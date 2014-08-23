@@ -1,0 +1,1 @@
+ const unsigned char PhoenixTestsVersionString[] __attribute__ ((used)) = "@(#)PROGRAM:PhoenixTests  PROJECT:Phoenix-1" "\n"; const double PhoenixTestsVersionNumber __attribute__ ((used)) = (double)1.;

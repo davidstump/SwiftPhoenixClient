@@ -1,0 +1,6 @@
+framework module Phoenix {
+  umbrella header "Phoenix.h"
+
+  export *
+  module * { export * }
+}

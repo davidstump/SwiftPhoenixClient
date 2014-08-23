@@ -1,0 +1,10 @@
+framework module Phoenix {
+  umbrella header "Phoenix.h"
+
+  export *
+  module * { export * }
+}
+
+module Phoenix.Swift {
+    header "Phoenix-Swift.h"
+}

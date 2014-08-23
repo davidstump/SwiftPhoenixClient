@@ -1,0 +1,13 @@
+{
+  'version': 0,
+  'case-sensitive': 'false',
+  'roots': [{
+    'type': 'directory',
+    'name': '/Users/david/Projects/ios/Phoenix/Build/Products/Debug-iphonesimulator/Phoenix.framework/Modules'
+    'contents': [{
+      'type': 'file',
+      'name': 'module.modulemap',
+      'external-contents': '/Users/david/Projects/ios/Phoenix/Build/Intermediates/Phoenix.build/Debug-iphonesimulator/Phoenix.build/unextended-module.modulemap',
+    }]
+  }]
+}

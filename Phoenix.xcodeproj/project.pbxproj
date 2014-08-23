@@ -9,6 +9,24 @@
 /* Begin PBXBuildFile section */
 		63E315A319A919D200565D3E /* Phoenix.h in Headers */ = {isa = PBXBuildFile; fileRef = 63E315A219A919D200565D3E /* Phoenix.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		63E315AD19A919D200565D3E /* PhoenixTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E315AC19A919D200565D3E /* PhoenixTests.swift */; };
+		63E315BC19A919E400565D3E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E315B619A919E400565D3E /* Message.swift */; };
+		63E315BD19A919E400565D3E /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E315B719A919E400565D3E /* Binding.swift */; };
+		63E315BE19A919E400565D3E /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E315B819A919E400565D3E /* Channel.swift */; };
+		63E315BF19A919E400565D3E /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E315B919A919E400565D3E /* Socket.swift */; };
+		63E315C019A919E400565D3E /* Payload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E315BA19A919E400565D3E /* Payload.swift */; };
+		63E315C119A919E400565D3E /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E315BB19A919E400565D3E /* Utilities.swift */; };
+		63E315FF19A925EF00565D3E /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63E315FE19A925EF00565D3E /* libicucore.dylib */; };
+		63E3160119A925F800565D3E /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63E3160019A925F800565D3E /* CFNetwork.framework */; };
+		63E3160319A9260000565D3E /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63E3160219A9260000565D3E /* Security.framework */; };
+		63E3160519A9260600565D3E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63E3160419A9260600565D3E /* Foundation.framework */; };
+		63E3160919A9261600565D3E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63E3160819A9261600565D3E /* UIKit.framework */; };
+		63E3160B19A9262000565D3E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63E3160A19A9262000565D3E /* CoreGraphics.framework */; };
+		63E3165219A9300C00565D3E /* base64.c in Sources */ = {isa = PBXBuildFile; fileRef = 63E3164A19A9300B00565D3E /* base64.c */; };
+		63E3165319A9300C00565D3E /* base64.h in Headers */ = {isa = PBXBuildFile; fileRef = 63E3164B19A9300B00565D3E /* base64.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		63E3165419A9300C00565D3E /* NSData+SRB64Additions.h in Headers */ = {isa = PBXBuildFile; fileRef = 63E3164C19A9300B00565D3E /* NSData+SRB64Additions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		63E3165519A9300C00565D3E /* NSData+SRB64Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E3164D19A9300B00565D3E /* NSData+SRB64Additions.m */; };
+		63E3165619A9300C00565D3E /* SRWebSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 63E3164E19A9300B00565D3E /* SRWebSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		63E3165719A9300C00565D3E /* SRWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E3164F19A9300C00565D3E /* SRWebSocket.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,6 +36,25 @@
 		63E315A819A919D200565D3E /* PhoenixTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhoenixTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		63E315AB19A919D200565D3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63E315AC19A919D200565D3E /* PhoenixTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoenixTests.swift; sourceTree = "<group>"; };
+		63E315B619A919E400565D3E /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		63E315B719A919E400565D3E /* Binding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Binding.swift; sourceTree = "<group>"; };
+		63E315B819A919E400565D3E /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
+		63E315B919A919E400565D3E /* Socket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
+		63E315BA19A919E400565D3E /* Payload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Payload.swift; sourceTree = "<group>"; };
+		63E315BB19A919E400565D3E /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		63E315FE19A925EF00565D3E /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+		63E3160019A925F800565D3E /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		63E3160219A9260000565D3E /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		63E3160419A9260600565D3E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		63E3160619A9260F00565D3E /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		63E3160819A9261600565D3E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		63E3160A19A9262000565D3E /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		63E3164A19A9300B00565D3E /* base64.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = base64.c; path = SocketRocket/base64.c; sourceTree = "<group>"; };
+		63E3164B19A9300B00565D3E /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = base64.h; path = SocketRocket/base64.h; sourceTree = "<group>"; };
+		63E3164C19A9300B00565D3E /* NSData+SRB64Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSData+SRB64Additions.h"; path = "SocketRocket/NSData+SRB64Additions.h"; sourceTree = "<group>"; };
+		63E3164D19A9300B00565D3E /* NSData+SRB64Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSData+SRB64Additions.m"; path = "SocketRocket/NSData+SRB64Additions.m"; sourceTree = "<group>"; };
+		63E3164E19A9300B00565D3E /* SRWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SRWebSocket.h; path = SocketRocket/SRWebSocket.h; sourceTree = "<group>"; };
+		63E3164F19A9300C00565D3E /* SRWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SRWebSocket.m; path = SocketRocket/SRWebSocket.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -25,6 +62,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63E315FF19A925EF00565D3E /* libicucore.dylib in Frameworks */,
+				63E3160B19A9262000565D3E /* CoreGraphics.framework in Frameworks */,
+				63E3160919A9261600565D3E /* UIKit.framework in Frameworks */,
+				63E3160519A9260600565D3E /* Foundation.framework in Frameworks */,
+				63E3160319A9260000565D3E /* Security.framework in Frameworks */,
+				63E3160119A925F800565D3E /* CFNetwork.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,6 +84,13 @@
 		63E3159319A919D200565D3E = {
 			isa = PBXGroup;
 			children = (
+				63E3160A19A9262000565D3E /* CoreGraphics.framework */,
+				63E3160819A9261600565D3E /* UIKit.framework */,
+				63E3160619A9260F00565D3E /* SenTestingKit.framework */,
+				63E3160419A9260600565D3E /* Foundation.framework */,
+				63E3160219A9260000565D3E /* Security.framework */,
+				63E3160019A925F800565D3E /* CFNetwork.framework */,
+				63E315FE19A925EF00565D3E /* libicucore.dylib */,
 				63E3159F19A919D200565D3E /* Phoenix */,
 				63E315A919A919D200565D3E /* PhoenixTests */,
 				63E3159E19A919D200565D3E /* Products */,
@@ -59,6 +109,13 @@
 		63E3159F19A919D200565D3E /* Phoenix */ = {
 			isa = PBXGroup;
 			children = (
+				63E3164619A9300B00565D3E /* SocketRocket */,
+				63E315B619A919E400565D3E /* Message.swift */,
+				63E315B719A919E400565D3E /* Binding.swift */,
+				63E315B819A919E400565D3E /* Channel.swift */,
+				63E315B919A919E400565D3E /* Socket.swift */,
+				63E315BA19A919E400565D3E /* Payload.swift */,
+				63E315BB19A919E400565D3E /* Utilities.swift */,
 				63E315A219A919D200565D3E /* Phoenix.h */,
 				63E315A019A919D200565D3E /* Supporting Files */,
 			);
@@ -90,6 +147,19 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		63E3164619A9300B00565D3E /* SocketRocket */ = {
+			isa = PBXGroup;
+			children = (
+				63E3164A19A9300B00565D3E /* base64.c */,
+				63E3164B19A9300B00565D3E /* base64.h */,
+				63E3164C19A9300B00565D3E /* NSData+SRB64Additions.h */,
+				63E3164D19A9300B00565D3E /* NSData+SRB64Additions.m */,
+				63E3164E19A9300B00565D3E /* SRWebSocket.h */,
+				63E3164F19A9300C00565D3E /* SRWebSocket.m */,
+			);
+			path = SocketRocket;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -97,6 +167,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63E3165419A9300C00565D3E /* NSData+SRB64Additions.h in Headers */,
+				63E3165319A9300C00565D3E /* base64.h in Headers */,
+				63E3165619A9300C00565D3E /* SRWebSocket.h in Headers */,
 				63E315A319A919D200565D3E /* Phoenix.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -196,6 +269,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63E3165519A9300C00565D3E /* NSData+SRB64Additions.m in Sources */,
+				63E315C119A919E400565D3E /* Utilities.swift in Sources */,
+				63E315BF19A919E400565D3E /* Socket.swift in Sources */,
+				63E3165219A9300C00565D3E /* base64.c in Sources */,
+				63E315BC19A919E400565D3E /* Message.swift in Sources */,
+				63E315BE19A919E400565D3E /* Channel.swift in Sources */,
+				63E3165719A9300C00565D3E /* SRWebSocket.m in Sources */,
+				63E315C019A919E400565D3E /* Payload.swift in Sources */,
+				63E315BD19A919E400565D3E /* Binding.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -298,28 +380,53 @@
 		63E315B119A919D200565D3E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"/Users/david/Downloads/SocketRocket-master/build/Debug",
+				);
 				INFOPLIST_FILE = Phoenix/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/david/Downloads/SocketRocket-master/build/Debug-iphoneos",
+				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		63E315B219A919D200565D3E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"/Users/david/Downloads/SocketRocket-master/build/Debug",
+				);
 				INFOPLIST_FILE = Phoenix/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/david/Downloads/SocketRocket-master/build/Debug-iphoneos",
+				);
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -374,6 +481,7 @@
 				63E315B219A919D200565D3E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		63E315B319A919D200565D3E /* Build configuration list for PBXNativeTarget "PhoenixTests" */ = {
 			isa = XCConfigurationList;
@@ -382,6 +490,7 @@
 				63E315B519A919D200565D3E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
