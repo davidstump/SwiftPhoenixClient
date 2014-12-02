@@ -316,7 +316,7 @@ struct Phoenix {
         json += "\"message\": \(payload.message.toJsonString())"
       }
       json += "}"
-      println("payloadJson: \(json)")
+      
       return json
     }
   }

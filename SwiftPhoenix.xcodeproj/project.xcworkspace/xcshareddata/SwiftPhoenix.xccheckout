@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>5BEBBFDA-BB6C-4163-957E-02CD20921B7F</string>
+	<key>IDESourceControlProjectName</key>
+	<string>SwiftPhoenix</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>9AF8CE16D0C4ACA6BFF07BC7BD99EF14BFC45978</key>
+		<string>github.com:davidstump/SwiftPhoenixChannels.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>SwiftPhoenix.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>9AF8CE16D0C4ACA6BFF07BC7BD99EF14BFC45978</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:davidstump/SwiftPhoenixChannels.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>9AF8CE16D0C4ACA6BFF07BC7BD99EF14BFC45978</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>9AF8CE16D0C4ACA6BFF07BC7BD99EF14BFC45978</string>
+			<key>IDESourceControlWCCName</key>
+			<string>SwiftPhoenix</string>
+		</dict>
+	</array>
+</dict>
+</plist>

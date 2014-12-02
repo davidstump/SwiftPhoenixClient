@@ -129,7 +129,7 @@
 				63FA89181A2CF6370022BE7B /* Json.swift */,
 				63FA891A1A2D51310022BE7B /* Serializable.swift */,
 			);
-			name = Phoenix;
+			path = Phoenix;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
