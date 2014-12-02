@@ -13,6 +13,10 @@
 		63E2C6981A2B87D200E162D5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63E2C6971A2B87D200E162D5 /* Images.xcassets */; };
 		63E2C69B1A2B87D200E162D5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63E2C6991A2B87D200E162D5 /* LaunchScreen.xib */; };
 		63E2C6A71A2B87D200E162D5 /* SwiftPhoenixTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E2C6A61A2B87D200E162D5 /* SwiftPhoenixTests.swift */; };
+		63E2C6B21A2B889500E162D5 /* Websocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63E2C6B11A2B889500E162D5 /* Websocket.swift */; };
+		63FA89171A2CE3010022BE7B /* Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FA89161A2CE3010022BE7B /* Phoenix.swift */; };
+		63FA89191A2CF6370022BE7B /* Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FA89181A2CF6370022BE7B /* Json.swift */; };
+		63FA891B1A2D51310022BE7B /* Serializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FA891A1A2D51310022BE7B /* Serializable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +40,10 @@
 		63E2C6A01A2B87D200E162D5 /* SwiftPhoenixTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftPhoenixTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		63E2C6A51A2B87D200E162D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63E2C6A61A2B87D200E162D5 /* SwiftPhoenixTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftPhoenixTests.swift; sourceTree = "<group>"; };
+		63E2C6B11A2B889500E162D5 /* Websocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Websocket.swift; sourceTree = "<group>"; };
+		63FA89161A2CE3010022BE7B /* Phoenix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Phoenix.swift; sourceTree = "<group>"; };
+		63FA89181A2CF6370022BE7B /* Json.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Json.swift; sourceTree = "<group>"; };
+		63FA891A1A2D51310022BE7B /* Serializable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serializable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +85,7 @@
 		63E2C68D1A2B87D200E162D5 /* SwiftPhoenix */ = {
 			isa = PBXGroup;
 			children = (
+				63E2C6B01A2B888600E162D5 /* Phoenix */,
 				63E2C6901A2B87D200E162D5 /* AppDelegate.swift */,
 				63E2C6921A2B87D200E162D5 /* ViewController.swift */,
 				63E2C6941A2B87D200E162D5 /* Main.storyboard */,
@@ -110,6 +119,17 @@
 				63E2C6A51A2B87D200E162D5 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		63E2C6B01A2B888600E162D5 /* Phoenix */ = {
+			isa = PBXGroup;
+			children = (
+				63E2C6B11A2B889500E162D5 /* Websocket.swift */,
+				63FA89161A2CE3010022BE7B /* Phoenix.swift */,
+				63FA89181A2CF6370022BE7B /* Json.swift */,
+				63FA891A1A2D51310022BE7B /* Serializable.swift */,
+			);
+			name = Phoenix;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -212,8 +232,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63FA891B1A2D51310022BE7B /* Serializable.swift in Sources */,
 				63E2C6931A2B87D200E162D5 /* ViewController.swift in Sources */,
+				63E2C6B21A2B889500E162D5 /* Websocket.swift in Sources */,
 				63E2C6911A2B87D200E162D5 /* AppDelegate.swift in Sources */,
+				63FA89191A2CF6370022BE7B /* Json.swift in Sources */,
+				63FA89171A2CE3010022BE7B /* Phoenix.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -405,6 +429,7 @@
 				63E2C6AC1A2B87D200E162D5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		63E2C6AD1A2B87D200E162D5 /* Build configuration list for PBXNativeTarget "SwiftPhoenixTests" */ = {
 			isa = XCConfigurationList;
@@ -413,6 +438,7 @@
 				63E2C6AF1A2B87D200E162D5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
