@@ -30,14 +30,14 @@ class ViewController: UIViewController {
     
     // Join the socket and establish handlers for users entering and submitting messages
     socket.join("rooms", topic: topic!, message: Phoenix.Message(subject: "status", body: "joining")) { channel in
-      let chan = channel as Phoenix.Channel
+      let chan = channel as! Phoenix.Channel
       
       chan.on("join") { message in
         self.chatWindow.text = "You joined the room.\n"
       }
       
       chan.on("new:msg") { message in
-        let msg = message as Phoenix.Message
+        let msg = message as! Phoenix.Message
         var (username: AnyObject?, body: AnyObject?) = (msg.message?["user"]!, msg.message?["body"]!)
         let newMessage = "[\(username!)] \(body!)\n"
         let updatedText = self.chatWindow.text.stringByAppendingString(newMessage)

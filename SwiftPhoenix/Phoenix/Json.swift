@@ -43,7 +43,7 @@ extension JSON {
     var enc:NSStringEncoding = NSUTF8StringEncoding
     var err:NSError?
     let str:String? =
-    NSString(
+    String(
       contentsOfURL:nsurl, usedEncoding:&enc, error:&err
     )
     if err != nil { self.init(err!) }
@@ -256,7 +256,7 @@ extension JSON {
     case let o as NSDictionary:
       var result = [String:JSON]()
       for (k:AnyObject, v:AnyObject) in o {
-        result[k as String] = JSON(v)
+        result[k as! String] = JSON(v)
       }
       return result
     default: return nil
@@ -267,7 +267,7 @@ extension JSON {
     if let dateString = _value as? NSString {
       let dateFormatter = NSDateFormatter()
       dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZ"
-      return dateFormatter.dateFromString(dateString)
+      return dateFormatter.dateFromString(dateString as String)
     }
     return nil
   }
@@ -294,7 +294,7 @@ extension JSON : SequenceType {
       var ks = o.allKeys.reverse()
       return GeneratorOf<(AnyObject, JSON)> {
         if ks.isEmpty { return nil }
-        let k = ks.removeLast() as String
+        let k = ks.removeLast() as! String
         return (k, JSON(o.valueForKey(k)!))
       }
     default:
@@ -340,7 +340,7 @@ extension JSON : Printable {
           if let nsstring = NSString(
             data:data, encoding:NSUTF8StringEncoding
             ) as NSString? {
-              return nsstring
+              return nsstring as String
           }
       }
       return "YOU ARE NOT SUPPOSED TO SEE THIS!"

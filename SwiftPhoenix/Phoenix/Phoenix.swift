@@ -32,7 +32,7 @@ struct Phoenix {
       if single {
         return [self.subject!: self.body!]
       } else {
-        return self.message! as [String: AnyObject]
+        return self.message! as! [String: AnyObject]
       }
     }
   }
@@ -62,7 +62,7 @@ struct Phoenix {
     var socket: Phoenix.Socket?
     
     init(channel: String, topic: String, message: Phoenix.Message, callback: (AnyObject -> Void), socket: Phoenix.Socket) {
-      (self.channel, self.topic, self.message, self.callback, self.socket) = (channel, topic, message, callback, socket)
+      (self.channel, self.topic, self.message, self.callback, self.socket) = (channel, topic, message, { callback($0) }, socket)
       reset()
     }
     
@@ -71,7 +71,7 @@ struct Phoenix {
     }
     
     func on(event: String, callback: (AnyObject -> Void)) {
-      bindings.append(Phoenix.Binding(event: event, callback: callback))
+      bindings.append(Phoenix.Binding(event: event, callback: { callback($0) }))
     }
     
     func isMember(channel: String, topic: String) -> Bool {
@@ -269,7 +269,7 @@ struct Phoenix {
     // WebSocket Delegate Methods
     func websocketDidReceiveMessage(message: String) {
       println("socket message: \(message)")
-      let json = JSON.parse(message as NSString)
+      let json = JSON.parse(message as NSString as String as String)
       let (channel, topic, event) = (
         unwrappedJsonString(json["channel"].asString),
         unwrappedJsonString(json["topic"].asString),
@@ -310,7 +310,7 @@ struct Phoenix {
     func payloadToJson(payload: Phoenix.Payload) -> String {
       var json = "{\"channel\": \"\(payload.channel)\", \"topic\": \"\(payload.topic)\", \"event\": \"\(payload.event)\", "
       if NSString(string: payload.message.toJsonString()).containsString("message") {
-        let jsonMessage = JSON.parse(payload.message.toJsonString())["message"].toString()
+        let jsonMessage = String(_cocoaString: JSON.parse(String(payload.message.toJsonString()))["message"])
         json += "\"message\": \(jsonMessage)"
       } else {
         json += "\"message\": \(payload.message.toJsonString())"

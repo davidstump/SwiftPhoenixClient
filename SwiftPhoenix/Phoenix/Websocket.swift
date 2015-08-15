@@ -201,18 +201,18 @@ public class WebSocket : NSObject, NSStreamDelegate {
     let bytes = UnsafePointer<UInt8>(data.bytes)
     outputStream!.write(bytes, maxLength: data.length)
     while(isRunLoop) {
-      NSRunLoop.currentRunLoop().runMode(NSDefaultRunLoopMode, beforeDate: NSDate.distantFuture() as NSDate)
+      NSRunLoop.currentRunLoop().runMode(NSDefaultRunLoopMode, beforeDate: NSDate.distantFuture() as! NSDate)
     }
   }
   //delegate for the stream methods. Processes incoming bytes
-  func stream(aStream: NSStream!, handleEvent eventCode: NSStreamEvent) {
+  public func stream(aStream: NSStream, handleEvent eventCode: NSStreamEvent) {
     
     if eventCode == .HasBytesAvailable {
       if(aStream == inputStream) {
         processInputStream()
       }
     } else if eventCode == .ErrorOccurred {
-      disconnectStream(aStream!.streamError)
+      disconnectStream(aStream.streamError)
     } else if eventCode == .EndEncountered {
       disconnectStream(nil)
     }
@@ -285,7 +285,7 @@ public class WebSocket : NSObject, NSStreamDelegate {
   }
   ///Finds the HTTP Packet in the TCP stream, by looking for the CRLF.
   private func processHTTP(buffer: UnsafePointer<UInt8>, bufferLen: Int) -> Bool {
-    let CRLFBytes = [UInt8("\r"), UInt8("\n"), UInt8("\r"), UInt8("\n")]
+    let CRLFBytes = [UInt8(ascii: "\r"), UInt8(ascii: "\n"), UInt8(ascii: "\r"), UInt8(ascii: "\n")]
     var k = 0
     var totalSize = 0
     for var i = 0; i < bufferLen; i++ {
@@ -325,7 +325,7 @@ public class WebSocket : NSObject, NSStreamDelegate {
     }
     let cfHeaders = CFHTTPMessageCopyAllHeaderFields(response.takeUnretainedValue())
     let headers: NSDictionary = cfHeaders.takeUnretainedValue()
-    let acceptKey = headers[headerWSAcceptName] as NSString
+    let acceptKey = headers[headerWSAcceptName] as! NSString
     if acceptKey.length > 0 {
       return true
     }
@@ -436,7 +436,7 @@ public class WebSocket : NSObject, NSStreamDelegate {
         data = NSData(bytes: UnsafePointer<UInt8>((buffer+offset)), length: Int(len))
       }
       if receivedOpcode == OpCode.Pong.rawValue {
-        let step = Int(offset+len)
+        let step = Int(offset + Int(len))
         let extra = bufferLen-step
         if extra > 0 {
           processRawMessage((buffer+step), bufferLen: extra)
@@ -490,7 +490,7 @@ public class WebSocket : NSObject, NSStreamDelegate {
         processResponse(response!)
       }
       
-      let step = Int(offset+len)
+      let step = Int(offset + Int(len))
       let extra = bufferLen-step
       if(extra > 0) {
         processExtra((buffer+step), bufferLen: extra)
@@ -522,7 +522,7 @@ public class WebSocket : NSObject, NSStreamDelegate {
         }
         dispatch_async(dispatch_get_main_queue(),{
           self.workaroundMethod()
-          self.delegate?.websocketDidReceiveMessage(str!)
+          self.delegate?.websocketDidReceiveMessage(str! as String)
         })
       } else if response.code == .BinaryFrame {
         let data = response.buffer! //local copy so it is perverse for writing
@@ -593,7 +593,7 @@ public class WebSocket : NSObject, NSStreamDelegate {
       }
       buffer[1] |= self.MaskMask
       var maskKey = UnsafeMutablePointer<UInt8>(buffer + offset)
-      SecRandomCopyBytes(kSecRandomDefault, UInt(sizeof(UInt32)), maskKey)
+      SecRandomCopyBytes(kSecRandomDefault, Int(sizeof(UInt32)), maskKey)
       offset += sizeof(UInt32)
       
       for (var i = 0; i < dataLength; i++) {

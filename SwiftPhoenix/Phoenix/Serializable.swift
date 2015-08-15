@@ -24,28 +24,28 @@ class Serializable : NSObject{
       var property = propertiesInAClass[i]
       var propName = NSString(CString: property_getName(property), encoding: NSUTF8StringEncoding)
       var propType = property_getAttributes(property)
-      var propValue : AnyObject! = self.valueForKey(propName!);
+      var propValue : AnyObject! = self.valueForKey(propName! as String);
       
       if propValue is Serializable {
-        propertiesDictionary.setValue((propValue as Serializable).toDictionary(), forKey: propName!)
+        propertiesDictionary.setValue((propValue as! Serializable).toDictionary(), forKey: (propName as! String))
       } else if propValue is Array<Serializable> {
         var subArray = Array<NSDictionary>()
-        for item in (propValue as Array<Serializable>) {
+        for item in (propValue as! Array<Serializable>) {
           subArray.append(item.toDictionary())
         }
-        propertiesDictionary.setValue(subArray, forKey: propName!)
+        propertiesDictionary.setValue(subArray, forKey: propName! as String)
       } else if propValue is NSData {
-        propertiesDictionary.setValue((propValue as NSData).base64EncodedStringWithOptions(nil), forKey: propName!)
+        propertiesDictionary.setValue((propValue as! NSData).base64EncodedStringWithOptions(nil), forKey: propName! as String)
       } else if propValue is Bool {
-        propertiesDictionary.setValue((propValue as Bool).boolValue, forKey: propName!)
+        propertiesDictionary.setValue((propValue as! Bool).boolValue, forKey: propName! as String)
       } else if propValue is NSDate {
-        var date = propValue as NSDate
+        var date = propValue as! NSDate
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "Z"
         var dateString = NSString(format: "/Date(%.0f000%@)/", date.timeIntervalSince1970, dateFormatter.stringFromDate(date))
-        propertiesDictionary.setValue(dateString, forKey: propName!)
+        propertiesDictionary.setValue(dateString, forKey: propName! as String)
       } else {
-        propertiesDictionary.setValue(propValue, forKey: propName!)
+        propertiesDictionary.setValue(propValue, forKey: propName! as String)
       }
     }
     
