@@ -308,7 +308,8 @@ struct Phoenix {
     }
     
     func payloadToJson(payload: Phoenix.Payload) -> String {
-      var json = "{\"channel\": \"\(payload.channel)\", \"topic\": \"\(payload.topic)\", \"event\": \"\(payload.event)\", "
+//      var json = "{\"channel\": \"\(payload.channel)\", \"topic\": \"\(payload.topic)\", \"event\": \"\(payload.event)\", "
+      var json = "{\"channel\": \"\(payload.channel)\", \"topic\": \"\(payload.topic)\", \"event\": \"\(payload.event)\", \"payload\": \"[:]\", \"ref\": \"123123\", "
       if NSString(string: payload.message.toJsonString()).containsString("message") {
         let jsonMessage = String(_cocoaString: JSON.parse(String(payload.message.toJsonString()))["message"])
         json += "\"message\": \(jsonMessage)"
