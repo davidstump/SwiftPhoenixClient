@@ -203,7 +203,7 @@ struct Phoenix {
       chan.reset()
       let (channel, topic, message) = (chan.channel, chan.topic, chan.message)
       let joinMessage = Phoenix.Message(subject: "status", body: "joining")
-      let payload = Phoenix.Payload(channel: channel!, topic: topic!, event: "join", message: joinMessage)
+      let payload = Phoenix.Payload(channel: channel!, topic: topic!, event: "phx_join", message: joinMessage)
       send(payload)
       chan.callback(chan)
     }
@@ -309,7 +309,7 @@ struct Phoenix {
     
     func payloadToJson(payload: Phoenix.Payload) -> String {
 //      var json = "{\"channel\": \"\(payload.channel)\", \"topic\": \"\(payload.topic)\", \"event\": \"\(payload.event)\", "
-      var json = "{\"channel\": \"\(payload.channel)\", \"topic\": \"\(payload.topic)\", \"event\": \"\(payload.event)\", \"payload\": \"[:]\", \"ref\": \"123123\", "
+      var json = "{\"channel\": \"\(payload.channel)\", \"topic\": \"\(payload.channel):\(payload.topic)\", \"event\": \"\(payload.event)\", \"payload\": \"[:]\", \"ref\": \"123123\", "
       if NSString(string: payload.message.toJsonString()).containsString("message") {
         let jsonMessage = String(_cocoaString: JSON.parse(String(payload.message.toJsonString()))["message"])
         json += "\"message\": \(jsonMessage)"
