@@ -20,8 +20,8 @@ class ViewController: UIViewController {
   @IBAction func sendMessage(sender: AnyObject) {
     let message = Phoenix.Message(message: ["user":userField.text, "body": messageField.text])
     println(message.toJsonString())
-//    TODO: Remove `channel`, it's already in `topic`
-    let payload = Phoenix.Payload(channel: "rooms", topic: topic!, event: "new:msg", message: message)
+    
+    let payload = Phoenix.Payload(topic: topic!, event: "new:msg", message: message)
     socket.send(payload)
     messageField.text = ""
   }
@@ -30,8 +30,7 @@ class ViewController: UIViewController {
     super.viewDidLoad()
     
     // Join the socket and establish handlers for users entering and submitting messages
-//    TODO: Remove `channel`, it's already in `topic`
-    socket.join("rooms", topic: topic!, message: Phoenix.Message(subject: "status", body: "joining")) { channel in
+    socket.join(topic: topic!, message: Phoenix.Message(subject: "status", body: "joining")) { channel in
       let chan = channel as! Phoenix.Channel
       
       chan.on("join") { message in
