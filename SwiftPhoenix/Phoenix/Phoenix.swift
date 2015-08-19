@@ -270,14 +270,14 @@ struct Phoenix {
     func websocketDidReceiveMessage(message: String) {
       println("socket message: \(message)")
       let json = JSON.parse(message as NSString as String as String)
-      let (channel, topic, event) = (
-        unwrappedJsonString(json["channel"].asString),
+      let (topic, event) = (
         unwrappedJsonString(json["topic"].asString),
         unwrappedJsonString(json["event"].asString)
       )
-      let msg: [String: AnyObject] = json["message"].asDictionary!
+      let msg: [String: AnyObject] = json["payload"].asDictionary!
       
-      let messagePayload = Phoenix.Payload(channel: channel, topic: topic, event: event, message: Phoenix.Message(message: msg))
+//      TODO: Remove `channel` from Phoenix.Payload initializer.
+      let messagePayload = Phoenix.Payload(channel: "rooms", topic: topic, event: event, message: Phoenix.Message(message: msg))
       onMessage(messagePayload)
     }
     
@@ -308,13 +308,14 @@ struct Phoenix {
     }
     
     func payloadToJson(payload: Phoenix.Payload) -> String {
-//      var json = "{\"channel\": \"\(payload.channel)\", \"topic\": \"\(payload.topic)\", \"event\": \"\(payload.event)\", "
-      var json = "{\"channel\": \"\(payload.channel)\", \"topic\": \"\(payload.channel):\(payload.topic)\", \"event\": \"\(payload.event)\", \"payload\": \"[:]\", \"ref\": \"123123\", "
+//      TODO: Remove hard-coded `ref`
+      var json = "{\"channel\": \"\(payload.channel)\", \"topic\": \"\(payload.channel):\(payload.topic)\", \"event\": \"\(payload.event)\", \"ref\": \"123123\", "
       if NSString(string: payload.message.toJsonString()).containsString("message") {
-        let jsonMessage = String(_cocoaString: JSON.parse(String(payload.message.toJsonString()))["message"])
-        json += "\"message\": \(jsonMessage)"
+        let msg = JSON.parse(String(payload.message.toJsonString()))["message"]
+        let jsonMessage = msg.toString(pretty: true)
+        json += "\"payload\": \(jsonMessage)"
       } else {
-        json += "\"message\": \(payload.message.toJsonString())"
+        json += "\"payload\": \(payload.message.toJsonString())"
       }
       json += "}"
       
