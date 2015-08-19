@@ -309,7 +309,7 @@ struct Phoenix {
     
     func payloadToJson(payload: Phoenix.Payload) -> String {
 //      TODO: Remove hard-coded `ref`
-      var json = "{\"channel\": \"\(payload.channel)\", \"topic\": \"\(payload.channel):\(payload.topic)\", \"event\": \"\(payload.event)\", \"ref\": \"123123\", "
+      var json = "{\"channel\": \"\(payload.channel)\", \"topic\": \"\(payload.topic)\", \"event\": \"\(payload.event)\", \"ref\": \"123123\", "
       if NSString(string: payload.message.toJsonString()).containsString("message") {
         let msg = JSON.parse(String(payload.message.toJsonString()))["message"]
         let jsonMessage = msg.toString(pretty: true)
