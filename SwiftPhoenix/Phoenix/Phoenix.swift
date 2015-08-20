@@ -32,7 +32,7 @@ struct Phoenix {
       if single {
         return [self.subject!: self.body!]
       } else {
-        return self.message! as [String: AnyObject]
+        return self.message! as! [String: AnyObject]
       }
     }
   }
@@ -55,14 +55,13 @@ struct Phoenix {
   // MARK: Phoenix Channel
   class Channel {
     var bindings: [Phoenix.Binding] = []
-    var channel: String?
     var topic: String?
     var message: Phoenix.Message?
     var callback: (AnyObject -> Void?)
     var socket: Phoenix.Socket?
     
-    init(channel: String, topic: String, message: Phoenix.Message, callback: (AnyObject -> Void), socket: Phoenix.Socket) {
-      (self.channel, self.topic, self.message, self.callback, self.socket) = (channel, topic, message, callback, socket)
+    init(topic: String, message: Phoenix.Message, callback: (AnyObject -> Void), socket: Phoenix.Socket) {
+      (self.topic, self.message, self.callback, self.socket) = (topic, message, { callback($0) }, socket)
       reset()
     }
     
@@ -71,11 +70,11 @@ struct Phoenix {
     }
     
     func on(event: String, callback: (AnyObject -> Void)) {
-      bindings.append(Phoenix.Binding(event: event, callback: callback))
+      bindings.append(Phoenix.Binding(event: event, callback: { callback($0) }))
     }
     
-    func isMember(channel: String, topic: String) -> Bool {
-      return self.channel == channel && self.topic == topic
+    func isMember(# topic: String) -> Bool {
+      return self.topic == topic
     }
     
     func off(event: String) {
@@ -98,13 +97,13 @@ struct Phoenix {
     
     func send(event: String, message: Phoenix.Message) {
       println("conn sending")
-      let payload = Phoenix.Payload(channel: channel!, topic: topic!, event: event, message: message)
+      let payload = Phoenix.Payload(topic: topic!, event: event, message: message)
       socket?.send(payload)
     }
     
     func leave(message: Phoenix.Message) {
       if let sock = socket {
-        sock.leave(channel!, topic: topic!, message: message)
+        sock.leave(topic: topic!, message: message)
       }
       reset()
     }
@@ -112,18 +111,12 @@ struct Phoenix {
   
   // MARK: Phoenix Payload
   class Payload {
-    var channel: String
     var topic: String
     var event: String
     var message: Phoenix.Message
     
-    init(channel: String, topic: String, event: String, message: Phoenix.Message) {
-      (self.channel, self.topic, self.event, self.message) = (channel, topic, event, message)
-      create()
-    }
-    
-    func create() -> [String: AnyObject?] {
-      return ["channel": channel, "topic": topic, "event": event, "message": message]
+    init(topic: String, event: String, message: Phoenix.Message) {
+      (self.topic, self.event, self.message) = (topic, event, message)
     }
     
   }
@@ -138,6 +131,7 @@ struct Phoenix {
     let flushEveryMs = 50
     var reconnectTimer: NSTimer?
     let reconnectAfterMs = 5000
+    var messageReference: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
     
     
     init(endPoint: String) {
@@ -201,15 +195,15 @@ struct Phoenix {
     
     func rejoin(chan: Phoenix.Channel) {
       chan.reset()
-      let (channel, topic, message) = (chan.channel, chan.topic, chan.message)
+      let (topic, message) = (chan.topic, chan.message)
       let joinMessage = Phoenix.Message(subject: "status", body: "joining")
-      let payload = Phoenix.Payload(channel: channel!, topic: topic!, event: "join", message: joinMessage)
+      let payload = Phoenix.Payload(topic: topic!, event: "phx_join", message: joinMessage)
       send(payload)
       chan.callback(chan)
     }
     
-    func join(channel: String, topic: String, message: Phoenix.Message, callback: (AnyObject -> Void)) {
-      let chan = Phoenix.Channel(channel: channel, topic: topic, message: message, callback: callback, socket: self)
+    func join(# topic: String, message: Phoenix.Message, callback: (AnyObject -> Void)) {
+      let chan = Phoenix.Channel(topic: topic, message: message, callback: callback, socket: self)
       channels.append(chan)
       if isConnected() {
         println("joining")
@@ -217,14 +211,14 @@ struct Phoenix {
       }
     }
     
-    func leave(channel: String, topic: String, message: Phoenix.Message) {
+    func leave(# topic: String, message: Phoenix.Message) {
       let leavingMessage = Phoenix.Message(subject: "status", body: "leaving")
-      let payload = Phoenix.Payload(channel: channel, topic: topic, event: "leave", message: leavingMessage)
+      let payload = Phoenix.Payload(topic: topic, event: "leave", message: leavingMessage)
       send(payload)
       var newChannels: [Phoenix.Channel] = []
       for chan in channels {
         let c = chan as Phoenix.Channel
-        if !c.isMember(channel, topic: topic) {
+        if !c.isMember(topic: topic) {
           newChannels.append(c)
         }
       }
@@ -258,9 +252,9 @@ struct Phoenix {
     }
     
     func onMessage(payload: Phoenix.Payload) {
-      let (channel, topic, event, message) = (payload.channel, payload.topic, payload.event, payload.message)
+      let (topic, event, message) = (payload.topic, payload.event, payload.message)
       for chan in channels {
-        if chan.isMember(channel, topic: topic) {
+        if chan.isMember(topic: topic) {
           chan.trigger(event, msg: message)
         }
       }
@@ -269,15 +263,14 @@ struct Phoenix {
     // WebSocket Delegate Methods
     func websocketDidReceiveMessage(message: String) {
       println("socket message: \(message)")
-      let json = JSON.parse(message as NSString)
-      let (channel, topic, event) = (
-        unwrappedJsonString(json["channel"].asString),
+      let json = JSON.parse(message as NSString as String as String)
+      let (topic, event) = (
         unwrappedJsonString(json["topic"].asString),
         unwrappedJsonString(json["event"].asString)
       )
-      let msg: [String: AnyObject] = json["message"].asDictionary!
+      let msg: [String: AnyObject] = json["payload"].asDictionary!
       
-      let messagePayload = Phoenix.Payload(channel: channel, topic: topic, event: event, message: Phoenix.Message(message: msg))
+      let messagePayload = Phoenix.Payload(topic: topic, event: event, message: Phoenix.Message(message: msg))
       onMessage(messagePayload)
     }
     
@@ -307,13 +300,21 @@ struct Phoenix {
       }
     }
     
+    func makeRef() -> UInt64 {
+      let newRef = messageReference + 1
+      messageReference = (newRef == UINT64_MAX) ? 0 : newRef
+      return newRef
+    }
+    
     func payloadToJson(payload: Phoenix.Payload) -> String {
-      var json = "{\"channel\": \"\(payload.channel)\", \"topic\": \"\(payload.topic)\", \"event\": \"\(payload.event)\", "
+      let ref = makeRef()
+      var json = "{\"topic\": \"\(payload.topic)\", \"event\": \"\(payload.event)\", \"ref\": \"\(ref)\", "
       if NSString(string: payload.message.toJsonString()).containsString("message") {
-        let jsonMessage = JSON.parse(payload.message.toJsonString())["message"].toString()
-        json += "\"message\": \(jsonMessage)"
+        let msg = JSON.parse(String(payload.message.toJsonString()))["message"]
+        let jsonMessage = msg.toString(pretty: true)
+        json += "\"payload\": \(jsonMessage)"
       } else {
-        json += "\"message\": \(payload.message.toJsonString())"
+        json += "\"payload\": \(payload.message.toJsonString())"
       }
       json += "}"
       
