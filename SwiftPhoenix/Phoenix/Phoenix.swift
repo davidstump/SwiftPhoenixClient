@@ -131,6 +131,7 @@ struct Phoenix {
     let flushEveryMs = 50
     var reconnectTimer: NSTimer?
     let reconnectAfterMs = 5000
+    var messageReference: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
     
     
     init(endPoint: String) {
@@ -299,9 +300,15 @@ struct Phoenix {
       }
     }
     
+    func makeRef() -> UInt64 {
+      let newRef = messageReference + 1
+      messageReference = (newRef == UINT64_MAX) ? 0 : newRef
+      return newRef
+    }
+    
     func payloadToJson(payload: Phoenix.Payload) -> String {
-//      TODO: Remove hard-coded `ref`
-      var json = "{\"topic\": \"\(payload.topic)\", \"event\": \"\(payload.event)\", \"ref\": \"123123\", "
+      let ref = makeRef()
+      var json = "{\"topic\": \"\(payload.topic)\", \"event\": \"\(payload.event)\", \"ref\": \"\(ref)\", "
       if NSString(string: payload.message.toJsonString()).containsString("message") {
         let msg = JSON.parse(String(payload.message.toJsonString()))["message"]
         let jsonMessage = msg.toString(pretty: true)
