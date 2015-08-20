@@ -117,11 +117,6 @@ struct Phoenix {
     
     init(topic: String, event: String, message: Phoenix.Message) {
       (self.topic, self.event, self.message) = (topic, event, message)
-      create()
-    }
-    
-    func create() -> [String: AnyObject?] {
-      return ["topic": topic, "event": event, "message": message]
     }
     
   }
