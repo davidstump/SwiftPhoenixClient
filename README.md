@@ -34,7 +34,6 @@ socket.join(topic: topic!, message: Phoenix.Message(subject: "status", body: "jo
   chan.on("join") { message in
     // A new player has joined the game
   }
-
 }
 ```
 
