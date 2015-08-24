@@ -17,6 +17,9 @@
 		63FA89171A2CE3010022BE7B /* Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FA89161A2CE3010022BE7B /* Phoenix.swift */; };
 		63FA89191A2CF6370022BE7B /* Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FA89181A2CF6370022BE7B /* Json.swift */; };
 		63FA891B1A2D51310022BE7B /* Serializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63FA891A1A2D51310022BE7B /* Serializable.swift */; };
+		CF3B61A11B8A901A0081C250 /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3B61A01B8A901A0081C250 /* Path.swift */; };
+		CF3B61A31B8AB9F70081C250 /* PathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3B61A21B8AB9F70081C250 /* PathTests.swift */; };
+		CF3B61A61B8ABD180081C250 /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3B61A01B8A901A0081C250 /* Path.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +47,8 @@
 		63FA89161A2CE3010022BE7B /* Phoenix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Phoenix.swift; sourceTree = "<group>"; };
 		63FA89181A2CF6370022BE7B /* Json.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Json.swift; sourceTree = "<group>"; };
 		63FA891A1A2D51310022BE7B /* Serializable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serializable.swift; sourceTree = "<group>"; };
+		CF3B61A01B8A901A0081C250 /* Path.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Path.swift; sourceTree = "<group>"; };
+		CF3B61A21B8AB9F70081C250 /* PathTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +113,7 @@
 			isa = PBXGroup;
 			children = (
 				63E2C6A61A2B87D200E162D5 /* SwiftPhoenixTests.swift */,
+				CF3B61A21B8AB9F70081C250 /* PathTests.swift */,
 				63E2C6A41A2B87D200E162D5 /* Supporting Files */,
 			);
 			path = SwiftPhoenixTests;
@@ -126,6 +132,7 @@
 			children = (
 				63E2C6B11A2B889500E162D5 /* Websocket.swift */,
 				63FA89161A2CE3010022BE7B /* Phoenix.swift */,
+				CF3B61A01B8A901A0081C250 /* Path.swift */,
 				63FA89181A2CF6370022BE7B /* Json.swift */,
 				63FA891A1A2D51310022BE7B /* Serializable.swift */,
 			);
@@ -233,6 +240,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				63FA891B1A2D51310022BE7B /* Serializable.swift in Sources */,
+				CF3B61A11B8A901A0081C250 /* Path.swift in Sources */,
 				63E2C6931A2B87D200E162D5 /* ViewController.swift in Sources */,
 				63E2C6B21A2B889500E162D5 /* Websocket.swift in Sources */,
 				63E2C6911A2B87D200E162D5 /* AppDelegate.swift in Sources */,
@@ -245,6 +253,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF3B61A31B8AB9F70081C250 /* PathTests.swift in Sources */,
+				CF3B61A61B8ABD180081C250 /* Path.swift in Sources */,
 				63E2C6A71A2B87D200E162D5 /* SwiftPhoenixTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

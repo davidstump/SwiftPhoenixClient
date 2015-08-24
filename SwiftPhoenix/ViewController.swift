@@ -14,7 +14,7 @@ class ViewController: UIViewController {
   @IBOutlet var messageField: UITextField!
   @IBOutlet var chatWindow: UITextView!
   @IBOutlet var sendButton: UIButton!
-  let socket = Phoenix.Socket(endPoint: "http://localhost:4000/socket/websocket")
+  let socket = Phoenix.Socket(domainAndPort: "localhost:4000", path: "socket", transport: "websocket")
   var topic: String? = "rooms:lobby"
   
   @IBAction func sendMessage(sender: AnyObject) {

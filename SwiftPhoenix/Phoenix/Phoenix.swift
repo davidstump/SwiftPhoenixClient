@@ -132,10 +132,9 @@ struct Phoenix {
     var reconnectTimer: NSTimer?
     let reconnectAfterMs = 5000
     var messageReference: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
-    
-    
-    init(endPoint: String) {
-      self.endPoint = endPoint
+
+    init(domainAndPort:String, path:String, transport:String, var prot:String = "http") {
+      self.endPoint = Path.endpointWithProtocol(prot, domainAndPort: domainAndPort, path: path, transport: transport)
       super.init()
       resetBufferTimer()
       reconnect()
