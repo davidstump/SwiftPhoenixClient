@@ -1,0 +1,14 @@
+PODS:
+  - SwiftPhoenixClient (0.1.0)
+
+DEPENDENCIES:
+  - SwiftPhoenixClient (from `../`)
+
+EXTERNAL SOURCES:
+  SwiftPhoenixClient:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  SwiftPhoenixClient: ce020278dd05e85e2b5a09f8ff67bf94ffec99e1
+
+COCOAPODS: 0.38.2
