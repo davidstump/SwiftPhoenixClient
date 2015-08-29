@@ -41,7 +41,7 @@ pod "SwiftPhoenixClient"
 
 ## Author
 
-Kyle Oba, koba@mudphone.com
+David Stump, david@davidstump.net
 
 ## License
 

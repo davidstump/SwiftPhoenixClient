@@ -1,15 +1,15 @@
 {
   "name": "SwiftPhoenixClient",
   "version": "0.1.0",
-  "summary": "A short description of SwiftPhoenixClient.",
+  "summary": "Connect your Phoenix and iOS applications through WebSockets!",
   "description": "",
-  "homepage": "https://github.com/<GITHUB_USERNAME>/SwiftPhoenixClient",
+  "homepage": "https://github.com/davidstump/SwiftPhoenixClient",
   "license": "MIT",
   "authors": {
-    "Kyle Oba": "koba@mudphone.com"
+    "David Stump": "david@davidstump.net"
   },
   "source": {
-    "git": "https://github.com/<GITHUB_USERNAME>/SwiftPhoenixClient.git",
+    "git": "https://github.com/davidstump/SwiftPhoenixClient.git",
     "tag": "0.1.0"
   },
   "platforms": {
