@@ -22,6 +22,7 @@ xcuserdata
 *.moved-aside
 *.xcuserstate
 *.xcscmblueprint
+profile
 
 ## Obj-C/Swift specific
 *.hmap
@@ -39,5 +40,10 @@ xcuserdata
 #
 # Add this line if you want to avoid checking in source code from Carthage dependencies.
 # Carthage/Checkouts
-
 Carthage/Build
+
+# OS X
+.DS_Store
+
+# Bundler
+.bundle

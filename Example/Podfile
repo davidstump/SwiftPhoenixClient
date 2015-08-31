@@ -1,0 +1,12 @@
+source 'https://github.com/CocoaPods/Specs.git'
+use_frameworks!
+
+target 'SwiftPhoenixClient_Example', :exclusive => true do
+  pod "SwiftPhoenixClient", :path => "../"
+end
+
+target 'SwiftPhoenixClient_Tests', :exclusive => true do
+  pod "SwiftPhoenixClient", :path => "../"
+
+  
+end
