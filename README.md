@@ -3,7 +3,19 @@ Swift Phoenix Client
 
 ## Installation
 
-SwiftPhoenixClient is not available yet via CocoaPods (In Progress - PRs always welcome). For the time being, to install this in a new or existing project simply copy over the contents of the [Phoenix](https://github.com/davidstump/SwiftPhoenixClient/tree/master/SwiftPhoenix/Phoenix) directory into your application.
+### CocoaPods
+
+You can install SwiftPhoenix Client via CocoaPods by adding the following to your Podfile
+
+```
+pod "SwiftPhoenixClient"
+```
+
+and running `pod install`. From there you will need to add `import SwiftPhoenixClient` in any ViewController you want it to be used.
+
+### Manual
+
+To install SwiftPhoenixClient manually in a new or existing project simply copy over the contents of the [Classes](https://github.com/davidstump/SwiftPhoenixClient/tree/master/Pod/Classes) directory in the Pod  into your application and build.
 
 ## Usage
 
