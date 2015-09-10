@@ -13,10 +13,6 @@ pod "SwiftPhoenixClient"
 
 and running `pod install`. From there you will need to add `import SwiftPhoenixClient` in any ViewController you want it to be used.
 
-### Manual
-
-To install SwiftPhoenixClient manually in a new or existing project simply copy over the contents of the [Classes](https://github.com/davidstump/SwiftPhoenixClient/tree/master/Pod/Classes) directory in the Pod  into your application and build.
-
 ## Usage
 
 Using the Swift Phoenix Client is extremely easy (and familiar if have used the Phoenix JS client).

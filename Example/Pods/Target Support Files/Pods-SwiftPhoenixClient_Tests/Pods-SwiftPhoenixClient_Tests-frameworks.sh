@@ -52,8 +52,10 @@ code_sign_if_enabled() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework 'Pods-SwiftPhoenixClient_Tests/Starscream.framework'
   install_framework 'Pods-SwiftPhoenixClient_Tests/SwiftPhoenixClient.framework'
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework 'Pods-SwiftPhoenixClient_Tests/Starscream.framework'
   install_framework 'Pods-SwiftPhoenixClient_Tests/SwiftPhoenixClient.framework'
 fi

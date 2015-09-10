@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Starscream
 
 public struct Phoenix {
   
@@ -260,9 +261,9 @@ public struct Phoenix {
     }
     
     // WebSocket Delegate Methods
-    public func websocketDidReceiveMessage(message: String) {
-      println("socket message: \(message)")
-      let json = JSON.parse(message as NSString as String as String)
+    public func websocketDidReceiveMessage(socket: WebSocket, text: String) {
+      println("socket message: \(text)")
+      let json = JSON.parse(text as NSString as String as String)
       let (topic, event) = (
         unwrappedJsonString(json["topic"].asString),
         unwrappedJsonString(json["event"].asString)
@@ -273,16 +274,16 @@ public struct Phoenix {
       onMessage(messagePayload)
     }
     
-    public func websocketDidReceiveData(data: NSData) {
+    public func websocketDidReceiveData(socket: WebSocket, data: NSData) {
       println("got some data: \(data.length)")
     }
     
-    public func websocketDidDisconnect(error: NSError?) {
+    public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
       println("socket closed: \(error?.localizedDescription)")
       onClose("reason: \(error?.localizedDescription)")
     }
     
-    public func websocketDidConnect() {
+    public func websocketDidConnect(socket: WebSocket) {
       println("socket opened")
       onOpen()
     }

@@ -46,5 +46,5 @@ http://www.phoenixframework.org/docs/channels
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.dependency 'Starscream', '~> 0.9.6'
 end
