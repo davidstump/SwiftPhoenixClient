@@ -1,8 +1,8 @@
 {
   "name": "SwiftPhoenixClient",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "summary": "Connect your Phoenix and iOS applications through WebSockets!",
-  "description": "",
+  "description": "This is the SwiftPhoenixClient, an iOS libaray that works with the\nPhoenix Framework's channels. The Phoenix Framework only ships with a\nJavascript client. Use this library to talk to your Phoenix app from\nyour iOS project. Check out the included chat client example, which\nworks with the Phoenix chat server example:\nhttps://github.com/chrismccord/phoenix_chat_example\n\nThis library implements Phoenix Channels on iOS. For more information\non Phoenix Channels check out the guide:\nhttp://www.phoenixframework.org/docs/channels",
   "homepage": "https://github.com/davidstump/SwiftPhoenixClient",
   "license": "MIT",
   "authors": {
@@ -10,7 +10,7 @@
   },
   "source": {
     "git": "https://github.com/davidstump/SwiftPhoenixClient.git",
-    "tag": "0.1.0"
+    "tag": "0.2.0"
   },
   "platforms": {
     "ios": "8.0"
@@ -20,6 +20,11 @@
   "resource_bundles": {
     "SwiftPhoenixClient": [
       "Pod/Assets/*.png"
+    ]
+  },
+  "dependencies": {
+    "Starscream": [
+      "~> 0.9.6"
     ]
   }
 }
