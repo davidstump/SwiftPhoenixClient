@@ -26,13 +26,13 @@ Using the Swift Phoenix Client is extremely easy (and familiar if have used the 
 The first thing you will need is to specify your Phoenix channel endpoint:
 
 ```
-let socket = Phoenix.Socket(endPoint: "http://localhost:4000/socket/websocket")
+let socket = Phoenix.Socket(domainAndPort: "localhost:4000", path: "socket", transport: "websocket")
 ```
 
 Additionally, you will want to identify the topic of the channel we are joining:
 
 ```
-let topic: String? = "your:topic"
+let topic: String? = "rooms:lobby"
 ```
 
 ### Joining Channel
@@ -78,9 +78,9 @@ Also check out both the Swift and Elixir channels on IRC.
 
 ## Note:
 
-Currently works with Swift 1.2, Xcode 6.4, and Phoenix 0.17.
+Currently works with Swift 1.2, Xcode 6.4, and Phoenix 1.0.0.
 
-Tested with the [Phoenix Chat Server example](https://github.com/chrismccord/phoenix_chat_example) at commit [8c8c4bd](https://github.com/chrismccord/phoenix_chat_example/commit/8c8c4bd265e0519077344c942fb870a15aaac7d0) at a point where it was working with Phoenix 0.17.
+Tested with the [Phoenix Chat Server example](https://github.com/chrismccord/phoenix_chat_example), upgraded to Phoenix 1.0.0.
 
 ## License
 
