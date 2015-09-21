@@ -26,7 +26,7 @@ public struct Phoenix {
     public init(message: AnyObject) {
       self.message = message
       super.init()
-      create(single: false)
+      create(false)
     }
     
     func create(single: Bool = true) -> [String: AnyObject] {
@@ -74,7 +74,7 @@ public struct Phoenix {
       bindings.append(Phoenix.Binding(event: event, callback: { callback($0) }))
     }
     
-    func isMember(# topic: String) -> Bool {
+    func isMember(topic  topic: String) -> Bool {
       return self.topic == topic
     }
     
@@ -97,7 +97,7 @@ public struct Phoenix {
     }
     
     func send(event: String, message: Phoenix.Message) {
-      println("conn sending")
+      print("conn sending")
       let payload = Phoenix.Payload(topic: topic!, event: event, message: message)
       socket?.send(payload)
     }
@@ -134,7 +134,7 @@ public struct Phoenix {
     let reconnectAfterMs = 5000
     var messageReference: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
 
-    public init(domainAndPort:String, path:String, transport:String, var prot:String = "http") {
+    public init(domainAndPort:String, path:String, transport:String, prot:String = "http") {
       self.endPoint = Path.endpointWithProtocol(prot, domainAndPort: domainAndPort, path: path, transport: transport)
       super.init()
       resetBufferTimer()
@@ -175,7 +175,7 @@ public struct Phoenix {
     }
     
     func onError(error: NSError) {
-      println("Error: \(error)")
+      print("Error: \(error)")
     }
     
     func isConnected() -> Bool {
@@ -195,23 +195,22 @@ public struct Phoenix {
     
     func rejoin(chan: Phoenix.Channel) {
       chan.reset()
-      let (topic, message) = (chan.topic, chan.message)
       let joinMessage = Phoenix.Message(subject: "status", body: "joining")
-      let payload = Phoenix.Payload(topic: topic!, event: "phx_join", message: joinMessage)
+      let payload = Phoenix.Payload(topic: chan.topic!, event: "phx_join", message: joinMessage)
       send(payload)
       chan.callback(chan)
     }
     
-    public func join(# topic: String, message: Phoenix.Message, callback: (AnyObject -> Void)) {
+    public func join(topic  topic: String, message: Phoenix.Message, callback: (AnyObject -> Void)) {
       let chan = Phoenix.Channel(topic: topic, message: message, callback: callback, socket: self)
       channels.append(chan)
       if isConnected() {
-        println("joining")
+        print("joining")
         rejoin(chan)
       }
     }
     
-    func leave(# topic: String, message: Phoenix.Message) {
+    func leave(topic  topic: String, message: Phoenix.Message) {
       let leavingMessage = Phoenix.Message(subject: "status", body: "leaving")
       let payload = Phoenix.Payload(topic: topic, event: "leave", message: leavingMessage)
       send(payload)
@@ -230,7 +229,7 @@ public struct Phoenix {
         (payload: Phoenix.Payload) -> Void in
         if let connection = self.conn {
           let json = self.payloadToJson(payload)
-          println("json: \(json)")
+          print("json: \(json)")
           connection.writeString(json)
         }
       }
@@ -262,7 +261,7 @@ public struct Phoenix {
     
     // WebSocket Delegate Methods
     public func websocketDidReceiveMessage(socket: WebSocket, text: String) {
-      println("socket message: \(text)")
+      print("socket message: \(text)")
       let json = JSON.parse(text as NSString as String as String)
       let (topic, event) = (
         unwrappedJsonString(json["topic"].asString),
@@ -275,16 +274,16 @@ public struct Phoenix {
     }
     
     public func websocketDidReceiveData(socket: WebSocket, data: NSData) {
-      println("got some data: \(data.length)")
+      print("got some data: \(data.length)")
     }
     
     public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
-      println("socket closed: \(error?.localizedDescription)")
+      print("socket closed: \(error?.localizedDescription)")
       onClose("reason: \(error?.localizedDescription)")
     }
     
     public func websocketDidConnect(socket: WebSocket) {
-      println("socket opened")
+      print("socket opened")
       onOpen()
     }
     
@@ -311,7 +310,7 @@ public struct Phoenix {
       var json = "{\"topic\": \"\(payload.topic)\", \"event\": \"\(payload.event)\", \"ref\": \"\(ref)\", "
       if NSString(string: payload.message.toJsonString()).containsString("message") {
         let msg = JSON.parse(String(payload.message.toJsonString()))["message"]
-        let jsonMessage = msg.toString(pretty: true)
+        let jsonMessage = msg.toString(true)
         json += "\"payload\": \(jsonMessage)"
       } else {
         json += "\"payload\": \(payload.message.toJsonString())"

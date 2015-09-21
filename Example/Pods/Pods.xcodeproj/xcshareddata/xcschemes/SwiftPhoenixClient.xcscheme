@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D0AD660874789C2C212600CF"
+               BlueprintIdentifier = "17B6E14054371719819C89C5"
                BuildableName = "SwiftPhoenixClient.framework"
                BlueprintName = "SwiftPhoenixClient"
                ReferencedContainer = "container:Pods.xcodeproj">

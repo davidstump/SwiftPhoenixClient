@@ -36,7 +36,7 @@ http://www.phoenixframework.org/docs/channels
   s.source           = { :git => "https://github.com/davidstump/SwiftPhoenixClient.git", :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.platform     = :ios, '8.0'
+  s.platform     = :ios, '9.0'
   s.requires_arc = true
 
   s.source_files = 'Pod/Classes/**/*'
@@ -46,5 +46,5 @@ http://www.phoenixframework.org/docs/channels
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  s.dependency 'Starscream', '~> 0.9.6'
+  s.dependency 'Starscream', '~> 1.0.0'
 end
