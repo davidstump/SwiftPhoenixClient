@@ -10,7 +10,7 @@
 
 Create a `Podfile` in a new Xcode project (MyProject), containing:
 ````
-platform :ios, '8.0'
+platform :ios, '9.0'
 use_frameworks!
 
 pod 'SwiftPhoenixClient', :path => '~/your/local/path/to/SwiftPhoenixClient'

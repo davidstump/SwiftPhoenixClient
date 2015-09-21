@@ -13,7 +13,7 @@
     "tag": "0.2.0"
   },
   "platforms": {
-    "ios": "8.0"
+    "ios": "9.0"
   },
   "requires_arc": true,
   "source_files": "Pod/Classes/**/*",
@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "Starscream": [
-      "~> 0.9.6"
+      "~> 1.0.0"
     ]
   }
 }
