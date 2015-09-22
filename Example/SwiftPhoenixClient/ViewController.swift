@@ -18,8 +18,8 @@ class ViewController: UIViewController {
   var topic: String? = "rooms:lobby"
   
   @IBAction func sendMessage(sender: AnyObject) {
-    let message = Phoenix.Message(message: ["user":userField.text, "body": messageField.text])
-    println(message.toJsonString())
+    let message = Phoenix.Message(message: ["user":userField.text!, "body": messageField.text!])
+    print(message.toJsonString())
     
     let payload = Phoenix.Payload(topic: topic!, event: "new:msg", message: message)
     socket.send(payload)
@@ -28,7 +28,7 @@ class ViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+
     // Join the socket and establish handlers for users entering and submitting messages
     socket.join(topic: topic!, message: Phoenix.Message(subject: "status", body: "joining")) { channel in
       let chan = channel as! Phoenix.Channel
@@ -38,15 +38,18 @@ class ViewController: UIViewController {
       }
       
       chan.on("new:msg") { message in
-        let msg = message as! Phoenix.Message
-        var (username: AnyObject?, body: AnyObject?) = (msg.message?["user"]!, msg.message?["body"]!)
+        guard let message = message as? Phoenix.Message,
+              let username = message.message?["user"],
+              let body     = message.message?["body"] else {
+                return
+        }
         let newMessage = "[\(username!)] \(body!)\n"
         let updatedText = self.chatWindow.text.stringByAppendingString(newMessage)
         self.chatWindow.text = updatedText
       }
       
       chan.on("user:entered") { message in
-        var username = "anonymous"
+        let username = "anonymous"
         let updatedText = self.chatWindow.text.stringByAppendingString("[\(username) entered]\n")
         self.chatWindow.text = updatedText
       }

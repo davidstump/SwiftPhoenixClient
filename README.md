@@ -3,7 +3,15 @@ Swift Phoenix Client
 
 ## Installation
 
-SwiftPhoenixClient is not available yet via CocoaPods (In Progress - PRs always welcome). For the time being, to install this in a new or existing project simply copy over the contents of the [Phoenix](https://github.com/davidstump/SwiftPhoenixClient/tree/master/SwiftPhoenix/Phoenix) directory into your application.
+### CocoaPods
+
+You can install SwiftPhoenix Client via CocoaPods by adding the following to your Podfile
+
+```
+pod "SwiftPhoenixClient"
+```
+
+and running `pod install`. From there you will need to add `import SwiftPhoenixClient` in any ViewController you want it to be used.
 
 ## Usage
 
@@ -14,13 +22,13 @@ Using the Swift Phoenix Client is extremely easy (and familiar if have used the 
 The first thing you will need is to specify your Phoenix channel endpoint:
 
 ```
-let socket = Phoenix.Socket(endPoint: "http://localhost:4000/socket/websocket")
+let socket = Phoenix.Socket(domainAndPort: "localhost:4000", path: "socket", transport: "websocket")
 ```
 
 Additionally, you will want to identify the topic of the channel we are joining:
 
 ```
-let topic: String? = "your:topic"
+let topic: String? = "rooms:lobby"
 ```
 
 ### Joining Channel
@@ -64,11 +72,13 @@ Check out the [ViewController](https://github.com/davidstump/SwiftPhoenixClient/
 
 Also check out both the Swift and Elixir channels on IRC.
 
+Read the `README_pods.md` file to include this pod from a local copy (of a cloned repo). This may be necessary if you want to use the latest features, but they haven't been tagged and released to CocoaPods yet.
+
 ## Note:
 
-Currently works with Swift 1.2, Xcode 6.4, and Phoenix 0.17.
+Currently works with Swift 2.0, Xcode 7.0, and Phoenix 1.0.1.
 
-Tested with the [Phoenix Chat Server example](https://github.com/chrismccord/phoenix_chat_example) at commit [8c8c4bd](https://github.com/chrismccord/phoenix_chat_example/commit/8c8c4bd265e0519077344c942fb870a15aaac7d0) at a point where it was working with Phoenix 0.17.
+Tested with the [Phoenix Chat Server example](https://github.com/chrismccord/phoenix_chat_example), upgraded to Phoenix 1.0.1.
 
 ## License
 
