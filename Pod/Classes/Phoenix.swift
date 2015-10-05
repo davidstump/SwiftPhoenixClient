@@ -57,12 +57,11 @@ public struct Phoenix {
   public class Channel {
     var bindings: [Phoenix.Binding] = []
     var topic: String?
-    var message: Phoenix.Message?
     var callback: (AnyObject -> Void?)
     var socket: Phoenix.Socket?
     
-    init(topic: String, message: Phoenix.Message, callback: (AnyObject -> Void), socket: Phoenix.Socket) {
-      (self.topic, self.message, self.callback, self.socket) = (topic, message, { callback($0) }, socket)
+    init(topic: String, callback: (AnyObject -> Void), socket: Phoenix.Socket) {
+      (self.topic, self.callback, self.socket) = (topic, { callback($0) }, socket)
       reset()
     }
     
@@ -133,6 +132,7 @@ public struct Phoenix {
     var reconnectTimer: NSTimer?
     let reconnectAfterMs = 5000
     var messageReference: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
+    var joinMessage: Phoenix.Message?
 
     public init(domainAndPort:String, path:String, transport:String, prot:String = "http") {
       self.endPoint = Path.endpointWithProtocol(prot, domainAndPort: domainAndPort, path: path, transport: transport)
@@ -195,14 +195,16 @@ public struct Phoenix {
     
     func rejoin(chan: Phoenix.Channel) {
       chan.reset()
-      let joinMessage = Phoenix.Message(subject: "status", body: "joining")
-      let payload = Phoenix.Payload(topic: chan.topic!, event: "phx_join", message: joinMessage)
-      send(payload)
-      chan.callback(chan)
+      if let topic = chan.topic, joinMessage = self.joinMessage {
+          let payload = Phoenix.Payload(topic: topic, event: "phx_join", message: joinMessage)
+          send(payload)
+          chan.callback(chan)
+      }
     }
     
     public func join(topic  topic: String, message: Phoenix.Message, callback: (AnyObject -> Void)) {
-      let chan = Phoenix.Channel(topic: topic, message: message, callback: callback, socket: self)
+      let chan = Phoenix.Channel(topic: topic, callback: callback, socket: self)
+      self.joinMessage = message
       channels.append(chan)
       if isConnected() {
         print("joining")
