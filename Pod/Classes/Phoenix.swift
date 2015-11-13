@@ -132,6 +132,8 @@ public struct Phoenix {
     let flushEverySec = 0.1
     var reconnectTimer: NSTimer?
     let reconnectAfterSec = 5
+    var heartbeatTimer: NSTimer?
+    let heartbeatAfterSec = 30
     var messageReference: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
 
     public init(domainAndPort:String, path:String, transport:String, prot:String = "http") {
@@ -166,10 +168,13 @@ public struct Phoenix {
     
     func onOpen() {
       reconnectTimer?.invalidate()
+      heartbeatTimer?.invalidate()
+      heartbeatTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(heartbeatAfterSec), target: self, selector: Selector("sendHeartbeat"), userInfo: nil, repeats: true)
       rejoinAll()
     }
     
     func onClose(event: String) {
+      heartbeatTimer?.invalidate()
       reconnectTimer?.invalidate()
       reconnectTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(reconnectAfterSec), target: self, selector: Selector("reconnect"), userInfo: nil, repeats: true)
     }
@@ -248,6 +253,12 @@ public struct Phoenix {
         sendBuffer = []
         resetBufferTimer()
       }
+    }
+    
+    func sendHeartbeat() {
+      let heartbeatMessage = Phoenix.Message(subject: "status", body: "heartbeat")
+      let payload = Phoenix.Payload(topic: "phoenix", event: "heartbeat", message: heartbeatMessage)
+      send(payload)
     }
     
     func onMessage(payload: Phoenix.Payload) {
