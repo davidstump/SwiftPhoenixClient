@@ -129,9 +129,9 @@ public struct Phoenix {
     var channels: [Phoenix.Channel] = []
     var sendBuffer: [Void] = []
     var sendBufferTimer: NSTimer?
-    let flushEveryMs = 50
+    let flushEverySec = 0.1
     var reconnectTimer: NSTimer?
-    let reconnectAfterMs = 5000
+    let reconnectAfterSec = 5
     var messageReference: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
 
     public init(domainAndPort:String, path:String, transport:String, prot:String = "http") {
@@ -161,7 +161,7 @@ public struct Phoenix {
     
     func resetBufferTimer() {
       sendBufferTimer?.invalidate()
-      sendBufferTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(flushEveryMs), target: self, selector: Selector("flushSendBuffer"), userInfo: nil, repeats: true)
+      sendBufferTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(flushEverySec), target: self, selector: Selector("flushSendBuffer"), userInfo: nil, repeats: true)
     }
     
     func onOpen() {
@@ -171,7 +171,7 @@ public struct Phoenix {
     
     func onClose(event: String) {
       reconnectTimer?.invalidate()
-      reconnectTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(reconnectAfterMs), target: self, selector: Selector("reconnect"), userInfo: nil, repeats: true)
+      reconnectTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(reconnectAfterSec), target: self, selector: Selector("reconnect"), userInfo: nil, repeats: true)
     }
     
     func onError(error: NSError) {
