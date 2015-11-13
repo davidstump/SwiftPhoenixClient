@@ -127,7 +127,7 @@ public struct Phoenix {
     var conn: WebSocket?
     var endPoint: String?
     var channels: [Phoenix.Channel] = []
-    var sendBuffer: [Void] = []
+    var sendBuffer: [Phoenix.Payload] = []
     var sendBufferTimer: NSTimer?
     let flushEverySec = 0.1
     var reconnectTimer: NSTimer?
@@ -230,28 +230,28 @@ public struct Phoenix {
     }
     
     public func send(data: Phoenix.Payload) {
-      let callback = {
-        (payload: Phoenix.Payload) -> Void in
-        if let connection = self.conn {
-          let json = self.payloadToJson(payload)
-          print("json: \(json)")
-          connection.writeString(json)
-        }
-      }
       if isConnected() {
-        callback(data)
+        doSendBuffer(data)
       } else {
-        sendBuffer.append(callback(data))
+        sendBuffer.append(data)
       }
     }
     
     func flushSendBuffer() {
       if isConnected() && sendBuffer.count > 0 {
-        for callback in sendBuffer {
-          callback
+        for data in sendBuffer {
+          doSendBuffer(data)
         }
         sendBuffer = []
         resetBufferTimer()
+      }
+    }
+    
+    func doSendBuffer(data: Phoenix.Payload) {
+      if let connection = self.conn {
+        let json = self.payloadToJson(data)
+        print("json: \(json)")
+        connection.writeString(json)
       }
     }
     
