@@ -127,11 +127,13 @@ public struct Phoenix {
     var conn: WebSocket?
     var endPoint: String?
     var channels: [Phoenix.Channel] = []
-    var sendBuffer: [Void] = []
+    var sendBuffer: [Phoenix.Payload] = []
     var sendBufferTimer: NSTimer?
-    let flushEveryMs = 50
+    let flushEverySec = 0.1
     var reconnectTimer: NSTimer?
-    let reconnectAfterMs = 5000
+    let reconnectAfterSec = 5
+    var heartbeatTimer: NSTimer?
+    let heartbeatAfterSec = 30
     var messageReference: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
 
     public init(domainAndPort:String, path:String, transport:String, prot:String = "http") {
@@ -161,17 +163,20 @@ public struct Phoenix {
     
     func resetBufferTimer() {
       sendBufferTimer?.invalidate()
-      sendBufferTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(flushEveryMs), target: self, selector: Selector("flushSendBuffer"), userInfo: nil, repeats: true)
+      sendBufferTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(flushEverySec), target: self, selector: Selector("flushSendBuffer"), userInfo: nil, repeats: true)
     }
     
     func onOpen() {
       reconnectTimer?.invalidate()
+      heartbeatTimer?.invalidate()
+      heartbeatTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(heartbeatAfterSec), target: self, selector: Selector("sendHeartbeat"), userInfo: nil, repeats: true)
       rejoinAll()
     }
     
     func onClose(event: String) {
+      heartbeatTimer?.invalidate()
       reconnectTimer?.invalidate()
-      reconnectTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(reconnectAfterMs), target: self, selector: Selector("reconnect"), userInfo: nil, repeats: true)
+      reconnectTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(reconnectAfterSec), target: self, selector: Selector("reconnect"), userInfo: nil, repeats: true)
     }
     
     func onError(error: NSError) {
@@ -225,29 +230,35 @@ public struct Phoenix {
     }
     
     public func send(data: Phoenix.Payload) {
-      let callback = {
-        (payload: Phoenix.Payload) -> Void in
-        if let connection = self.conn {
-          let json = self.payloadToJson(payload)
-          print("json: \(json)")
-          connection.writeString(json)
-        }
-      }
       if isConnected() {
-        callback(data)
+        doSendBuffer(data)
       } else {
-        sendBuffer.append(callback(data))
+        sendBuffer.append(data)
       }
     }
     
     func flushSendBuffer() {
       if isConnected() && sendBuffer.count > 0 {
-        for callback in sendBuffer {
-          callback
+        for data in sendBuffer {
+          doSendBuffer(data)
         }
         sendBuffer = []
         resetBufferTimer()
       }
+    }
+    
+    func doSendBuffer(data: Phoenix.Payload) {
+      if let connection = self.conn {
+        let json = self.payloadToJson(data)
+        print("json: \(json)")
+        connection.writeString(json)
+      }
+    }
+    
+    func sendHeartbeat() {
+      let heartbeatMessage = Phoenix.Message(subject: "status", body: "heartbeat")
+      let payload = Phoenix.Payload(topic: "phoenix", event: "heartbeat", message: heartbeatMessage)
+      send(payload)
     }
     
     func onMessage(payload: Phoenix.Payload) {
