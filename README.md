@@ -25,6 +25,12 @@ The first thing you will need is to specify your Phoenix channel endpoint:
 let socket = Phoenix.Socket(domainAndPort: "localhost:4000", path: "socket", transport: "websocket")
 ```
 
+To specify a specific protocol you can use the `prot` argument:
+
+```
+let socket = Phoenix.Socket(domainAndPort: "localhost:4000", path: "socket", transport: "websocket", prot: "https")
+```
+
 Additionally, you will want to identify the topic of the channel we are joining:
 
 ```
