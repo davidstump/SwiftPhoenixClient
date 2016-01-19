@@ -1,6 +1,8 @@
 Swift Phoenix Client
 ====================
 
+While I stil check up on this project and its issues (and enjoy doing so), our family's new son leaves me with significantly less free time for maintenance than I would like. I would love to hear from one or a few people who are passionate and up-to-date on all things Swift if they have any interest in helping maintain this project. Thanks for any interest :) 
+
 ## Installation
 
 ### CocoaPods
