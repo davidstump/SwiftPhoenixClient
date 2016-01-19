@@ -102,7 +102,7 @@ public struct Phoenix {
       socket?.send(payload)
     }
     
-    func leave(message: Phoenix.Message) {
+    public func leave(message: Phoenix.Message) {
       if let sock = socket {
         sock.leave(topic: topic!, message: message)
       }
@@ -135,7 +135,7 @@ public struct Phoenix {
     var heartbeatTimer: NSTimer?
     let heartbeatAfterSec = 30
     var messageReference: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
-
+    
     public init(domainAndPort:String, path:String, transport:String, prot:String = "http") {
       self.endPoint = Path.endpointWithProtocol(prot, domainAndPort: domainAndPort, path: path, transport: transport)
       super.init()
@@ -200,7 +200,7 @@ public struct Phoenix {
     
     func rejoin(chan: Phoenix.Channel) {
       chan.reset()
-      let joinMessage = Phoenix.Message(subject: "status", body: "joining")
+      let joinMessage = chan.message ?? Phoenix.Message(subject: "status", body: "joining")
       let payload = Phoenix.Payload(topic: chan.topic!, event: "phx_join", message: joinMessage)
       send(payload)
       chan.callback(chan)
@@ -215,9 +215,8 @@ public struct Phoenix {
       }
     }
     
-    func leave(topic  topic: String, message: Phoenix.Message) {
-      let leavingMessage = Phoenix.Message(subject: "status", body: "leaving")
-      let payload = Phoenix.Payload(topic: topic, event: "leave", message: leavingMessage)
+    public func leave(topic  topic: String, message: Phoenix.Message) {
+      let payload = Phoenix.Payload(topic: topic, event: "phx_leave", message: message)
       send(payload)
       var newChannels: [Phoenix.Channel] = []
       for chan in channels {
@@ -277,7 +276,7 @@ public struct Phoenix {
       let (topic, event) = (
         unwrappedJsonString(json["topic"].asString),
         unwrappedJsonString(json["event"].asString)
-      )
+        )
       let msg: [String: AnyObject] = json["payload"].asDictionary!
       
       let messagePayload = Phoenix.Payload(topic: topic, event: event, message: Phoenix.Message(message: msg))
