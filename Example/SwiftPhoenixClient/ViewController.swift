@@ -53,6 +53,13 @@ class ViewController: UIViewController {
         let updatedText = self.chatWindow.text.stringByAppendingString("[\(username) entered]\n")
         self.chatWindow.text = updatedText
       }
+      
+      chan.on("error") { message in
+        let body = message.body!
+        let newMessage = "[ERROR] \(body!)\n"
+        let updatedText = self.chat.text.stringByAppendingString(newMessage)
+        self.chat.text = updatedText
+      }
     }
   }
   
