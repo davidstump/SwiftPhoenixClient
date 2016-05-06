@@ -127,17 +127,24 @@ public struct Phoenix {
     var conn: WebSocket?
     var endPoint: String?
     var channels: [Phoenix.Channel] = []
+    
     var sendBuffer: [Void] = []
     var sendBufferTimer = NSTimer()
     let flushEveryMs = 1.0
+    
     var reconnectTimer = NSTimer()
     let reconnectAfterMs = 1.0
+    
+    var heartbeatTimer = NSTimer()
+    let heartbeatDelay = 30.0
+    
     var messageReference: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
     
     public init(domainAndPort:String, path:String, transport:String, prot:String = "http") {
       self.endPoint = Path.endpointWithProtocol(prot, domainAndPort: domainAndPort, path: path, transport: transport)
       super.init()
       resetBufferTimer()
+      startHeartbeatTimer()
       reconnect()
     }
     
@@ -147,6 +154,17 @@ public struct Phoenix {
         connection.disconnect()
       }
       callback()
+    }
+    
+    func startHeartbeatTimer() {
+      heartbeatTimer.invalidate()
+      heartbeatTimer = NSTimer.scheduledTimerWithTimeInterval(heartbeatDelay, target: self, selector: #selector(Phoenix.Socket.heartbeat), userInfo: nil, repeats: true)
+    }
+    
+    func heartbeat() {
+      let message = Phoenix.Message(message: ["body": "Pong"])
+      let payload = Phoenix.Payload(topic: "phoenix", event: "heartbeat", message: message)
+      send(payload)
     }
     
     func reconnect() {
