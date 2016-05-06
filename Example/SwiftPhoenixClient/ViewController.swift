@@ -55,7 +55,10 @@ class ViewController: UIViewController {
       }
       
       chan.on("error") { message in
-        let body = message.body!
+        guard let message = message as? Phoenix.Message,
+          let body = message.message?["body"] else {
+            return
+        }
         let newMessage = "[ERROR] \(body!)\n"
         let updatedText = self.chat.text.stringByAppendingString(newMessage)
         self.chat.text = updatedText

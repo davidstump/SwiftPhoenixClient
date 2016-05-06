@@ -178,7 +178,7 @@ public struct Phoenix {
     func onError(error: NSError) {
       print("Error: \(error)")
       for chan in channels {
-        let msg = Phoenix.Message(subject: "error", body: error.localizedDescription)
+        let msg = Phoenix.Message(message: ["body": error.localizedDescription])
         chan.trigger("error", msg: msg)
       }
     }
