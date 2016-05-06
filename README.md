@@ -74,6 +74,12 @@ chan.on("user:entered") { message in
 }
 ```
 
+```
+chan.on("error") { message in
+  // Nuts
+}
+```
+
 ## Example
 
 Check out the [ViewController](https://github.com/davidstump/SwiftPhoenixClient/blob/master/Example/SwiftPhoenixClient/ViewController.swift) in this repo for a brief example of a simple iOS chat application using the [Phoenix Chat Example](https://github.com/chrismccord/phoenix_chat_example)
