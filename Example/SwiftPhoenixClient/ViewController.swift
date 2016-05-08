@@ -60,8 +60,8 @@ class ViewController: UIViewController {
             return
         }
         let newMessage = "[ERROR] \(body!)\n"
-        let updatedText = self.chat.text.stringByAppendingString(newMessage)
-        self.chat.text = updatedText
+        let updatedText = self.chatWindow.text.stringByAppendingString(newMessage)
+        self.chatWindow.text = updatedText
       }
     }
   }
