@@ -8,14 +8,14 @@
 
 Pod::Spec.new do |s|
   s.name             = "SwiftPhoenixClient"
-  s.version          = "0.2"
+  s.version          = "0.3"
   s.summary          = "Connect your Phoenix and iOS applications through WebSockets!"
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
 #   * Try to keep it short, snappy and to the point.
 #   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!  
+#   * Finally, don't worry about the indent, CocoaPods strips it!
   s.description      = <<-DESC
 This is the SwiftPhoenixClient, an iOS libaray that works with the
 Phoenix Framework's channels. The Phoenix Framework only ships with a
