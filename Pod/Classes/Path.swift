@@ -10,6 +10,13 @@ import Foundation
 
 public struct Path {
   
+  /**
+   Reomoves trailing slash from URL string
+   
+   - parameter path: String path
+   
+   - returns: String
+   */
   public static func removeTrailingSlash(path:String) -> String {
     if path.characters.count == 0 { return path }
     if path.substringWithRange(Range<String.Index>(start: path.endIndex.advancedBy(-1), end: path.endIndex)) == "/" {
@@ -18,6 +25,13 @@ public struct Path {
     return path
   }
   
+  /**
+   Remove Leading Slash from URL string
+   
+   - parameter path: String path
+   
+   - returns: String
+   */
   public static func removeLeadingSlash(path:String) -> String {
     if path.characters.count == 0 { return path }
     if path.substringWithRange(Range<String.Index>(start: path.startIndex, end: path.startIndex.advancedBy(1))) == "/" {
@@ -26,10 +40,27 @@ public struct Path {
     return path
   }
   
+  /**
+   Remove both leading and trailing URL slashes
+   
+   - parameter path: String path
+   
+   - returns: String
+   */
   public static func removeLeadingAndTrailingSlashes(path:String) -> String {
     return Path.removeTrailingSlash( Path.removeLeadingSlash(path) )
   }
   
+  /**
+   Builds proper endoint
+   
+   - parameter prot:          Endpoint protocol - usually 'ws'
+   - parameter domainAndPort: Phoenix server root domain and port
+   - parameter path:          Phoenix server socket path
+   - parameter transport:     Server transport - usually "websocket"
+   
+   - returns: String
+   */
   public static func endpointWithProtocol(prot:String, domainAndPort:String, path:String, transport:String) -> String {
     var theProt = ""
     switch prot {
