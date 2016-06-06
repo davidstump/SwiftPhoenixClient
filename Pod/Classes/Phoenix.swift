@@ -94,7 +94,7 @@ public struct Phoenix {
     var topic: String?
     var message: Phoenix.Message?
     var callback: (AnyObject -> Void?)
-    var socket: Phoenix.Socket?
+    weak var socket: Phoenix.Socket?
     
     /**
      Initializes a new Phoenix.Channel mapping to a server-side channel
