@@ -255,12 +255,26 @@ public struct Phoenix {
      
      - parameter callback: Function to run after close
      */
-    func close(callback: () -> ()) {
+    public func close(callback: (() -> ()) = {}) {
       if let connection = self.conn {
         connection.delegate = nil
         connection.disconnect()
       }
+      invalidateTimers()
       callback()
+    }
+    
+    /**
+      Invalidate open timers to allow socket to be deallocated when closed
+    */
+    func invalidateTimers() {
+      heartbeatTimer.invalidate()
+      reconnectTimer.invalidate()
+      sendBufferTimer.invalidate()
+      
+      heartbeatTimer = NSTimer()
+      reconnectTimer = NSTimer()
+      sendBufferTimer = NSTimer()
     }
     
     /**
@@ -283,7 +297,7 @@ public struct Phoenix {
     /**
      Reconnects to a closed socket connection
      */
-    func reconnect() {
+    public func reconnect() {
       close() {
         self.conn = WebSocket(url: NSURL(string: self.endPoint!)!)
         if let connection = self.conn {
@@ -391,7 +405,7 @@ public struct Phoenix {
      - parameter topic:   String topic name
      - parameter message: Phoenix.Message payload
      */
-    func leave(topic  topic: String, message: Phoenix.Message) {
+    public func leave(topic  topic: String, message: Phoenix.Message) {
       let leavingMessage = Phoenix.Message(subject: "status", body: "leaving")
       let payload = Phoenix.Payload(topic: topic, event: "leave", message: leavingMessage)
       send(payload)
