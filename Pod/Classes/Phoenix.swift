@@ -377,7 +377,7 @@ public struct Phoenix {
      */
     func rejoin(chan: Phoenix.Channel) {
       chan.reset()
-      if let topic = chan.topic, joinMessage = chan.joinMessage {
+      if let topic = chan.topic, joinMessage = chan.message {
           let payload = Phoenix.Payload(topic: topic, event: "phx_join", message: joinMessage)
           send(payload)
           chan.callback(chan)
