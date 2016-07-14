@@ -246,7 +246,6 @@ public struct Phoenix {
       self.endPoint = Path.endpointWithProtocol(prot, domainAndPort: domainAndPort, path: path, transport: transport)
       super.init()
       resetBufferTimer()
-      startHeartbeatTimer()
       reconnect()
     }
 
@@ -321,6 +320,7 @@ public struct Phoenix {
      */
     func onOpen() {
       reconnectTimer.invalidate()
+      startHeartbeatTimer()
       rejoinAll()
     }
 
