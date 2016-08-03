@@ -408,7 +408,7 @@ public struct Phoenix {
      */
     public func leave(topic  topic: String, message: Phoenix.Message) {
       let leavingMessage = Phoenix.Message(subject: "status", body: "leaving")
-      let payload = Phoenix.Payload(topic: topic, event: "leave", message: leavingMessage)
+      let payload = Phoenix.Payload(topic: topic, event: "phx_leave", message: leavingMessage)
       send(payload)
       var newChannels: [Phoenix.Channel] = []
       for chan in channels {
