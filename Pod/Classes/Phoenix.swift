@@ -471,12 +471,17 @@ public struct Phoenix {
     // WebSocket Delegate Methods
     public func websocketDidReceiveMessage(socket: WebSocket, text: String) {
       print("socket message: \(text)")
-      let json = JSON.parse(text as NSString as String as String)
-      let (topic, event) = (
-        unwrappedJsonString(json["topic"].asString),
-        unwrappedJsonString(json["event"].asString)
-      )
-      let msg: [String: AnyObject] = json["payload"].asDictionary!
+      guard let data = text.dataUsingEncoding(NSUTF8StringEncoding),
+            let json = try? NSJSONSerialization.JSONObjectWithData(data, options: []) else {
+        print("Could not parse json: \(text)")
+        return
+      }
+
+      guard let topic = json["topic"] as? String, let event = json["event"] as? String,
+            let msg = json["payload"] as? [String: AnyObject] else {
+        print("No phoenix message \(text)")
+        return
+      }
 
       let messagePayload = Phoenix.Payload(topic: topic, event: event, message: Phoenix.Message(message: msg))
       onMessage(messagePayload)
@@ -517,17 +522,20 @@ public struct Phoenix {
 
     func payloadToJson(payload: Phoenix.Payload) -> String {
       let ref = makeRef()
-      var json = "{\"topic\": \"\(payload.topic)\", \"event\": \"\(payload.event)\", \"ref\": \"\(ref)\", "
-      if NSString(string: payload.message.toJsonString()).containsString("message") {
-        let msg = JSON.parse(String(payload.message.toJsonString()))["message"]
-        let jsonMessage = msg.toString(true)
-        json += "\"payload\": \(jsonMessage)"
-      } else {
-        json += "\"payload\": \(payload.message.toJsonString())"
-      }
-      json += "}"
+      var json: [String: AnyObject] = ["topic": payload.topic, "event": payload.event, "ref": "\(ref)"]
 
-      return json
+      if let msg = payload.message.message {
+        json["payload"] = msg
+      } else {
+        json["payload"] = payload.message.toDictionary()
+      }
+
+      guard let jsonData = try? NSJSONSerialization.dataWithJSONObject(json, options: []),
+            let jsonString = String(data: jsonData, encoding: NSUTF8StringEncoding) else {
+        return ""
+      }
+
+      return jsonString
     }
   }
 }
