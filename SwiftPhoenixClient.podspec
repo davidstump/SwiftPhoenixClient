@@ -39,6 +39,7 @@ http://www.phoenixframework.org/docs/channels
   s.platform     = :ios, '9.0'
   s.requires_arc = true
 
+  s.pod_target_xcconfig = { 'ENABLE_TESTABILITY[config=Debug]' => 'YES' }
   s.source_files = 'Pod/Classes/**/*'
   #s.resource_bundles = {
   #  'SwiftPhoenixClient' => ['Pod/Assets/*.png']
