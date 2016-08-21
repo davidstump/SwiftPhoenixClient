@@ -242,8 +242,8 @@ public struct Phoenix {
 
      - returns: Phoenix.Socket
      */
-    public init(domainAndPort:String, path:String, transport:String, prot:String = "http") {
-      self.endPoint = Path.endpointWithProtocol(prot, domainAndPort: domainAndPort, path: path, transport: transport)
+    public init(domainAndPort:String, path:String, var query:[String:String] = [:], transport:String, var prot:String = "http") {
+      self.endPoint = Path.endpointWithProtocol(prot, domainAndPort: domainAndPort, path: path, query: query, transport: transport)
       super.init()
       resetBufferTimer()
       reconnect()

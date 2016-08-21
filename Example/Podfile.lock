@@ -1,7 +1,7 @@
 PODS:
-  - Starscream (1.0.0)
-  - SwiftPhoenixClient (0.2.0):
-    - Starscream (~> 1.0.0)
+  - Starscream (1.1.3)
+  - SwiftPhoenixClient (0.4):
+    - Starscream (~> 1.1.3)
 
 DEPENDENCIES:
   - SwiftPhoenixClient (from `../`)
@@ -11,7 +11,9 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Starscream: 24012f5dc21c634b66e2270b1bb95771b5316d5b
-  SwiftPhoenixClient: 24de50d6dc23a79feb93dcfbf800eadfe2717548
+  Starscream: d662732354b40dd19ed1ece3e3c44c80b536b83c
+  SwiftPhoenixClient: aa032aeb0bd6d5637f864e0f69ce71c566b6adb6
 
-COCOAPODS: 0.38.2
+PODFILE CHECKSUM: 5e6528e5716629b4f7ddc13ad7ba53a0bda8722e
+
+COCOAPODS: 1.0.1
