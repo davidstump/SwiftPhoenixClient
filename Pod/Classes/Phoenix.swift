@@ -245,7 +245,7 @@ public struct Phoenix {
     public init(domainAndPort:String, path:String, transport:String, prot:String = "http", params: [String: AnyObject]? = nil) {
       var _endPoint = Path.endpointWithProtocol(prot, domainAndPort: domainAndPort, path: path, transport: transport)
       if params != nil{
-        _endpoint = _endpoint + "?" + params!.map({ "\($0.0)=\($0.1)" }).joinWithSeparator("&")
+        _endPoint = _endPoint + "?" + params!.map({ "\($0.0)=\($0.1)" }).joinWithSeparator("&")
       }
       self.endPoint = _endPoint
       super.init()
