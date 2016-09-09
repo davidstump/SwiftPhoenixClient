@@ -216,8 +216,9 @@ public struct Phoenix {
 
   // MARK: Phoenix Socket
   public class Socket: NSObject, WebSocketDelegate {
+    var endPoint: NSURL
+
     var conn: WebSocket?
-    var endPoint: String?
     var channels: [Phoenix.Channel] = []
 
     var sendBuffer: [Void] = []
@@ -232,18 +233,36 @@ public struct Phoenix {
 
     var messageReference: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
 
+    public static func buildEndPoint(url:NSURL, transport:String, data:[String:String]) -> NSURL {
+      let comp = NSURLComponents(URL: url.URLByAppendingPathComponent(transport), resolvingAgainstBaseURL: true)!
+      comp.scheme = Socket.normalizeScheme(comp.scheme!)
+      comp.queryItems = data.map { (key, value) in NSURLQueryItem(name: key, value: value) }
+      return comp.URL!
+    }
+
+    public static func normalizeScheme(prot:String) -> String {
+      switch prot {
+        case "ws":
+          return "http"
+        case "wss":
+          return "https"
+        default:
+          return prot
+      }
+    }
+
     /**
      Initializes a Socket connection
 
-     - parameter domainAndPort: Phoenix server root path and proper port
-     - parameter path:          Websocket path on Phoenix Server
+     - parameter url: Websocket path on Phoenix Server
      - parameter transport:     Transport for Phoenix.Server - traditionally "websocket"
      - parameter prot:          Connection protocol - default is HTTP
-
+     - parameter data:          Connection Data
      - returns: Phoenix.Socket
      */
-    public init(domainAndPort:String, path:String, transport:String, prot:String = "http") {
-      self.endPoint = Path.endpointWithProtocol(prot, domainAndPort: domainAndPort, path: path, transport: transport)
+
+    public init(url: NSURL, transport:String, data:[String: String] = [:]) {
+      self.endPoint = Socket.buildEndPoint(url, transport:transport, data:data)
       super.init()
       resetBufferTimer()
       reconnect()
@@ -298,7 +317,7 @@ public struct Phoenix {
      */
     public func reconnect() {
       close() {
-        self.conn = WebSocket(url: NSURL(string: self.endPoint!)!)
+        self.conn = WebSocket(url: self.endPoint)
         if let connection = self.conn {
           connection.delegate = self
           connection.connect()

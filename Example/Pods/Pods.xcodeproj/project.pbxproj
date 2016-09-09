@@ -20,7 +20,6 @@
 		97E2ACD40BA65365AFF460A5584FAA7D /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4514C22468A271BC9C7431CD5C9B7ABD /* Starscream.framework */; };
 		98E1FC8D803A90FF6F83A32A727FE628 /* Pods-SwiftPhoenixClient_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D97F902DB53E5777A67616EBB0B47CF /* Pods-SwiftPhoenixClient_Example-dummy.m */; };
 		AA579344269B6FB6C5C42958C40051DC /* Pods-SwiftPhoenixClient_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 278659E5331ECAF3176E0255D17781B1 /* Pods-SwiftPhoenixClient_Tests-dummy.m */; };
-		C3C4421C55C4604BDC1346DB9D321DD0 /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6350331F936A1A2A4F6652B6EBE1222D /* Path.swift */; };
 		CA893375F0584F281181717DFA7FA77E /* SwiftPhoenixClient-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = F367A0906136B13192957EC20C0DD126 /* SwiftPhoenixClient-dummy.m */; };
 		E3A905C8DC82AE43D0FCD85EF415360E /* Pods-SwiftPhoenixClient_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = DBFC58B98A15D9805D00737E4F1B890B /* Pods-SwiftPhoenixClient_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EC500FB9B9429EBA7A7A3ADBFA1A4822 /* SwiftPhoenixClient.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 89FACEB4EE35C5A18D7916A66B551DEE /* SwiftPhoenixClient.bundle */; };
@@ -91,7 +90,6 @@
 		527A1A9933058E9A0742AE0128D47FA7 /* Pods-SwiftPhoenixClient_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SwiftPhoenixClient_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		5FC12DA04BB680F040840FB10453FF4C /* Starscream.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = Starscream.modulemap; sourceTree = "<group>"; };
 		625399922D7EC1074EA890B5708FDAAF /* Pods-SwiftPhoenixClient_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-SwiftPhoenixClient_Tests.modulemap"; sourceTree = "<group>"; };
-		6350331F936A1A2A4F6652B6EBE1222D /* Path.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Path.swift; sourceTree = "<group>"; };
 		6EAE4FEFDC8A29B39D72D542F883B8DB /* Pods-SwiftPhoenixClient_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SwiftPhoenixClient_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		6F2B9D479749C67295EBB039E361C6E7 /* Starscream-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Starscream-dummy.m"; sourceTree = "<group>"; };
 		70ECA8FB0FA562D2A5A2619C68D0AB43 /* WebSocket.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
@@ -208,7 +206,6 @@
 			isa = PBXGroup;
 			children = (
 				8A800AA4DC046BE6422AB01F3480478A /* Json.swift */,
-				6350331F936A1A2A4F6652B6EBE1222D /* Path.swift */,
 				8F7815E25540A0F15CBD3CC55D1E8700 /* Phoenix.swift */,
 				012B257AF4EC85F0B03B8FAF49B58830 /* Serializable.swift */,
 			);
@@ -479,7 +476,7 @@
 				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0700;
 			};
-			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
+			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "_Pods" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -532,7 +529,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				50B1CD65FBDF2D4A158FE5A635C55FE5 /* Json.swift in Sources */,
-				C3C4421C55C4604BDC1346DB9D321DD0 /* Path.swift in Sources */,
 				F9ACF108A7B9190D9AD62D7124A3D0D3 /* Phoenix.swift in Sources */,
 				5A8B17EE960EF025D9FE37967B2C09D1 /* Serializable.swift in Sources */,
 				CA893375F0584F281181717DFA7FA77E /* SwiftPhoenixClient-dummy.m in Sources */,
@@ -952,7 +948,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
+		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "_Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5CE5176205D06FF3FFE3DDDA9291E44B /* Debug */,
