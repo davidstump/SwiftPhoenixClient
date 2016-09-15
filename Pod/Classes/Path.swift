@@ -50,6 +50,24 @@ public struct Path {
   public static func removeLeadingAndTrailingSlashes(path:String) -> String {
     return Path.removeTrailingSlash( Path.removeLeadingSlash(path) )
   }
+    
+    
+    public static func encodeQuery(string:String) -> String {
+        return string.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+    }
+    
+    /**
+     Build the Query Params
+     
+     - parameter path: Dict
+     
+     - returns: String
+     */
+    public static func buildQueryParams(query:[String:String]) -> String {
+        if query.count == 0 { return "" }
+        return "?" + query.map({ $0.0 + "=" + encodeQuery($0.1) }).joinWithSeparator("&").stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+    }
+
   
   /**
    Builds proper endoint
@@ -61,7 +79,7 @@ public struct Path {
    
    - returns: String
    */
-  public static func endpointWithProtocol(prot:String, domainAndPort:String, path:String, transport:String) -> String {
+  public static func endpointWithProtocol(prot:String, domainAndPort:String, path:String, query:[String:String] = [:], transport:String) -> String {
     var theProt = ""
     switch prot {
     case "ws":
@@ -74,7 +92,8 @@ public struct Path {
     
     let theDomAndPort = removeLeadingAndTrailingSlashes(domainAndPort)
     let thePath = removeLeadingAndTrailingSlashes(path)
+    let theQuery = buildQueryParams(query)
     let theTransport = removeLeadingAndTrailingSlashes(transport)
-    return "\(theProt)://\(theDomAndPort)/\(thePath)/\(theTransport)"
+    return "\(theProt)://\(theDomAndPort)/\(thePath)/\(theTransport)\(theQuery)"
   }
 }
