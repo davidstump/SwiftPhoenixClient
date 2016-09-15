@@ -281,7 +281,14 @@ public struct Phoenix {
      */
     func startHeartbeatTimer() {
       heartbeatTimer.invalidate()
-      heartbeatTimer = NSTimer.scheduledTimerWithTimeInterval(heartbeatDelay, target: self, selector: #selector(Phoenix.Socket.heartbeat), userInfo: nil, repeats: true)
+        dispatch_async(dispatch_get_main_queue()) {
+            self.heartbeatTimer = NSTimer.scheduledTimerWithTimeInterval(
+                self.heartbeatDelay,
+                target: self,
+                selector: #selector(self.heartbeat),
+                userInfo: nil,
+                repeats: true)
+        }
     }
 
     /**
