@@ -11,7 +11,6 @@
 		28D08B78218B59AF469E711930D16996 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70ECA8FB0FA562D2A5A2619C68D0AB43 /* WebSocket.swift */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		36A891730CD8B102723AECD40E4FC51F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8664F5C1817BF2DBB05AF644978FC30B /* Foundation.framework */; };
 		4CCF5B2FE390CBC803728D844DB843E7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8664F5C1817BF2DBB05AF644978FC30B /* Foundation.framework */; };
-		50B1CD65FBDF2D4A158FE5A635C55FE5 /* Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A800AA4DC046BE6422AB01F3480478A /* Json.swift */; };
 		5626D270335A49E77385DC158B05341D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8664F5C1817BF2DBB05AF644978FC30B /* Foundation.framework */; };
 		566AE3F07845DC9BFA4CD8BA4F27DCA2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8664F5C1817BF2DBB05AF644978FC30B /* Foundation.framework */; };
 		5A8B17EE960EF025D9FE37967B2C09D1 /* Serializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 012B257AF4EC85F0B03B8FAF49B58830 /* Serializable.swift */; };
@@ -100,7 +99,6 @@
 		8507211CD4830201B59C40C63C274D3C /* SwiftPhoenixClient.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SwiftPhoenixClient.xcconfig; sourceTree = "<group>"; };
 		8664F5C1817BF2DBB05AF644978FC30B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		89FACEB4EE35C5A18D7916A66B551DEE /* SwiftPhoenixClient.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftPhoenixClient.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
-		8A800AA4DC046BE6422AB01F3480478A /* Json.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Json.swift; sourceTree = "<group>"; };
 		8F7815E25540A0F15CBD3CC55D1E8700 /* Phoenix.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Phoenix.swift; sourceTree = "<group>"; };
 		99F93664FE9DD8A4E51CA59BB3FF0549 /* Starscream-Private.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Starscream-Private.xcconfig"; sourceTree = "<group>"; };
 		A0EEC477C6CF9B35361BD271C3BDC75B /* Pods-SwiftPhoenixClient_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-SwiftPhoenixClient_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -207,7 +205,6 @@
 		3810CED92BA111EB767EAE4BD65AEA84 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				8A800AA4DC046BE6422AB01F3480478A /* Json.swift */,
 				6350331F936A1A2A4F6652B6EBE1222D /* Path.swift */,
 				8F7815E25540A0F15CBD3CC55D1E8700 /* Phoenix.swift */,
 				012B257AF4EC85F0B03B8FAF49B58830 /* Serializable.swift */,
@@ -531,7 +528,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				50B1CD65FBDF2D4A158FE5A635C55FE5 /* Json.swift in Sources */,
 				C3C4421C55C4604BDC1346DB9D321DD0 /* Path.swift in Sources */,
 				F9ACF108A7B9190D9AD62D7124A3D0D3 /* Phoenix.swift in Sources */,
 				5A8B17EE960EF025D9FE37967B2C09D1 /* Serializable.swift in Sources */,
