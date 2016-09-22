@@ -22,16 +22,16 @@ class PathTests: XCTestCase {
   func testRemoveLeadingAndTrailingSlashes() {
     // This is an example of a functional test case.
 //    XCTAssert(true, "Pass")
-    XCTAssertEqual(Path.removeLeadingAndTrailingSlashes(pathWithSlashes), "socket/websocket", "Strips slashes from beginning and end of string")
-    XCTAssertEqual(Path.removeLeadingAndTrailingSlashes(pathWithLeadingSlash), "socket/websocket", "Strips slashes from beginning of string")
-    XCTAssertEqual(Path.removeLeadingAndTrailingSlashes(pathWithTrailingSlash), "socket/websocket", "Strips slashes from end of string")
-    XCTAssertEqual(Path.removeLeadingAndTrailingSlashes(pathWithNoLeadingOrTrailingSlash), "socket/websocket", "Preserves path even without leading and trailing slashes")
-    XCTAssertEqual(Path.removeLeadingAndTrailingSlashes(pathWithOnlySlash), "", "Removes only a slash")
-    XCTAssertEqual(Path.removeLeadingAndTrailingSlashes(pathWithBlank), "", "Handles blank")
+    XCTAssertEqual(Path.removeLeadingAndTrailingSlashes(path: pathWithSlashes), "socket/websocket", "Strips slashes from beginning and end of string")
+    XCTAssertEqual(Path.removeLeadingAndTrailingSlashes(path: pathWithLeadingSlash), "socket/websocket", "Strips slashes from beginning of string")
+    XCTAssertEqual(Path.removeLeadingAndTrailingSlashes(path: pathWithTrailingSlash), "socket/websocket", "Strips slashes from end of string")
+    XCTAssertEqual(Path.removeLeadingAndTrailingSlashes(path: pathWithNoLeadingOrTrailingSlash), "socket/websocket", "Preserves path even without leading and trailing slashes")
+    XCTAssertEqual(Path.removeLeadingAndTrailingSlashes(path: pathWithOnlySlash), "", "Removes only a slash")
+    XCTAssertEqual(Path.removeLeadingAndTrailingSlashes(path: pathWithBlank), "", "Handles blank")
   }
 
   func testendpointWithProtocol() {
-    XCTAssertEqual(Path.endpointWithProtocol("ws", domainAndPort: "localhost:4000", path: "socket", transport: "websocket"), "http://localhost:4000/socket/websocket", "Should format a Phoenix endpoint URL.")
+    XCTAssertEqual(Path.endpointWithProtocol(prot: "ws", domainAndPort: "localhost:4000", path: "socket", transport: "websocket"), "http://localhost:4000/socket/websocket", "Should format a Phoenix endpoint URL.")
   }
   
 }

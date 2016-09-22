@@ -4,15 +4,16 @@ Starscream is a conforming WebSocket ([RFC 6455](http://tools.ietf.org/html/rfc6
 
 It's Objective-C counter part can be found here: [Jetfire](https://github.com/acmacalister/jetfire)
 
-This is written Swift 2.0 (the latest). If you need older legecy support checkout the Swift-1.2 branch [here](https://github.com/daltoniam/Starscream/tree/swift-1.2).
-
 ## Features
 
 - Conforms to all of the base [Autobahn test suite](http://autobahn.ws/testsuite/).
 - Nonblocking. Everything happens in the background, thanks to GCD.
-- Simple delegate pattern design.
 - TLS/WSS support.
 - Simple concise codebase at just a few hundred LOC.
+
+## Swift 2.3
+
+See release/tag 1.1.4 for Swift 2.3 support.
 
 ## Example
 
@@ -22,10 +23,10 @@ First thing is to import the framework. See the Installation instructions on how
 import Starscream
 ```
 
-Once imported, you can open a connection to your WebSocket server. Note that `socket` is probably best as a property, so your delegate can stick around.
+Once imported, you can open a connection to your WebSocket server. Note that `socket` is probably best as a property, so it doesn't get deallocated right after being setup.
 
 ```swift
-var socket = WebSocket(url: NSURL(scheme: "ws", host: "localhost:8080", path: "/")!)
+socket = WebSocket(url: URL(string: "ws://localhost:8080/")!)
 socket.delegate = self
 socket.connect()
 ```
@@ -38,7 +39,7 @@ websocketDidConnect is called as soon as the client connects to the server.
 
 ```swift
 func websocketDidConnect(socket: WebSocket) {
-    println("websocket is connected")
+    print("websocket is connected")
 }
 ```
 
@@ -48,7 +49,7 @@ websocketDidDisconnect is called as soon as the client is disconnected from the 
 
 ```swift
 func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
-	println("websocket is disconnected: \(error?.localizedDescription)")
+	print("websocket is disconnected: \(error?.localizedDescription)")
 }
 ```
 
@@ -58,7 +59,7 @@ websocketDidReceiveMessage is called when the client gets a text frame from the 
 
 ```swift
 func websocketDidReceiveMessage(socket: WebSocket, text: String) {
-	println("got some text: \(text)")
+	print("got some text: \(text)")
 }
 ```
 
@@ -67,8 +68,8 @@ func websocketDidReceiveMessage(socket: WebSocket, text: String) {
 websocketDidReceiveData is called when the client gets a binary frame from the connection.
 
 ```swift
-func websocketDidReceiveData(socket: WebSocket, data: NSData) {
-	println("got some data: \(data.length)")
+func websocketDidReceiveData(socket: WebSocket, data: Data) {
+	print("got some data: \(data.count)")
 }
 ```
 
@@ -77,60 +78,62 @@ func websocketDidReceiveData(socket: WebSocket, data: NSData) {
 websocketDidReceivePong is called when the client gets a pong response from the connection. You need to implement the WebSocketPongDelegate protocol and set an additional delegate, eg: ` socket.pongDelegate = self`
 
 ```swift
-func websocketDidReceivePong(socket: WebSocket) {
-	println("Got pong!")
+func websocketDidReceivePong(socket: WebSocket, data: Data?) {
+	print("Got pong! Maybe some data: \(data?.count)")
 }
 ```
 
 Or you can use closures.
 
 ```swift
-var socket = WebSocket(url: NSURL(scheme: "ws", host: "localhost:8080", path: "/")!)
+socket = WebSocket(url: URL(string: "ws://localhost:8080/")!)
 //websocketDidConnect
 socket.onConnect = {
-    println("websocket is connected")
+    print("websocket is connected")
 }
 //websocketDidDisconnect
 socket.onDisconnect = { (error: NSError?) in
-    println("websocket is disconnected: \(error?.localizedDescription)")
+    print("websocket is disconnected: \(error?.localizedDescription)")
 }
 //websocketDidReceiveMessage
 socket.onText = { (text: String) in
-    println("got some text: \(text)")
+    print("got some text: \(text)")
 }
 //websocketDidReceiveData
-socket.onData = { (data: NSData) in
-    println("got some data: \(data.length)")
+socket.onData = { (data: Data) in
+    print("got some data: \(data.count)")
 }
 //you could do onPong as well.
 socket.connect()
 ```
 
+One more: you can listen to socket connection and disconnection via notifications. Starscream posts `WebsocketDidConnectNotification` and `WebsocketDidDisconnectNotification`. You can find an `NSError` that caused the disconection by accessing `WebsocketDisconnectionErrorKeyName` on notification `userInfo`.
+
 
 ## The delegate methods give you a simple way to handle data from the server, but how do you send data?
 
-### writeData
+### write a binary frame
 
-The writeData method gives you a simple way to send `NSData` (binary) data to the server.
+The writeData method gives you a simple way to send `Data` (binary) data to the server.
 
 ```swift
-self.socket.writeData(data) //write some NSData over the socket!
+socket.write(data: data) //write some Data over the socket!
 ```
 
-### writeString
+### write a string frame
 
 The writeString method is the same as writeData, but sends text/string.
 
 ```swift
-self.socket.writeString("Hi Server!") //example on how to write text over the socket!
+socket.write(string: "Hi Server!") //example on how to write text over the socket!
 ```
 
-### writePing
+### write a ping frame
 
-The writePing method is the same as writeData, but sends a ping control frame.
+The writePing method is the same as write, but sends a ping control frame.
 
 ```swift
-self.socket.writePing(NSData()) //example on how to write a ping control frame over the socket!
+socket.write(ping: Data()) //example on how to write a ping control frame over the socket!
 ```
 
 ### disconnect
@@ -138,7 +141,7 @@ self.socket.writePing(NSData()) //example on how to write a ping control frame o
 The disconnect method does what you would expect and closes the socket.
 
 ```swift
-self.socket.disconnect()
+socket.disconnect()
 ```
 
 ### isConnected
@@ -146,7 +149,7 @@ self.socket.disconnect()
 Returns if the socket is connected or not.
 
 ```swift
-if self.socket.isConnected {
+if socket.isConnected {
   // do cool stuff.
 }
 ```
@@ -167,7 +170,7 @@ If you need to specify a protocol, simple add it to the init:
 
 ```swift
 //chat and superchat are the example protocols here
-var socket = WebSocket(url: NSURL(scheme: "ws", host: "localhost:8080", path: "/")!, protocols: ["chat","superchat"])
+socket = WebSocket(url: URL(string: "ws://localhost:8080/")!, protocols: ["chat","superchat"])
 socket.delegate = self
 socket.connect()
 ```
@@ -177,13 +180,13 @@ socket.connect()
 There are a couple of other properties that modify the stream:
 
 ```swift
-var socket = WebSocket(url: NSURL(scheme: "ws", host: "localhost:8080", path: "/")!, protocols: ["chat","superchat"])
+socket = WebSocket(url: URL(string: "ws://localhost:8080/")!, protocols: ["chat","superchat"])
 
 //set this if you are planning on using the socket in a VOIP background setting (using the background VOIP service).
 socket.voipEnabled = true
 
 //set this you want to ignore SSL cert validation, so a self signed SSL certificate can be used.
-socket.selfSignedSSL = true
+socket.disableSSLCertValidation = true
 ```
 
 ### SSL Pinning
@@ -191,21 +194,21 @@ socket.selfSignedSSL = true
 SSL Pinning is also supported in Starscream. 
 
 ```swift
-var socket = WebSocket(url: NSURL(scheme: "ws", host: "localhost:8080", path: "/")!, protocols: ["chat","superchat"])
+socket = WebSocket(url: URL(string: "ws://localhost:8080/")!, protocols: ["chat","superchat"])
 let data = ... //load your certificate from disk
-socket.security = Security(certs: [SSLCert(data: data)], usePublicKeys: true)
-//socket.security = Security() //uses the .cer files in your app's bundle
+socket.security = SSLSecurity(certs: [SSLCert(data: data)], usePublicKeys: true)
+//socket.security = SSLSecurity() //uses the .cer files in your app's bundle
 ```
-You load either a `NSData` blob of your certificate or you can use a `SecKeyRef` if you have a public key you want to use. The `usePublicKeys` bool is whether to use the certificates for validation or the public keys. The public keys will be extracted from the certificates automatically if `usePublicKeys` is choosen.
+You load either a `Data` blob of your certificate or you can use a `SecKeyRef` if you have a public key you want to use. The `usePublicKeys` bool is whether to use the certificates for validation or the public keys. The public keys will be extracted from the certificates automatically if `usePublicKeys` is choosen.
 
 ### Custom Queue
 
-A custom queue can be specified when delegate methods are called. By default `dispatch_get_main_queue` is used, thus making all delegate methods calls run on the main thread. It is important to note that all WebSocket processing is done on a background thread, only the delegate method calls are changed when modifying the queue. The actual processing is always on a background thread and will not pause your app.
+A custom queue can be specified when delegate methods are called. By default `DispatchQueue.main` is used, thus making all delegate methods calls run on the main thread. It is important to note that all WebSocket processing is done on a background thread, only the delegate method calls are changed when modifying the queue. The actual processing is always on a background thread and will not pause your app.
 
 ```swift
-var socket = WebSocket(url: NSURL(scheme: "ws", host: "localhost:8080", path: "/")!, protocols: ["chat","superchat"])
+socket = WebSocket(url: URL(string: "ws://localhost:8080/")!, protocols: ["chat","superchat"])
 //create a custom queue
-socket.queue = dispatch_queue_create("com.vluxe.starscream.myapp", nil)
+socket.callbackQueue = DispatchQueue(label: "com.vluxe.starscream.myapp")
 ```
 
 ## Example Project
@@ -214,21 +217,21 @@ Check out the SimpleTest project in the examples directory to see how to setup a
 
 ## Requirements
 
-Starscream works with iOS 7/OSX 10.9 or above. It is recommended to use iOS 8/10.10 or above for Cocoapods/framework support.
+Starscream works with iOS 7/OSX 10.9 or above. It is recommended to use iOS 8/10.10 or above for CocoaPods/framework support. To use Starscream with a project targeting iOS 7, you must include all Swift files directly in your project.
 
 ## Installation
 
-### Cocoapods
+### CocoaPods
 
 Check out [Get Started](http://cocoapods.org/) tab on [cocoapods.org](http://cocoapods.org/).
 
 To use Starscream in your project add the following 'Podfile' to your project
 
 	source 'https://github.com/CocoaPods/Specs.git'
-	platform :ios, '8.0'
+	platform :ios, '9.0'
 	use_frameworks!
 
-	pod 'Starscream', '~> 1.0.0'
+	pod 'Starscream', '~> 2.0.0'
 
 Then run:
 
@@ -250,7 +253,7 @@ $ brew install carthage
 To integrate Starscream into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```
-github "daltoniam/Starscream" >= 1.0.0
+github "daltoniam/Starscream" >= 2.0.0
 ```
 
 ### Rogue
@@ -277,9 +280,9 @@ If you are running this in an OSX app or on a physical iOS device you will need 
 
 ## TODOs
 
-- [ ] WatchOS
-- [ ] TVOS?
-- [ ] Add Unit Tests
+- [ ] WatchOS?
+- [ ] Linux Support?
+- [ ] Add Unit Tests - Local Swift websocket server
 
 ## License
 

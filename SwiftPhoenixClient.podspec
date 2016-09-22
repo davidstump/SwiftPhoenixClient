@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "SwiftPhoenixClient"
-  s.version          = "0.4.1"
+  s.version          = "0.5.0"
   s.summary          = "Connect your Phoenix and iOS applications through WebSockets!"
 
 # This description is used to generate tags and improve search results.
@@ -46,5 +46,5 @@ http://www.phoenixframework.org/docs/channels
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  s.dependency 'Starscream', '~> 1.0.0'
+  s.dependency 'Starscream', '~> 2.0.0'
 end
