@@ -17,12 +17,12 @@ class ViewController: UIViewController {
   let socket = Phoenix.Socket(domainAndPort: "localhost:4000", path: "socket", transport: "websocket")
   var topic: String? = "rooms:lobby"
   
-  @IBAction func sendMessage(sender: AnyObject) {
+  @IBAction func sendMessage(sender: UIButton) {
     let message = Phoenix.Message(message: ["user":userField.text!, "body": messageField.text!])
     print(message.toJsonString())
     
     let payload = Phoenix.Payload(topic: topic!, event: "new:msg", message: message)
-    socket.send(payload)
+    socket.send(data: payload)
     messageField.text = ""
   }
   
@@ -33,34 +33,33 @@ class ViewController: UIViewController {
     socket.join(topic: topic!, message: Phoenix.Message(subject: "status", body: "joining")) { channel in
       let chan = channel as! Phoenix.Channel
       
-      chan.on("join") { message in
+      chan.on(event: "join") { message in
         self.chatWindow.text = "You joined the room.\n"
       }
       
-      chan.on("new:msg") { message in
+      chan.on(event: "new:msg") { message in
         guard let message = message as? Phoenix.Message,
-              let username = message.message?["user"],
-              let body     = message.message?["body"] else {
+              let username = message["user"],
+              let body     = message["body"] else {
                 return
         }
-        let newMessage = "[\(username!)] \(body!)\n"
-        let updatedText = self.chatWindow.text.stringByAppendingString(newMessage)
+        let newMessage = "[\(username)] \(body)\n"
+        let updatedText = self.chatWindow.text.appending(newMessage)
         self.chatWindow.text = updatedText
       }
       
-      chan.on("user:entered") { message in
+      chan.on(event: "user:entered") { message in
         let username = "anonymous"
-        let updatedText = self.chatWindow.text.stringByAppendingString("[\(username) entered]\n")
-        self.chatWindow.text = updatedText
+        self.chatWindow.text = self.chatWindow.text.appending("[\(username) entered]\n")
       }
       
-      chan.on("error") { message in
+      chan.on(event: "error") { message in
         guard let message = message as? Phoenix.Message,
-          let body = message.message?["body"] else {
+          let body = message["body"] else {
             return
         }
-        let newMessage = "[ERROR] \(body!)\n"
-        let updatedText = self.chatWindow.text.stringByAppendingString(newMessage)
+        let newMessage = "[ERROR] \(body)\n"
+        let updatedText = self.chatWindow.text.appending(newMessage)
         self.chatWindow.text = updatedText
       }
     }
