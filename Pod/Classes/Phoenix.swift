@@ -235,10 +235,14 @@ public struct Phoenix {
          - parameter prot:          Connection protocol - default is HTTP
          - returns: Phoenix.Socket
          */
-        public init(domainAndPort:String, path:String, transport:String, prot:String = "http") {
-            self.endPoint = Path.endpointWithProtocol(prot: prot, domainAndPort: domainAndPort, path: path, transport: transport)
-            resetBufferTimer()
-            reconnect()
+        public init(domainAndPort:String, path:String, transport:String, prot:String = "http", params: [String: Any]? = nil) {
+          self.endPoint = Path.endpointWithProtocol(prot: prot, domainAndPort: domainAndPort, path: path, transport: transport)
+          if let parameters = params {
+            self.endPoint = self.endPoint! + "?" + parameters.map({ "\($0.0)=\($0.1)" }).joined(separator: "&")
+
+          }
+          resetBufferTimer()
+          reconnect()
         }
 
         /**
