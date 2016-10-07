@@ -499,7 +499,7 @@ public struct Phoenix {
 
         func makeRef() -> UInt64 {
             let newRef = messageReference + 1
-            messageReference = (newRef == UINT64_MAX) ? 0 : newRef
+            messageReference = (newRef == UInt64.max) ? 0 : newRef
             return newRef
         }
 
