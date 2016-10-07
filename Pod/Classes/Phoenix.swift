@@ -459,12 +459,19 @@ public struct Phoenix {
 
         public func websocketDidReceiveMessage(socket: WebSocket, text: String) {
             print("socket message: \(text)")
-            let json = JSON.parse(string: text as String)
-            let (topic, event) = (
-                unwrappedJsonString(string: json["topic"].asString),
-                unwrappedJsonString(string: json["event"].asString)
-            )
-            let msg: Any = json["payload"].asDictionary! as Any
+
+            guard let data = text.data(using: String.Encoding.utf8),
+                  let json = try? JSONSerialization.jsonObject(with: data, options: []),
+                  let jsonObject = json as? [String: AnyObject] else {
+                print("Unable to parse JSON: \(text)")
+                return
+            }
+
+            guard let topic = jsonObject["topic"] as? String, let event = jsonObject["event"] as? String,
+                  let msg = jsonObject["payload"] as? [String: AnyObject] else {
+                print("No phoenix message: \(text)")
+                return
+            }
 
             let messagePayload = Phoenix.Payload(topic: topic, event: event, message: Phoenix.Message(message: msg))
             onMessage(payload: messagePayload)
@@ -505,17 +512,24 @@ public struct Phoenix {
 
         func payloadToJson(payload: Phoenix.Payload) -> String {
             let ref = makeRef()
-            var json = "{\"topic\": \"\(payload.topic)\", \"event\": \"\(payload.event)\", \"ref\": \"\(ref)\", "
-            if NSString(string: payload.message.toJsonString()).contains("message") {
-                let msg = JSON.parse(string: String(payload.message.toJsonString()))["message"]
-                let jsonMessage = msg.description
-                json += "\"payload\": \(jsonMessage)"
-            } else if let payloadMessage = payload.message.toJsonString() {
-                json += "\"payload\": \(payloadMessage)"
+            var json: [String: Any] = [
+                "topic": payload.topic,
+                "event": payload.event,
+                "ref": "\(ref)"
+            ]
+
+            if let msg = payload.message.message {
+                json["payload"] = msg
+            } else {
+                json["payload"] = payload.message.toDictionary()
             }
-            json += "}"
-            
-            return json
+
+            guard let jsonData = try? JSONSerialization.data(withJSONObject: json, options: []),
+                  let jsonString = String(data: jsonData, encoding: String.Encoding.utf8) else {
+                return ""
+            }
+
+            return jsonString
         }
     }
 }

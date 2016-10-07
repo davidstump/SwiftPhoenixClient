@@ -18,7 +18,6 @@
 		47F98759AC2B61340ABD4A4C2BB96301 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ED35AC067115E8561F19DB916241CB /* Foundation.framework */; };
 		5A2953BCA978F6ADBDFBA4A354D4579A /* Serializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE368215F9F3EE34913226AFE33C59F /* Serializable.swift */; };
 		5DE080A0BCE0A90AE0B98959C0E1B788 /* Pods-SwiftPhoenixClient_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 16A7D4C5A8C158600D5A411EFB2D547C /* Pods-SwiftPhoenixClient_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		71B77A79B8E0F39798DDABBA69563850 /* Json.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3637EDD02A7D0EBD564594C356B552 /* Json.swift */; };
 		790960AC551D21102F64C1F64377FA8A /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F0ED5408096F7CF564991C1296C806 /* WebSocket.swift */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		806DDB9E2CFBA25BF364FCFE0CA0BBE4 /* SwiftPhoenixClient-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 205FD590F112AF881A1F52B80475ABE7 /* SwiftPhoenixClient-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A639FCD87751390B3EF573CDEBD04695 /* SSLSecurity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99096DE2BFEA77B075F7FAAAEDCCF8CD /* SSLSecurity.swift */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -68,7 +67,6 @@
 
 /* Begin PBXFileReference section */
 		0B2654FDB396A314AAB3EF07DD1385D4 /* Phoenix.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Phoenix.swift; sourceTree = "<group>"; };
-		0D3637EDD02A7D0EBD564594C356B552 /* Json.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Json.swift; sourceTree = "<group>"; };
 		0D960071CEC7FF8D44E796C22DCC3E3B /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0F52249DD4D3DD3159B64A42F2E7349B /* Starscream.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Starscream.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		16A7D4C5A8C158600D5A411EFB2D547C /* Pods-SwiftPhoenixClient_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-SwiftPhoenixClient_Tests-umbrella.h"; sourceTree = "<group>"; };
@@ -301,7 +299,6 @@
 		EB6A74AECF3EACD710B031F95B8E955B /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				0D3637EDD02A7D0EBD564594C356B552 /* Json.swift */,
 				AAC9246CD580136A5A233E4C3CD5CB4B /* Path.swift */,
 				0B2654FDB396A314AAB3EF07DD1385D4 /* Phoenix.swift */,
 				3BE368215F9F3EE34913226AFE33C59F /* Serializable.swift */,
@@ -490,7 +487,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				71B77A79B8E0F39798DDABBA69563850 /* Json.swift in Sources */,
 				EFE9D60507B831D9FA1AA64EA174219C /* Path.swift in Sources */,
 				185517E65A8C976090767AE61ECD3EF8 /* Phoenix.swift in Sources */,
 				5A2953BCA978F6ADBDFBA4A354D4579A /* Serializable.swift in Sources */,
