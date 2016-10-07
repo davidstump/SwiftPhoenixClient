@@ -17,7 +17,7 @@ class ViewController: UIViewController {
   let socket = Phoenix.Socket(domainAndPort: "localhost:4000", path: "socket", transport: "websocket")
   var topic: String? = "rooms:lobby"
   
-  @IBAction func sendMessage(sender: UIButton) {
+  @IBAction func sendMessage(_ sender: UIButton) {
     let message = Phoenix.Message(message: ["user":userField.text!, "body": messageField.text!])
     print(message.toJsonString())
     
