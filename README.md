@@ -1,6 +1,5 @@
 # Swift Phoenix Client
 
-[![CI Status](http://img.shields.io/travis/davidstump/SwiftPhoenixClient.svg?style=flat)](https://travis-ci.org/davidstump/SwiftPhoenixClient)
 [![Version](https://img.shields.io/cocoapods/v/SwiftPhoenixClient.svg?style=flat)](http://cocoapods.org/pods/SwiftPhoenixClient)
 [![License](https://img.shields.io/cocoapods/l/SwiftPhoenixClient.svg?style=flat)](http://cocoapods.org/pods/SwiftPhoenixClient)
 [![Platform](https://img.shields.io/cocoapods/p/SwiftPhoenixClient.svg?style=flat)](http://cocoapods.org/pods/SwiftPhoenixClient)
