@@ -8,13 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		0BFAE4EE1DA84F59000B3CD3 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BFAE4E41DA84F59000B3CD3 /* SwiftPhoenixClient.framework */; };
-		0BFAE4F31DA84F59000B3CD3 /* SwiftPhoenixClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFAE4F21DA84F59000B3CD3 /* SwiftPhoenixClientTests.swift */; };
 		0BFAE4F51DA84F59000B3CD3 /* SwiftPhoenixClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BFAE4E71DA84F59000B3CD3 /* SwiftPhoenixClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0BFAE5011DA84FF2000B3CD3 /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFAE4FE1DA84FF2000B3CD3 /* Path.swift */; };
 		0BFAE5021DA84FF2000B3CD3 /* Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFAE4FF1DA84FF2000B3CD3 /* Phoenix.swift */; };
 		0BFAE5031DA84FF2000B3CD3 /* Serializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFAE5001DA84FF2000B3CD3 /* Serializable.swift */; };
 		0BFAE5091DA853B5000B3CD3 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BFAE5081DA853B5000B3CD3 /* Starscream.framework */; };
 		0BFAE50A1DA853EE000B3CD3 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BFAE5081DA853B5000B3CD3 /* Starscream.framework */; };
+		0BFAE50C1DA85527000B3CD3 /* PathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFAE50B1DA85527000B3CD3 /* PathTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,12 +32,12 @@
 		0BFAE4E71DA84F59000B3CD3 /* SwiftPhoenixClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftPhoenixClient.h; sourceTree = "<group>"; };
 		0BFAE4E81DA84F59000B3CD3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0BFAE4ED1DA84F59000B3CD3 /* SwiftPhoenixClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftPhoenixClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0BFAE4F21DA84F59000B3CD3 /* SwiftPhoenixClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftPhoenixClientTests.swift; sourceTree = "<group>"; };
 		0BFAE4F41DA84F59000B3CD3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0BFAE4FE1DA84FF2000B3CD3 /* Path.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Path.swift; sourceTree = "<group>"; };
 		0BFAE4FF1DA84FF2000B3CD3 /* Phoenix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Phoenix.swift; sourceTree = "<group>"; };
 		0BFAE5001DA84FF2000B3CD3 /* Serializable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serializable.swift; sourceTree = "<group>"; };
 		0BFAE5081DA853B5000B3CD3 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = "Vendor/Starscream/build/Debug-iphoneos/Starscream.framework"; sourceTree = "<group>"; };
+		0BFAE50B1DA85527000B3CD3 /* PathTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,7 +96,7 @@
 		0BFAE4F11DA84F59000B3CD3 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				0BFAE4F21DA84F59000B3CD3 /* SwiftPhoenixClientTests.swift */,
+				0BFAE50B1DA85527000B3CD3 /* PathTests.swift */,
 				0BFAE4F41DA84F59000B3CD3 /* Info.plist */,
 			);
 			path = Tests;
@@ -230,7 +230,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0BFAE4F31DA84F59000B3CD3 /* SwiftPhoenixClientTests.swift in Sources */,
+				0BFAE50C1DA85527000B3CD3 /* PathTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
