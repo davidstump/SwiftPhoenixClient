@@ -1,6 +1,0 @@
-framework module Pods_SwiftPhoenixClient_Tests {
-  umbrella header "Pods-SwiftPhoenixClient_Tests-umbrella.h"
-
-  export *
-  module * { export * }
-}

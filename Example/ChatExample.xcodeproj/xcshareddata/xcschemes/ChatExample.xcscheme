@@ -15,23 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-               BuildableName = "SwiftPhoenixClient_Example.app"
-               BlueprintName = "SwiftPhoenixClient_Example"
-               ReferencedContainer = "container:SwiftPhoenixClient.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "607FACE41AFB9204008FA782"
-               BuildableName = "SwiftPhoenixClient_Tests.xctest"
-               BlueprintName = "SwiftPhoenixClient_Tests"
-               ReferencedContainer = "container:SwiftPhoenixClient.xcodeproj">
+               BuildableName = "ChatExample.app"
+               BlueprintName = "ChatExample"
+               ReferencedContainer = "container:ChatExample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -42,16 +28,6 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "607FACE41AFB9204008FA782"
-               BuildableName = "SwiftPhoenixClient_Tests.xctest"
-               BlueprintName = "SwiftPhoenixClient_Tests"
-               ReferencedContainer = "container:SwiftPhoenixClient.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
@@ -80,9 +56,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-            BuildableName = "SwiftPhoenixClient_Example.app"
-            BlueprintName = "SwiftPhoenixClient_Example"
-            ReferencedContainer = "container:SwiftPhoenixClient.xcodeproj">
+            BuildableName = "ChatExample.app"
+            BlueprintName = "ChatExample"
+            ReferencedContainer = "container:ChatExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -94,16 +70,6 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-            BuildableName = "SwiftPhoenixClient_Example.app"
-            BlueprintName = "SwiftPhoenixClient_Example"
-            ReferencedContainer = "container:SwiftPhoenixClient.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
