@@ -153,9 +153,13 @@ Read the `README_pods.md` file to include this pod from a local copy (of a clone
 
 ## Note:
 
-Currently works with Swift 2.0, Xcode 7.0, and Phoenix 1.0.1.
+Currently works with Swift 3.0, Xcode 7.0, and Phoenix 1.0.1.
 
 Tested with the [Phoenix Chat Server example](https://github.com/chrismccord/phoenix_chat_example), upgraded to Phoenix 1.0.1.
+
+## Development
+
+To set up your environment to work on `SwiftPhoenixClient` itself, clone the repo and then run `$ git submodule update --init` to check out the appropriate version of `Starscream`. You can then open `SwiftPhoenixClient.xcworkspace` in Xcode.
 
 ## License
 
