@@ -1,15 +1,10 @@
 //
-//  Models.swift
-//  SwiftPhoenix
-//
-//  Created by David Stump on 12/1/14.
-//  Copyright (c) 2014 David Stump. All rights reserved.
+//  Message.swift
+//  SwiftPhoenixClient
 //
 
-import Foundation
-import Starscream
+import Swift
 
-// MARK: Phoenix Message
 public class Message: Serializable {
     var subject: String?
     var body: Any?
@@ -63,49 +58,5 @@ public class Message: Serializable {
             }
             return nil
         }
-    }
-}
-
-// MARK: Phoenix Binding
-class Binding {
-    var event: String
-    var callback: (Any) -> Void?
-
-    /**
-     Initializes an object for handling event/callback bindings
-     - parameter event:    String indicating event name
-     - parameter callback: Function to run on given event
-     - returns: Tuple containing event and callback function
-     */
-    @discardableResult
-    init(event: String, callback: @escaping (Any) -> Void?) {
-        (self.event, self.callback) = (event, callback)
-        create()
-    }
-
-    /**
-     Creates a Binding object holding event/callback details
-     - returns: Tuple containing event and callback function
-     */
-    func create() -> (String, (Any) -> Void?) {
-        return (event, callback)
-    }
-}
-
-// MARK: Phoenix Payload
-public class Payload {
-    var topic: String
-    var event: String
-    var message: Message
-
-    /**
-     Initializes a formatted Payload
-     - parameter topic:   String topic name
-     - parameter event:   String event name
-     - parameter message: Message payload
-     - returns: Payload
-     */
-    public init(topic: String, event: String, message: Message) {
-        (self.topic, self.event, self.message) = (topic, event, message)
     }
 }
