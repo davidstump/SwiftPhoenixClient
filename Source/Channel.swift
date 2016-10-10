@@ -6,21 +6,21 @@
 import Swift
 
 public class Channel {
-    var bindings: [Phoenix.Binding] = []
+    var bindings: [Binding] = []
     var topic: String?
-    var message: Phoenix.Message?
+    var message: Message?
     var callback: ((Any) -> Void?)
     weak var socket: Socket?
 
     /**
      Initializes a new Channel mapping to a server-side channel
      - parameter topic:    String topic for given channel
-     - parameter message:  Phoenix.Message object containing message to send
+     - parameter message:  Message object containing message to send
      - parameter callback: Function to pass along with the channel instance
      - parameter socket:   Socket for websocket connection
      - returns: Channel
      */
-    init(topic: String, message: Phoenix.Message, callback: @escaping ((Any) -> Void), socket: Socket) {
+    init(topic: String, message: Message, callback: @escaping ((Any) -> Void), socket: Socket) {
         (self.topic, self.message, self.callback, self.socket) = (topic, message, { callback($0) }, socket)
         reset()
     }
@@ -38,7 +38,7 @@ public class Channel {
      - parameter callback: Function to run on event
      */
     public func on(event: String, callback: @escaping ((Any) -> Void)) {
-        bindings.append(Phoenix.Binding(event: event, callback: { callback($0) }))
+        bindings.append(Binding(event: event, callback: { callback($0) }))
     }
 
     /**
@@ -55,10 +55,10 @@ public class Channel {
      - parameter event: String event name
      */
     func off(event: String) {
-        var newBindings: [Phoenix.Binding] = []
+        var newBindings: [Binding] = []
         for binding in bindings {
             if binding.event != event {
-                newBindings.append(Phoenix.Binding(event: binding.event, callback: binding.callback))
+                newBindings.append(Binding(event: binding.event, callback: binding.callback))
             }
         }
         bindings = newBindings
@@ -67,9 +67,9 @@ public class Channel {
     /**
      Triggers an event on this channel
      - parameter triggerEvent: String event name
-     - parameter msg:          Phoenix.Message to pass into event callback
+     - parameter msg:          Message to pass into event callback
      */
-    func trigger(triggerEvent: String, msg: Phoenix.Message) {
+    func trigger(triggerEvent: String, msg: Message) {
         for binding in bindings {
             if binding.event == triggerEvent {
                 binding.callback(msg)
@@ -80,19 +80,19 @@ public class Channel {
     /**
      Sends and event and message through the socket
      - parameter event:   String event name
-     - parameter message: Phoenix.Message payload
+     - parameter message: Message payload
      */
-    func send(event: String, message: Phoenix.Message) {
+    func send(event: String, message: Message) {
         print("conn sending")
-        let payload = Phoenix.Payload(topic: topic!, event: event, message: message)
+        let payload = Payload(topic: topic!, event: event, message: message)
         socket?.send(data: payload)
     }
 
     /**
      Leaves the socket
-     - parameter message: Phoenix.Message to pass to the Socket#leave function
+     - parameter message: Message to pass to the Socket#leave function
      */
-    func leave(message: Phoenix.Message) {
+    func leave(message: Message) {
         if let sock = socket {
             sock.leave(topic: topic!, message: message)
         }

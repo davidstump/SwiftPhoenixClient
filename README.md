@@ -75,7 +75,7 @@ In order to join a channel you must call the function `socket.join`, which takes
 four arguments:
 
 * Topic: The topic to join, for instance `"rooms:lobby"`
-* Message: A Phoenix.Message object that is sent to the server when the socket joins the channel.
+* Message: A Message object that is sent to the server when the socket joins the channel.
 * Callback: A closure that receives a AnyObject and returns void. This AnyObject can be cast to
 a Channel object to add callbacks.
 
@@ -86,7 +86,7 @@ retrieving data from a channel in the next section). You'd do something as follo
 
 
 ```
-socket.join(topic: "rooms:lobby", message: Phoenix.Message(subject: "status", body: "joining")) { channel in
+socket.join(topic: "rooms:lobby", message: Message(subject: "status", body: "joining")) { channel in
   let channel = channel as! Channel
 }
 ```
@@ -97,7 +97,7 @@ The Channel has one main method to specify callbacks: `on`, which takes two para
 
 * Event: A String object indicating what kind of event you're listening for.
 * Callback: A closure that receives AnyObject and returns void. This AnyObject can be
-cast to Phoenix.Message to retrieve data from the message.
+cast to Message to retrieve data from the message.
 
 Some examples:
 
@@ -109,7 +109,7 @@ Some examples:
 
 ```
   channel.on("error") { message in
-    let message = message as! Phoenix.Message
+    let message = message as! Message
 
     // data is a dictionary with keys that indicate the name of the field
     // and a value of type AnyObject
@@ -129,16 +129,16 @@ don't use a channel object to send data to a channel, you send the data through
 a Socket object directly using the `send` method, which receives one
 parameter:
 
-* data: A Phoenix.Payload object with the data to send.
+* data: A Payload object with the data to send.
 
 For example:
 
 ```
-  let message = Phoenix.Message(message: ["user": "Muhammad Ali", "body": "I am gonna show you how great I am"]
+  let message = Message(message: ["user": "Muhammad Ali", "body": "I am gonna show you how great I am"]
   )
   let topic = "rooms:lobby"
   let event = "new:message"
-  let payload = Phoenix.Payload(topic: topic, event: event, message: message)
+  let payload = Payload(topic: topic, event: event, message: message)
   socket.send(payload)
 
 ```

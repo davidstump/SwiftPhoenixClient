@@ -78,11 +78,11 @@ public class Socket: WebSocketDelegate {
     }
 
     /**
-     Heartbeat payload (Phoenix.Message) to send with each pulse
+     Heartbeat payload (Message) to send with each pulse
      */
     @objc func heartbeat() {
-        let message = Phoenix.Message(message: ["body": "Pong"] as Any)
-        let payload = Phoenix.Payload(topic: "phoenix", event: "heartbeat", message: message)
+        let message = Message(message: ["body": "Pong"] as Any)
+        let payload = Payload(topic: "phoenix", event: "heartbeat", message: message)
         send(data: payload)
     }
 
@@ -133,7 +133,7 @@ public class Socket: WebSocketDelegate {
     func onError(error: NSError) {
         print("Error: \(error)")
         for chan in channels {
-            let msg = Phoenix.Message(message: ["body": error.localizedDescription] as Any)
+            let msg = Message(message: ["body": error.localizedDescription] as Any)
             chan.trigger(triggerEvent: "error", msg: msg)
         }
     }
@@ -167,7 +167,7 @@ public class Socket: WebSocketDelegate {
     func rejoin(chan: Channel) {
         chan.reset()
         if let topic = chan.topic, let joinMessage = chan.message {
-            let payload = Phoenix.Payload(topic: topic, event: "phx_join", message: joinMessage)
+            let payload = Payload(topic: topic, event: "phx_join", message: joinMessage)
             send(data: payload)
             chan.callback(chan)
         }
@@ -176,10 +176,10 @@ public class Socket: WebSocketDelegate {
     /**
      Joins socket
      - parameter topic:    String topic name
-     - parameter message:  Phoenix.Message payload
+     - parameter message:  Message payload
      - parameter callback: Function to trigger after join
      */
-    public func join(topic: String, message: Phoenix.Message, callback: @escaping ((Any) -> Void)) {
+    public func join(topic: String, message: Message, callback: @escaping ((Any) -> Void)) {
         let chan = Channel(topic: topic, message: message, callback: callback, socket: self)
         channels.append(chan)
         if isConnected() {
@@ -191,11 +191,11 @@ public class Socket: WebSocketDelegate {
     /**
      Leave open socket
      - parameter topic:   String topic name
-     - parameter message: Phoenix.Message payload
+     - parameter message: Message payload
      */
-    public func leave(topic: String, message: Phoenix.Message) {
-        let leavingMessage = Phoenix.Message(subject: "status", body: "leaving" as Any)
-        let payload = Phoenix.Payload(topic: topic, event: "phx_leave", message: leavingMessage)
+    public func leave(topic: String, message: Message) {
+        let leavingMessage = Message(subject: "status", body: "leaving" as Any)
+        let payload = Payload(topic: topic, event: "phx_leave", message: leavingMessage)
         send(data: payload)
         var newChannels: [Channel] = []
         for chan in channels {
@@ -209,11 +209,11 @@ public class Socket: WebSocketDelegate {
 
     /**
      Send payload over open socket
-     - parameter data: Phoenix.Payload
+     - parameter data: Payload
      */
-    public func send(data: Phoenix.Payload) {
+    public func send(data: Payload) {
         let callback = {
-            (payload: Phoenix.Payload) -> Void in
+            (payload: Payload) -> Void in
             if let connection = self.conn {
                 let json = self.payloadToJson(payload: payload)
                 print("json: \(json)")
@@ -242,9 +242,9 @@ public class Socket: WebSocketDelegate {
 
     /**
      Trigger event on message received
-     - parameter payload: Phoenix.Payload
+     - parameter payload: Payload
      */
-    func onMessage(payload: Phoenix.Payload) {
+    func onMessage(payload: Payload) {
         let (topic, event, message) = (payload.topic, payload.event, payload.message)
         for chan in channels {
             if chan.isMember(topic: topic) {
@@ -271,7 +271,7 @@ public class Socket: WebSocketDelegate {
                 return
         }
 
-        let messagePayload = Phoenix.Payload(topic: topic, event: event, message: Phoenix.Message(message: msg))
+        let messagePayload = Payload(topic: topic, event: event, message: Message(message: msg))
         onMessage(payload: messagePayload)
     }
 
@@ -308,7 +308,7 @@ public class Socket: WebSocketDelegate {
         return newRef
     }
 
-    func payloadToJson(payload: Phoenix.Payload) -> String {
+    func payloadToJson(payload: Payload) -> String {
         let ref = makeRef()
         var json: [String: Any] = [
             "topic": payload.topic,
