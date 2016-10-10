@@ -14,14 +14,14 @@ class ViewController: UIViewController {
   @IBOutlet var messageField: UITextField!
   @IBOutlet var chatWindow: UITextView!
   @IBOutlet var sendButton: UIButton!
-  let socket = Phoenix.Socket(domainAndPort: "localhost:4000", path: "socket", transport: "websocket")
+  let socket = Socket(domainAndPort: "localhost:4000", path: "socket", transport: "websocket")
   var topic: String? = "rooms:lobby"
   
   @IBAction func sendMessage(_ sender: UIButton) {
-    let message = Phoenix.Message(message: ["user":userField.text!, "body": messageField.text!])
+    let message = Message(message: ["user":userField.text!, "body": messageField.text!])
     print(message.toJsonString())
     
-    let payload = Phoenix.Payload(topic: topic!, event: "new:msg", message: message)
+    let payload = Payload(topic: topic!, event: "new:msg", message: message)
     socket.send(data: payload)
     messageField.text = ""
   }
@@ -30,15 +30,15 @@ class ViewController: UIViewController {
     super.viewDidLoad()
 
     // Join the socket and establish handlers for users entering and submitting messages
-    socket.join(topic: topic!, message: Phoenix.Message(subject: "status", body: "joining")) { channel in
-      let chan = channel as! Phoenix.Channel
+    socket.join(topic: topic!, message: Message(subject: "status", body: "joining")) { channel in
+      let chan = channel as! Channel
       
       chan.on(event: "join") { message in
         self.chatWindow.text = "You joined the room.\n"
       }
       
       chan.on(event: "new:msg") { message in
-        guard let message = message as? Phoenix.Message,
+        guard let message = message as? Message,
               let username = message["user"],
               let body     = message["body"] else {
                 return
@@ -54,7 +54,7 @@ class ViewController: UIViewController {
       }
       
       chan.on(event: "error") { message in
-        guard let message = message as? Phoenix.Message,
+        guard let message = message as? Message,
           let body = message["body"] else {
             return
         }
@@ -70,4 +70,3 @@ class ViewController: UIViewController {
   }
 
 }
-
