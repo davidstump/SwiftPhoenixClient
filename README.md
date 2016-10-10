@@ -47,7 +47,7 @@ protocol: http
 So, to create this socket, you'd write:
 
 ```
-let socket = Phoenix.Socket(domainAndPort: "localhost:4000", path: "socket", transport: "websocket")
+let socket = Socket(domainAndPort: "localhost:4000", path: "socket", transport: "websocket")
 ```
 
 A couple of things to note: first, the default protocol is http, so you can omit
@@ -66,7 +66,7 @@ protocol: ws
 So, the socket would be created with:
 
 ```
-let socket = Phoenix.Socket(domainAndPort: "myphoenixserver.com", path: "socket", transport: "websocket")
+let socket = Socket(domainAndPort: "myphoenixserver.com", path: "socket", transport: "websocket")
 ```
 
 ### Joining Channel
@@ -77,7 +77,7 @@ four arguments:
 * Topic: The topic to join, for instance `"rooms:lobby"`
 * Message: A Phoenix.Message object that is sent to the server when the socket joins the channel.
 * Callback: A closure that receives a AnyObject and returns void. This AnyObject can be cast to
-a Phoenix.Channel object to add callbacks.
+a Channel object to add callbacks.
 
 For example, let's say we're joining the channel `"rooms:lobby"`, we want to
 send a message indicating that we're joining and we don't want to do anything
@@ -87,13 +87,13 @@ retrieving data from a channel in the next section). You'd do something as follo
 
 ```
 socket.join(topic: "rooms:lobby", message: Phoenix.Message(subject: "status", body: "joining")) { channel in
-  let channel = channel as! Phoenix.Channel
+  let channel = channel as! Channel
 }
 ```
 
 ### Channel callbacks
 
-The Phoenix.Channel has one main method to specify callbacks: `on`, which takes two parameters:
+The Channel has one main method to specify callbacks: `on`, which takes two parameters:
 
 * Event: A String object indicating what kind of event you're listening for.
 * Callback: A closure that receives AnyObject and returns void. This AnyObject can be
@@ -126,7 +126,7 @@ Some examples:
 
 In contrast to Phoenix.Socket javascript library, in Swift Phoenix Client you
 don't use a channel object to send data to a channel, you send the data through
-a Phoenix.Socket object directly using the `send` method, which receives one
+a Socket object directly using the `send` method, which receives one
 parameter:
 
 * data: A Phoenix.Payload object with the data to send.
