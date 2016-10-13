@@ -1,0 +1,3 @@
+[submodule "Vendor/Starscream"]
+	path = Vendor/Starscream
+	url = https://github.com/daltoniam/Starscream.git
