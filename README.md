@@ -150,13 +150,11 @@ Check out the [ViewController](https://github.com/davidstump/SwiftPhoenixClient/
 
 Also check out both the Swift and Elixir channels on IRC.
 
-Read the `README_pods.md` file to include this pod from a local copy (of a cloned repo). This may be necessary if you want to use the latest features, but they haven't been tagged and released to CocoaPods yet.
-
 ## Note:
 
-Currently works with Swift 3.0, Xcode 7.0, and Phoenix 1.0.1.
+Currently works with Swift 3.0, Xcode 8.0, and Phoenix 1.2.
 
-Tested with the [Phoenix Chat Server example](https://github.com/chrismccord/phoenix_chat_example), upgraded to Phoenix 1.0.1.
+Tested with the [Phoenix Chat Server example](https://github.com/chrismccord/phoenix_chat_example), upgraded to Phoenix 1.2.
 
 ## Development
 
