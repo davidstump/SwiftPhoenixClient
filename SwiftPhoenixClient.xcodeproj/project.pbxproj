@@ -102,7 +102,7 @@
 				0BFAE4E81DA84F59000B3CD3 /* Info.plist */,
 			);
 			name = SwiftPhoenixClient;
-			path = Source;
+			path = Sources;
 			sourceTree = "<group>";
 		};
 		0BFAE4F11DA84F59000B3CD3 /* Tests */ = {
