@@ -5,6 +5,7 @@
 
 import Swift
 import Starscream
+import Foundation
 
 public class Socket: WebSocketDelegate {
     var conn: WebSocket?
