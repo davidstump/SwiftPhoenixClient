@@ -103,13 +103,13 @@ cast to Message to retrieve data from the message.
 Some examples:
 
 ```
-  channel.on("join") { message in
+  channel.on(event: "join") { message in
     debugPrint("You joined the room")
   }
 ```
 
 ```
-  channel.on("error") { message in
+  channel.on(event: "error") { message in
     let message = message as! Message
 
     // data is a dictionary with keys that indicate the name of the field
