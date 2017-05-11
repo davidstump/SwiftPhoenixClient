@@ -10,6 +10,9 @@ Swift Phoenix Client is an extension of Starscream websocket client library
 that makes it easy to connect to Phoenix sockets in a similar manner to the
 Phoenix Socket Javascript library.
 
+## Contributors
+I am looking for some interested and passionate contributors and/or maintainers to give this library the TLC it deserves. Feel free to send me a note if you are interested and I would love to chat. Thanks! :)
+
 ## Installation
 
 ### CocoaPods
