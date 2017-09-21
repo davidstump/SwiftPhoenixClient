@@ -10,6 +10,9 @@ Swift Phoenix Client is an extension of Starscream websocket client library
 that makes it easy to connect to Phoenix sockets in a similar manner to the
 Phoenix Socket Javascript library.
 
+## Contributors
+I am looking for some interested and passionate contributors and/or maintainers to give this library the TLC it deserves. Feel free to send me a note if you are interested and I would love to chat. Thanks! :)
+
 ## Installation
 
 ### CocoaPods
@@ -103,13 +106,13 @@ cast to Message to retrieve data from the message.
 Some examples:
 
 ```
-  channel.on("join") { message in
-    debugLogger.debug("You joined the room")
+  channel.on(event: "join") { message in
+    debugPrint("You joined the room")
   }
 ```
 
 ```
-  channel.on("error") { message in
+  channel.on(event: "error") { message in
     let message = message as! Message
 
     // data is a dictionary with keys that indicate the name of the field
@@ -146,7 +149,7 @@ For example:
 
 ## Example
 
-Check out the [ViewController](https://github.com/davidstump/SwiftPhoenixClient/blob/master/Example/SwiftPhoenixClient/ViewController.swift) in this repo for a brief example of a simple iOS chat application using the [Phoenix Chat Example](https://github.com/chrismccord/phoenix_chat_example)
+Check out the [ViewController](https://github.com/davidstump/SwiftPhoenixClient/blob/master/Example/ChatExample/ViewController.swift) in this repo for a brief example of a simple iOS chat application using the [Phoenix Chat Example](https://github.com/chrismccord/phoenix_chat_example)
 
 Also check out both the Swift and Elixir channels on IRC.
 
