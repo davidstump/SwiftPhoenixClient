@@ -132,7 +132,7 @@ public class Socket: WebSocketDelegate {
      - parameter error: NSError
      */
     func onError(error: NSError) {
-        print("Error: \(error)")
+      Logger.debug(message: "Error: \(error)")
         for chan in channels {
             let msg = Message(message: ["body": error.localizedDescription] as Any)
             chan.trigger(triggerEvent: "error", msg: msg)
@@ -184,7 +184,7 @@ public class Socket: WebSocketDelegate {
         let chan = Channel(topic: topic, message: message, callback: callback, socket: self)
         channels.append(chan)
         if isConnected() {
-            print("joining")
+          Logger.debug(message: "joining")
             rejoin(chan: chan)
         }
     }
@@ -217,7 +217,7 @@ public class Socket: WebSocketDelegate {
             (payload: Payload) -> Void in
             if let connection = self.conn {
                 let json = self.payloadToJson(payload: payload)
-                print("json: \(json)")
+              Logger.debug(message: "json: \(json)")
                 connection.write(string: json)
             }
         }
@@ -257,37 +257,37 @@ public class Socket: WebSocketDelegate {
     // WebSocket Delegate Methods
 
     public func websocketDidReceiveMessage(socket: WebSocket, text: String) {
-        print("socket message: \(text)")
+      Logger.debug(message: "socket message: \(text)")
 
         guard let data = text.data(using: String.Encoding.utf8),
             let json = try? JSONSerialization.jsonObject(with: data, options: []),
             let jsonObject = json as? [String: AnyObject] else {
-                print("Unable to parse JSON: \(text)")
+            Logger.debug(message: "Unable to parse JSON: \(text)")
                 return
         }
 
         guard let topic = jsonObject["topic"] as? String, let event = jsonObject["event"] as? String,
             let msg = jsonObject["payload"] as? [String: AnyObject] else {
-                print("No phoenix message: \(text)")
+              Logger.debug(message: "No phoenix message: \(text)")
                 return
         }
-
+        Logger.debug(message: "JSON Object: \(jsonObject)")
         let messagePayload = Payload(topic: topic, event: event, message: Message(message: msg))
         onMessage(payload: messagePayload)
     }
 
     public func websocketDidReceiveData(socket: WebSocket, data: Data) {
-        print("got some data: \(data.count)")
+      Logger.debug(message: "got some data: \(data.count)")
     }
 
     public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
         if let err = error { onError(error: err) }
-        print("socket closed: \(error?.localizedDescription)")
+        Logger.debug(message: "socket closed: \(error?.localizedDescription)")
         onClose(event: "reason: \(error?.localizedDescription)")
     }
 
     public func websocketDidConnect(socket: WebSocket) {
-        print("socket opened")
+      Logger.debug(message: "socket opened")
         onOpen()
     }
 

@@ -83,7 +83,7 @@ public class Channel {
      - parameter message: Message payload
      */
     func send(event: String, message: Message) {
-        print("conn sending")
+        Logger.debug(message: "conn sending")
         let payload = Payload(topic: topic!, event: event, message: message)
         socket?.send(data: payload)
     }

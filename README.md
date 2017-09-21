@@ -104,7 +104,7 @@ Some examples:
 
 ```
   channel.on("join") { message in
-    debugPrint("You joined the room")
+    debugLogger.debug("You joined the room")
   }
 ```
 
@@ -119,7 +119,7 @@ Some examples:
     // Let's say that our data has a "error_type" key
     let errorType = (data["error_type"].asString)!
 
-    debugPrint(errorType)
+    debugLogger.debug(errorType)
   }
 ```
 
