@@ -46,15 +46,15 @@ public class Channel {
      - parameter topic: String topic name for comparison
      - returns: Boolean
      */
-    func isMember(topic: String) -> Bool {
+    public func isMember(topic: String) -> Bool {
         return self.topic == topic
     }
 
     /**
-     Removes an event binding from this cahnnel
+     Removes an event binding from this channel
      - parameter event: String event name
      */
-    func off(event: String) {
+    public func off(event: String) {
         var newBindings: [Binding] = []
         for binding in bindings {
             if binding.event != event {
@@ -82,7 +82,7 @@ public class Channel {
      - parameter event:   String event name
      - parameter message: Message payload
      */
-    func send(event: String, message: Message) {
+    public func send(event: String, message: Message) {
         Logger.debug(message: "conn sending")
         let payload = Payload(topic: topic!, event: event, message: message)
         socket?.send(data: payload)
@@ -92,7 +92,7 @@ public class Channel {
      Leaves the socket
      - parameter message: Message to pass to the Socket#leave function
      */
-    func leave(message: Message) {
+    public func leave(message: Message) {
         if let sock = socket {
             sock.leave(topic: topic!, message: message)
         }
