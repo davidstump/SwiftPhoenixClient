@@ -282,8 +282,8 @@ public class Socket: WebSocketDelegate {
 
     public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
         if let err = error { onError(error: err) }
-        Logger.debug(message: "socket closed: \(error?.localizedDescription)")
-        onClose(event: "reason: \(error?.localizedDescription)")
+        Logger.debug(message: "socket closed: \(error?.localizedDescription ?? "Unknown error")")
+        onClose(event: "reason: \(error?.localizedDescription ?? "Unknown error")")
     }
 
     public func websocketDidConnect(socket: WebSocket) {
