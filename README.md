@@ -42,7 +42,7 @@ protocol. For example:
 
 ```
 http://localhost:4000/socket
-domainAndPort: loocalhost:4000
+domainAndPort: localhost:4000
 path: socket
 transport: websocket
 protocol: http
