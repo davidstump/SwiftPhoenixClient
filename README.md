@@ -21,7 +21,7 @@ You can install SwiftPhoenix Client via CocoaPods by adding the following to you
 Podfile. Keep in mind that in order to use Swift Phoenix Client, the minimum iOS
 target must be '9.0'
 
-```
+```RUBY
 platform :ios, '9.0'
 use_frameworks!
 
@@ -50,7 +50,7 @@ protocol: http
 ```
 So, to create this socket, you'd write:
 
-```
+```SWIFT
 let socket = Socket(domainAndPort: "localhost:4000", path: "socket", transport: "websocket")
 ```
 
@@ -69,7 +69,7 @@ protocol: ws
 
 So, the socket would be created with:
 
-```
+```SWIFT
 let socket = Socket(domainAndPort: "myphoenixserver.com", path: "socket", transport: "websocket")
 ```
 
@@ -89,7 +89,7 @@ with the channel we're joining (we'll get into details about sending and
 retrieving data from a channel in the next section). You'd do something as follows.
 
 
-```
+```SWIFT
 socket.join(topic: "rooms:lobby", message: Message(subject: "status", body: "joining")) { channel in
   let channel = channel as! Channel
 }
@@ -105,13 +105,13 @@ cast to Message to retrieve data from the message.
 
 Some examples:
 
-```
+```SWIFT
   channel.on(event: "join") { message in
     debugPrint("You joined the room")
   }
 ```
 
-```
+```SWIFT
   channel.on(event: "error") { message in
     let message = message as! Message
 
@@ -137,7 +137,7 @@ parameter:
 
 For example:
 
-```
+```SWIFT
   let message = Message(message: ["user": "Muhammad Ali", "body": "I am gonna show you how great I am"]
   )
   let topic = "rooms:lobby"
