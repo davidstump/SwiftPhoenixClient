@@ -1,15 +1,14 @@
 source 'https://github.com/CocoaPods/Specs.git'
-use_frameworks!
+platform :ios, '9.0'
+swift_version = "4.0"
+
+# Pods are noisy, especially the ObjC based ones
+inhibit_all_warnings!
+
+
 
 target 'ChatExample' do
+  use_frameworks!
+
   pod "SwiftPhoenixClient", :path => "../"
 end
-
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    target.build_configurations.each do |config|
-      config.build_settings['SWIFT_VERSION'] = '3.0'
-    end
-  end
-end
-

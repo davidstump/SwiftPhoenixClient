@@ -1,19 +1,16 @@
 ![starscream](https://raw.githubusercontent.com/daltoniam/starscream/assets/starscream.jpg)
 
-Starscream is a conforming WebSocket ([RFC 6455](http://tools.ietf.org/html/rfc6455)) client library in Swift for iOS and OSX.
+Starscream is a conforming WebSocket ([RFC 6455](http://tools.ietf.org/html/rfc6455)) client library in Swift.
 
-It's Objective-C counter part can be found here: [Jetfire](https://github.com/acmacalister/jetfire)
+Its Objective-C counterpart can be found here: [Jetfire](https://github.com/acmacalister/jetfire)
 
 ## Features
 
 - Conforms to all of the base [Autobahn test suite](http://autobahn.ws/testsuite/).
 - Nonblocking. Everything happens in the background, thanks to GCD.
 - TLS/WSS support.
+- Compression Extensions support ([RFC 7692](https://tools.ietf.org/html/rfc7692))
 - Simple concise codebase at just a few hundred LOC.
-
-## Swift 2.3
-
-See release/tag 1.1.4 for Swift 2.3 support.
 
 ## Example
 
@@ -38,7 +35,7 @@ After you are connected, there are some delegate methods that we need to impleme
 websocketDidConnect is called as soon as the client connects to the server.
 
 ```swift
-func websocketDidConnect(socket: WebSocket) {
+func websocketDidConnect(socket: WebSocketClient) {
     print("websocket is connected")
 }
 ```
@@ -48,7 +45,7 @@ func websocketDidConnect(socket: WebSocket) {
 websocketDidDisconnect is called as soon as the client is disconnected from the server.
 
 ```swift
-func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
+func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
 	print("websocket is disconnected: \(error?.localizedDescription)")
 }
 ```
@@ -58,7 +55,7 @@ func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
 websocketDidReceiveMessage is called when the client gets a text frame from the connection.
 
 ```swift
-func websocketDidReceiveMessage(socket: WebSocket, text: String) {
+func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
 	print("got some text: \(text)")
 }
 ```
@@ -68,7 +65,7 @@ func websocketDidReceiveMessage(socket: WebSocket, text: String) {
 websocketDidReceiveData is called when the client gets a binary frame from the connection.
 
 ```swift
-func websocketDidReceiveData(socket: WebSocket, data: Data) {
+func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
 	print("got some data: \(data.count)")
 }
 ```
@@ -78,7 +75,7 @@ func websocketDidReceiveData(socket: WebSocket, data: Data) {
 websocketDidReceivePong is called when the client gets a pong response from the connection. You need to implement the WebSocketPongDelegate protocol and set an additional delegate, eg: ` socket.pongDelegate = self`
 
 ```swift
-func websocketDidReceivePong(socket: WebSocket, data: Data?) {
+func websocketDidReceivePong(socket: WebSocketClient, data: Data?) {
 	print("Got pong! Maybe some data: \(data?.count)")
 }
 ```
@@ -92,7 +89,7 @@ socket.onConnect = {
     print("websocket is connected")
 }
 //websocketDidDisconnect
-socket.onDisconnect = { (error: NSError?) in
+socket.onDisconnect = { (error: Error?) in
     print("websocket is disconnected: \(error?.localizedDescription)")
 }
 //websocketDidReceiveMessage
@@ -107,7 +104,7 @@ socket.onData = { (data: Data) in
 socket.connect()
 ```
 
-One more: you can listen to socket connection and disconnection via notifications. Starscream posts `WebsocketDidConnectNotification` and `WebsocketDidDisconnectNotification`. You can find an `NSError` that caused the disconection by accessing `WebsocketDisconnectionErrorKeyName` on notification `userInfo`.
+One more: you can listen to socket connection and disconnection via notifications. Starscream posts `WebsocketDidConnectNotification` and `WebsocketDidDisconnectNotification`. You can find an `Error` that caused the disconection by accessing `WebsocketDisconnectionErrorKeyName` on notification `userInfo`.
 
 
 ## The delegate methods give you a simple way to handle data from the server, but how do you send data?
@@ -136,6 +133,25 @@ The writePing method is the same as write, but sends a ping control frame.
 socket.write(ping: Data()) //example on how to write a ping control frame over the socket!
 ```
 
+### write a pong frame
+
+
+the writePong method is the same as writePing, but sends a pong control frame.
+
+```swift
+socket.write(pong: Data()) //example on how to write a pong control frame over the socket!
+```
+
+Starscream will automatically respond to incoming `ping` control frames so you do not need to manually send `pong`s.
+
+However if for some reason you need to control this prosses you can turn off the automatic `ping` response by disabling `respondToPingWithPong`.
+
+```swift
+socket.respondToPingWithPong = false //Do not automaticaly respond to incoming pings with pongs.
+```
+
+In most cases you will not need to do this.
+
 ### disconnect
 
 The disconnect method does what you would expect and closes the socket.
@@ -159,9 +175,23 @@ if socket.isConnected {
 You can also override the default websocket headers with your own custom ones like so:
 
 ```swift
-socket.headers["Sec-WebSocket-Protocol"] = "someother protocols"
-socket.headers["Sec-WebSocket-Version"] = "14"
-socket.headers["My-Awesome-Header"] = "Everything is Awesome!"
+var request = URLRequest(url: URL(string: "ws://localhost:8080/")!)
+request.timeoutInterval = 5
+request.setValue("someother protocols", forHTTPHeaderField: "Sec-WebSocket-Protocol")
+request.setValue("14", forHTTPHeaderField: "Sec-WebSocket-Version")
+request.setValue("Everything is Awesome!", forHTTPHeaderField: "My-Awesome-Header")
+let socket = WebSocket(request: request)
+```
+
+### Custom HTTP Method
+
+Your server may use a different HTTP method when connecting to the websocket:
+
+```swift
+var request = URLRequest(url: URL(string: "ws://localhost:8080/")!)
+request.httpMethod = "POST"
+request.timeoutInterval = 5
+let socket = WebSocket(request: request)
 ```
 
 ### Protocols
@@ -175,23 +205,18 @@ socket.delegate = self
 socket.connect()
 ```
 
-### Self Signed SSL and VOIP
-
-There are a couple of other properties that modify the stream:
+### Self Signed SSL
 
 ```swift
 socket = WebSocket(url: URL(string: "ws://localhost:8080/")!, protocols: ["chat","superchat"])
 
-//set this if you are planning on using the socket in a VOIP background setting (using the background VOIP service).
-socket.voipEnabled = true
-
-//set this you want to ignore SSL cert validation, so a self signed SSL certificate can be used.
+//set this if you want to ignore SSL cert validation, so a self signed SSL certificate can be used.
 socket.disableSSLCertValidation = true
 ```
 
 ### SSL Pinning
 
-SSL Pinning is also supported in Starscream. 
+SSL Pinning is also supported in Starscream.
 
 ```swift
 socket = WebSocket(url: URL(string: "ws://localhost:8080/")!, protocols: ["chat","superchat"])
@@ -200,6 +225,30 @@ socket.security = SSLSecurity(certs: [SSLCert(data: data)], usePublicKeys: true)
 //socket.security = SSLSecurity() //uses the .cer files in your app's bundle
 ```
 You load either a `Data` blob of your certificate or you can use a `SecKeyRef` if you have a public key you want to use. The `usePublicKeys` bool is whether to use the certificates for validation or the public keys. The public keys will be extracted from the certificates automatically if `usePublicKeys` is choosen.
+
+### SSL Cipher Suites
+
+To use an SSL encrypted connection, you need to tell Starscream about the cipher suites your server supports. 
+
+```swift
+socket = WebSocket(url: URL(string: "wss://localhost:8080/")!, protocols: ["chat","superchat"])
+
+// Set enabled cipher suites to AES 256 and AES 128
+socket.enabledSSLCipherSuites = [TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256] 
+```
+
+If you don't know which cipher suites are supported by your server, you can try pointing [SSL Labs](https://www.ssllabs.com/ssltest/) at it and checking the results.
+
+### Compression Extensions
+
+Compression Extensions ([RFC 7692](https://tools.ietf.org/html/rfc7692)) is supported in Starscream.  Compression is enabled by default, however compression will only be used if it is supported by the server as well.  You may enable or disable compression via the `.enableCompression` property:
+
+```swift
+socket = WebSocket(url: URL(string: "ws://localhost:8080/")!)
+socket.enableCompression = false
+```
+
+Compression should be disabled if your application is transmitting already-compressed, random, or other uncompressable data.
 
 ### Custom Queue
 
@@ -231,7 +280,7 @@ To use Starscream in your project add the following 'Podfile' to your project
 	platform :ios, '9.0'
 	use_frameworks!
 
-	pod 'Starscream', '~> 2.0.0'
+	pod 'Starscream', '~> 3.0.2'
 
 Then run:
 
@@ -253,7 +302,7 @@ $ brew install carthage
 To integrate Starscream into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```
-github "daltoniam/Starscream" >= 2.0.0
+github "daltoniam/Starscream" >= 3.0.2
 ```
 
 ### Rogue
@@ -263,10 +312,22 @@ First see the [installation docs](https://github.com/acmacalister/Rogue) for how
 To install Starscream run the command below in the directory you created the rogue file.
 
 ```
-rogue add https://github.com/daltoniam/starscream
+rogue add https://github.com/daltoniam/Starscream
 ```
 
 Next open the `libs` folder and add the `Starscream.xcodeproj` to your Xcode project. Once that is complete, in your "Build Phases" add the `Starscream.framework` to your "Link Binary with Libraries" phase. Make sure to add the `libs` folder to your `.gitignore` file.
+
+### Swift Package Manager
+
+The [Swift Package Manager](https://swift.org/package-manager/) is a tool for automating the distribution of Swift code and is integrated into the `swift` compiler.
+
+Once you have your Swift package set up, adding Starscream as a dependency is as easy as adding it to the `dependencies` value of your `Package.swift`.
+
+```swift
+dependencies: [
+    .Package(url: "https://github.com/daltoniam/Starscream.git", majorVersion: 3)
+]
+```
 
 ### Other
 
@@ -278,11 +339,54 @@ Add the `Starscream.xcodeproj` to your Xcode project. Once that is complete, in 
 
 If you are running this in an OSX app or on a physical iOS device you will need to make sure you add the `Starscream.framework` to be included in your app bundle. To do this, in Xcode, navigate to the target configuration window by clicking on the blue project icon, and selecting the application target under the "Targets" heading in the sidebar. In the tab bar at the top of that window, open the "Build Phases" panel. Expand the "Link Binary with Libraries" group, and add `Starscream.framework`. Click on the + button at the top left of the panel and select "New Copy Files Phase". Rename this new phase to "Copy Frameworks", set the "Destination" to "Frameworks", and add `Starscream.framework` respectively.
 
+
+## WebSocketAdvancedDelegate
+The advanced delegate acts just like the simpler delegate but provides some additional information on the connection and incoming frames.
+
+```swift
+socket.advancedDelegate = self
+```
+
+In most cases you do not need the extra info and should use the normal delegate.
+
+#### websocketDidReceiveMessage
+```swift
+func websocketDidReceiveMessage(socket: WebSocketClient, text: String, response: WebSocket.WSResponse) {
+	print("got some text: \(text)")
+	print("First frame for this message arrived on \(response.firstFrame)")
+}
+```
+
+#### websocketDidReceiveData
+```swift
+func websocketDidReceiveData(socket: WebSocketClient, data: Date, response: WebSocket.WSResponse) {
+	print("got some data it long: \(data.count)")
+	print("A total of \(response.frameCount) frames were used to send this data")
+}
+```
+
+#### websocketHttpUpgrade
+These methods are called when the HTTP upgrade request is sent and when the response returns.
+```swift
+func  websocketHttpUpgrade(socket: WebSocketClient, request: CFHTTPMessage) {
+	print("the http request was sent we can check the raw http if we need to")
+}
+```
+
+```swift
+func  websocketHttpUpgrade(socket: WebSocketClient, response: CFHTTPMessage) {
+	print("the http response has returned.")
+}
+```
+
+## KNOWN ISSUES
+- WatchOS does not have the the CFNetwork String constants to modify the stream's SSL behavior. It will be the default Foundation SSL behavior. This means watchOS CANNOT use `SSLCiphers`,  `disableSSLCertValidation`, or SSL pinning. All these values set on watchOS will do nothing. 
+- Linux does not have the security framework, so it CANNOT use SSL pinning or `SSLCiphers` either. 
+
+
 ## TODOs
 
-- [ ] WatchOS?
-- [ ] Linux Support?
-- [ ] Add Unit Tests - Local Swift websocket server
+- [ ] Add Unit Tests - Local WebSocket server that runs against Autobahn
 
 ## License
 
