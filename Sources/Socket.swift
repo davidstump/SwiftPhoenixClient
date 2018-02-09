@@ -256,7 +256,7 @@ public class Socket: WebSocketDelegate {
 
     // WebSocket Delegate Methods
 
-    public func websocketDidReceiveMessage(socket: WebSocket, text: String) {
+    public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
       Logger.debug(message: "socket message: \(text)")
 
         guard let data = text.data(using: String.Encoding.utf8),
@@ -276,17 +276,17 @@ public class Socket: WebSocketDelegate {
         onMessage(payload: messagePayload)
     }
 
-    public func websocketDidReceiveData(socket: WebSocket, data: Data) {
+    public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
       Logger.debug(message: "got some data: \(data.count)")
     }
 
-    public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
-        if let err = error { onError(error: err) }
+    public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
+        if let err = error { onError(error: err as NSError) }
         Logger.debug(message: "socket closed: \(error?.localizedDescription ?? "Unknown error")")
         onClose(event: "reason: \(error?.localizedDescription ?? "Unknown error")")
     }
 
-    public func websocketDidConnect(socket: WebSocket) {
+    public func websocketDidConnect(socket: WebSocketClient) {
       Logger.debug(message: "socket opened")
         onOpen()
     }
