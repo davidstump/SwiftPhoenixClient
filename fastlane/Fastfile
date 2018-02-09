@@ -1,0 +1,39 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+
+  desc "Runs tests for the project"
+  lane :test do 
+    execute_tests
+    gather_coverage
+  end
+
+
+  # PRIVATE LANES
+  private_lane :execute_tests do 
+    scan(
+      workspace: "SwiftPhoenixClient.xcworkspace",
+      scheme: "SwiftPhoenixClient",
+      code_coverage: true
+    )
+  end
+
+  private_lane :gather_coverage do 
+    slather(
+      use_bundle_exec: true,
+      cobertura_xml: true,
+      travis: true
+    )
+  end
+end

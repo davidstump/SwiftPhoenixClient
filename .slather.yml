@@ -1,0 +1,12 @@
+# .slather.yml
+# CodeCov
+
+coverage_service: cobertura_xml
+xcodeproj: SwiftPhoenixClient.xcodeproj
+scheme: SwiftPhoenixClient
+workspace: SwiftPhoenixClient.xcworkspace
+source_directory: SwiftPhoenixClient
+output_directory: fastlane/test_output
+ignore:
+  - ../*
+  - Pods/*
