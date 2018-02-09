@@ -19,11 +19,16 @@
 //  limitations under the License.
 //
 //////////////////////////////////////////////////////////////////////////////////////////////////
-
+#if os(Linux)
+#else
 import Foundation
 import Security
 
-public class SSLCert {
+public protocol SSLTrustValidator {
+    func isValid(_ trust: SecTrust, domain: String?) -> Bool
+}
+
+open class SSLCert {
     var certData: Data?
     var key: SecKey?
     
@@ -50,9 +55,10 @@ public class SSLCert {
     }
 }
 
-public class SSLSecurity {
+open class SSLSecurity : SSLTrustValidator {
     public var validatedDN = true //should the domain name be validated?
-    
+    public var validateEntireChain = true //should the entire cert chain be validated
+
     var isReady = false //is the key processing done?
     var certificates: [Data]? //the certificates
     var pubKeys: [SecKey]? //the public keys
@@ -82,7 +88,7 @@ public class SSLSecurity {
     /**
     Designated init
     
-    - parameter keys: is the certificates or public keys to use
+    - parameter certs: is the certificates or public keys to use
     - parameter usePublicKeys: is to specific if the publicKeys or certificates should be used for SSL pinning validation
     
     - returns: a representation security object to be used with
@@ -165,6 +171,9 @@ public class SSLSecurity {
             var result: SecTrustResultType = .unspecified
             SecTrustEvaluate(trust,&result)
             if result == .unspecified || result == .proceed {
+                if !validateEntireChain {
+                    return true
+                }
                 var trustedCount = 0
                 for serverCert in serverCerts {
                     for cert in certs {
@@ -254,3 +263,4 @@ public class SSLSecurity {
     
     
 }
+#endif
