@@ -23,7 +23,6 @@ platform :ios do
   # PRIVATE LANES
   private_lane :execute_tests do 
     scan(
-      workspace: "SwiftPhoenixClient.xcworkspace",
       scheme: "SwiftPhoenixClient",
       code_coverage: true
     )
