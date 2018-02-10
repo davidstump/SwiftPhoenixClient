@@ -161,7 +161,7 @@ Tested with the [Phoenix Chat Server example](https://github.com/chrismccord/pho
 
 ## Development
 
-To set up your environment to work on `SwiftPhoenixClient` itself, clone the repo and then run `$ git submodule update --init` to check out the appropriate version of `Starscream`. You can then open `SwiftPhoenixClient.xcworkspace` in Xcode.
+Check out the wiki page for [getting started](https://github.com/davidstump/SwiftPhoenixClient/wiki/Contributing)
 
 ## License
 
