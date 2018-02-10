@@ -14,7 +14,7 @@ class ViewController: UIViewController {
   @IBOutlet var messageField: UITextField!
   @IBOutlet var chatWindow: UITextView!
   @IBOutlet var sendButton: UIButton!
-  let socket = Socket(domainAndPort: "localhost:4000", path: "socket", transport: "websocket")
+    let socket = Socket(url: "ws://localhost:4000/socket/websocket")
   var topic: String? = "rooms:lobby"
   
   @IBAction func sendMessage(_ sender: UIButton) {
@@ -28,6 +28,7 @@ class ViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    socket.connect()
 
     // Join the socket and establish handlers for users entering and submitting messages
     socket.join(topic: topic!, message: Message(subject: "status", body: "joining")) { channel in
