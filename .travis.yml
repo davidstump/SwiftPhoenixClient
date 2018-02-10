@@ -1,14 +1,18 @@
-# references:
-# * http://www.objc.io/issue-6/travis-ci.html
-# * https://github.com/supermarin/xcpretty#usage
+language: swift
 
-osx_image: xcode8
-language: objective-c
-# cache: cocoapods
-# podfile: Example/Podfile
-# before_install:
-# - gem install cocoapods # Since Travis is not always on latest version
-# - pod install --project-directory=Example
+os: osx
+osx_image: xcode9.2
+cache:
+  bundler: true
+  directories:
+    - Carthage
+
+before_install:
+  - brew update
+  - brew outdated carthage || brew upgrade carthage
+  - carthage bootstrap --no-use-binaries --platform iOS --cache-builds
+
 script:
-- set -o pipefail && xcodebuild test -workspace SwiftPhoenixClient.xcworkspace -scheme SwiftPhoenixClient -sdk iphonesimulator10.0 ONLY_ACTIVE_ARCH=NO | xcpretty
-- pod lib lint --allow-warnings
+  - bundle exec fastlane test
+# after_success:
+#   - bash <(curl -s https://codecov.io/bash)
