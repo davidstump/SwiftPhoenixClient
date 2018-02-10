@@ -18,56 +18,46 @@ class ViewController: UIViewController {
   var topic: String? = "rooms:lobby"
   
   @IBAction func sendMessage(_ sender: UIButton) {
-    let message = Message(message: ["user":userField.text!, "body": messageField.text!])
-    print(message.toJsonString())
+    let payload = ["user":userField.text!, "body": messageField.text!]
+    let outbound = Outbound(topic: topic!, event: "new:msg", payload: payload)
     
-    let payload = Payload(topic: topic!, event: "new:msg", message: message)
-    socket.send(data: payload)
+
+    socket
+        .send(outbound: outbound)
+        .receive("ok") { (payload) in
+            print("success", payload)
+        }
+        .receive("error") { (errorPayload) in
+            print("error: ", errorPayload)
+        }
+        .always {
+            print("always")
+        }
+    
     messageField.text = ""
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    socket.connect()
-
-    // Join the socket and establish handlers for users entering and submitting messages
-    socket.join(topic: topic!, message: Message(subject: "status", body: "joining")) { channel in
-      let chan = channel as! Channel
-      
-      chan.on(event: "join") { message in
-        self.chatWindow.text = "You joined the room.\n"
-      }
-      
-      chan.on(event: "new:msg") { message in
-        guard let message = message as? Message,
-              let username = message["user"],
-              let body     = message["body"] else {
-                return
-        }
-        let newMessage = "[\(username)] \(body)\n"
-        let updatedText = self.chatWindow.text.appending(newMessage)
-        self.chatWindow.text = updatedText
-      }
-      
-      chan.on(event: "user:entered") { message in
-        let username = "anonymous"
-        self.chatWindow.text = self.chatWindow.text.appending("[\(username) entered]\n")
-      }
-      
-      chan.on(event: "error") { message in
-        guard let message = message as? Message,
-          let body = message["body"] else {
-            return
-        }
-        let newMessage = "[ERROR] \(body)\n"
-        let updatedText = self.chatWindow.text.appending(newMessage)
-        self.chatWindow.text = updatedText
-      }
+    socket.join(topic: topic!, payload: ["status":"joining"]) { (channel) in
+        channel.on(event: "join", handler: { (payload) in
+            self.chatWindow.text = "You joined the room.\n"
+        })
+        
+        channel.on(event: "new:msg", handler: { (payload) in
+            guard let username = payload["user"], let body = payload["body"] else { return }
+            let newMessage = "[\(username)] \(body)\n"
+            let updatedText = self.chatWindow.text.appending(newMessage)
+            self.chatWindow.text = updatedText
+        })
+        
+        channel.on(event: "user:entered", handler: { (payload) in
+            let username = "anonymous"
+            self.chatWindow.text = self.chatWindow.text.appending("[\(username) entered]\n")
+        })
     }
-  }
-  
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
+    
+    socket.open()
   }
 
 }
