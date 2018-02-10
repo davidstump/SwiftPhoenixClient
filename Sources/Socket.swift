@@ -3,13 +3,16 @@
 //  SwiftPhoenixClient
 //
 
-import Swift
-import Starscream
 import Foundation
+import Starscream
 
 public class Socket: WebSocketDelegate {
+    
+    private let _endpoint: URL
+    public var endpoint: URL { get { return _endpoint } }
+    
+    
     var conn: WebSocket?
-    var endPoint: String?
     var channels: [Channel] = []
 
     var sendBuffer: [Void] = []
@@ -24,6 +27,39 @@ public class Socket: WebSocketDelegate {
 
     var messageReference: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
 
+    
+    /// Initializes a Socket, pointed at the given URL
+    ///
+    /// - parameter url: URL to point to
+    /// - parameter params: Optional query parameters to append to the URL
+    @available(*, introduced: 0.7.0)
+    public init(url: URL, params: [String: Any]? = nil) {
+        guard
+            var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false),
+            let params = params
+            else {
+                _endpoint = url
+                return
+            }
+        
+        urlComponents.queryItems = params.map({ return URLQueryItem(name: $0.key, value: String(describing: $0.value)) })
+        guard let url = urlComponents.url else { fatalError("Malformed URL while adding paramters") }
+        _endpoint = url
+    }
+    
+    /// Initializes a Socket, pointed at the given URL as a String. If the String
+    /// cannot be resolved into a URL, then a fatal error is thrown
+    ///
+    /// - parameter url: String representation of URL to point to
+    /// - parameter params: Optional query parameters to append to the URL
+    @available(*, introduced: 0.7.0)
+    public convenience init(url: String, params: [String: Any]? = nil) {
+        guard let parsedUrl = URL(string: url) else { fatalError("Malformed URL String \(url)") }
+        self.init(url: parsedUrl, params: params)
+    }
+    
+    
+    
     /**
      Initializes a Socket connection
      - parameter domainAndPort: Phoenix server root path and proper port
@@ -32,13 +68,22 @@ public class Socket: WebSocketDelegate {
      - parameter prot:          Connection protocol - default is HTTP
      - returns: Socket
      */
+    @available(*, deprecated: 0.7.0)
     public init(domainAndPort:String, path:String, transport:String, prot:String = "http", params: [String: Any]? = nil) {
-        self.endPoint = Path.endpointWithProtocol(prot: prot, domainAndPort: domainAndPort, path: path, transport: transport)
+        var endpointString = Path.endpointWithProtocol(prot: prot, domainAndPort: domainAndPort, path: path, transport: transport)
 
         if let parameters = params {
-            self.endPoint = self.endPoint! + "?" + parameters.map({ "\($0.0)=\($0.1)" }).joined(separator: "&")
+            endpointString = endpointString + "?" + parameters.map({ "\($0.0)=\($0.1)" }).joined(separator: "&")
         }
+        
+        _endpoint = URL(string: endpointString)!
 
+        resetBufferTimer()
+        reconnect()
+    }
+    
+    /// Opens a connection
+    public func connect() {
         resetBufferTimer()
         reconnect()
     }
@@ -92,7 +137,7 @@ public class Socket: WebSocketDelegate {
      */
     @objc public func reconnect() {
         close() {
-            self.conn = WebSocket(url: NSURL(string: self.endPoint!)! as URL)
+            self.conn = WebSocket(url: _endpoint)
             if let connection = self.conn {
                 connection.delegate = self
                 connection.connect()

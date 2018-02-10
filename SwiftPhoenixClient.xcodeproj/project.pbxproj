@@ -20,6 +20,7 @@
 		12252F56202EA467000BA6A2 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12252F54202EA467000BA6A2 /* Quick.framework */; };
 		12252F57202EA467000BA6A2 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12252F55202EA467000BA6A2 /* Nimble.framework */; };
 		12252F58202EA52C000BA6A2 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BFAE4E41DA84F59000B3CD3 /* SwiftPhoenixClient.framework */; };
+		12EAFF29202F656300685575 /* SocketSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EAFF27202F654300685575 /* SocketSpec.swift */; };
 		635CB1F31F7415F400438844 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635CB1F21F7415F400438844 /* Logger.swift */; };
 		63CD642E1DB11E8400C406A6 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD642D1DB11E8400C406A6 /* Presence.swift */; };
 		63CD64321DB1272400C406A6 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD64311DB1272400C406A6 /* Response.swift */; };
@@ -53,6 +54,7 @@
 		12046065202E9AAD00036A92 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
 		12252F54202EA467000BA6A2 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
 		12252F55202EA467000BA6A2 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
+		12EAFF27202F654300685575 /* SocketSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketSpec.swift; sourceTree = "<group>"; };
 		635CB1F21F7415F400438844 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		63CD642D1DB11E8400C406A6 /* Presence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Presence.swift; sourceTree = "<group>"; };
 		63CD64311DB1272400C406A6 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 			children = (
 				0BFAE50B1DA85527000B3CD3 /* PathTests.swift */,
 				0BFAE4F41DA84F59000B3CD3 /* Info.plist */,
+				12EAFF27202F654300685575 /* SocketSpec.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -287,6 +290,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0BFAE50C1DA85527000B3CD3 /* PathTests.swift in Sources */,
+				12EAFF29202F656300685575 /* SocketSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
