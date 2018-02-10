@@ -11,14 +11,15 @@
 		0B8517E51DAC12F40093A015 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8517E41DAC12F40093A015 /* Channel.swift */; };
 		0B8517E71DAC38E00093A015 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8517E61DAC38E00093A015 /* Binding.swift */; };
 		0B8517E91DAC39270093A015 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8517E81DAC39270093A015 /* Message.swift */; };
-		0BFAE4EE1DA84F59000B3CD3 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BFAE4E41DA84F59000B3CD3 /* SwiftPhoenixClient.framework */; };
 		0BFAE4F51DA84F59000B3CD3 /* SwiftPhoenixClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BFAE4E71DA84F59000B3CD3 /* SwiftPhoenixClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0BFAE5011DA84FF2000B3CD3 /* Path.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFAE4FE1DA84FF2000B3CD3 /* Path.swift */; };
 		0BFAE5021DA84FF2000B3CD3 /* Payload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFAE4FF1DA84FF2000B3CD3 /* Payload.swift */; };
 		0BFAE5031DA84FF2000B3CD3 /* Serializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFAE5001DA84FF2000B3CD3 /* Serializable.swift */; };
-		0BFAE5091DA853B5000B3CD3 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BFAE5081DA853B5000B3CD3 /* Starscream.framework */; };
-		0BFAE50A1DA853EE000B3CD3 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BFAE5081DA853B5000B3CD3 /* Starscream.framework */; };
 		0BFAE50C1DA85527000B3CD3 /* PathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BFAE50B1DA85527000B3CD3 /* PathTests.swift */; };
+		12046066202E9AAD00036A92 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12046065202E9AAD00036A92 /* Starscream.framework */; };
+		12252F56202EA467000BA6A2 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12252F54202EA467000BA6A2 /* Quick.framework */; };
+		12252F57202EA467000BA6A2 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12252F55202EA467000BA6A2 /* Nimble.framework */; };
+		12252F58202EA52C000BA6A2 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BFAE4E41DA84F59000B3CD3 /* SwiftPhoenixClient.framework */; };
 		635CB1F31F7415F400438844 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635CB1F21F7415F400438844 /* Logger.swift */; };
 		63CD642E1DB11E8400C406A6 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD642D1DB11E8400C406A6 /* Presence.swift */; };
 		63CD64321DB1272400C406A6 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD64311DB1272400C406A6 /* Response.swift */; };
@@ -49,6 +50,9 @@
 		0BFAE5001DA84FF2000B3CD3 /* Serializable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serializable.swift; sourceTree = "<group>"; };
 		0BFAE5081DA853B5000B3CD3 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = "Vendor/Starscream/build/Debug-iphoneos/Starscream.framework"; sourceTree = "<group>"; };
 		0BFAE50B1DA85527000B3CD3 /* PathTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathTests.swift; sourceTree = "<group>"; };
+		12046065202E9AAD00036A92 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
+		12252F54202EA467000BA6A2 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
+		12252F55202EA467000BA6A2 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
 		635CB1F21F7415F400438844 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		63CD642D1DB11E8400C406A6 /* Presence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Presence.swift; sourceTree = "<group>"; };
 		63CD64311DB1272400C406A6 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
@@ -59,7 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0BFAE50A1DA853EE000B3CD3 /* Starscream.framework in Frameworks */,
+				12046066202E9AAD00036A92 /* Starscream.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,8 +71,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0BFAE5091DA853B5000B3CD3 /* Starscream.framework in Frameworks */,
-				0BFAE4EE1DA84F59000B3CD3 /* SwiftPhoenixClient.framework in Frameworks */,
+				12252F58202EA52C000BA6A2 /* SwiftPhoenixClient.framework in Frameworks */,
+				12252F56202EA467000BA6A2 /* Quick.framework in Frameworks */,
+				12252F57202EA467000BA6A2 /* Nimble.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -126,6 +131,9 @@
 		0BFAE5071DA853B5000B3CD3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				12252F55202EA467000BA6A2 /* Nimble.framework */,
+				12252F54202EA467000BA6A2 /* Quick.framework */,
+				12046065202E9AAD00036A92 /* Starscream.framework */,
 				0BFAE5081DA853B5000B3CD3 /* Starscream.framework */,
 			);
 			name = Frameworks;
@@ -149,6 +157,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0BFAE4F81DA84F59000B3CD3 /* Build configuration list for PBXNativeTarget "SwiftPhoenixClient" */;
 			buildPhases = (
+				12046067202E9AD700036A92 /* ShellScript */,
 				0BFAE4DF1DA84F59000B3CD3 /* Sources */,
 				0BFAE4E01DA84F59000B3CD3 /* Frameworks */,
 				0BFAE4E11DA84F59000B3CD3 /* Headers */,
@@ -236,6 +245,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		12046067202E9AD700036A92 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Starscream.framework",
+			);
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Starscream.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0BFAE4DF1DA84F59000B3CD3 /* Sources */ = {
@@ -396,6 +423,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Sources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -419,6 +450,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Sources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -436,11 +471,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Tests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks $(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.phoenixframework.SwiftPhoenixClientTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
@@ -449,11 +488,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = Tests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks $(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.phoenixframework.SwiftPhoenixClientTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
