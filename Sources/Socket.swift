@@ -28,8 +28,7 @@ public class Socket {
     public  var endpoint:  URL { get { return _endpoint } }
     private let _endpoint: URL
     
-    private var awaitingResponse: [String: Outbound] = [:]
-    
+    fileprivate var awaitingResponse: [String: Outbound] = [:]
     var channels: [Channel] = []
 
     var sendBuffer: [Void] = []

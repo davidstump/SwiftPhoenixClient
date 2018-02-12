@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "SwiftPhoenixClient"
-  s.version          = "0.6.0"
+  s.version          = "0.7.0-rc1"
   s.summary          = "Connect your Phoenix and iOS applications through WebSockets!"
 
 # This description is used to generate tags and improve search results.
