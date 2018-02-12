@@ -7,11 +7,36 @@
 
 import Quick
 import Nimble
+import Starscream
 @testable import SwiftPhoenixClient
 
 class SocketSpec: QuickSpec {
     
+    class FakeWebSocket: WebSocket {
+        
+        var disconnectCallsCount = 0
+        var disconnectCalled: Bool { return disconnectCallsCount > 0 }
+        func disconnect() {
+            disconnectCallsCount += 1
+        }
+        
+        var connectCallsCount = 0
+        var connectCalled: Bool { return connectCallsCount > 0 }
+        override func connect() {
+            connectCallsCount += 1
+        }
+        
+    }
+
     override func spec() {
+        
+        var fakeConnection: FakeWebSocket!
+        var socket: Socket!
+        
+        beforeEach {
+            fakeConnection = FakeWebSocket(url: URL(string: "http://localhost:4000/socket/websocket")!)
+            socket = Socket(connection: fakeConnection)
+        }
         
         describe(".init(url:, params:)") {
             it("should construct a valid URL", closure: {
@@ -54,6 +79,118 @@ class SocketSpec: QuickSpec {
             })
         }
         
+        describe(".join(topic: payload:, closure:)") {
+            
+            var webSocketClient: WebSocketClient!
+            
+            var join: String!
+            var phxReply: String!
+            var joinReply: String!
+            var userEnteredReply: String!
+            var messageReply: String!
+            var pingReply: String!
+            
+            
+            beforeEach {
+                webSocketClient = WebSocket(url: socket.endpoint)
+                join = "{\"event\":\"phx_join\",\"topic\":\"rooms:lobby\",\"ref\":\"1\",\"payload\":{\"body\":\"joining\",\"subject\":\"status\"}}"
+                phxReply = "{\"topic\":\"rooms:socket\",\"ref\":\"1\",\"payload\":{\"status\":\"ok\",\"response\":{}},\"event\":\"phx_reply\"}"
+                joinReply = "{\"topic\":\"rooms:lobby\",\"ref\":null,\"payload\":{\"status\":\"connected\"},\"event\":\"join\"}"
+                userEnteredReply = "{\"topic\":\"rooms:lobby\",\"ref\":null,\"payload\":{\"user\":null},\"event\":\"user:entered\"}"
+                messageReply = "{\"topic\":\"rooms:lobby\",\"ref\":null,\"payload\":{\"user\":\"Test User\",\"body\":\"holla\"},\"event\":\"new:msg\"}"
+                pingReply = "{\"topic\":\"rooms:lobby\",\"ref\":null,\"payload\":{\"user\":\"SYSTEM\",\"body\":\"ping\"},\"event\":\"new:msg\"}"
+            }
+            
+            it("should join a channel and begin receiving events", closure: {
+                var joinEventCallsCount = 0
+                var joinEventCalled: Bool { return joinEventCallsCount > 0 }
+                var joinEventPayloads: [Socket.Payload] = []
+                
+                var newMsgEventCallsCount = 0
+                var newMsgEventCalled: Bool { return newMsgEventCallsCount > 0 }
+                var newMsgEventPayloads: [Socket.Payload] = []
+                
+                var usrEnteredEventCallsCount = 0
+                var usrEnteredEventCalled: Bool { return usrEnteredEventCallsCount > 0 }
+                var usrEnteredEventPayloads: [Socket.Payload] = []
+                
+                
+                socket.join(topic: "rooms:lobby", { (channel) in
+                    channel.on(event: "join", handler: { (payload) in
+                        joinEventCallsCount += 1
+                        joinEventPayloads.append(payload)
+                    })
+
+                    channel.on(event: "new:msg", handler: { (payload) in
+                        newMsgEventCallsCount += 1
+                        newMsgEventPayloads.append(payload)
+                    })
+
+                    channel.on(event: "user:entered", handler: { (payload) in
+                        usrEnteredEventCallsCount += 1
+                        usrEnteredEventPayloads.append(payload)
+                    })
+                })
+                
+                
+                var replyEventCallsCount = 0
+                var replyEventCalled: Bool { return joinEventCallsCount > 0 }
+                var replyEventPayloads: [Socket.Payload] = []
+                socket.join(topic: "rooms:socket", { (channel) in
+                    channel.on(event: "phx_reply", handler: { (payload) in
+                        replyEventCallsCount += 1
+                        replyEventPayloads.append(payload)
+                    })
+                })
+
+
+                socket.websocketDidReceiveMessage(socket: webSocketClient, text: phxReply)
+                socket.websocketDidReceiveMessage(socket: webSocketClient, text: userEnteredReply)
+                socket.websocketDidReceiveMessage(socket: webSocketClient, text: joinReply)
+                socket.websocketDidReceiveMessage(socket: webSocketClient, text: pingReply)
+                socket.websocketDidReceiveMessage(socket: webSocketClient, text: messageReply)
+                socket.leave(topic: "rooms:lobby")
+                socket.websocketDidReceiveMessage(socket: webSocketClient, text: pingReply)
+                socket.websocketDidReceiveMessage(socket: webSocketClient, text: phxReply)
+                
+                
+                expect(joinEventCallsCount).to(equal(1))
+                expect(usrEnteredEventCallsCount).to(equal(1))
+                expect(newMsgEventCallsCount).to(equal(2))
+                expect(replyEventCallsCount).to(equal(2))
+                
+                socket.close()
+                expect(socket.channels).toNot(beEmpty())
+                
+                socket.close(reset: true)
+                expect(socket.channels).to(beEmpty())
+            })
+        }
+        
+        describe(".send()") {
+            it("should inform the outbound of success", closure: {
+                var receivedCallsCount = 0
+                var receivedCalled: Bool { return receivedCallsCount > 0 }
+                
+                var alwaysCallsCount = 0
+                var alwaysCalled: Bool { return alwaysCallsCount > 0 }
+                
+                
+                let outbound = Outbound(topic: "topic", event: "event", payload: [:], ref: "1")
+                socket
+                    .send(outbound: outbound)
+                    .receive("ok", handler: { (payload) in
+                        receivedCallsCount += 1
+                    }).always({
+                        alwaysCallsCount += 1
+                    })
+                let phxReply = "{\"topic\":\"rooms:socket\",\"ref\":\"1\",\"payload\":{\"status\":\"ok\",\"response\":{}},\"event\":\"phx_reply\"}"
+                let client = WebSocket(url: socket.endpoint)
+                socket.websocketDidReceiveMessage(socket: client, text: phxReply)
+                expect(receivedCalled).to(beTrue())
+                expect(alwaysCalled ).to(beTrue())
+            })
+        }
     }
 }
 

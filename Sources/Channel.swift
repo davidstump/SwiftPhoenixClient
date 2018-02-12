@@ -5,97 +5,116 @@
 
 import Swift
 
+///
+/// Represents a Channel which is bound to a topic
+///
+/// A Channel can bind to multiple events on a given topic and
+/// be informed when those events occur within a topic.
+///
+/// Example:
+///     channel.on(event: "new_message", { response in
+///         print(response.payload)
+///     }
+///
 public class Channel {
-    var bindings: [Binding] = []
-    var topic: String?
-    var message: Message?
-    var callback: ((Any) -> Void?)
-    weak var socket: Socket?
-
-    /**
-     Initializes a new Channel mapping to a server-side channel
-     - parameter topic:    String topic for given channel
-     - parameter message:  Message object containing message to send
-     - parameter callback: Function to pass along with the channel instance
-     - parameter socket:   Socket for websocket connection
-     - returns: Channel
-     */
-    init(topic: String, message: Message, callback: @escaping ((Any) -> Void), socket: Socket) {
-        (self.topic, self.message, self.callback, self.socket) = (topic, message, { callback($0) }, socket)
-        reset()
+    
+    /// The topic of the Channel. e.g. "rooms:friends"
+    public let topic: String
+    
+    /// The payload sent when joining the channel
+    public let payload: Socket.Payload
+    
+    /// Returns the channel that is joined
+    internal let joinClosure: ((Channel) -> Void)
+    
+    /// Collection of all event closures to trigger events to
+    fileprivate var eventHandlers: [String: ((Socket.Payload) -> Void)]
+    
+    /// The Socket that the channel belongs to
+    fileprivate let socket: Socket
+    
+    
+    //----------------------------------------------------------------------
+    // MARK: - Initialization
+    //----------------------------------------------------------------------
+    init(socket: Socket, topic: String, payload: Socket.Payload?, joinClosure:@escaping ((Channel) -> Void)) {
+        self.socket = socket
+        self.topic = topic
+        self.payload = payload ?? [:]
+        self.joinClosure = joinClosure
+        self.eventHandlers = [:]
     }
 
-    /**
-     Removes existing bindings
-     */
-    func reset() {
-        bindings = []
+    
+    //----------------------------------------------------------------------
+    // MARK: - Message Sending
+    //----------------------------------------------------------------------
+    /// Leaves the channel
+    ///
+    /// - parameter payload: Optional message to send to the server when leaving
+    public func leave(payload: Socket.Payload?) {
+        socket.leave(topic: topic, payload: payload ?? [:])
+        
+        // Release all event handlers
+        self.reset()
     }
-
-    /**
-     Assigns Binding events to the channel bindings array
-     - parameter event:    String event name
-     - parameter callback: Function to run on event
-     */
-    public func on(event: String, callback: @escaping ((Any) -> Void)) {
-        bindings.append(Binding(event: event, callback: { callback($0) }))
-    }
-
-    /**
-     Determine if a topic belongs in this channel
-     - parameter topic: String topic name for comparison
-     - returns: Boolean
-     */
-    public func isMember(topic: String) -> Bool {
-        return self.topic == topic
-    }
-
-    /**
-     Removes an event binding from this channel
-     - parameter event: String event name
-     */
-    public func off(event: String) {
-        var newBindings: [Binding] = []
-        for binding in bindings {
-            if binding.event != event {
-                newBindings.append(Binding(event: binding.event, callback: binding.callback))
-            }
-        }
-        bindings = newBindings
-    }
-
-    /**
-     Triggers an event on this channel
-     - parameter triggerEvent: String event name
-     - parameter msg:          Message to pass into event callback
-     */
-    func trigger(triggerEvent: String, msg: Message) {
-        for binding in bindings {
-            if binding.event == triggerEvent {
-                binding.callback(msg)
-            }
-        }
-    }
-
-    /**
-     Sends and event and message through the socket
-     - parameter event:   String event name
-     - parameter message: Message payload
-     */
-    public func send(event: String, message: Message) {
+    
+    /// Sends an event and message to the Channel's topic
+    ///
+    /// - parameter event: Event name
+    /// - parameter message: Message to send
+    public func send(event: String, payload: Socket.Payload?) -> Outbound {
         Logger.debug(message: "conn sending")
-        let payload = Payload(topic: topic!, event: event, message: message)
-        socket?.send(data: payload)
+        return socket.send(event: event, topic: topic, payload: payload ?? [:])
+    }
+    
+    
+    //----------------------------------------------------------------------
+    // MARK: - Event Handling
+    //----------------------------------------------------------------------
+    /// Bind to events that occur on the channel
+    ///
+    /// - parameter event: Name of the event to bind to
+    /// - closure: Called whenever an event occurs
+    public func on(event: String, handler: @escaping ((Socket.Payload) -> Void)) {
+        
+        self.eventHandlers[event] = handler
     }
 
-    /**
-     Leaves the socket
-     - parameter message: Message to pass to the Socket#leave function
-     */
-    public func leave(message: Message) {
-        if let sock = socket {
-            sock.leave(topic: topic!, message: message)
-        }
-        reset()
+    /// Unbinds from an event that occurs on  the channel
+    ///
+    /// - parameter event: Name of the event to unbind from
+    public func off(event: String) {
+        self.eventHandlers.removeValue(forKey: event)
+    }
+
+
+    //----------------------------------------------------------------------
+    // MARK: - Internal
+    //----------------------------------------------------------------------
+    /// Triggers a response to be sent to the closure bounds to the event.
+    /// If no closure is bound to the event then the call is ignored
+    ///
+    /// - parameter named: Name of the event
+    /// - parameter response: Response to send to the closure
+    func triggerEvent(named: String, with payload: Socket.Payload) {
+        guard let handler = self.eventHandlers[named] else {
+            Logger.debug(message: "No closure bound to the event named \(named)")
+            return }
+        
+        handler(payload)
+    }
+    
+    /// Joins the channel
+    @discardableResult
+    func join() -> Outbound {
+        self.eventHandlers = [:]
+        return socket.send(event: PhoenixEvent.join, 
+                           topic: topic, payload: payload)
+    }
+    
+    /// Releases any event handlers that the channel was bound to
+    func reset() {
+        self.eventHandlers = [:]
     }
 }
