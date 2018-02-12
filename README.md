@@ -10,8 +10,13 @@ Swift Phoenix Client is an extension of Starscream websocket client library
 that makes it easy to connect to Phoenix sockets in a similar manner to the
 Phoenix Socket Javascript library.
 
-## Contributors
-I am looking for some interested and passionate contributors and/or maintainers to give this library the TLC it deserves. Feel free to send me a note if you are interested and I would love to chat. Thanks! :)
+
+## Latest Version
+
+0.6.0 Is the latest release and supports Swift 3
+
+The `master` branch has been updated for Swift 4 along with heavy API changes. See the [CHANGELOG](https://github.com/davidstump/SwiftPhoenixClient/blob/master/CHANGELOG.md) to see what's new since the latest release. 
+
 
 ## Installation
 
@@ -34,118 +39,8 @@ and running `pod install`. From there you will need to add `import SwiftPhoenixC
 
 Using the Swift Phoenix Client is extremely easy (and familiar if have used the Phoenix JS client).
 
-### Socket Connection/Setup
+See the [Usage Guide](https://github.com/davidstump/SwiftPhoenixClient/wiki/Usage-Guide) for details instructions
 
-The first thing you will need is to specify your Phoenix channel endpoint.
-To do so, you must separate a url into its domainAndPort, path, transport, and
-protocol. For example:
-
-```
-http://localhost:4000/socket
-domainAndPort: localhost:4000
-path: socket
-transport: websocket
-protocol: http
-
-```
-So, to create this socket, you'd write:
-
-```SWIFT
-let socket = Socket(domainAndPort: "localhost:4000", path: "socket", transport: "websocket")
-```
-
-A couple of things to note: first, the default protocol is http, so you can omit
-it in the creation of the websocket. Second, the 'traditional' transport is websocket.
-
-Another example:
-
-```
-ws://myphoenixserver.com/socket
-domainAndPort: myphoenixserver.com
-path: socket
-transport: websocket
-protocol: ws
-```
-
-So, the socket would be created with:
-
-```SWIFT
-let socket = Socket(domainAndPort: "myphoenixserver.com", path: "socket", transport: "websocket")
-```
-
-### Joining Channel
-
-In order to join a channel you must call the function `socket.join`, which takes
-four arguments:
-
-* Topic: The topic to join, for instance `"rooms:lobby"`
-* Message: A Message object that is sent to the server when the socket joins the channel.
-* Callback: A closure that receives a AnyObject and returns void. This AnyObject can be cast to
-a Channel object to add callbacks.
-
-For example, let's say we're joining the channel `"rooms:lobby"`, we want to
-send a message indicating that we're joining and we don't want to do anything
-with the channel we're joining (we'll get into details about sending and
-retrieving data from a channel in the next section). You'd do something as follows.
-
-
-```SWIFT
-socket.join(topic: "rooms:lobby", message: Message(subject: "status", body: "joining")) { channel in
-  let channel = channel as! Channel
-}
-```
-
-### Channel callbacks
-
-The Channel has one main method to specify callbacks: `on`, which takes two parameters:
-
-* Event: A String object indicating what kind of event you're listening for.
-* Callback: A closure that receives AnyObject and returns void. This AnyObject can be
-cast to Message to retrieve data from the message.
-
-Some examples:
-
-```SWIFT
-  channel.on(event: "join") { message in
-    debugPrint("You joined the room")
-  }
-```
-
-```SWIFT
-  channel.on(event: "error") { message in
-    let message = message as! Message
-
-    // data is a dictionary with keys that indicate the name of the field
-    // and a value of type AnyObject
-    let data = message.message as! Dictionary<String, SwiftPhoenixClient.JSON>
-
-    // Let's say that our data has a "error_type" key
-    let errorType = (data["error_type"].asString)!
-
-    debugLogger.debug(errorType)
-  }
-```
-
-### Sending data to channel
-
-In contrast to Phoenix.Socket javascript library, in Swift Phoenix Client you
-don't use a channel object to send data to a channel, you send the data through
-a Socket object directly using the `send` method, which receives one
-parameter:
-
-* data: A Payload object with the data to send.
-
-For example:
-
-```SWIFT
-  let message = Message(message: ["user": "Muhammad Ali", "body": "I am gonna show you how great I am"]
-  )
-  let topic = "rooms:lobby"
-  let event = "new:message"
-  let payload = Payload(topic: topic, event: event, message: message)
-  socket.send(payload)
-
-```
 
 ## Example
 
