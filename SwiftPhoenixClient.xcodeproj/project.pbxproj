@@ -11,13 +11,11 @@
 		0B8517E51DAC12F40093A015 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8517E41DAC12F40093A015 /* Channel.swift */; };
 		0BFAE4F51DA84F59000B3CD3 /* SwiftPhoenixClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BFAE4E71DA84F59000B3CD3 /* SwiftPhoenixClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		12046066202E9AAD00036A92 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12046065202E9AAD00036A92 /* Starscream.framework */; };
-		1220C3F9202FA808001664A2 /* Outbound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1220C3F8202FA808001664A2 /* Outbound.swift */; };
+		1220C3F9202FA808001664A2 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1220C3F8202FA808001664A2 /* Push.swift */; };
 		12252F56202EA467000BA6A2 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12252F54202EA467000BA6A2 /* Quick.framework */; };
 		12252F57202EA467000BA6A2 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12252F55202EA467000BA6A2 /* Nimble.framework */; };
 		12252F58202EA52C000BA6A2 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BFAE4E41DA84F59000B3CD3 /* SwiftPhoenixClient.framework */; };
-		12814836202FCA6200014A0C /* ChannelSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12814834202FCA5300014A0C /* ChannelSpec.swift */; };
 		12EAFF29202F656300685575 /* SocketSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EAFF27202F654300685575 /* SocketSpec.swift */; };
-		635CB1F31F7415F400438844 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635CB1F21F7415F400438844 /* Logger.swift */; };
 		63CD642E1DB11E8400C406A6 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD642D1DB11E8400C406A6 /* Presence.swift */; };
 		63CD64321DB1272400C406A6 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD64311DB1272400C406A6 /* Response.swift */; };
 /* End PBXBuildFile section */
@@ -42,12 +40,10 @@
 		0BFAE4F41DA84F59000B3CD3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0BFAE5081DA853B5000B3CD3 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = "Vendor/Starscream/build/Debug-iphoneos/Starscream.framework"; sourceTree = "<group>"; };
 		12046065202E9AAD00036A92 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
-		1220C3F8202FA808001664A2 /* Outbound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Outbound.swift; sourceTree = "<group>"; };
+		1220C3F8202FA808001664A2 /* Push.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; };
 		12252F54202EA467000BA6A2 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
 		12252F55202EA467000BA6A2 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
-		12814834202FCA5300014A0C /* ChannelSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelSpec.swift; sourceTree = "<group>"; };
 		12EAFF27202F654300685575 /* SocketSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketSpec.swift; sourceTree = "<group>"; };
-		635CB1F21F7415F400438844 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		63CD642D1DB11E8400C406A6 /* Presence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Presence.swift; sourceTree = "<group>"; };
 		63CD64311DB1272400C406A6 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -97,13 +93,12 @@
 			isa = PBXGroup;
 			children = (
 				0BFAE4E71DA84F59000B3CD3 /* SwiftPhoenixClient.h */,
+				0BFAE4E81DA84F59000B3CD3 /* Info.plist */,
 				0B8517E21DAC11C80093A015 /* Socket.swift */,
 				0B8517E41DAC12F40093A015 /* Channel.swift */,
-				0BFAE4E81DA84F59000B3CD3 /* Info.plist */,
 				63CD642D1DB11E8400C406A6 /* Presence.swift */,
 				63CD64311DB1272400C406A6 /* Response.swift */,
-				635CB1F21F7415F400438844 /* Logger.swift */,
-				1220C3F8202FA808001664A2 /* Outbound.swift */,
+				1220C3F8202FA808001664A2 /* Push.swift */,
 			);
 			name = SwiftPhoenixClient;
 			path = Sources;
@@ -114,7 +109,6 @@
 			children = (
 				0BFAE4F41DA84F59000B3CD3 /* Info.plist */,
 				12EAFF27202F654300685575 /* SocketSpec.swift */,
-				12814834202FCA5300014A0C /* ChannelSpec.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -261,10 +255,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				0B8517E31DAC11C80093A015 /* Socket.swift in Sources */,
-				1220C3F9202FA808001664A2 /* Outbound.swift in Sources */,
+				1220C3F9202FA808001664A2 /* Push.swift in Sources */,
 				0B8517E51DAC12F40093A015 /* Channel.swift in Sources */,
 				63CD64321DB1272400C406A6 /* Response.swift in Sources */,
-				635CB1F31F7415F400438844 /* Logger.swift in Sources */,
 				63CD642E1DB11E8400C406A6 /* Presence.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -273,7 +266,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				12814836202FCA6200014A0C /* ChannelSpec.swift in Sources */,
 				12EAFF29202F656300685575 /* SocketSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
