@@ -64,12 +64,11 @@ public class Socket {
     var awaitingResponse: [String: Push] = [:]
     var channels: [String: Channel] = [:]
 
-    var sendBuffer: [Void] = []
+    
+    /// Buffers messages that need to be sent once the socket has connected
+    var sendBuffer: [Push] = []
     var sendBufferTimer = Timer()
     let flushEveryMs = 1.0
-
-    var reconnectTimer = Timer()
-    let reconnectAfterMs = 1.0
 
     var heartbeatTimer = Timer()
     let heartbeatDelay = 30.0
@@ -150,6 +149,8 @@ public class Socket {
     ///
     /// - parameter params: The params to send when connecting, for example {user_id: userToken}
     public func connect() {
+        resetBufferTimer()
+        
         _connection.delegate = self
         _connection.connect()
     }
@@ -194,9 +195,12 @@ public class Socket {
     /// Sends data through the Socket
     ///
     /// - parameter data: Data to send
+    @discardableResult
     public func push(data: Push) -> Push {
+        // If the socket is oepn, then send the outbound message. If closed,
+        // then store the message in a buffer to send once the soecket is opened
         guard isConnected else {
-            data.handleNotConnected()
+            sendBuffer.append(data)
             return data
         }
         
@@ -205,9 +209,9 @@ public class Socket {
             
             // Store push objects that are waiting for status events
             self.awaitingResponse[data.ref] = data
+            self.log?("SwiftPhoenixClient: Sending \(String(data: json, encoding: String.Encoding.utf8) ?? "")")
             self._connection.write(data: json)
-        } catch let error {
-            log?("Failed to send message: \(error)")
+        } catch _ {
             data.handleParseError()
         }
         
@@ -230,11 +234,9 @@ public class Socket {
     /// Invalidate open timers to allow socket to be deallocated when closed
     func invalidateTimers() {
         heartbeatTimer.invalidate()
-        reconnectTimer.invalidate()
         sendBufferTimer.invalidate()
 
         heartbeatTimer = Timer()
-        reconnectTimer = Timer()
         sendBufferTimer = Timer()
     }
 
@@ -268,8 +270,10 @@ public class Socket {
     
     /// Send all messages in the buffer
     @objc func flushSendBuffer() {
-        if _connection.isConnected && sendBuffer.count > 0 {
-            for runner in sendBuffer { runner }
+        if isConnected && sendBuffer.count > 0 {
+            for data in sendBuffer {
+                push(data: data)
+            }
             sendBuffer = []
             resetBufferTimer()
         }
@@ -291,7 +295,6 @@ public class Socket {
 extension Socket: WebSocketDelegate {
     
     public func websocketDidConnect(socket: WebSocketClient) {
-        log?("SwiftPhoenixClient: Socket Opened")
         onOpen?()
         
         startHeartbeatTimer()
@@ -301,10 +304,8 @@ extension Socket: WebSocketDelegate {
         self.awaitingResponse.removeAll()
         
         if let error = error {
-            log?("SwiftPhoenixClient: Socket disconnected due to error: \(error)")
             onError?(error)
         } else {
-            log?("SwiftPhoenixClient: Socket Closed")
             onClose?()
         }
     }
@@ -326,6 +327,7 @@ extension Socket: WebSocketDelegate {
             push.handleResponse(response)
         }
         
+        onMessage?(response.payload)
         dispatch(response: response)
     }
     

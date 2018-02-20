@@ -165,7 +165,9 @@ public class Channel {
             _payload = onMessageHook(event, _payload, ref)
         }
         
-        guard let onEvent = self.onEvents[event] else { return }
+        guard let onEvent = self.onEvents[event] else {
+            socket.log?("SwiftPhoenixClient: No closure bound to the event named \(event)")
+            return }
         onEvent(_payload)
     }
 }
