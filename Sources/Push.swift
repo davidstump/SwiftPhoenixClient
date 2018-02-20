@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class Outbound {
+public class Push {
     
     /// Topic to send in an outbound message
     public let topic: String
@@ -16,7 +16,7 @@ public class Outbound {
     public let event: String
     
     /// Paylopad to send in an outbound message
-    public let payload: Socket.Payload
+    public let payload: Payload
     
     /// Ref ID of an outbound message
     let ref: String
@@ -26,12 +26,12 @@ public class Outbound {
     fileprivate var receivedStatus: String?
     
     /// Caches a payload if received before handler was registered
-    fileprivate var receivedResponse: Socket.Payload?
+    fileprivate var receivedResponse: Payload?
     
     
-    /// Custpm handlers which will fire when an outbound message is sent to the server
+    /// Custom handlers which will fire when an outbound message is sent to the server
     /// such as "ok", "error", etc
-    fileprivate var handlers: [String: [(Socket.Payload) -> ()]] = [:]
+    fileprivate var handlers: [String: [(Payload) -> ()]] = [:]
     
     /// Custom handlers which will always fire on any send event
     fileprivate var alwaysHandlers: [() -> ()] = []
@@ -43,8 +43,8 @@ public class Outbound {
     /// - parameter topic: Topic to send to
     /// - parameter event: Event to send
     /// - parameter payload: Payload to send
-    /// - parameter ref: Optional. Ref number to send
-    public init(topic: String, event: String, payload: Socket.Payload, ref: String = UUID().uuidString) {
+    /// - parameter ref: Optional. Ref number to send. Use socket.makeRef to get a reference number
+    public init(topic: String, event: String, payload: Payload, ref: String) {
         self.topic = topic
         self.event = event
         self.payload = payload
@@ -80,7 +80,7 @@ public class Outbound {
     ///         }
     ///
     @discardableResult
-    public func receive(_ status: String, handler: @escaping ((Socket.Payload) -> Void)) -> Outbound {
+    public func receive(_ status: String, handler: @escaping ((Payload) -> Void)) -> Push {
         if receivedStatus == status,
             let receivedResponse = receivedResponse {
             handler(receivedResponse)
@@ -97,7 +97,7 @@ public class Outbound {
     
     /// Always receive a callback on any event
     @discardableResult
-    public func always(_ handler: @escaping () -> ()) -> Outbound {
+    public func always(_ handler: @escaping () -> ()) -> Push {
         alwaysHandlers.append(handler)
         return self
     }

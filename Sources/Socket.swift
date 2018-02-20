@@ -16,31 +16,71 @@ public struct PhoenixEvent {
     static let close     = "phx_close"
 }
 
+/// Alias for a JSON dictionary [String: Any]
+public typealias Payload = [String: Any]
+
 public class Socket {
     
-    /// Alias for a JSON dictionary [String: Any]
-    public typealias Payload = [String: Any]
+    //----------------------------------------------------------------------
+    // MARK: - Public
+    //----------------------------------------------------------------------
+    /// Returns the socket protocol
+    public var websocketProtocol: String { get { return _endpointUrl.scheme ?? "" } }
+    
+    /// The fully qualifed socket url
+    public  var endpointUrl:  URL { get { return _endpointUrl } }
+    private var _endpointUrl: URL
+    
+    /// Logs the message. Used for custom logging.
+    public var log: ((_ msg: String) -> Void)?
+    
+    /// Registers callbacks for connection open events
+    ///
+    /// Example
+    ///     socket.onOpen = { payload in print("socket opened") }"
+    public var onOpen: (() -> Void)?
+    
+    /// Registers callbacks for connection close events
+    public var onClose: (() -> Void)?
+    
+    /// Registers callbacks for connection error events
+    ///
+    /// Example
+    ///     socket.onError = { error in print(error.localizedDescription) }"
+    public var onError: ((Error) -> Void)?
+    
+    /// Registers callbacks for connection message events
+    public var onMessage: ((Payload) -> Void)?
+    
+    /// - return: True if the socket is connected
+    public var isConnected: Bool { return self._connection.isConnected }
+    
+    
+    
+    //----------------------------------------------------------------------
+    // MARK: - Private
+    //----------------------------------------------------------------------
+    /// Collection of outbound events that are waiting for a response from the server
+    var awaitingResponse: [String: Push] = [:]
+    var channels: [String: Channel] = [:]
+
+    
+    /// Buffers messages that need to be sent once the socket has connected
+    var sendBuffer: [Push] = []
+    var sendBufferTimer = Timer()
+    let flushEveryMs = 1.0
+
+    var heartbeatTimer = Timer()
+    let heartbeatDelay = 30.0
+    
+    /// Counts messages that reference which message was sent to the server
+    /// and which reply goes with which message
+    var messageReference: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
+    
     
     /// Websocket connection to the server
     private let _connection: WebSocket
     
-    /// URL the Socket is pointed to
-    public  var endpoint:  URL { get { return _endpoint } }
-    private let _endpoint: URL
-    
-    fileprivate var awaitingResponse: [String: Outbound] = [:]
-    var channels: [Channel] = []
-
-    var sendBuffer: [Void] = []
-    var sendBufferTimer = Timer()
-    let flushEveryMs = 1.0
-
-    var reconnectTimer = Timer()
-    let reconnectAfterMs = 1.0
-
-    var heartbeatTimer = Timer()
-    let heartbeatDelay = 30.0
-
     
     //----------------------------------------------------------------------
     // MARK: - Initialization
@@ -50,7 +90,13 @@ public class Socket {
     /// - parameter connection: Websocket connection to maintain
     init(connection: WebSocket) {
         _connection = connection
-        _endpoint = connection.currentURL
+        _endpointUrl = connection.currentURL
+        
+        log = { msg in
+            #if DEBUG
+                print(msg)
+            #endif
+        }
     }
     
     /// Initializes a Socket
@@ -85,114 +131,99 @@ public class Socket {
     
     
     
+    
     //----------------------------------------------------------------------
-    // MARK: - Connection
+    // MARK: - Public
     //----------------------------------------------------------------------
-    /// Opens the connection
-    public func open() {
+    /// Disconnects the Socket. onClose() will be fired when the socket closes
+    ///
+    /// - parameter callback: Called when disconnected
+    public func disconnect(_ callback: (() -> Void)? = nil) {
+        _connection.delegate = nil
+        _connection.disconnect()
+        
+        callback?()
+    }
+    
+    /// Connects the Socket
+    ///
+    /// - parameter params: The params to send when connecting, for example {user_id: userToken}
+    public func connect() {
         resetBufferTimer()
         
         _connection.delegate = self
         _connection.connect()
     }
     
-    /// Closes the connection. All channels are maintained, so if the socket
-    /// opened again, then all channels will be rejoined. To prevent this,
-    /// pass reset: true
+    /// Removes a channel from the socket
     ///
-    /// - parameter reset: True to remove all previous channels. Default is false
-    public func close(reset: Bool = false) {
-        _connection.delegate = nil
-        _connection.disconnect()
-        
-        invalidateTimers()
-        
-        // Clear all channels so they will not be rejoined on open
-        if reset { self.channels = [] }
-    }
-    
-    
-    //----------------------------------------------------------------------
-    // MARK: - Channels
-    //----------------------------------------------------------------------
-    /// Joins a topic's channel
-    ///
-    /// - parameter topic: Topic of the channel to join
-    /// - parameter payload: Optional payload to send when joining a channel
-    /// - parameter closure: Called when the channel is available for binding to events
-    public func join(topic: String, payload: Payload? = nil, _ closure: @escaping ((Channel) -> Void)) {
-        let channel = Channel(socket: self, topic: topic, payload: payload, joinClosure: closure)
-        self.channels.append(channel)
-        
-        channel.join()
-        channel.joinClosure(channel)
-    }
-    
-    /// Leave a channel
-    ///
-    /// - parameter topic: Topic of the channel to leave
-    /// - parameter payload: Optional payload to send when leaving a channel
-    public func leave(topic: String, payload: Payload? = nil) {
-        let outbound = Outbound(topic: topic,
-                                event: PhoenixEvent.leave,
-                                payload: payload ?? [:])
-        let _ = send(outbound: outbound)
-        
-        // Release any channels that belongde to the topic
-        var newChannels: [Channel] = []
-        for chan in channels {
-            let c = chan as Channel
-            if c.topic != topic {
-                newChannels.append(c)
-            }
+    /// - parameter channel: Channel to remove
+    public func remove(_ channel: Channel) {
+        channel.leave().receive("ok") { [weak self] (_) in
+            self?.channels.removeValue(forKey: channel.topic)
         }
-        channels = newChannels
     }
     
-    //----------------------------------------------------------------------
-    // MARK: - Send
-    //----------------------------------------------------------------------
-    /// Sends an outbound message through the Socket. You can bind to the
-    /// returned Outbound objet to receive successful and error events.
+    /// Initiates a new channel for the given topic. If a channel already exists, then
+    /// it is returned instead of a new one being created
     ///
-    /// - parameter event: Message event
+    /// - parameter topic: Topic of the channel
+    /// - parameter params: Parameters for the channel
+    /// - return: A new channel
+    public func channel(_ topic: String, params: [String: Any]? = nil) -> Channel {
+        if let previousChannel = channels[topic] { return previousChannel }
+        
+        let channel = Channel(topic: topic, params: params, socket: self)
+        self.channels[topic] = channel
+
+        return channel
+    }
+    
+    /// Sends an data through the Socket. You can bind to the
+    /// returned Push object to receive successful and error events. A
+    /// reference number will be generated for the message.
+    ///
     /// - parameter topic: Message topic
+    /// - parameter event: Message event
     /// - parameter payload: Optional. Extra payload to send with the message
-    /// = return: Outbound instance that you can bind to for events
-    public func send(event: String, topic: String, payload: Socket.Payload = [:]) -> Outbound {
-        let outbound = Outbound(topic: topic, event: event, payload: payload)
-        return self.send(outbound: outbound)
+    /// - return: Push instance that you can bind to for events
+    public func push(topic: String, event: String, payload: [String: Any] = [:]) -> Push {
+        let push = Push(topic: topic, event: event, payload: payload, ref: makeRef())
+        return self.push(data: push)
     }
     
-    /// Sends an outbound message through the Socket. You can bind to the
-    /// returned Outbound objet to receive successful and error events.
+    /// Sends data through the Socket
     ///
-    /// - parameter outbound: Outbound payload to send
-    /// = return: Outbound instance that you can bind to for events
-    public func send(outbound: Outbound) -> Outbound {
-        let runner = { (toSend: Outbound) -> Void in
-            do {
-                let json = try toSend.toJson()
-                
-                // Store outbounds that are waiting for a successful response
-                self.awaitingResponse[toSend.ref] = toSend
-                
-                self._connection.write(data: json)
-            } catch let error {
-                Logger.debug(message: "Failed to parse message: \(error)")
-                toSend.handleParseError()
-            }
-        }
-        
+    /// - parameter data: Data to send
+    @discardableResult
+    public func push(data: Push) -> Push {
         // If the socket is oepn, then send the outbound message. If closed,
         // then store the message in a buffer to send once the soecket is opened
-        guard _connection.isConnected else {
-            sendBuffer.append(runner(outbound))
-            return outbound
+        guard isConnected else {
+            sendBuffer.append(data)
+            return data
         }
         
-        runner(outbound)
-        return outbound
+        do {
+            let json = try data.toJson()
+            
+            // Store push objects that are waiting for status events
+            self.awaitingResponse[data.ref] = data
+            self.log?("SwiftPhoenixClient: Sending \(String(data: json, encoding: String.Encoding.utf8) ?? "")")
+            self._connection.write(data: json)
+        } catch _ {
+            data.handleParseError()
+        }
+        
+        return data
+    }
+    
+    /// - return: the next message ref, accounting for overflows
+    public func makeRef() -> String {
+        let newRef = messageReference + 1
+        messageReference = (newRef == UInt64.max) ? 0 : newRef
+        
+        return String(newRef)
     }
     
     
@@ -203,11 +234,9 @@ public class Socket {
     /// Invalidate open timers to allow socket to be deallocated when closed
     func invalidateTimers() {
         heartbeatTimer.invalidate()
-        reconnectTimer.invalidate()
         sendBufferTimer.invalidate()
 
         heartbeatTimer = Timer()
-        reconnectTimer = Timer()
         sendBufferTimer = Timer()
     }
 
@@ -236,53 +265,26 @@ public class Socket {
     //----------------------------------------------------------------------
     /// Sends a hearbeat payload to the phoenix serverss
     @objc func sendHeartbeat() {
-        let _ = send(event: "phoenix", topic: PhoenixEvent.heartbeat)
-    }
-
-    /// Reopens the Socket
-    @objc public func reopen() {
-        self.close()
-        self.open()
+        let _ = push(topic: "phoenix", event: PhoenixEvent.heartbeat)
     }
     
     /// Send all messages in the buffer
     @objc func flushSendBuffer() {
-        if _connection.isConnected && sendBuffer.count > 0 {
-            for runner in sendBuffer { runner }
+        if isConnected && sendBuffer.count > 0 {
+            for data in sendBuffer {
+                push(data: data)
+            }
             sendBuffer = []
             resetBufferTimer()
         }
     }
 
     
-
-    /// Triggers an error event out to all channels
-    ///
-    /// - parameter error: Error from the underlying connection
-    func onError(error: Error) {
-        Logger.debug(message: "Error: \(error)")
-//        for chan in channels {
-//            let msg = Message(message: ["body": error.localizedDescription] as Any)
-//            chan.trigger(triggerEvent: "error", msg: msg)
-//        }
-    }
-
-    /// Rejoins all Channels that were previously joined
-    func rejoinAll() {
-        for channel in channels {
-            channel.join()
-            channel.joinClosure(channel)
-        }
-    }
-    
     /// Distributes a response to all channels that have joined
     /// the response's topic
     func dispatch(response: Response) {
-        for channel in channels {
-            if channel.topic == response.topic {
-                channel.triggerEvent(named: response.event, with: response.payload)
-            }
-        }
+        guard let channel = channels[response.topic] else { return }
+        channel.trigger(event: response.event, with: response.payload, ref: response.ref)
     }
 }
 
@@ -293,55 +295,42 @@ public class Socket {
 extension Socket: WebSocketDelegate {
     
     public func websocketDidConnect(socket: WebSocketClient) {
-        Logger.debug(message: "socket opened")
+        onOpen?()
         
-        // Kills reconnect timer and joins all open channels
-        reconnectTimer.invalidate()
         startHeartbeatTimer()
-        rejoinAll()
     }
     
     public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-        if let error = error { onError(error: error) }
-        
-        Logger.debug(message: "socket closed: \(error?.localizedDescription ?? "Unknown error")")
-        
         self.awaitingResponse.removeAll()
         
-        // Begins the reconnect Timer. If the user manually disconnected the socket
-        // then the timer will be inalidated and no reconnection will be tried
-        reconnectTimer.invalidate()
-        reconnectTimer = Timer.scheduledTimer(timeInterval: reconnectAfterMs,
-                                              target: self,
-                                              selector: #selector(reopen),
-                                              userInfo: nil,
-                                              repeats: true)
+        if let error = error {
+            onError?(error)
+        } else {
+            onClose?()
+        }
     }
     
     public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-        Logger.debug(message: "socket received: \(text)")
+        log?("SwiftPhoenixClient: Received: \(text)")
         
         guard let data = text.data(using: String.Encoding.utf8),
             let response = Response(data: data)
             else {
-                Logger.debug(message: "Unable to parse JSON: \(text)")
+                log?("SwiftPhoenixClient: Unable to parse JSON: \(text)")
                 return }
         
         defer {
             self.awaitingResponse.removeValue(forKey: response.ref)
         }
         
-        if let outbound = self.awaitingResponse[response.ref] {
-            outbound.handleResponse(response)
+        if let push = self.awaitingResponse[response.ref] {
+            push.handleResponse(response)
         }
         
-        Logger.debug(message: "Phoenix Response: \(response.description)")
+        onMessage?(response.payload)
         dispatch(response: response)
     }
     
-    public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-        Logger.debug(message: "got some data: \(data.count)")
-    }
-    
+    public func websocketDidReceiveData(socket: WebSocketClient, data: Data) { /* no-op */ }
     
 }

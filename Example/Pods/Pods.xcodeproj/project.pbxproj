@@ -8,24 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		02051001CF2115C1ACB04D5CEA03E729 /* Compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A04D8C3C1516E1A02A46FCEB72236FA /* Compression.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		0F6D620A60352F0996AAA93E833C5ED2 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0B7841C7E83781EA5A866CA4B2678D /* Socket.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		18CFDFC57A0D5C59A14F8DA0A5B364E6 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379ABD00463D60CC04DA91A2E06E6C5D /* Presence.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		1FD56F97DD97F7DBEA8B1A57AC0474FA /* SSLSecurity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55365038245EB43AE2A59C80C01FD23 /* SSLSecurity.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		24AEBF4AA6C33DE53A5CDCB097442E5C /* Pods-ChatExample-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C780E30A1AECA11F6D93AA3B5F6ED34 /* Pods-ChatExample-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2CB3B96FEB22EF74FB2CEBB4E9F051A4 /* SwiftPhoenixClient-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = C92A314AB298A4E35774E524C43EE0A6 /* SwiftPhoenixClient-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2CB3B96FEB22EF74FB2CEBB4E9F051A4 /* SwiftPhoenixClient-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 996D23C22A224D63F769E5561EA75576 /* SwiftPhoenixClient-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		31B44EF22ED3E1B1AD5A694509358F4B /* Starscream-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D996E17FD79A681D5829532F50CF07C /* Starscream-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		34972ED2CE5174BF70CE3B80542AC681 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D165F43C693AD3E1AE5069CA52E4C8E /* Logger.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		6055D86C94A9A28E0683ED53D74F5897 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B220DE9811768A33367A37972807704 /* Foundation.framework */; };
 		62D6E049C8F47047933393F60A3D5808 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B220DE9811768A33367A37972807704 /* Foundation.framework */; };
 		6D53894421B34638185381F9A805E191 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B220DE9811768A33367A37972807704 /* Foundation.framework */; };
-		870351DFB86C559A1A87DB5AFEC4039D /* Outbound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CF2E0099B162E7ACA666BD3F6DCA1D /* Outbound.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		8BEC6824D3925E5A933E3F917EBF518B /* Pods-ChatExample-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6305A7F7E3BE5845060709E057709268 /* Pods-ChatExample-dummy.m */; };
 		A4E36D4B6D9C221E92389A4E4F888269 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F52249DD4D3DD3159B64A42F2E7349B /* Starscream.framework */; };
-		BE0A1EF0AB1910F225AB77494F58F8A5 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF838A44068B8A8505E69D45E2AAFE8D /* Response.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		C6F4681EDD5AFB8C24C508CA23DEA4AA /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5FE7E5E8F62E0C20F0FE4F1E73D7A2 /* Presence.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		D13C40D7A5D9982311B0BB4A1FE5E07E /* SwiftPhoenixClient-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D0C9484AF3698965261D748E630C6094 /* SwiftPhoenixClient-dummy.m */; };
-		DB0324C4CEE915581DC7DDF9377F43A3 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 402C7B60C78EB7A0A53B9E48B2603CEA /* Channel.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		BE4BAE5A48EAE3F95A5EAC0843B9768D /* SwiftPhoenixClient-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 365E0B0B7F50371329B6E8EE303E910F /* SwiftPhoenixClient-dummy.m */; };
+		C078D3431F7D7AA9B21450D0E3369D27 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0B2ED10BC0D52239BD583EF53767F5 /* Response.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		C1D3DB67BD0A5DC0A354ACF7BA8FF8CB /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF06D8916C09F4F1C210C748A579742 /* Socket.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		D4BA66A4D886DDC674E84CB333FD5A40 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF99D029E448702E86D6AD252A9CB3DF /* Push.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		DE7CAE602CEF36BE20C3EA76B74C66A4 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF79A3A1C6FEF108CF16DE0537B0431 /* WebSocket.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		E1F008446580453D2467E3DF339B44C1 /* Starscream-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1661B72F0A274473D9147AAE8A3E06F1 /* Starscream-dummy.m */; };
+		F67DD8A6AAE118FFB82DB97372454569 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC69B89ED24595CF44C1AB7190D5696C /* Channel.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,46 +52,45 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0B7DA0DAB305B1C1B13EFAC8FEF896D3 /* SwiftPhoenixClient.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = SwiftPhoenixClient.modulemap; sourceTree = "<group>"; };
 		0F52249DD4D3DD3159B64A42F2E7349B /* Starscream.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Starscream.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		133EDBD706EF899D0A8C27600993729A /* Pods-ChatExample-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-ChatExample-acknowledgements.plist"; sourceTree = "<group>"; };
 		1458B06DC7458B1125CD4CD60AD6016E /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1661B72F0A274473D9147AAE8A3E06F1 /* Starscream-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Starscream-dummy.m"; sourceTree = "<group>"; };
-		1B0B7841C7E83781EA5A866CA4B2678D /* Socket.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Socket.swift; path = Sources/Socket.swift; sourceTree = "<group>"; };
+		195164C7B6B6D0232EEB6505404B0004 /* SwiftPhoenixClient.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; path = SwiftPhoenixClient.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		1EF8702E5E1C2CC2C646CB222E5F8E10 /* Pods-ChatExample-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ChatExample-resources.sh"; sourceTree = "<group>"; };
 		24CD1CF8C67430D7697078621E8DFD65 /* Starscream.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Starscream.modulemap; sourceTree = "<group>"; };
 		2C780E30A1AECA11F6D93AA3B5F6ED34 /* Pods-ChatExample-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-ChatExample-umbrella.h"; sourceTree = "<group>"; };
 		301BDAB58F7B8DBA2F7DEFCFDDB527A3 /* Pods-ChatExample-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-ChatExample-acknowledgements.markdown"; sourceTree = "<group>"; };
 		3111104C5AC661E19379538CE82A587B /* Pods-ChatExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ChatExample.debug.xcconfig"; sourceTree = "<group>"; };
-		31ADCE5A2F6CCAEC9E45B483B70C7F94 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		365E0B0B7F50371329B6E8EE303E910F /* SwiftPhoenixClient-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SwiftPhoenixClient-dummy.m"; sourceTree = "<group>"; };
+		379ABD00463D60CC04DA91A2E06E6C5D /* Presence.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Presence.swift; path = Sources/Presence.swift; sourceTree = "<group>"; };
 		3A89F29E62024F23802960B4656EAB90 /* Starscream.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Starscream.xcconfig; sourceTree = "<group>"; };
 		3BF79A3A1C6FEF108CF16DE0537B0431 /* WebSocket.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WebSocket.swift; path = Sources/WebSocket.swift; sourceTree = "<group>"; };
-		3D165F43C693AD3E1AE5069CA52E4C8E /* Logger.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Logger.swift; path = Sources/Logger.swift; sourceTree = "<group>"; };
-		402C7B60C78EB7A0A53B9E48B2603CEA /* Channel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Channel.swift; path = Sources/Channel.swift; sourceTree = "<group>"; };
-		48CF2E0099B162E7ACA666BD3F6DCA1D /* Outbound.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Outbound.swift; path = Sources/Outbound.swift; sourceTree = "<group>"; };
 		4F5F2F64FB7C40C6E38FFD9B8FE2521F /* Starscream.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Starscream.framework; path = Starscream.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		52C23B8F69B3D50363420CD39F9E6939 /* SwiftPhoenixClient-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftPhoenixClient-prefix.pch"; sourceTree = "<group>"; };
+		57208BA6E2759FA26D7BF6C636F1AA80 /* SwiftPhoenixClient-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftPhoenixClient-prefix.pch"; sourceTree = "<group>"; };
+		586F6CE52EFC84A4DBF3F05E1D5B90D4 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5A9D17B37705B99972E40CA15F05BB20 /* Pods-ChatExample-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ChatExample-frameworks.sh"; sourceTree = "<group>"; };
 		5B220DE9811768A33367A37972807704 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		6305A7F7E3BE5845060709E057709268 /* Pods-ChatExample-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-ChatExample-dummy.m"; sourceTree = "<group>"; };
-		6A033D13656AA051FB60FE4B6210D1CC /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7E4EFB22A67904736C58C45967B34879 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
-		7E5FE7E5E8F62E0C20F0FE4F1E73D7A2 /* Presence.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Presence.swift; path = Sources/Presence.swift; sourceTree = "<group>"; };
 		84F18C8C8F2DDCA8727E7AD9EE4A7DFE /* Pods-ChatExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ChatExample.release.xcconfig"; sourceTree = "<group>"; };
 		8A04D8C3C1516E1A02A46FCEB72236FA /* Compression.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Compression.swift; path = Sources/Compression.swift; sourceTree = "<group>"; };
+		8E3C62CEAC1EE69F572791CC51D6BEF1 /* SwiftPhoenixClient.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = SwiftPhoenixClient.modulemap; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		996D23C22A224D63F769E5561EA75576 /* SwiftPhoenixClient-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftPhoenixClient-umbrella.h"; sourceTree = "<group>"; };
 		99D18BA96649BD0F2A32D0286652BC33 /* SwiftPhoenixClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SwiftPhoenixClient.framework; path = SwiftPhoenixClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D996E17FD79A681D5829532F50CF07C /* Starscream-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Starscream-umbrella.h"; sourceTree = "<group>"; };
 		A55365038245EB43AE2A59C80C01FD23 /* SSLSecurity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SSLSecurity.swift; path = Sources/SSLSecurity.swift; sourceTree = "<group>"; };
+		A62C3F1896F1B6431BDFCF121047B9E8 /* SwiftPhoenixClient.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SwiftPhoenixClient.xcconfig; sourceTree = "<group>"; };
+		AF99D029E448702E86D6AD252A9CB3DF /* Push.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Push.swift; path = Sources/Push.swift; sourceTree = "<group>"; };
+		BAE6800223C56867951F26C3073A1BEF /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		BB0B2ED10BC0D52239BD583EF53767F5 /* Response.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Response.swift; path = Sources/Response.swift; sourceTree = "<group>"; };
 		BB6B6883FFA69DA5D3CC9650653575F2 /* Pods-ChatExample.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-ChatExample.modulemap"; sourceTree = "<group>"; };
-		C33CA9CF823A927F6C1E81A915E6CD1C /* SwiftPhoenixClient.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SwiftPhoenixClient.xcconfig; sourceTree = "<group>"; };
-		C92A314AB298A4E35774E524C43EE0A6 /* SwiftPhoenixClient-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftPhoenixClient-umbrella.h"; sourceTree = "<group>"; };
-		D0C9484AF3698965261D748E630C6094 /* SwiftPhoenixClient-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SwiftPhoenixClient-dummy.m"; sourceTree = "<group>"; };
+		CC69B89ED24595CF44C1AB7190D5696C /* Channel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Channel.swift; path = Sources/Channel.swift; sourceTree = "<group>"; };
 		D81F63893E234525A4008CE1A18359F7 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DFF06D8916C09F4F1C210C748A579742 /* Socket.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Socket.swift; path = Sources/Socket.swift; sourceTree = "<group>"; };
 		E30CD6AEB67F8F272DEAB957F7021909 /* Starscream-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Starscream-prefix.pch"; sourceTree = "<group>"; };
-		E6A5A2DBAAD24ECA23264CB80974BA64 /* SwiftPhoenixClient.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; path = SwiftPhoenixClient.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		ED9166F023CBE2CC18CD5215EB745AFC /* Pods_ChatExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_ChatExample.framework; path = "Pods-ChatExample.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		FF838A44068B8A8505E69D45E2AAFE8D /* Response.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Response.swift; path = Sources/Response.swift; sourceTree = "<group>"; };
+		F5A018CE9AF1D3E467431D38D3D2752E /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +122,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		10EEE6297AD27829E6DC8DF82DC4BCBD /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				BAE6800223C56867951F26C3073A1BEF /* LICENSE */,
+				F5A018CE9AF1D3E467431D38D3D2752E /* README.md */,
+				195164C7B6B6D0232EEB6505404B0004 /* SwiftPhoenixClient.podspec */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
 		2B0FDD84B727C02B747DE69360E99C20 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -142,22 +150,18 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		4E7EAB300B36B67DEBA2C61119C03677 /* Development Pods */ = {
+		40986B27C9100F66CD27B35B81DD8FB4 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				8E0841183EC9E6062BB951D003C80F84 /* SwiftPhoenixClient */,
+				586F6CE52EFC84A4DBF3F05E1D5B90D4 /* Info.plist */,
+				8E3C62CEAC1EE69F572791CC51D6BEF1 /* SwiftPhoenixClient.modulemap */,
+				A62C3F1896F1B6431BDFCF121047B9E8 /* SwiftPhoenixClient.xcconfig */,
+				365E0B0B7F50371329B6E8EE303E910F /* SwiftPhoenixClient-dummy.m */,
+				57208BA6E2759FA26D7BF6C636F1AA80 /* SwiftPhoenixClient-prefix.pch */,
+				996D23C22A224D63F769E5561EA75576 /* SwiftPhoenixClient-umbrella.h */,
 			);
-			name = "Development Pods";
-			sourceTree = "<group>";
-		};
-		6463DD2C0DA45DCEB1E49FD4185BE1EB /* Pod */ = {
-			isa = PBXGroup;
-			children = (
-				7E4EFB22A67904736C58C45967B34879 /* LICENSE */,
-				31ADCE5A2F6CCAEC9E45B483B70C7F94 /* README.md */,
-				E6A5A2DBAAD24ECA23264CB80974BA64 /* SwiftPhoenixClient.podspec */,
-			);
-			name = Pod;
+			name = "Support Files";
+			path = "Example/Pods/Target Support Files/SwiftPhoenixClient";
 			sourceTree = "<group>";
 		};
 		66516FC77F52D51176FF5067F0A78173 /* iOS */ = {
@@ -172,7 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
-				4E7EAB300B36B67DEBA2C61119C03677 /* Development Pods */,
+				7E2C7EC64442AB2084A242D3F4F37AB5 /* Development Pods */,
 				C6C6CF85326A60B112CC4A77BAD281D7 /* Frameworks */,
 				3472A81D0DB31608B2D83C2463248903 /* Pods */,
 				2B0FDD84B727C02B747DE69360E99C20 /* Products */,
@@ -180,20 +184,12 @@
 			);
 			sourceTree = "<group>";
 		};
-		8E0841183EC9E6062BB951D003C80F84 /* SwiftPhoenixClient */ = {
+		7E2C7EC64442AB2084A242D3F4F37AB5 /* Development Pods */ = {
 			isa = PBXGroup;
 			children = (
-				402C7B60C78EB7A0A53B9E48B2603CEA /* Channel.swift */,
-				3D165F43C693AD3E1AE5069CA52E4C8E /* Logger.swift */,
-				48CF2E0099B162E7ACA666BD3F6DCA1D /* Outbound.swift */,
-				7E5FE7E5E8F62E0C20F0FE4F1E73D7A2 /* Presence.swift */,
-				FF838A44068B8A8505E69D45E2AAFE8D /* Response.swift */,
-				1B0B7841C7E83781EA5A866CA4B2678D /* Socket.swift */,
-				6463DD2C0DA45DCEB1E49FD4185BE1EB /* Pod */,
-				D1071BD74630F5E9BB72F5B9ADBD079A /* Support Files */,
+				D04D027C16B8F28B3EBEAB61F1AFB01E /* SwiftPhoenixClient */,
 			);
-			name = SwiftPhoenixClient;
-			path = ../..;
+			name = "Development Pods";
 			sourceTree = "<group>";
 		};
 		A2E73AE8AFBA222FC2948FE8959EF62E /* Pods-ChatExample */ = {
@@ -243,18 +239,19 @@
 			path = Starscream;
 			sourceTree = "<group>";
 		};
-		D1071BD74630F5E9BB72F5B9ADBD079A /* Support Files */ = {
+		D04D027C16B8F28B3EBEAB61F1AFB01E /* SwiftPhoenixClient */ = {
 			isa = PBXGroup;
 			children = (
-				6A033D13656AA051FB60FE4B6210D1CC /* Info.plist */,
-				0B7DA0DAB305B1C1B13EFAC8FEF896D3 /* SwiftPhoenixClient.modulemap */,
-				C33CA9CF823A927F6C1E81A915E6CD1C /* SwiftPhoenixClient.xcconfig */,
-				D0C9484AF3698965261D748E630C6094 /* SwiftPhoenixClient-dummy.m */,
-				52C23B8F69B3D50363420CD39F9E6939 /* SwiftPhoenixClient-prefix.pch */,
-				C92A314AB298A4E35774E524C43EE0A6 /* SwiftPhoenixClient-umbrella.h */,
+				CC69B89ED24595CF44C1AB7190D5696C /* Channel.swift */,
+				379ABD00463D60CC04DA91A2E06E6C5D /* Presence.swift */,
+				AF99D029E448702E86D6AD252A9CB3DF /* Push.swift */,
+				BB0B2ED10BC0D52239BD583EF53767F5 /* Response.swift */,
+				DFF06D8916C09F4F1C210C748A579742 /* Socket.swift */,
+				10EEE6297AD27829E6DC8DF82DC4BCBD /* Pod */,
+				40986B27C9100F66CD27B35B81DD8FB4 /* Support Files */,
 			);
-			name = "Support Files";
-			path = "Example/Pods/Target Support Files/SwiftPhoenixClient";
+			name = SwiftPhoenixClient;
+			path = ../..;
 			sourceTree = "<group>";
 		};
 		E54986408F60ECB036498154E2A5488B /* Support Files */ = {
@@ -341,7 +338,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 68D422485B03C90D910557F5CC17EA74 /* Build configuration list for PBXNativeTarget "SwiftPhoenixClient" */;
 			buildPhases = (
-				70813D780E40692E1863055608EC6791 /* Sources */,
+				A83462AD2EDEFF25F4D9C125D283DFEB /* Sources */,
 				38A44932B2231BAF5346625DDE507E2D /* Frameworks */,
 				FD91A4D69A55BDC8C3BB78078707D634 /* Headers */,
 			);
@@ -392,20 +389,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		70813D780E40692E1863055608EC6791 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DB0324C4CEE915581DC7DDF9377F43A3 /* Channel.swift in Sources */,
-				34972ED2CE5174BF70CE3B80542AC681 /* Logger.swift in Sources */,
-				870351DFB86C559A1A87DB5AFEC4039D /* Outbound.swift in Sources */,
-				C6F4681EDD5AFB8C24C508CA23DEA4AA /* Presence.swift in Sources */,
-				BE0A1EF0AB1910F225AB77494F58F8A5 /* Response.swift in Sources */,
-				0F6D620A60352F0996AAA93E833C5ED2 /* Socket.swift in Sources */,
-				D13C40D7A5D9982311B0BB4A1FE5E07E /* SwiftPhoenixClient-dummy.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		8EDB1F6CDE1F29F00B759E287B3493FA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -414,6 +397,19 @@
 				1FD56F97DD97F7DBEA8B1A57AC0474FA /* SSLSecurity.swift in Sources */,
 				E1F008446580453D2467E3DF339B44C1 /* Starscream-dummy.m in Sources */,
 				DE7CAE602CEF36BE20C3EA76B74C66A4 /* WebSocket.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A83462AD2EDEFF25F4D9C125D283DFEB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F67DD8A6AAE118FFB82DB97372454569 /* Channel.swift in Sources */,
+				18CFDFC57A0D5C59A14F8DA0A5B364E6 /* Presence.swift in Sources */,
+				D4BA66A4D886DDC674E84CB333FD5A40 /* Push.swift in Sources */,
+				C078D3431F7D7AA9B21450D0E3369D27 /* Response.swift in Sources */,
+				C1D3DB67BD0A5DC0A354ACF7BA8FF8CB /* Socket.swift in Sources */,
+				BE4BAE5A48EAE3F95A5EAC0843B9768D /* SwiftPhoenixClient-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -533,7 +529,7 @@
 		};
 		3A0AEF6DA4FA43C49FE4F3F777D97510 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C33CA9CF823A927F6C1E81A915E6CD1C /* SwiftPhoenixClient.xcconfig */;
+			baseConfigurationReference = A62C3F1896F1B6431BDFCF121047B9E8 /* SwiftPhoenixClient.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -663,7 +659,7 @@
 		};
 		B7C1FD8E01129F6675F0455286A4BF82 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C33CA9CF823A927F6C1E81A915E6CD1C /* SwiftPhoenixClient.xcconfig */;
+			baseConfigurationReference = A62C3F1896F1B6431BDFCF121047B9E8 /* SwiftPhoenixClient.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
