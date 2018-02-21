@@ -13,10 +13,7 @@ Phoenix Socket Javascript library.
 
 ## Latest Version
 
-0.6.0 Is the latest release and supports Swift 3
-
-The `master` branch has been updated for Swift 4 along with heavy API changes. See the [CHANGELOG](https://github.com/davidstump/SwiftPhoenixClient/blob/master/CHANGELOG.md) to see what's new since the latest release. 
-
+0.8.0 Is the latest release and supports Swift 4
 
 ## Installation
 
@@ -48,15 +45,11 @@ Check out the [ViewController](https://github.com/davidstump/SwiftPhoenixClient/
 
 Also check out both the Swift and Elixir channels on IRC.
 
-## Note:
-
-Currently works with Swift 3.0, Xcode 8.0, and Phoenix 1.2.
-
-Tested with the [Phoenix Chat Server example](https://github.com/chrismccord/phoenix_chat_example), upgraded to Phoenix 1.2.
-
 ## Development
 
 Check out the wiki page for [getting started](https://github.com/davidstump/SwiftPhoenixClient/wiki/Contributing)
+
+Tested with the [Phoenix Chat Server example](https://github.com/chrismccord/phoenix_chat_example), upgraded to Phoenix 1.2.
 
 ## License
 
