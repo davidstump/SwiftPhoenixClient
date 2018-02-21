@@ -12,7 +12,7 @@ import Swift
 /// be informed when those events occur within a topic.
 ///
 /// Example:
-///     let channel = socket.channel("room:123, params: ["token: "Room Token"])
+///     let channel = socket.channel("room:123", params: ["token": "Room Token"])
 ///     channel.on("new_msg") { payload in print("Got message", payload") }
 ///     channel.push("new_msg, payload: ["body": "This is a message"])
 ///         .receive("ok") { payload in print("Sent message", payload) }
