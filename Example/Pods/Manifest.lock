@@ -1,6 +1,6 @@
 PODS:
   - Starscream (3.0.4)
-  - SwiftPhoenixClient (0.7.0-rc1):
+  - SwiftPhoenixClient (0.8.0):
     - Starscream (~> 3.0.4)
 
 DEPENDENCIES:
@@ -12,7 +12,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Starscream: f5da93fe6984c77b694366bf7299b7dc63a76f26
-  SwiftPhoenixClient: 3ae5889fb8f75a907de39e008f9becfb139c79fe
+  SwiftPhoenixClient: 41522212631771ba4733465b846e4aa6ce9ee89e
 
 PODFILE CHECKSUM: 89199469d6bb693e4326959922e50c8262803bd1
 
