@@ -12,7 +12,7 @@ import Swift
 /// be informed when those events occur within a topic.
 ///
 /// Example:
-///     let channel = socket.channel("room:123, params: ["token: "Room Token"])
+///     let channel = socket.channel("room:123", params: ["token": "Room Token"])
 ///     channel.on("new_msg") { payload in print("Got message", payload") }
 ///     channel.push("new_msg, payload: ["body": "This is a message"])
 ///         .receive("ok") { payload in print("Sent message", payload) }
@@ -52,7 +52,7 @@ public class Channel {
     /// Overridable message hook. Receives all events for specialized message
     /// handling before dispatching to the channel callbacks.
     ///
-    /// - paremeter event: The event the message was for
+    /// - parameter event: The event the message was for
     /// - parameter payload: The payload for the message
     /// - parameter ref: The reference of the message
     /// - return: Must return the payload, modified or unmodified
@@ -66,7 +66,7 @@ public class Channel {
     /// Initialize a Channel
     ///
     /// - parameter topic: Topic of the Channel
-    /// - paremeter params: Parameters to send when joining. Can be nil
+    /// - parameter params: Parameters to send when joining. Can be nil
     /// - parameter socket: Socket that the channel is a part of
     init(topic: String, params: [String: Any]?, socket: Socket) {
         self.topic = topic
@@ -83,7 +83,7 @@ public class Channel {
     //----------------------------------------------------------------------
     /// Joins the channel
     ///
-    /// - paremeter timeout: Optional timeout
+    /// - parameter timeout: Optional timeout
     /// - return: Push which can receive hooks can be applied to
     public func join(timeout: Int? = nil) -> Push {
         return socket.push(topic: topic, event: PhoenixEvent.join)
@@ -142,7 +142,7 @@ public class Channel {
     /// Overridable message hook. Receives all events for specialized message
     /// handling before dispatching to the channel callbacks.
     ///
-    /// - paremeter event: The event the message was for
+    /// - parameter event: The event the message was for
     /// - parameter payload: The payload for the message
     /// - parameter ref: The reference of the message
     /// - return: Must return the payload, modified or unmodified
