@@ -86,8 +86,7 @@ public class Channel {
     /// - parameter timeout: Optional timeout
     /// - return: Push which can receive hooks can be applied to
     public func join(timeout: Int? = nil) -> Push {
-        return socket.push(topic: topic, event: PhoenixEvent.join)
-        
+        return socket.push(topic: topic, event: PhoenixEvent.join, payload: params)
     }
     
     /// Hook into channel close
