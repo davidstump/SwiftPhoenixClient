@@ -33,6 +33,17 @@ pod "SwiftPhoenixClient"
 
 and running `pod install`. From there you will need to add `import SwiftPhoenixClient` in any ViewController you want it to be used.
 
+### Carthage
+
+If you use Carthage to manage your dependencies, simply add
+SwiftPhoenixClient to your `Cartfile`:
+
+```
+github "davidstump/SwiftPhoenixClient" ~> 0.8
+```
+
+Make sure you have added `SwiftPhoenixClient.framework`, and `Starscream.framework` to the "_Linked Frameworks and Libraries_" section of your target, and have included them in your Carthage framework copying build phase.
+
 ## Usage
 
 Using the Swift Phoenix Client is extremely easy (and familiar if have used the Phoenix JS client).
