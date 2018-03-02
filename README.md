@@ -13,10 +13,6 @@ that makes it easy to connect to Phoenix sockets in a similar manner to the
 Phoenix Socket Javascript library.
 
 
-## Latest Version
-
-0.8.0 Is the latest release and supports Swift 4
-
 ## Installation
 
 ### CocoaPods
