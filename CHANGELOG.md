@@ -6,7 +6,7 @@ This product uses [Semantic Versioning](https://semver.org/).
 
 
 ## [Unreleased]
-
+* Update project and dependencies to Swift 4.1
 
 
 ## [0.8.1]

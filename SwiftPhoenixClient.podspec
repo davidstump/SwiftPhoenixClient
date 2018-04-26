@@ -39,5 +39,5 @@ http://www.phoenixframework.org/docs/channels
 
   s.source_files = 'Sources/*.swift'
 
-  s.dependency 'Starscream', '~> 3.0.4'
+  s.dependency 'Starscream', '~> 3.0.5'
 end
