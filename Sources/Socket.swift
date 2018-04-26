@@ -158,8 +158,9 @@ public class Socket {
     /// Removes a channel from the socket
     ///
     /// - parameter channel: Channel to remove
-    public func remove(_ channel: Channel) {
-        channel.leave().receive("ok") { [weak self] (_) in
+    @discardableResult
+    public func remove(_ channel: Channel) -> Push {
+        return channel.leave().receive("ok") { [weak self] (_) in
             self?.channels.removeValue(forKey: channel.topic)
         }
     }
