@@ -136,6 +136,9 @@ public class Channel {
     @discardableResult
     public func leave(timeout: Int? = nil) -> Push {
         return socket.push(topic: topic, event: PhoenixEvent.leave)
+            .receive("ok") { [weak self] payload in
+                self?.onClose?(payload)
+            }
     }
     
     /// Overridable message hook. Receives all events for specialized message
