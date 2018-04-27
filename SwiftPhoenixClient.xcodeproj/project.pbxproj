@@ -15,6 +15,7 @@
 		12252F56202EA467000BA6A2 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12252F54202EA467000BA6A2 /* Quick.framework */; };
 		12252F57202EA467000BA6A2 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12252F55202EA467000BA6A2 /* Nimble.framework */; };
 		12252F58202EA52C000BA6A2 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BFAE4E41DA84F59000B3CD3 /* SwiftPhoenixClient.framework */; };
+		12BD54232093B20600C049F2 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12BD54222093B20600C049F2 /* Constants.swift */; };
 		12EAFF29202F656300685575 /* SocketSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EAFF27202F654300685575 /* SocketSpec.swift */; };
 		63CD642E1DB11E8400C406A6 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD642D1DB11E8400C406A6 /* Presence.swift */; };
 		63CD64321DB1272400C406A6 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD64311DB1272400C406A6 /* Response.swift */; };
@@ -43,6 +44,7 @@
 		1220C3F8202FA808001664A2 /* Push.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; };
 		12252F54202EA467000BA6A2 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
 		12252F55202EA467000BA6A2 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
+		12BD54222093B20600C049F2 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		12EAFF27202F654300685575 /* SocketSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketSpec.swift; sourceTree = "<group>"; };
 		63CD642D1DB11E8400C406A6 /* Presence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Presence.swift; sourceTree = "<group>"; };
 		63CD64311DB1272400C406A6 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 				63CD642D1DB11E8400C406A6 /* Presence.swift */,
 				63CD64311DB1272400C406A6 /* Response.swift */,
 				1220C3F8202FA808001664A2 /* Push.swift */,
+				12BD54222093B20600C049F2 /* Constants.swift */,
 			);
 			name = SwiftPhoenixClient;
 			path = Sources;
@@ -259,6 +262,7 @@
 				0B8517E51DAC12F40093A015 /* Channel.swift in Sources */,
 				63CD64321DB1272400C406A6 /* Response.swift in Sources */,
 				63CD642E1DB11E8400C406A6 /* Presence.swift in Sources */,
+				12BD54232093B20600C049F2 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
