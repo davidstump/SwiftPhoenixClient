@@ -40,7 +40,7 @@ class SocketSpec: QuickSpec {
             fakeConnection = FakeWebSocket(url: URL(string: "http://localhost:4000/socket/websocket")!)
             socket = Socket(connection: fakeConnection)
             
-            newMsgChannel = socket.channel("new_msg", params: ["token": "abc123"])
+            newMsgChannel = socket.channel("new_msg")
             oldMsgChannel = socket.channel("old_msg")
             
         }

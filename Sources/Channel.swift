@@ -28,9 +28,6 @@ public class Channel {
     
     /// The topic of the Channel. e.g. "rooms:friends"
     public let topic: String
-    
-    /// The params sent when joining the channel
-    public let params: Payload
 
     /// The Socket that the channel belongs to
     fileprivate let socket: Socket
@@ -66,11 +63,9 @@ public class Channel {
     /// Initialize a Channel
     ///
     /// - parameter topic: Topic of the Channel
-    /// - parameter params: Parameters to send when joining. Can be nil
     /// - parameter socket: Socket that the channel is a part of
-    init(topic: String, params: [String: Any]?, socket: Socket) {
+    init(topic: String, socket: Socket) {
         self.topic = topic
-        self.params = params ?? [:]
         self.socket = socket
         
         self.onEvents = [:]
@@ -83,9 +78,10 @@ public class Channel {
     //----------------------------------------------------------------------
     /// Joins the channel
     ///
+    /// - parameter params: Parameters to send when joining. Can be nil
     /// - parameter timeout: Optional timeout
     /// - return: Push which can receive hooks can be applied to
-    public func join(timeout: Int? = nil) -> Push {
+    public func join(params: [String: Any] = [:], timeout: Int? = nil) -> Push {
         return socket.push(topic: topic, event: PhoenixEvent.join, payload: params)
     }
     
