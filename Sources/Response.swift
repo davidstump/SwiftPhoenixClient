@@ -17,6 +17,9 @@ class Response {
     /// The unique string ref
     let ref: String
     
+    /// The ref sent during a join event
+    let joinRef: String
+    
     /// The string topic or topic:subtopic pair namespace, for example "messages", "messages:123"
     let topic: String
     
@@ -34,6 +37,7 @@ class Response {
                 else { return nil }
             
             self.ref = jsonObject["ref"] as? String ?? ""
+            self.joinRef = jsonObject["join_ref"] as? String ?? ""
             
             if
                 let topic = jsonObject["topic"] as? String,

@@ -17,6 +17,7 @@
 		12252F58202EA52C000BA6A2 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BFAE4E41DA84F59000B3CD3 /* SwiftPhoenixClient.framework */; };
 		12BD54232093B20600C049F2 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12BD54222093B20600C049F2 /* Constants.swift */; };
 		12EAFF29202F656300685575 /* SocketSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EAFF27202F654300685575 /* SocketSpec.swift */; };
+		12F879272097A3FC00161C02 /* PhxTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12F879262097A3FC00161C02 /* PhxTimer.swift */; };
 		63CD642E1DB11E8400C406A6 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD642D1DB11E8400C406A6 /* Presence.swift */; };
 		63CD64321DB1272400C406A6 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD64311DB1272400C406A6 /* Response.swift */; };
 /* End PBXBuildFile section */
@@ -46,6 +47,7 @@
 		12252F55202EA467000BA6A2 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
 		12BD54222093B20600C049F2 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		12EAFF27202F654300685575 /* SocketSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketSpec.swift; sourceTree = "<group>"; };
+		12F879262097A3FC00161C02 /* PhxTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhxTimer.swift; sourceTree = "<group>"; };
 		63CD642D1DB11E8400C406A6 /* Presence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Presence.swift; sourceTree = "<group>"; };
 		63CD64311DB1272400C406A6 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -102,6 +104,7 @@
 				63CD64311DB1272400C406A6 /* Response.swift */,
 				1220C3F8202FA808001664A2 /* Push.swift */,
 				12BD54222093B20600C049F2 /* Constants.swift */,
+				12F879262097A3FC00161C02 /* PhxTimer.swift */,
 			);
 			name = SwiftPhoenixClient;
 			path = Sources;
@@ -259,6 +262,7 @@
 			files = (
 				0B8517E31DAC11C80093A015 /* Socket.swift in Sources */,
 				1220C3F9202FA808001664A2 /* Push.swift in Sources */,
+				12F879272097A3FC00161C02 /* PhxTimer.swift in Sources */,
 				0B8517E51DAC12F40093A015 /* Channel.swift in Sources */,
 				63CD64321DB1272400C406A6 /* Response.swift in Sources */,
 				63CD642E1DB11E8400C406A6 /* Presence.swift in Sources */,
