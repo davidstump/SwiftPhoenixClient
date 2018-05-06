@@ -29,6 +29,11 @@ class Response {
     /// The message payload
     let payload: Payload
     
+    
+    
+    //----------------------------------------------------------------------
+    // MARK: - Internal
+    //----------------------------------------------------------------------
     init?(data: Data) {
         do {
             guard let jsonObject

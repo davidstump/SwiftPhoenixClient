@@ -96,15 +96,15 @@
 		0BFAE4E61DA84F59000B3CD3 /* SwiftPhoenixClient */ = {
 			isa = PBXGroup;
 			children = (
-				0BFAE4E71DA84F59000B3CD3 /* SwiftPhoenixClient.h */,
-				0BFAE4E81DA84F59000B3CD3 /* Info.plist */,
-				0B8517E21DAC11C80093A015 /* Socket.swift */,
 				0B8517E41DAC12F40093A015 /* Channel.swift */,
-				63CD642D1DB11E8400C406A6 /* Presence.swift */,
-				63CD64311DB1272400C406A6 /* Response.swift */,
-				1220C3F8202FA808001664A2 /* Push.swift */,
 				12BD54222093B20600C049F2 /* Constants.swift */,
+				0BFAE4E81DA84F59000B3CD3 /* Info.plist */,
 				12F879262097A3FC00161C02 /* PhxTimer.swift */,
+				63CD642D1DB11E8400C406A6 /* Presence.swift */,
+				1220C3F8202FA808001664A2 /* Push.swift */,
+				63CD64311DB1272400C406A6 /* Response.swift */,
+				0B8517E21DAC11C80093A015 /* Socket.swift */,
+				0BFAE4E71DA84F59000B3CD3 /* SwiftPhoenixClient.h */,
 			);
 			name = SwiftPhoenixClient;
 			path = Sources;

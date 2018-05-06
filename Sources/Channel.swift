@@ -126,9 +126,10 @@ public class Channel {
             self.rejoinTimer?.scheduleTimeout()
         }
         
-//        self.on(ChannelEvent.reply) { (payload) in
+        self.on(ChannelEvent.reply) { (payload) in
+            print("Channel Reply")
 //            self.trigger(event: self.replyEventName(ref), with: <#T##Payload#>, ref: <#T##String#>)
-//        }
+        }
     }
     
     
@@ -208,7 +209,7 @@ public class Channel {
     /// - parameter event: Event to unsubscribe from
     /// - paramter ref: Ref counter returned when subscribing. Can be omitted
     public func off(_ event: String, ref: Int? = nil) {
-        self.bindings = bindings.filter({ $0.event == event && (ref == nil || ref == $0.ref) })
+        self.bindings = bindings.filter({ !($0.event == event && (ref == nil || ref == $0.ref)) })
     }
     
     /// Push a payload to the Channel

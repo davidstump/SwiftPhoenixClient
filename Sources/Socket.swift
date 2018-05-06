@@ -22,6 +22,7 @@ public class Socket {
     
     /// Internval between socket reconnect attempts
     public var reconnectAfterMs: (_ tryCount: Int) -> Int = { tryCount in
+        guard tryCount < 4 else { return 10000 } // After 4 tries, default to 10 second retries
         return [1000, 2000, 5000, 10000][tryCount]
     }
     
@@ -30,6 +31,11 @@ public class Socket {
     
     /// Disable sending Heartbeats by setting to true
     public var skipHeartbeat: Bool = false
+    
+    /// Socket will attempt to reconnect if the Socket was closed. Will not
+    /// reconnect if the Socket errored (e.g. connection refused.) Default
+    /// is set to true
+    public var autoReconnect: Bool = true
     
     
     //----------------------------------------------------------------------
@@ -212,12 +218,21 @@ public class Socket {
         self.onMessageCallbacks.append(callback)
     }
     
+    /// Releases all stored callback hooks (onError, onOpen, onClose, etc.) You should
+    /// call this method when you are finished when the Socket in order to release
+    /// any references held by the socket.
+    public func removeAllCallbacks() {
+        self.onOpenCallbacks.removeAll()
+        self.onCloseCallbacks.removeAll()
+        self.onErrorCallbacks.removeAll()
+        self.onMessageCallbacks.removeAll()
+    }
+    
+    
     /// Removes the Channel from the socket. This does not cause the channel to
     /// inform the server that it is leaving. You should call channel.leave() first.
     public func remove(_ channel: Channel) {
-        self.channels = channels.filter({ (c) -> Bool in
-            return false // TODO c.joinRef === channel.joinRef
-        })
+        self.channels = channels.filter( { $0.joinRef != channel.joinRef } )
     }
     
     /// Initialize a new Channel with a given topic
@@ -301,9 +316,8 @@ public class Socket {
         self.reconnectTimer.reset()
 
         
-        if !skipHeartbeat {
-            self.startHeartbeatTimer()
-        }
+        // Start sending heartbeats if enabled
+        if !skipHeartbeat { self.startHeartbeatTimer() }
         
         // Inform all onOpen callbacks that the Socket has opened
         self.onOpenCallbacks.forEach( { $0() } )
@@ -313,7 +327,9 @@ public class Socket {
         self.logItems("transport", "close")
         self.triggerChannelError()
         self.heartbeatTimer?.invalidate()
-        self.reconnectTimer.scheduleTimeout()
+        
+        // Attempt to reconnect the socket
+        if autoReconnect { self.reconnectTimer.scheduleTimeout() }
         self.onCloseCallbacks.forEach( { $0() } )
     }
     
@@ -335,7 +351,7 @@ public class Socket {
         
         // Dispatch the message to all channels that belong to the topic
         self.channels
-            .filter( { $0.isMember(r.topic, event: r.event, payload: r.payload, joinRef: r.joinRef) } )
+            .filter( { $0.isMember(r.topic, event: r.event, payload: r.payload, joinRef: r.ref) } )
             .forEach( { $0.trigger(event: r.event, with: r.payload, ref: r.ref, joinRef: r.joinRef) } )
         
         // Inform all onMessage callbacks of the message
@@ -357,7 +373,6 @@ public class Socket {
     //----------------------------------------------------------------------
     // MARK: - Timers
     //----------------------------------------------------------------------
-
     /// Initializes a 30s timer to let Phoenix know this device is still alive
     func startHeartbeatTimer() {
         let heartbeatInterval = TimeInterval(heartbeatIntervalMs / 1000)
@@ -412,5 +427,4 @@ extension Socket: WebSocketDelegate {
     public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
         /* no-op */
     }
-    
 }

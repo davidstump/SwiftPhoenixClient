@@ -36,13 +36,14 @@ class PhxTimer {
     /// ongoing scheduled timeout.
     public func reset() {
         self.tries = 0
+        self.clearTimer()
         self.timer?.invalidate()
         self.timer = nil
     }
     
     /// Cancels any previous scheduleTimeout() and schedules another callback
     public func scheduleTimeout() {
-        self.reset()
+        self.clearTimer()
         
         /// Start the Timeout timer.
         let timeout = timerCalc(self.tries)
@@ -64,6 +65,12 @@ class PhxTimer {
     //----------------------------------------------------------------------
     // MARK: - Private
     //----------------------------------------------------------------------
+    /// Invalidates any ongoing timer, does not reset the tries count.
+    private func clearTimer() {
+        self.timer?.invalidate()
+        self.timer = nil
+    }
+    
     @objc func onTimerTriggered() {
         self.tries += 1
         self.callback()
