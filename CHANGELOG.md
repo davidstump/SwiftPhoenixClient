@@ -7,6 +7,13 @@ This product uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 * Update project and dependencies to Swift 4.1
+* Updated all callbacks to receive a `Message` object. The `Payload` can be accessed using `message.payload`
+* `channel.join()` can now take optional params to override the ones set while creating the Channel
+* Implemented timeouts
+* Impletemted a rejoin timer which can be configured to attempt to rejoin given a function. Defaults to 1s, 2s, 5s, 10s and then retries every 10s
+* Improved API to closer match the JS library's API
+* Updated Socket and Channel `on` callbacks to be able to hold more than just a single callback
+
 
 
 ## [0.8.1]
