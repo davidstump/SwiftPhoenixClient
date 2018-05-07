@@ -19,7 +19,7 @@
 		12EAFF29202F656300685575 /* SocketSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EAFF27202F654300685575 /* SocketSpec.swift */; };
 		12F879272097A3FC00161C02 /* PhxTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12F879262097A3FC00161C02 /* PhxTimer.swift */; };
 		63CD642E1DB11E8400C406A6 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD642D1DB11E8400C406A6 /* Presence.swift */; };
-		63CD64321DB1272400C406A6 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD64311DB1272400C406A6 /* Response.swift */; };
+		63CD64321DB1272400C406A6 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD64311DB1272400C406A6 /* Message.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,7 +49,7 @@
 		12EAFF27202F654300685575 /* SocketSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketSpec.swift; sourceTree = "<group>"; };
 		12F879262097A3FC00161C02 /* PhxTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhxTimer.swift; sourceTree = "<group>"; };
 		63CD642D1DB11E8400C406A6 /* Presence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Presence.swift; sourceTree = "<group>"; };
-		63CD64311DB1272400C406A6 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
+		63CD64311DB1272400C406A6 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,7 +102,7 @@
 				12F879262097A3FC00161C02 /* PhxTimer.swift */,
 				63CD642D1DB11E8400C406A6 /* Presence.swift */,
 				1220C3F8202FA808001664A2 /* Push.swift */,
-				63CD64311DB1272400C406A6 /* Response.swift */,
+				63CD64311DB1272400C406A6 /* Message.swift */,
 				0B8517E21DAC11C80093A015 /* Socket.swift */,
 				0BFAE4E71DA84F59000B3CD3 /* SwiftPhoenixClient.h */,
 			);
@@ -264,7 +264,7 @@
 				1220C3F9202FA808001664A2 /* Push.swift in Sources */,
 				12F879272097A3FC00161C02 /* PhxTimer.swift in Sources */,
 				0B8517E51DAC12F40093A015 /* Channel.swift in Sources */,
-				63CD64321DB1272400C406A6 /* Response.swift in Sources */,
+				63CD64321DB1272400C406A6 /* Message.swift in Sources */,
 				63CD642E1DB11E8400C406A6 /* Presence.swift in Sources */,
 				12BD54232093B20600C049F2 /* Constants.swift in Sources */,
 			);

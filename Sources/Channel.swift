@@ -40,7 +40,7 @@ public class Channel {
     private var state: ChannelState
     
     /// Collection of event bindings
-    private var bindings: [(event: String, ref: Int, callback: (Payload) -> Void)]
+    private var bindings: [(event: String, ref: Int, callback: (Message) -> Void)]
     
     /// Tracks event binding ref counters
     private var bindingRef: Int
@@ -126,9 +126,10 @@ public class Channel {
             self.rejoinTimer?.scheduleTimeout()
         }
         
-        self.on(ChannelEvent.reply) { (payload) in
-            print("Channel Reply")
-//            self.trigger(event: self.replyEventName(ref), with: <#T##Payload#>, ref: <#T##String#>)
+        self.on(ChannelEvent.reply) { (message) in
+            let replyEventName = self.replyEventName(message.ref)
+            let replyMessage = Message(ref: message.ref, topic: message.topic, event: replyEventName, payload: message.payload)
+            self.trigger(replyMessage)
         }
     }
     
@@ -136,12 +137,10 @@ public class Channel {
     /// Overridable message hook. Receives all events for specialized message
     /// handling before dispatching to the channel callbacks.
     ///
-    /// - parameter event: The event the message was for
-    /// - parameter payload: The payload for the message
-    /// - parameter ref: The reference of the message
-    /// - return: Must return the payload, modified or unmodified
-    var onMessage: ((_ event: String, _ payload: Payload, _ ref: String) -> Payload) = { (_, payload, _) in
-        return payload
+    /// - parameter msg: The Message received by the client from the server
+    /// - return: Must return the message, modified or unmodified
+    public var onMessage: (_ message: Message) -> Message = { (message) in
+        return message
     }
     
     
@@ -166,7 +165,7 @@ public class Channel {
     /// - parameter callback: Callback to be informed when channel closes
     /// - return: The ref counter of the subscription
     @discardableResult
-    public func onClose(_ callback: @escaping ((_ payload: Payload) -> Void)) -> Int {
+    public func onClose(_ callback: @escaping ((_ msg: Message) -> Void)) -> Int {
         return self.on(ChannelEvent.close, callback: callback)
     }
     
@@ -175,7 +174,7 @@ public class Channel {
     /// - parameter callback: Callback to be informed when channel errors
     /// - return: The ref counter of the subscription
     @discardableResult
-    public func onError(_ callback: @escaping ((_ payload: Payload) -> Void)) -> Int {
+    public func onError(_ callback: @escaping ((_ msg: Message) -> Void)) -> Int {
         return self.on(ChannelEvent.error, callback: callback)
     }
     
@@ -196,7 +195,7 @@ public class Channel {
     /// - parameter callback: Reveives payload of the event
     /// - return: The ref counter
     @discardableResult
-    public func on(_ event: String, callback: @escaping ((Payload) -> Void)) -> Int {
+    public func on(_ event: String, callback: @escaping ((Message) -> Void)) -> Int {
         let ref = bindingRef
         self.bindingRef = ref + 1
         
@@ -248,9 +247,9 @@ public class Channel {
     public func leave(timeout: Int = PHOENIX_DEFAULT_TIMEOUT) -> Push {
         self.state = .leaving
         
-        let onClose: ((Payload) -> Void) = { [weak self] (_) in
+        let onClose: ((Message) -> Void) = { [weak self] (message) in
             self?.socket.logItems("channel", "leave \(self?.topic ?? "unknown")")
-            self?.trigger(event: ChannelEvent.leave, with: [:], ref: "")
+            self?.trigger(message)
         }
         
         let leavePush = Push(channel: self, event: ChannelEvent.leave, timeout: timeout)
@@ -270,7 +269,7 @@ public class Channel {
     /// - parameter payload: The payload for the message
     /// - parameter ref: The reference of the message
     /// - return: Must return the payload, modified or unmodified
-    public func onMessage(_ callback: @escaping ((_ event: String, _ payload: Payload, _ ref: String) -> Payload)) {
+    public func onMessage(_ callback: @escaping (_ message: Message) -> Message) {
         self.onMessage = callback
     }
 
@@ -280,12 +279,12 @@ public class Channel {
     //----------------------------------------------------------------------
 
     /// Checks if an event received by the Socket belongs to this Channel
-    func isMember(_ topic: String, event: String, payload: Payload, joinRef: String? = nil) -> Bool {
+    func isMember(_ message: Message) -> Bool {
         guard topic == self.topic else { return false }
         
-        let isLifecycleEvent = ChannelEvent.isLifecyleEvent(event)
-        if let safeJoinRef = joinRef, isLifecycleEvent, safeJoinRef != self.joinRef {
-            self.socket.logItems("channel", "dropping outdated message", topic, event, payload, safeJoinRef)
+        let isLifecycleEvent = ChannelEvent.isLifecyleEvent(message.event)
+        if let safeJoinRef = message.joinRef, isLifecycleEvent, safeJoinRef != self.joinRef {
+            self.socket.logItems("channel", "dropping outdated message", message.topic, message.event, message.payload, safeJoinRef)
             return false
         }
         
@@ -311,12 +310,12 @@ public class Channel {
     /// - parameter payload: Payload of the event
     /// - parameter ref: Ref of the event
     /// - parameter joinRef: Ref of the join event. Defaults to nil
-    func trigger(event: String, with payload: Payload, ref: String, joinRef: String? = nil) {
-        let handledPayload = self.onMessage(event, payload, ref)
+    func trigger(_ message: Message) {
+        let handledMessage = self.onMessage(message)
         
         self.bindings
-            .filter( { return $0.event == event } )
-            .forEach( { $0.callback(handledPayload) } )
+            .filter( { return $0.event == message.event } )
+            .forEach( { $0.callback(handledMessage) } )
     }
     
     

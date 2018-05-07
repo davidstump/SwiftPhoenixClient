@@ -51,7 +51,7 @@ public class Socket {
     private var onErrorCallbacks: [(Error) -> Void] = []
     
     /// Collection of callbacks for onMessage socket events
-    private var onMessageCallbacks: [(Payload) -> Void] = []
+    private var onMessageCallbacks: [(Message) -> Void] = []
     
     /// Collection on channels created for the Socket
     private var channels: [Channel] = []
@@ -214,7 +214,7 @@ public class Socket {
     ///     }
     ///
     /// - parameter callback: Callback to register
-    public func onMessage(callback: @escaping (Payload) -> Void) {
+    public func onMessage(callback: @escaping (Message) -> Void) {
         self.onMessageCallbacks.append(callback)
     }
     
@@ -344,23 +344,24 @@ public class Socket {
         
         guard
             let data = rawMessage.data(using: String.Encoding.utf8),
-            let r = Response(data: data)
+            let message = Message(data: data)
             else {
                 self.logItems("receive: Unable to parse JSON: \(rawMessage)")
                 return }
         
         // Dispatch the message to all channels that belong to the topic
         self.channels
-            .filter( { $0.isMember(r.topic, event: r.event, payload: r.payload, joinRef: r.ref) } )
-            .forEach( { $0.trigger(event: r.event, with: r.payload, ref: r.ref, joinRef: r.joinRef) } )
+            .filter( { $0.isMember(message) } )
+            .forEach( { $0.trigger(message) } )
         
         // Inform all onMessage callbacks of the message
-        self.onMessageCallbacks.forEach( { $0(r.payload) } )
+        self.onMessageCallbacks.forEach( { $0(message) } )
     }
     
     /// Triggers an error event to all of the connected Channels
     private func triggerChannelError() {
-        self.channels.forEach( { $0.trigger(event: ChannelEvent.error, with: [:], ref: "", joinRef: "") } )
+        let errorMessage = Message(event: ChannelEvent.error)
+        self.channels.forEach( { $0.trigger(errorMessage) } )
     }
     
     /// Send all messages that were buffered before the socket opened

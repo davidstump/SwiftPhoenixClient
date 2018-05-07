@@ -31,11 +31,11 @@ class ViewController: UIViewController {
     
     self.lobbyChannel
         .push("new:msg", payload: payload)
-        .receive("ok") { (payload) in
-            print("success", payload)
+        .receive("ok") { (message) in
+            print("success", message)
         }
-        .receive("error") { (errorPayload) in
-            print("error: ", errorPayload)
+        .receive("error") { (errorMessage) in
+            print("error: ", errorMessage)
         }
     
     messageField.text = ""
@@ -67,14 +67,15 @@ class ViewController: UIViewController {
         self.chatWindow.text = "You joined the room.\n"
     }
     
-    channel.on("new:msg") { (payload) in
+    channel.on("new:msg") { (message) in
+        let payload = message.payload
         guard let username = payload["user"], let body = payload["body"] else { return }
         let newMessage = "[\(username)] \(body)\n"
         let updatedText = self.chatWindow.text.appending(newMessage)
         self.chatWindow.text = updatedText
     }
 
-    channel.on("user:entered") { (payload) in
+    channel.on("user:entered") { (message) in
         let username = "anonymous"
         self.chatWindow.text = self.chatWindow.text.appending("[\(username) entered]\n")
     }

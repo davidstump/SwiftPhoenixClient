@@ -23,13 +23,13 @@ public class Push {
     private var timeout: Int
     
     /// The server's response to the Push
-    private var receivedResponse: Payload?
+    private var receivedMessage: Message?
     
     /// Timer which triggers a timeout event
     var timeoutTimer: Timer?
     
     /// Hooks into a Push. Where .receive("ok", callback(Payload)) are stored
-    var receiveHooks: [String: [(Payload) -> ()]]
+    var receiveHooks: [String: [(Message) -> ()]]
     
     /// True if the Push has been sent
     var sent: Bool
@@ -58,7 +58,7 @@ public class Push {
         self.event = event
         self.payload = payload
         self.timeout = timeout
-        self.receivedResponse = nil
+        self.receivedMessage = nil
         self.timeoutTimer = nil
         self.receiveHooks = [:]
         self.sent = false
@@ -91,9 +91,9 @@ public class Push {
     /// - parameter status: Status to receive
     /// - parameter callback: Callback to fire when the status is recevied
     @discardableResult
-    public func receive(_ status: String, callback: @escaping ((Payload) -> ())) -> Push {
-        if hasReceived(status: status), let receivedResponse = self.receivedResponse {
-            callback(receivedResponse)
+    public func receive(_ status: String, callback: @escaping ((Message) -> ())) -> Push {
+        if hasReceived(status: status), let receivedMessage = self.receivedMessage {
+            callback(receivedMessage)
         }
         
         /// Create a new array of hooks if no previous hook is associated with status
@@ -143,7 +143,7 @@ public class Push {
         self.cancelRefEvent()
         self.ref = nil
         self.refEvent = nil
-        self.receivedResponse = nil
+        self.receivedMessage = nil
         self.sent = false
     }
     
@@ -152,8 +152,8 @@ public class Push {
     ///
     /// - parameter status: Status which was received, e.g. "ok", "error", "timeout"
     /// - parameter response: Response that was received
-    func matchReceive(_ status: String, response: Payload) {
-        receiveHooks[status]?.forEach( { $0(response) } )
+    func matchReceive(_ status: String, message: Message) {
+        receiveHooks[status]?.forEach( { $0(message) } )
     }
     
     /// Reverses the result on channel.on(ChannelEvent, callback) that spawned the Push
@@ -180,14 +180,14 @@ public class Push {
         
         /// If a response is received  before the Timer triggers, cancel timer
         /// and match the recevied event to it's corresponding hook
-        self.channel.on(refEvent) { (payload) in
+        self.channel.on(refEvent) { (message) in
             self.cancelRefEvent()
             self.cancelTimeout()
-            self.receivedResponse = payload
+            self.receivedMessage = message
             
             /// Check if there is event a status available
-            guard let status = payload["status"] as? String else { return }
-            self.matchReceive(status, response: payload)
+            guard let status = message.status else { return }
+            self.matchReceive(status, message: message)
         }
         
         /// Start the Timeout timer.
@@ -216,8 +216,7 @@ public class Push {
     /// - return: True if given status has been received by the Push.
     func hasReceived(status: String) -> Bool {
         guard
-            let receivedResponse = self.receivedResponse,
-            let receivedStatus = receivedResponse["status"] as? String,
+            let receivedStatus = self.receivedMessage?.status,
             receivedStatus == status
             else { return false }
         
@@ -231,6 +230,8 @@ public class Push {
         
         var mutPayload = payload
         mutPayload["status"] = status
-        self.channel.trigger(event: refEvent, with: mutPayload, ref: "")
+        
+        let message = Message(ref: refEvent, payload: mutPayload)
+        self.channel.trigger(message)
     }
 }
