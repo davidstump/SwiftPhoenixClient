@@ -17,7 +17,7 @@ public class Push {
     private let event: String
     
     /// The payload, for example ["user_id": "abc123"]
-    private var payload: Payload
+    var payload: Payload
     
     /// The push timeout, in milliseconds
     private var timeout: Int

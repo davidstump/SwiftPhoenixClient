@@ -149,10 +149,17 @@ public class Channel {
     //----------------------------------------------------------------------
     /// Joins the channel
     ///
-    /// - parameter timeout: Optional timeout
+    /// - parameter joinParams: Overrides the params given when creating the Channel.
+    ///                         If not provided, then initial params will be used.
+    /// - parameter timeout: Optional timeout override. If not provided, default is used
     /// - return: Push which can receive hooks can be applied to
-    public func join(timeout: Int? = nil) -> Push {
+    public func join(joinParams: Payload? = nil, timeout: Int? = nil) -> Push {
         guard !joinedOnce else { fatalError("Tried to join channel multiple times. 'join()' can only be called once per channel instance")}
+        
+        /// Allow the User to update the payload send when a channel joins
+        if let updatedJoinParams = joinParams {
+            self.joinPush.payload = updatedJoinParams
+        }
         
         self.joinedOnce = true
         self.rejoin(timeout)
