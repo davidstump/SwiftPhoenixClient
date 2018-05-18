@@ -10,25 +10,32 @@ import UIKit
 import SwiftPhoenixClient
 
 class ViewController: UIViewController {
-  @IBOutlet var userField: UITextField!
-  @IBOutlet var messageField: UITextField!
-  @IBOutlet var chatWindow: UITextView!
-  @IBOutlet var sendButton: UIButton!
-  let socket = Socket(url: "ws://localhost:4000/socket/websocket")
-  var topic: String? = "rooms:lobby"
+    
+    //----------------------------------------------------------------------
+    // MARK: - Child Views
+    //----------------------------------------------------------------------
+    @IBOutlet var userField: UITextField!
+    @IBOutlet var messageField: UITextField!
+    @IBOutlet var chatWindow: UITextView!
+    @IBOutlet var sendButton: UIButton!
+  
+    
+    let socket = Socket(url: "ws://localhost:4000/socket/websocket")
+    var topic: String = "rooms:lobby"
+    var lobbyChannel: Channel!
+    
+    
   
   @IBAction func sendMessage(_ sender: UIButton) {
     let payload = ["user":userField.text!, "body": messageField.text!]
-    socket
-        .push(topic: topic!, event: "new:msg", payload: payload)
-        .receive("ok") { (payload) in
-            print("success", payload)
+    
+    self.lobbyChannel
+        .push("new:msg", payload: payload)
+        .receive("ok") { (message) in
+            print("success", message)
         }
-        .receive("error") { (errorPayload) in
-            print("error: ", errorPayload)
-        }
-        .always {
-            print("always")
+        .receive("error") { (errorMessage) in
+            print("error: ", errorMessage)
         }
     
     messageField.text = ""
@@ -36,38 +43,39 @@ class ViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    socket.onOpen = {
+
+    socket.onOpen {
         print("Socket has opened")
     }
     
-    socket.onClose = {
+    socket.onClose {
         print("Socket has closed")
     }
     
-    socket.onError = { error in
+    socket.onError { error in
         print("Socket has errored: ", error.localizedDescription)
     }
     
-    socket.log = { msg in
+    socket.logger = { msg in
         print(msg)
     }
-    
+
     socket.connect()
     
-    let channel = socket.channel(topic!, params: ["status":"joining"])
+    let channel = socket.channel(topic, params: ["status":"joining"])
     channel.on("join") { (payload) in
         self.chatWindow.text = "You joined the room.\n"
     }
     
-    channel.on("new:msg") { (payload) in
+    channel.on("new:msg") { (message) in
+        let payload = message.payload
         guard let username = payload["user"], let body = payload["body"] else { return }
         let newMessage = "[\(username)] \(body)\n"
         let updatedText = self.chatWindow.text.appending(newMessage)
         self.chatWindow.text = updatedText
     }
 
-    channel.on("user:entered") { (payload) in
+    channel.on("user:entered") { (message) in
         let username = "anonymous"
         self.chatWindow.text = self.chatWindow.text.appending("[\(username) entered]\n")
     }
@@ -79,6 +87,10 @@ class ViewController: UIViewController {
         }.receive("error") { (payload) in
             print("Failed to join channel: ", payload)
         }
+    
+    
+    self.lobbyChannel = channel
+    
   }
 
 }

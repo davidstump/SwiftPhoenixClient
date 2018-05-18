@@ -11,20 +11,43 @@
 
 import Foundation
 
-/// Maps the data from a Websocket into a Response
-class Response {
+/// Represents a Message that has been received by the client from the Server. You should
+/// never need to create this class, only ever consume it's values.
+public class Message {
     
-    /// The unique string ref
-    let ref: String
+    /// The unique string ref. Empty if not present
+    public let ref: String
+    
+    /// The ref sent during a join event. Empty if not present.
+    /// Visible only to the library
+    let joinRef: String?
     
     /// The string topic or topic:subtopic pair namespace, for example "messages", "messages:123"
-    let topic: String
+    public let topic: String
     
     /// The string event name, for example "phx_join"
-    let event: String
+    public let event: String
     
     /// The message payload
-    let payload: Payload
+    public let payload: Payload
+    
+    /// Convenience var to access the message's payload's status. Equivalent
+    /// to checking message.payload["status"] yourself
+    public var status: String? {
+        return payload["status"] as? String
+    }
+    
+    //----------------------------------------------------------------------
+    // MARK: - Internal
+    //----------------------------------------------------------------------
+    init(ref: String = "", topic: String = "", event: String = "", payload: Payload = [:]) {
+        self.ref = ref
+        self.topic = topic
+        self.event = event
+        self.payload = payload
+        self.joinRef = nil
+    }
+    
     
     init?(data: Data) {
         do {
@@ -34,6 +57,7 @@ class Response {
                 else { return nil }
             
             self.ref = jsonObject["ref"] as? String ?? ""
+            self.joinRef = jsonObject["join_ref"] as? String
             
             if
                 let topic = jsonObject["topic"] as? String,
