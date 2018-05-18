@@ -11,19 +11,19 @@ import Foundation
 public class Push {
     
     /// The channel
-    private let channel: Channel
+    let channel: Channel
     
     /// The event, for example ChannelEvent.join
-    private let event: String
+    let event: String
     
     /// The payload, for example ["user_id": "abc123"]
     var payload: Payload
     
     /// The push timeout, in milliseconds
-    private var timeout: Int
+    var timeout: Int
     
     /// The server's response to the Push
-    private var receivedMessage: Message?
+    var receivedMessage: Message?
     
     /// Timer which triggers a timeout event
     var timeoutTimer: Timer?
