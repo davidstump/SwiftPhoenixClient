@@ -15,7 +15,7 @@
 		12252F56202EA467000BA6A2 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12252F54202EA467000BA6A2 /* Quick.framework */; };
 		12252F57202EA467000BA6A2 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12252F55202EA467000BA6A2 /* Nimble.framework */; };
 		12252F58202EA52C000BA6A2 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BFAE4E41DA84F59000B3CD3 /* SwiftPhoenixClient.framework */; };
-		124B95C220AF41190012006C /* PushSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 124B95C120AF41190012006C /* PushSpec.swift */; };
+		12A3983D20D00050003203DF /* PushSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 124B95C120AF41190012006C /* PushSpec.swift */; };
 		12BD54232093B20600C049F2 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12BD54222093B20600C049F2 /* Constants.swift */; };
 		12C140D920AF416600184725 /* ChannelSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C140D720AF415900184725 /* ChannelSpec.swift */; };
 		12C140DB20AF41A900184725 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C140DA20AF41A900184725 /* Mocks.swift */; };
@@ -274,7 +274,6 @@
 				12F879272097A3FC00161C02 /* PhxTimer.swift in Sources */,
 				0B8517E51DAC12F40093A015 /* Channel.swift in Sources */,
 				63CD64321DB1272400C406A6 /* Message.swift in Sources */,
-				124B95C220AF41190012006C /* PushSpec.swift in Sources */,
 				63CD642E1DB11E8400C406A6 /* Presence.swift in Sources */,
 				12BD54232093B20600C049F2 /* Constants.swift in Sources */,
 			);
@@ -284,6 +283,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12A3983D20D00050003203DF /* PushSpec.swift in Sources */,
 				12C140D920AF416600184725 /* ChannelSpec.swift in Sources */,
 				12EAFF29202F656300685575 /* SocketSpec.swift in Sources */,
 				12C140DB20AF41A900184725 /* Mocks.swift in Sources */,
