@@ -34,12 +34,12 @@ public enum SocketState: String {
 /// Represents the different events that can be sent through
 /// a channel regarding a Channel's lifecycle.
 public struct ChannelEvent {
-    static let heartbeat = "heartbeat"
-    static let join      = "phx_join"
-    static let leave     = "phx_leave"
-    static let reply     = "phx_reply"
-    static let error     = "phx_error"
-    static let close     = "phx_close"
+    public static let heartbeat = "heartbeat"
+    public static let join      = "phx_join"
+    public static let leave     = "phx_leave"
+    public static let reply     = "phx_reply"
+    public static let error     = "phx_error"
+    public static let close     = "phx_close"
     
     static func isLifecyleEvent(_ event: String) -> Bool {
         switch event {
