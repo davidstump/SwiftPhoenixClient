@@ -287,7 +287,7 @@ public class Channel {
 
     /// Checks if an event received by the Socket belongs to this Channel
     func isMember(_ message: Message) -> Bool {
-        guard topic == self.topic else { return false }
+        guard message.topic == self.topic else { return false }
         
         let isLifecycleEvent = ChannelEvent.isLifecyleEvent(message.event)
         if let safeJoinRef = message.joinRef, isLifecycleEvent, safeJoinRef != self.joinRef {
