@@ -10,7 +10,7 @@
 public let PHOENIX_DEFAULT_TIMEOUT: Int = 10000
 
 /// Default heartbeat interval set to 30 seconds
-public let PHOENIX_DEFAULT_HEARTBEAT: Int = 30000
+public let PHOENIX_DEFAULT_HEARTBEAT: Int = 5000
 
 
 
