@@ -356,6 +356,12 @@ public class Socket {
         
         // Inform all onMessage callbacks of the message
         self.onMessageCallbacks.forEach( { $0(message) } )
+        
+        // Check if this message was a pending heartbeat
+        if message.ref == pendingHeartbeatRef {
+            self.logItems("received pending heartbeat")
+            pendingHeartbeatRef = nil
+        }
     }
     
     /// Triggers an error event to all of the connected Channels
