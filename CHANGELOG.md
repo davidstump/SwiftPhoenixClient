@@ -43,7 +43,7 @@ Thanks to @murphb52 and @ALucasVanDongen for helping with some of the developmen
 
 
 [Unreleased]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.9.0...HEAD
-[0.8.1]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.8.1...0.9.0
+[0.9.0]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.8.1...0.9.0
 [0.8.1]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.8.0...0.8.1
 [0.8.0]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.6.0...0.8.0
 [migration guide]: https://github.com/davidstump/SwiftPhoenixClient/wiki/Usage-Guide
