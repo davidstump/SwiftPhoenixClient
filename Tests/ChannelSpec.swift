@@ -142,8 +142,26 @@ class ChannelSpec: QuickSpec {
             })
         }
         
-        
-        
+        //----------------------------------------------------------------------
+        // MARK: - Internals
+        //----------------------------------------------------------------------
+        describe(".isMember(message:)") {
+            it("should return false if the member's topic does not match the channel's topic", closure: {
+                let message = Message(topic: "other_topic")
+                expect(channel.isMember(message)).to(beFalse())
+            })
+            
+            it("should return false if isLifecycleEvent and joinRefs are not equal", closure: {
+                channel.joinPush.ref = "join_ref_1"
+                let message = Message(topic: "topic", event: ChannelEvent.join, joinRef: "join_ref_2")
+                expect(channel.isMember(message)).to(beFalse())
+            })
+            
+            it("should return true if the message belongs in the channel", closure: {
+                let message = Message(topic: "topic", event: "test_event")
+                expect(channel.isMember(message)).to(beTrue())
+            })
+        }
 
         
         describe(".sendJoin()") {

@@ -299,15 +299,13 @@ public class Channel {
         return true
     }
     
-    var joinRef: String {
-        return self.joinPush.ref ?? ""
-    }
-    
+    /// Sends the payload to join the Channel
     func sendJoin(_ timeout: Int) {
         self.state = ChannelState.joining
         self.joinPush.resend(timeout)
     }
     
+    /// Rejoins the channel
     func rejoin(_ timeout: Int? = nil) {
         self.sendJoin(timeout ?? self.timeout)
     }
@@ -331,6 +329,11 @@ public class Channel {
     /// - return: The event name of the reply
     func replyEventName(_ ref: String) -> String {
         return "chan_reply_\(ref)"
+    }
+    
+    /// The Ref send during the join message.
+    var joinRef: String {
+        return self.joinPush.ref ?? ""
     }
     
     /// - return: True if the Channel can push messages, meaning the socket

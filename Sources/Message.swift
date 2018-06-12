@@ -40,12 +40,16 @@ public class Message {
     //----------------------------------------------------------------------
     // MARK: - Internal
     //----------------------------------------------------------------------
-    init(ref: String = "", topic: String = "", event: String = "", payload: Payload = [:]) {
+    init(ref: String = "",
+         topic: String = "",
+         event: String = "",
+         payload: Payload = [:],
+         joinRef: String? = nil) {
         self.ref = ref
         self.topic = topic
         self.event = event
         self.payload = payload
-        self.joinRef = nil
+        self.joinRef = joinRef
     }
     
     
