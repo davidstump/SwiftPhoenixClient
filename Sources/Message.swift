@@ -29,7 +29,7 @@ public class Message {
     public let event: String
     
     /// The message payload
-    public let payload: Payload
+    public var payload: Payload
     
     /// Convenience var to access the message's payload's status. Equivalent
     /// to checking message.payload["status"] yourself

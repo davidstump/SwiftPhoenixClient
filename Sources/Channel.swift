@@ -36,32 +36,30 @@ public class Channel {
     let socket: Socket
 
     
+    
     /// Current state of the Channel
-    private var state: ChannelState
+    var state: ChannelState
     
     /// Collection of event bindings
-    private var bindings: [(event: String, ref: Int, callback: (Message) -> Void)]
+    var bindings: [(event: String, ref: Int, callback: (Message) -> Void)]
     
     /// Tracks event binding ref counters
-    private var bindingRef: Int
+    var bindingRef: Int
     
     /// Timout when attempting to join a Channel
-    private var timeout: Int
+    var timeout: Int
     
     /// Set to true once the channel calls .join()
-    private var joinedOnce: Bool
+    var joinedOnce: Bool
     
     /// Push to send when the channel calls .join()
-    private var joinPush: Push!
+    var joinPush: Push!
     
     /// Buffer of Pushes that will be sent once the Channel's socket connects
-    private var pushBuffer: [Push]
+    var pushBuffer: [Push]
     
     /// Timer to attempt to rejoin
-    private var rejoinTimer: PhxTimer!
-    
-
-    
+    var rejoinTimer: PhxTimer!
     
 
 
@@ -83,7 +81,10 @@ public class Channel {
         self.timeout = PHOENIX_DEFAULT_TIMEOUT // socket.timeout    
         self.joinedOnce = false
         self.pushBuffer = []
-        self.joinPush = Push(channel: self, event: ChannelEvent.join, payload: self.params, timeout: self.timeout)
+        self.joinPush = Push(channel: self,
+                             event: ChannelEvent.join,
+                             payload: self.params,
+                             timeout: self.timeout)
         
         self.rejoinTimer = PhxTimer(callback: {
             self.rejoinTimer?.scheduleTimeout()
@@ -287,7 +288,7 @@ public class Channel {
 
     /// Checks if an event received by the Socket belongs to this Channel
     func isMember(_ message: Message) -> Bool {
-        guard topic == self.topic else { return false }
+        guard topic == self.topic else { return false } 
         
         let isLifecycleEvent = ChannelEvent.isLifecyleEvent(message.event)
         if let safeJoinRef = message.joinRef, isLifecycleEvent, safeJoinRef != self.joinRef {
