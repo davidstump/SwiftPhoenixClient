@@ -6,7 +6,7 @@ This product uses [Semantic Versioning](https://semver.org/).
 
 
 ## [Unreleased]
-
+* Exposes security properties of the underlying `WebSocket`. This allows for things like SSL Pinning, custom encyption setups, etc. 
 
 
 ## [0.9.0]
