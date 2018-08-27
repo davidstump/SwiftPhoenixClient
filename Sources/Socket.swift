@@ -182,6 +182,8 @@ public class Socket {
     public func disconnect(_ callback: (() -> Void)? = nil) {
         connection.delegate = nil
         connection.disconnect()
+
+        onConnectionClosed()
         
         callback?()
     }
