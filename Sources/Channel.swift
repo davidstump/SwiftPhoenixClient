@@ -33,7 +33,7 @@ public class Channel {
     var params: Payload
 
     /// The Socket that the channel belongs to
-    let socket: Socket
+    weak var socket: Socket?
 
     
     
@@ -89,9 +89,9 @@ public class Channel {
         self.rejoinTimer = PhxTimer(callback: { [weak self] in
             guard let strongSelf = self else { return }
             strongSelf.rejoinTimer?.scheduleTimeout()
-            if strongSelf.socket.isConnected { strongSelf.rejoin() }
+            if strongSelf.socket?.isConnected == true { strongSelf.rejoin() }
         }, timerCalc: { [weak self] tryCount in
-            self?.socket.reconnectAfterMs(tryCount) ?? 10000
+            self?.socket?.reconnectAfterMs(tryCount) ?? 10000
         })
         
         /// Perfom once the Channel is joined
@@ -107,16 +107,16 @@ public class Channel {
         self.onClose { [weak self] (_) in
             guard let strongSelf = self else { return }
             strongSelf.rejoinTimer?.reset()
-            strongSelf.socket.logItems("channel", "close \(strongSelf.topic)")
+            strongSelf.socket?.logItems("channel", "close \(strongSelf.topic)")
             strongSelf.state = ChannelState.closed
-            strongSelf.socket.remove(strongSelf)
+            strongSelf.socket?.remove(strongSelf)
         }
         
         /// Perfom when the Channel errors
         self.onError { [weak self] (_) in
             guard let strongSelf = self else { return }
             guard strongSelf.isLeaving || !strongSelf.isClosed else { return }
-            strongSelf.socket.logItems("channel", "error \(strongSelf.topic)")
+            strongSelf.socket?.logItems("channel", "error \(strongSelf.topic)")
             strongSelf.state = ChannelState.errored
             strongSelf.rejoinTimer?.scheduleTimeout()
         }
@@ -124,7 +124,7 @@ public class Channel {
         self.joinPush.receive("timeout") { [weak self] (_) in
             guard let strongSelf = self else { return }
             guard !strongSelf.isJoining else { return }
-            strongSelf.socket.logItems("channel", "timeout \(strongSelf.topic) \(strongSelf.joinRef) after \(strongSelf.timeout)ms")
+            strongSelf.socket?.logItems("channel", "timeout \(strongSelf.topic) \(strongSelf.joinRef) after \(strongSelf.timeout)ms")
             
             let leavePush = Push(channel: strongSelf, event: ChannelEvent.leave, payload: [:], timeout: strongSelf.timeout)
             leavePush.send()
@@ -267,7 +267,7 @@ public class Channel {
         self.state = .leaving
         
         let onClose: ((Message) -> Void) = { [weak self] (message) in
-            self?.socket.logItems("channel", "leave \(self?.topic ?? "unknown")")
+            self?.socket?.logItems("channel", "leave \(self?.topic ?? "unknown")")
             self?.trigger(message)
         }
         
@@ -303,7 +303,7 @@ public class Channel {
         
         let isLifecycleEvent = ChannelEvent.isLifecyleEvent(message.event)
         if let safeJoinRef = message.joinRef, isLifecycleEvent, safeJoinRef != self.joinRef {
-            self.socket.logItems("channel", "dropping outdated message", message.topic, message.event, message.payload, safeJoinRef)
+            self.socket?.logItems("channel", "dropping outdated message", message.topic, message.event, message.payload, safeJoinRef)
             return false
         }
         
@@ -350,7 +350,7 @@ public class Channel {
     /// - return: True if the Channel can push messages, meaning the socket
     ///           is connected and the channel is joined
     var canPush: Bool {
-        return self.socket.isConnected && self.isJoined
+        return self.socket?.isConnected == true && self.isJoined
     }
     
     /// - return: True if the Channel has been closed

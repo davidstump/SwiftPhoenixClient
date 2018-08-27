@@ -126,7 +126,7 @@ public class Push {
         self.startTimeout()
         self.sent = true
         
-        channel.socket.push(
+        channel.socket?.push(
             topic: channel.topic,
             event: self.event,
             payload: self.payload,
@@ -173,9 +173,9 @@ public class Push {
     /// time, in milliseconds, is reached.
     func startTimeout() {
         if let _ = self.timeoutTimer { self.cancelTimeout() }
-        guard let channel = channel else { return }
+        guard let channel = channel, let socket = channel.socket else { return }
         
-        let ref = channel.socket.makeRef()
+        let ref = socket.makeRef()
         self.ref = ref
         let refEvent = channel.replyEventName(ref)
         self.refEvent = refEvent
