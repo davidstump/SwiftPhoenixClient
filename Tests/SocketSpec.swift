@@ -84,6 +84,11 @@ class SocketSpec: QuickSpec {
                     .endpointUrl.absoluteString)
                     .to(equal("ws://localhost:4000/socket/websocket?token=abc%20123&user_id=1"))
             })
+
+            it("should not introduce any retain cycles", closure: {
+                weak var socket = Socket(url: "http://localhost:4000/socket/websocket")
+                expect(socket).to(beNil())
+            })
         }
         
         

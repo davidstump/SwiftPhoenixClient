@@ -118,9 +118,11 @@ public class Socket {
     init(connection: WebSocket) {
         self.connection = connection
         self._endpoint = connection.currentURL
-        self.reconnectTimer = PhxTimer(callback: {
-            self.disconnect({ self.connect() })
-        }, timerCalc: reconnectAfterMs)
+        self.reconnectTimer = PhxTimer(callback: { [weak self] in
+            self?.disconnect({ self?.connect() })
+        }, timerCalc: { [weak self] tryCount in
+            return self?.reconnectAfterMs(tryCount) ?? 10000
+        })
     }
     
     /// Initializes the Socket
@@ -151,7 +153,9 @@ public class Socket {
         self.init(url: parsedUrl, params: params)
     }
     
-    
+    deinit {
+        reconnectTimer.reset()
+    }
     
     //----------------------------------------------------------------------
     // MARK: - Public
