@@ -53,10 +53,15 @@ class ChannelSpec: QuickSpec {
             
             it("sets up the joinPush", closure: {
                 let joinPush = channel.joinPush
-                expect(joinPush?.channel.topic).to(equal(channel.topic))
+                expect(joinPush?.channel?.topic).to(equal(channel.topic))
                 expect(joinPush?.payload["one"] as? Int).to(equal(2))
                 expect(joinPush?.event).to(equal(ChannelEvent.join))
                 expect(joinPush?.timeout).to(equal(PHOENIX_DEFAULT_TIMEOUT))
+            })
+
+            it("should not introduce any retain cycles", closure: {
+                weak var channel = Channel(topic: "topic", params: ["one": 2], socket: mockSocket)
+                expect(channel).to(beNil())
             })
         }
         

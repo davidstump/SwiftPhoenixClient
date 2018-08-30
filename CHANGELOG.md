@@ -7,7 +7,7 @@ This product uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 * Exposes security properties of the underlying `WebSocket`. This allows for things like SSL Pinning, custom encyption setups, etc. 
-
+* Fixes leaks ([#109](https://github.com/davidstump/SwiftPhoenixClient/issues/109))
 
 ## [0.9.0]
 Continue to improve the API and behavior of the library to behave similar to the JS library. This release introduces 
