@@ -183,7 +183,8 @@ public class Socket {
         connection.delegate = nil
         connection.disconnect()
 
-        onConnectionClosed()
+        self.heartbeatTimer?.invalidate()
+        self.onCloseCallbacks.forEach( { $0() } )
         
         callback?()
     }
