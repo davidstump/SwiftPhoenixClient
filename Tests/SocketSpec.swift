@@ -104,6 +104,18 @@ class SocketSpec: QuickSpec {
                 expect(fakeConnection.delegate).to(beNil())
                 expect(callbackCalled).to(beTrue())
             })
+
+            it("should fire onClose", closure: {
+                var onCloseCallsCount = 0
+                var onCloseCalled: Bool { return onCloseCallsCount > 0 }
+
+                socket.onClose(callback: {
+                    onCloseCallsCount += 1
+                })
+                socket.disconnect()
+
+                expect(onCloseCalled).to(beTrue())
+            })
         }
         
         describe(".connect()") {

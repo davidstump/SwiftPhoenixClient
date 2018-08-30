@@ -186,6 +186,9 @@ public class Socket {
     public func disconnect(_ callback: (() -> Void)? = nil) {
         connection.delegate = nil
         connection.disconnect()
+
+        self.heartbeatTimer?.invalidate()
+        self.onCloseCallbacks.forEach( { $0() } )
         
         callback?()
     }
