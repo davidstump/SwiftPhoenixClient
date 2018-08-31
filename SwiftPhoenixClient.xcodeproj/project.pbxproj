@@ -157,7 +157,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0BFAE4F81DA84F59000B3CD3 /* Build configuration list for PBXNativeTarget "SwiftPhoenixClient" */;
 			buildPhases = (
-				12046067202E9AD700036A92 /* ShellScript */,
 				0BFAE4DF1DA84F59000B3CD3 /* Sources */,
 				0BFAE4E01DA84F59000B3CD3 /* Frameworks */,
 				0BFAE4E11DA84F59000B3CD3 /* Headers */,
@@ -245,24 +244,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		12046067202E9AD700036A92 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/Starscream.framework",
-			);
-			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Starscream.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0BFAE4DF1DA84F59000B3CD3 /* Sources */ = {
