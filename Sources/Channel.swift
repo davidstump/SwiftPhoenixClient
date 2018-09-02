@@ -27,18 +27,18 @@ import Swift
 public class Channel {
     
     /// The topic of the Channel. e.g. "rooms:friends"
-    let topic: String
+    public let topic: String
     
     /// The params sent when joining the channel
     var params: Payload
 
     /// The Socket that the channel belongs to
-    weak var socket: Socket?
+    public weak var socket: Socket?
 
     
     
     /// Current state of the Channel
-    var state: ChannelState
+    private(set) public var state: ChannelState
     
     /// Collection of event bindings
     var bindings: [(event: String, ref: Int, callback: (Message) -> Void)]
