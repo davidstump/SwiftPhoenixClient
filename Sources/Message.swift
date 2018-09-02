@@ -29,7 +29,7 @@ public class Message {
     public let event: String
     
     /// The message payload
-    public let payload: Payload
+    public var payload: Payload
     
     /// Convenience var to access the message's payload's status. Equivalent
     /// to checking message.payload["status"] yourself
@@ -40,12 +40,16 @@ public class Message {
     //----------------------------------------------------------------------
     // MARK: - Internal
     //----------------------------------------------------------------------
-    init(ref: String = "", topic: String = "", event: String = "", payload: Payload = [:]) {
+    init(ref: String = "",
+         topic: String = "",
+         event: String = "",
+         payload: Payload = [:],
+         joinRef: String? = nil) {
         self.ref = ref
         self.topic = topic
         self.event = event
         self.payload = payload
-        self.joinRef = nil
+        self.joinRef = joinRef
     }
     
     

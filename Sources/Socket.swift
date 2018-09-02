@@ -37,6 +37,34 @@ public class Socket {
     /// is set to true
     public var autoReconnect: Bool = true
     
+    /// Enable/Disable SSL certificate validation by setting the value on the 
+    /// underlying WebSocket.
+    /// See https://github.com/daltoniam/Starscream#self-signed-ssl
+    public var disableSSLCertValidation: Bool {
+        get { return connection.disableSSLCertValidation }
+        set { connection.disableSSLCertValidation = newValue }
+    }
+
+    #if os(Linux)
+    #else
+    /// Configure custom SSL validation logic, eg. SSL pinning, by setting the 
+    /// value on the underlyting WebSocket.
+    /// See https://github.com/daltoniam/Starscream#ssl-pinning
+    public var security: SSLTrustValidator? {
+        get { return connection.security }
+        set { connection.security = newValue }
+    }
+    
+    /// Configure the encryption used by your client by setting the allowed 
+    /// cipher suites supported by your server.
+    /// See https://github.com/daltoniam/Starscream#ssl-cipher-suites
+    public var enabledSSLCipherSuites: [SSLCipherSuite]? {
+        get { return connection.enabledSSLCipherSuites }
+        set { connection.enabledSSLCipherSuites = newValue }
+    }
+    #endif
+    
+    
     
     //----------------------------------------------------------------------
     // MARK: - Private Attributes
@@ -90,9 +118,11 @@ public class Socket {
     init(connection: WebSocket) {
         self.connection = connection
         self._endpoint = connection.currentURL
-        self.reconnectTimer = PhxTimer(callback: {
-            self.disconnect({ self.connect() })
-        }, timerCalc: reconnectAfterMs)
+        self.reconnectTimer = PhxTimer(callback: { [weak self] in
+            self?.disconnect({ self?.connect() })
+        }, timerCalc: { [weak self] tryCount in
+            return self?.reconnectAfterMs(tryCount) ?? 10000
+        })
     }
     
     /// Initializes the Socket
@@ -123,7 +153,9 @@ public class Socket {
         self.init(url: parsedUrl, params: params)
     }
     
-    
+    deinit {
+        reconnectTimer.reset()
+    }
     
     //----------------------------------------------------------------------
     // MARK: - Public
@@ -154,6 +186,9 @@ public class Socket {
     public func disconnect(_ callback: (() -> Void)? = nil) {
         connection.delegate = nil
         connection.disconnect()
+
+        self.heartbeatTimer?.invalidate()
+        self.onCloseCallbacks.forEach( { $0() } )
         
         callback?()
     }

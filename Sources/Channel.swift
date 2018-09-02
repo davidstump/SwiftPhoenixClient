@@ -33,35 +33,33 @@ public class Channel {
     var params: Payload
 
     /// The Socket that the channel belongs to
-    let socket: Socket
+    weak var socket: Socket?
 
+    
     
     /// Current state of the Channel
-    private var state: ChannelState
+    var state: ChannelState
     
     /// Collection of event bindings
-    private var bindings: [(event: String, ref: Int, callback: (Message) -> Void)]
+    var bindings: [(event: String, ref: Int, callback: (Message) -> Void)]
     
     /// Tracks event binding ref counters
-    private var bindingRef: Int
+    var bindingRef: Int
     
     /// Timout when attempting to join a Channel
-    private var timeout: Int
+    var timeout: Int
     
     /// Set to true once the channel calls .join()
-    private var joinedOnce: Bool
+    var joinedOnce: Bool
     
     /// Push to send when the channel calls .join()
-    private var joinPush: Push!
+    var joinPush: Push!
     
     /// Buffer of Pushes that will be sent once the Channel's socket connects
-    private var pushBuffer: [Push]
+    var pushBuffer: [Push]
     
     /// Timer to attempt to rejoin
-    private var rejoinTimer: PhxTimer!
-    
-
-    
+    var rejoinTimer: PhxTimer!
     
 
 
@@ -83,56 +81,70 @@ public class Channel {
         self.timeout = PHOENIX_DEFAULT_TIMEOUT // socket.timeout    
         self.joinedOnce = false
         self.pushBuffer = []
-        self.joinPush = Push(channel: self, event: ChannelEvent.join, payload: self.params, timeout: self.timeout)
+        self.joinPush = Push(channel: self,
+                             event: ChannelEvent.join,
+                             payload: self.params,
+                             timeout: self.timeout)
         
-        self.rejoinTimer = PhxTimer(callback: {
-            self.rejoinTimer?.scheduleTimeout()
-            if self.socket.isConnected { self.rejoin() }
-        }, timerCalc: socket.reconnectAfterMs)
+        self.rejoinTimer = PhxTimer(callback: { [weak self] in
+            guard let strongSelf = self else { return }
+            strongSelf.rejoinTimer?.scheduleTimeout()
+            if strongSelf.socket?.isConnected == true { strongSelf.rejoin() }
+        }, timerCalc: { [weak self] tryCount in
+            self?.socket?.reconnectAfterMs(tryCount) ?? 10000
+        })
         
         /// Perfom once the Channel is joined
-        self.joinPush.receive("ok") { (_) in
-            self.state = ChannelState.joined
-            self.rejoinTimer?.reset()
-            self.pushBuffer.forEach( { $0.send() })
-            self.pushBuffer = [Push]()
+        self.joinPush.receive("ok") { [weak self] (_) in
+            guard let strongSelf = self else { return }
+            strongSelf.state = ChannelState.joined
+            strongSelf.rejoinTimer?.reset()
+            strongSelf.pushBuffer.forEach( { $0.send() })
+            strongSelf.pushBuffer = [Push]()
         }
         
         /// Perfom when the Channel has been closed
-        self.onClose { (_) in
-            self.rejoinTimer?.reset()
-            self.socket.logItems("channel", "close \(self.topic)")
-            self.state = ChannelState.closed
-            self.socket.remove(self)
+        self.onClose { [weak self] (_) in
+            guard let strongSelf = self else { return }
+            strongSelf.rejoinTimer?.reset()
+            strongSelf.socket?.logItems("channel", "close \(strongSelf.topic)")
+            strongSelf.state = ChannelState.closed
+            strongSelf.socket?.remove(strongSelf)
         }
         
         /// Perfom when the Channel errors
-        self.onError { (_) in
-            guard self.isLeaving || !self.isClosed else { return }
-            self.socket.logItems("channel", "error \(self.topic)")
-            self.state = ChannelState.errored
-            self.rejoinTimer?.scheduleTimeout()
+        self.onError { [weak self] (_) in
+            guard let strongSelf = self else { return }
+            guard strongSelf.isLeaving || !strongSelf.isClosed else { return }
+            strongSelf.socket?.logItems("channel", "error \(strongSelf.topic)")
+            strongSelf.state = ChannelState.errored
+            strongSelf.rejoinTimer?.scheduleTimeout()
         }
         
-        self.joinPush.receive("timeout") { (_) in
-            guard !self.isJoining else { return }
-            self.socket.logItems("channel", "timeout \(self.topic) \(self.joinRef) after \(self.timeout)ms")
+        self.joinPush.receive("timeout") { [weak self] (_) in
+            guard let strongSelf = self else { return }
+            guard !strongSelf.isJoining else { return }
+            strongSelf.socket?.logItems("channel", "timeout \(strongSelf.topic) \(strongSelf.joinRef) after \(strongSelf.timeout)ms")
             
-            let leavePush = Push(channel: self, event: ChannelEvent.leave, payload: [:], timeout: self.timeout)
+            let leavePush = Push(channel: strongSelf, event: ChannelEvent.leave, payload: [:], timeout: strongSelf.timeout)
             leavePush.send()
             
-            self.state = ChannelState.errored
-            self.joinPush.reset()
-            self.rejoinTimer?.scheduleTimeout()
+            strongSelf.state = ChannelState.errored
+            strongSelf.joinPush.reset()
+            strongSelf.rejoinTimer?.scheduleTimeout()
         }
         
-        self.on(ChannelEvent.reply) { (message) in
-            let replyEventName = self.replyEventName(message.ref)
+        self.on(ChannelEvent.reply) { [weak self] (message) in
+            guard let strongSelf = self else { return }
+            let replyEventName = strongSelf.replyEventName(message.ref)
             let replyMessage = Message(ref: message.ref, topic: message.topic, event: replyEventName, payload: message.payload)
-            self.trigger(replyMessage)
+            strongSelf.trigger(replyMessage)
         }
     }
-    
+
+    deinit {
+        rejoinTimer.reset()
+    }
     
     /// Overridable message hook. Receives all events for specialized message
     /// handling before dispatching to the channel callbacks.
@@ -255,7 +267,7 @@ public class Channel {
         self.state = .leaving
         
         let onClose: ((Message) -> Void) = { [weak self] (message) in
-            self?.socket.logItems("channel", "leave \(self?.topic ?? "unknown")")
+            self?.socket?.logItems("channel", "leave \(self?.topic ?? "unknown")")
             self?.trigger(message)
         }
         
@@ -291,22 +303,20 @@ public class Channel {
         
         let isLifecycleEvent = ChannelEvent.isLifecyleEvent(message.event)
         if let safeJoinRef = message.joinRef, isLifecycleEvent, safeJoinRef != self.joinRef {
-            self.socket.logItems("channel", "dropping outdated message", message.topic, message.event, message.payload, safeJoinRef)
+            self.socket?.logItems("channel", "dropping outdated message", message.topic, message.event, message.payload, safeJoinRef)
             return false
         }
         
         return true
     }
     
-    var joinRef: String {
-        return self.joinPush.ref ?? ""
-    }
-    
+    /// Sends the payload to join the Channel
     func sendJoin(_ timeout: Int) {
         self.state = ChannelState.joining
         self.joinPush.resend(timeout)
     }
     
+    /// Rejoins the channel
     func rejoin(_ timeout: Int? = nil) {
         self.sendJoin(timeout ?? self.timeout)
     }
@@ -332,10 +342,15 @@ public class Channel {
         return "chan_reply_\(ref)"
     }
     
+    /// The Ref send during the join message.
+    var joinRef: String {
+        return self.joinPush.ref ?? ""
+    }
+    
     /// - return: True if the Channel can push messages, meaning the socket
     ///           is connected and the channel is joined
     var canPush: Bool {
-        return self.socket.isConnected && self.isJoined
+        return self.socket?.isConnected == true && self.isJoined
     }
     
     /// - return: True if the Channel has been closed
