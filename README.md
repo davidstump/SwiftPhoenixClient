@@ -36,7 +36,7 @@ If you use Carthage to manage your dependencies, simply add
 SwiftPhoenixClient to your `Cartfile`:
 
 ```
-github "davidstump/SwiftPhoenixClient" ~> 0.8
+github "davidstump/SwiftPhoenixClient" ~> 0.9
 ```
 
 Make sure you have added `SwiftPhoenixClient.framework`, and `Starscream.framework` to the "_Linked Frameworks and Libraries_" section of your target, and have included them in your Carthage framework copying build phase.
