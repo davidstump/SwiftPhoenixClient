@@ -3,11 +3,25 @@ All notable changes to this project will be documented in this file. The format 
 
 This product uses [Semantic Versioning](https://semver.org/). 
 
-
-
 ## [Unreleased]
-* Exposes security properties of the underlying `WebSocket`. This allows for things like SSL Pinning, custom encyption setups, etc. 
-* Fixes leaks ([#109](https://github.com/davidstump/SwiftPhoenixClient/issues/109))
+
+
+## [0.9.2]
+
+## Fixed
+* [#111](https://github.com/davidstump/SwiftPhoenixClient/pull/111): Strong memory cycles between Socket, Channel and Timers
+* [#112](https://github.com/davidstump/SwiftPhoenixClient/pull/112): Leak when Socket disconnects and properly call `onClose()`
+* [#114](https://github.com/davidstump/SwiftPhoenixClient/pull/114): Carthage failing on builds and app store uploads
+
+## Changed
+* [#116](https://github.com/davidstump/SwiftPhoenixClient/pull/116): A Channel's `topic` is now exposed as `public`
+
+
+## [0.9.1]
+
+### Added
+* Added security configuration to the underlying WebSocket.
+
 
 ## [0.9.0]
 Continue to improve the API and behavior of the library to behave similar to the JS library. This release introduces 
@@ -42,7 +56,9 @@ Thanks to @murphb52 and @ALucasVanDongen for helping with some of the developmen
 * Mirror [Phoenix.js](https://hexdocs.pm/phoenix/js/) more closely
 
 
-[Unreleased]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.9.0...HEAD
+[Unreleased]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.9.2...HEAD
+[0.9.2]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.9.1...0.9.2
+[0.9.1]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.9.0...0.9.1
 [0.9.0]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.8.1...0.9.0
 [0.8.1]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.8.0...0.8.1
 [0.8.0]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.6.0...0.8.0
