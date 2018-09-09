@@ -27,7 +27,7 @@ import Swift
 public class Channel {
     
     /// The topic of the Channel. e.g. "rooms:friends"
-    let topic: String
+    public let topic: String
     
     /// The params sent when joining the channel
     var params: Payload
