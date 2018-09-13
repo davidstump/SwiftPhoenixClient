@@ -26,8 +26,17 @@ import Swift
 ///
 public class Channel {
     
+    //----------------------------------------------------------------------
+    // MARK: - Public Attributes
+    //----------------------------------------------------------------------
     /// The topic of the Channel. e.g. "rooms:friends"
     public let topic: String
+
+    /// Internval between socket reconnect attempts
+    public var reconnectAfterMs: (_ tryCount: Int) -> Int = { tryCount in
+        guard tryCount < 4 else { return 10000 } // After 4 tries, default to 10 second retries
+        return [1000, 2000, 5000, 10000][tryCount]
+    }
     
     /// The params sent when joining the channel
     var params: Payload
@@ -90,9 +99,7 @@ public class Channel {
             guard let strongSelf = self else { return }
             strongSelf.rejoinTimer?.scheduleTimeout()
             if strongSelf.socket?.isConnected == true { strongSelf.rejoin() }
-        }, timerCalc: { [weak self] tryCount in
-            self?.socket?.reconnectAfterMs(tryCount) ?? 10000
-        })
+        }, timerCalc: reconnectAfterMs)
         
         /// Perfom once the Channel is joined
         self.joinPush.receive("ok") { [weak self] (_) in

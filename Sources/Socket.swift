@@ -44,6 +44,12 @@ public class Socket {
         get { return connection.disableSSLCertValidation }
         set { connection.disableSSLCertValidation = newValue }
     }
+    
+    /// Ref counter for the last heartbeat that was sent
+    public var pendingHeartbeatRef: String?
+    
+    /// Timer to use when attempting to reconnect
+    public var reconnectTimer: PhxTimer!
 
     #if os(Linux)
     #else
@@ -98,12 +104,6 @@ public class Socket {
     
     /// Timer that triggers sending new Heartbeat messages
     private var heartbeatTimer: Timer?
-    
-    /// Ref counter for the last heartbeat that was sent
-    private var pendingHeartbeatRef: String?
-    
-    /// Timer to use when attempting to reconnect
-    private var reconnectTimer: PhxTimer!
     
     /// Websocket connection to the server
     private let connection: WebSocket

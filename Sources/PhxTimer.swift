@@ -8,7 +8,7 @@
 import Foundation
 
 
-class PhxTimer {
+public class PhxTimer {
     
     private let callback: (() -> Void)
     private let timerCalc: ((_ tryCount: Int) -> Int)
