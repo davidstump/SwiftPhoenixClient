@@ -324,7 +324,7 @@ public class Channel {
     }
     
     /// Rejoins the channel
-    func rejoin(_ timeout: Int? = nil) {
+    public func rejoin(_ timeout: Int? = nil) {
         self.sendJoin(timeout ?? self.timeout)
     }
     
