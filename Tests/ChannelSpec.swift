@@ -114,7 +114,7 @@ class ChannelSpec: QuickSpec {
         }
         
         describe(".push(event:, payload:, timeout:)") {
-            it("should send the push if the channel canp ush", closure: {
+            it("should send the push if the channel can push", closure: {
                 channel.joinedOnce = true
                 channel.state = ChannelState.joined
                 mockSocket.isConnected = true

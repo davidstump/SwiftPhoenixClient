@@ -23,6 +23,9 @@
 		12F879272097A3FC00161C02 /* PhxTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12F879262097A3FC00161C02 /* PhxTimer.swift */; };
 		63CD642E1DB11E8400C406A6 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD642D1DB11E8400C406A6 /* Presence.swift */; };
 		63CD64321DB1272400C406A6 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD64311DB1272400C406A6 /* Message.swift */; };
+		B425205C2165203200700CBD /* PresenceStateSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B425205B2165203200700CBD /* PresenceStateSpec.swift */; };
+		B425205E2165D48900700CBD /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B425205D2165D48900700CBD /* Helpers.swift */; };
+		B48458A82164E3D300466E32 /* PresenceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48458A62164E28500466E32 /* PresenceSpec.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,8 +57,11 @@
 		12C140DA20AF41A900184725 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
 		12EAFF27202F654300685575 /* SocketSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketSpec.swift; sourceTree = "<group>"; };
 		12F879262097A3FC00161C02 /* PhxTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhxTimer.swift; sourceTree = "<group>"; };
-		63CD642D1DB11E8400C406A6 /* Presence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Presence.swift; sourceTree = "<group>"; };
+		63CD642D1DB11E8400C406A6 /* Presence.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = Presence.swift; sourceTree = "<group>"; tabWidth = 2; };
 		63CD64311DB1272400C406A6 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		B425205B2165203200700CBD /* PresenceStateSpec.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = PresenceStateSpec.swift; sourceTree = "<group>"; tabWidth = 2; };
+		B425205D2165D48900700CBD /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		B48458A62164E28500466E32 /* PresenceSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenceSpec.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +130,9 @@
 				124B95C120AF41190012006C /* PushSpec.swift */,
 				12C140D720AF415900184725 /* ChannelSpec.swift */,
 				12C140DA20AF41A900184725 /* Mocks.swift */,
+				B48458A62164E28500466E32 /* PresenceSpec.swift */,
+				B425205B2165203200700CBD /* PresenceStateSpec.swift */,
+				B425205D2165D48900700CBD /* Helpers.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -265,9 +274,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				12A3983D20D00050003203DF /* PushSpec.swift in Sources */,
+				B425205E2165D48900700CBD /* Helpers.swift in Sources */,
+				B425205C2165203200700CBD /* PresenceStateSpec.swift in Sources */,
 				12C140D920AF416600184725 /* ChannelSpec.swift in Sources */,
 				12EAFF29202F656300685575 /* SocketSpec.swift in Sources */,
 				12C140DB20AF41A900184725 /* Mocks.swift in Sources */,
+				B48458A82164E3D300466E32 /* PresenceSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

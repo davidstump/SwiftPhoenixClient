@@ -343,8 +343,8 @@ public class Channel {
     }
     
     /// The Ref send during the join message.
-    var joinRef: String {
-        return self.joinPush.ref ?? ""
+    var joinRef: String? {
+        return self.joinPush.ref
     }
     
     /// - return: True if the Channel can push messages, meaning the socket

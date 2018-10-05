@@ -25,19 +25,16 @@ class WebSocketMock: WebSocket {
 }
 
 class SocketMock: Socket {
-    
     var underlyingIsConnected: Bool!
     override var isConnected: Bool {
         get { return underlyingIsConnected }
         set(value) { underlyingIsConnected = value }
     }
     
-    
     init() {
         let mockWebSocket = WebSocketMock(url: URL(string: "http://localhost:4000/socket/websocket")!)
         super.init(connection: mockWebSocket)
     }
-    
     
     var pushCallsCount = 0
     var pushCalled: Bool { return pushCallsCount > 0 }
@@ -47,7 +44,6 @@ class SocketMock: Socket {
         pushArgs = (topic, event, payload, ref, joinRef)
     }
     
-    
     var makeRefCallsCount = 0
     var makeRefCalled: Bool { return makeRefCallsCount > 0 }
     var makeRefReturnValue: String?
@@ -55,7 +51,8 @@ class SocketMock: Socket {
         guard let stubbedValue = makeRefReturnValue else { return super.makeRef() }
         return stubbedValue
     }
+}
+
+class ChannelMock: Channel {
     
-
-
 }
