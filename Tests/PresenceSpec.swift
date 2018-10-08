@@ -46,67 +46,34 @@ class PresenceSpec: QuickSpec {
                 expect(channel.bindings.filter { $0.event == "presence_diff" }).to(haveCount(1))
             }
             
-            it("handle initial state") {
-                expect(mockSocket.pushCallsCount).to(equal(0))
-                channel.join()
-                    .receive("ok") { _ in
-                        print("kekler - ok")
-                    }
-                    .receive("error") { (message: SwiftPhoenixClient.Message) in
-                        print("kekler - error")
-                }
-                channel.joinedOnce = true
-                mockSocket.push(topic: "topic", event: "presence_state", payload: [:], ref: nil, joinRef: nil)
-                expect(mockSocket.pushCallsCount).to(equal(2))
-                expect(presence.state).to(beEmpty())
-                let diff: Payload = [
-                    "leaves": [:],
-                    "joins":
-                        ["uuid":
-                            ["metas":
-                                [
-                                    ["phx_ref": "ref", "connected_at":"1538637530"]
-                                ]
-                            ]
-                        ]
-                ]
-                mockSocket.push(topic: "topic", event: "presence_diff", payload: diff, ref: nil, joinRef: nil)
-                expect(mockSocket.pushCallsCount).to(equal(2))
-                expect(presence.state).to(haveCount(1))
-            }
-//            it("sets defaults", closure: {
-//                expect(channel.state).to(equal(ChannelState.closed))
-//                expect(channel.topic).to(equal("topic"))
-//                expect(channel.params["one"] as? Int).to(equal(2))
-//                expect(channel.socket).to(beAKindOf(SocketMock.self))
-//                expect(channel.timeout).to(equal(PHOENIX_DEFAULT_TIMEOUT))
-//                expect(channel.joinedOnce).to(beFalse())
-//                expect(channel.pushBuffer).to(beEmpty())
-//            })
-//
-//            it("handles nil params", closure: {
-//                channel = Channel(topic: "topic", params: nil, socket: mockSocket)
-//                expect(channel.params).toNot(beNil())
-//                expect(channel.params).to(beEmpty())
-//            })
-//
-//            it("sets up the joinPush", closure: {
-//                let joinPush = channel.joinPush
-//                expect(joinPush?.channel?.topic).to(equal(channel.topic))
-//                expect(joinPush?.payload["one"] as? Int).to(equal(2))
-//                expect(joinPush?.event).to(equal(ChannelEvent.join))
-//                expect(joinPush?.timeout).to(equal(PHOENIX_DEFAULT_TIMEOUT))
-//            })
-//
-//            it("should not introduce any retain cycles", closure: {
-//                weak var channel = Channel(topic: "topic", params: ["one": 2], socket: mockSocket)
-//                expect(channel).to(beNil())
-//            })
+//            it("handle initial state") {
+//                expect(mockSocket.pushCallsCount).to(equal(0))
+//                channel.join()
+//                    .receive("ok") { _ in
+//                        print("kekler - ok")
+//                    }
+//                    .receive("error") { (message: SwiftPhoenixClient.Message) in
+//                        print("kekler - error")
+//                }
+//                channel.joinedOnce = true
+//                mockSocket.push(topic: "topic", event: "presence_state", payload: [:], ref: nil, joinRef: nil)
+//                expect(mockSocket.pushCallsCount).to(equal(2))
+//                expect(presence.state).to(beEmpty())
+//                let diff: Payload = [
+//                    "leaves": [:],
+//                    "joins":
+//                        ["uuid":
+//                            ["metas":
+//                                [
+//                                    ["phx_ref": "ref", "connected_at":"1538637530"]
+//                                ]
+//                            ]
+//                        ]
+//                ]
+//                mockSocket.push(topic: "topic", event: "presence_diff", payload: diff, ref: nil, joinRef: nil)
+//                expect(mockSocket.pushCallsCount).to(equal(2))
+//                expect(presence.state).to(haveCount(1))
+//            }
         }
-        
-        //----------------------------------------------------------------------
-        // MARK: - Internals
-        //----------------------------------------------------------------------
-        
     }
 }
