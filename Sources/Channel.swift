@@ -47,7 +47,7 @@ public class Channel {
     
     
     /// Current state of the Channel
-    var state: ChannelState
+    public var state: ChannelState
     
     /// Collection of event bindings
     var bindings: [(event: String, ref: Int, callback: (Message) -> Void)]
@@ -99,7 +99,9 @@ public class Channel {
             guard let strongSelf = self else { return }
             strongSelf.rejoinTimer?.scheduleTimeout()
             if strongSelf.socket?.isConnected == true { strongSelf.rejoin() }
-        }, timerCalc: reconnectAfterMs)
+        }, timerCalc: timerCalc: { [weak self] tryCount in
+            self?.reconnectAfterMs(tryCount) ?? 10000
+        })
         
         /// Perfom once the Channel is joined
         self.joinPush.receive("ok") { [weak self] (_) in
