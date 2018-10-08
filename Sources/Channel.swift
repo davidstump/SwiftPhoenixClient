@@ -99,7 +99,7 @@ public class Channel {
             guard let strongSelf = self else { return }
             strongSelf.rejoinTimer?.scheduleTimeout()
             if strongSelf.socket?.isConnected == true { strongSelf.rejoin() }
-        }, timerCalc: timerCalc: { [weak self] tryCount in
+        }, timerCalc: { [weak self] tryCount in
             self?.reconnectAfterMs(tryCount) ?? 10000
         })
         
