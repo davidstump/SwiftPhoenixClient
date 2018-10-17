@@ -1,7 +1,7 @@
 language: swift
 
 os: osx
-osx_image: xcode9.2
+osx_image: xcode10
 cache:
   bundler: true
   directories:
