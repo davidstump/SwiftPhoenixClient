@@ -5,6 +5,10 @@ This product uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.9.3]
+
+## Added
+* [#120](https://github.com/davidstump/SwiftPhoenixClient/pull/120): Xcode 10 and Swift 4.2
 
 ## [0.9.2]
 
