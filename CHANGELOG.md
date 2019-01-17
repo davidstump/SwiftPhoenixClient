@@ -6,6 +6,17 @@ This product uses [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 
+## [0.9.3]
+
+## Added
+* [#119](https://github.com/davidstump/SwiftPhoenixClient/pull/119): A working implementation of Presence
+
+
+## Changed
+* [#120](https://github.com/davidstump/SwiftPhoenixClient/pull/120): Xcode 10 and Swift 4.2
+
+
+
 ## [0.9.2]
 
 ## Fixed
@@ -56,7 +67,8 @@ Thanks to @murphb52 and @ALucasVanDongen for helping with some of the developmen
 * Mirror [Phoenix.js](https://hexdocs.pm/phoenix/js/) more closely
 
 
-[Unreleased]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.9.2...HEAD
+[Unreleased]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.9.3...HEAD
+[0.9.3]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.9.2...0.9.3
 [0.9.2]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.9.1...0.9.2
 [0.9.1]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.9.0...0.9.1
 [0.9.0]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.8.1...0.9.0
