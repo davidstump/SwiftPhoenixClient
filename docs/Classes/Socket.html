@@ -14,7 +14,7 @@
     <a title="Socket Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">SwiftPhoenixClient Docs</a> (55% documented)</p>
+        <p><a href="../index.html">SwiftPhoenixClient Docs</a> (50% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -38,6 +38,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Presence.html">Presence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Presence/PresenceEventType.html">– PresenceEventType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D7OptionsV">– PresenceOptions</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Push.html">Push</a>
@@ -268,6 +274,93 @@ is set to true</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">autoReconnect</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient6SocketC24disableSSLCertValidationSbvp"></a>
+                    <a name="//apple_ref/swift/Property/disableSSLCertValidation" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient6SocketC24disableSSLCertValidationSbvp">disableSSLCertValidation</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Enable/Disable SSL certificate validation by setting the value on the 
+underlying WebSocket.
+See <a href="https://github.com/daltoniam/Starscream#self-signed-ssl">https://github.com/daltoniam/Starscream#self-signed-ssl</a></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">disableSSLCertValidation</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient6SocketC8security10Starscream17SSLTrustValidator_pSgvp"></a>
+                    <a name="//apple_ref/swift/Property/security" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient6SocketC8security10Starscream17SSLTrustValidator_pSgvp">security</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Configure custom SSL validation logic, eg. SSL pinning, by setting the 
+value on the underlyting WebSocket.
+See <a href="https://github.com/daltoniam/Starscream#ssl-pinning">https://github.com/daltoniam/Starscream#ssl-pinning</a></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">security</span><span class="p">:</span> <span class="kt">SSLTrustValidator</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient6SocketC22enabledSSLCipherSuitesSays6UInt16VGSgvp"></a>
+                    <a name="//apple_ref/swift/Property/enabledSSLCipherSuites" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient6SocketC22enabledSSLCipherSuitesSays6UInt16VGSgvp">enabledSSLCipherSuites</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Configure the encryption used by your client by setting the allowed 
+cipher suites supported by your server.
+See <a href="https://github.com/daltoniam/Starscream#ssl-cipher-suites">https://github.com/daltoniam/Starscream#ssl-cipher-suites</a></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">enabledSSLCipherSuites</span><span class="p">:</span> <span class="p">[</span><span class="kt">SSLCipherSuite</span><span class="p">]?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
