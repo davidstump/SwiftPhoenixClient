@@ -75,14 +75,29 @@ class SocketSpec: QuickSpec {
                 expect(Socket(url: "ws://localhost:4000/socket/websocket",
                               params: ["token": "abc123", "user_id": 1])
                     .endpointUrl.absoluteString)
-                    .to(equal("ws://localhost:4000/socket/websocket?token=abc123&user_id=1"))
+                    .to(satisfyAnyOf(
+                        // absoluteString does not seem to return a string with the params in a deterministic order
+                        equal("ws://localhost:4000/socket/websocket?token=abc123&user_id=1"),
+                        equal("ws://localhost:4000/socket/websocket?user_id=1&token=abc123")
+                        )
+                    )
                 
                 
                 // test params with spaces
                 expect(Socket(url: "ws://localhost:4000/socket/websocket",
                               params: ["token": "abc 123", "user_id": 1])
                     .endpointUrl.absoluteString)
-                    .to(equal("ws://localhost:4000/socket/websocket?token=abc%20123&user_id=1"))
+                    .to(satisfyAnyOf(
+                        // absoluteString does not seem to return a string with the params in a deterministic order
+                        equal("ws://localhost:4000/socket/websocket?token=abc%20123&user_id=1"),
+                        equal("ws://localhost:4000/socket/websocket?user_id=1&token=abc%20123")
+                        )
+                    )
+            })
+
+            it("should not introduce any retain cycles", closure: {
+                weak var socket = Socket(url: "http://localhost:4000/socket/websocket")
+                expect(socket).to(beNil())
             })
         }
         
@@ -98,6 +113,18 @@ class SocketSpec: QuickSpec {
                 })
                 expect(fakeConnection.delegate).to(beNil())
                 expect(callbackCalled).to(beTrue())
+            })
+
+            it("should fire onClose", closure: {
+                var onCloseCallsCount = 0
+                var onCloseCalled: Bool { return onCloseCallsCount > 0 }
+
+                socket.onClose(callback: {
+                    onCloseCallsCount += 1
+                })
+                socket.disconnect()
+
+                expect(onCloseCalled).to(beTrue())
             })
         }
         

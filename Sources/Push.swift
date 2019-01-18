@@ -11,7 +11,7 @@ import Foundation
 public class Push {
     
     /// The channel
-    let channel: Channel
+    weak var channel: Channel?
     
     /// The event, for example ChannelEvent.join
     let event: String
@@ -121,16 +121,17 @@ public class Push {
     // MARK: - Library Private
     //----------------------------------------------------------------------
     func send() {
+        guard let channel = channel else { return }
         if hasReceived(status: "timeout") { return }
         self.startTimeout()
         self.sent = true
         
-        self.channel.socket.push(
-            topic: self.channel.topic,
+        channel.socket?.push(
+            topic: channel.topic,
             event: self.event,
             payload: self.payload,
             ref: self.ref,
-            joinRef: self.channel.joinRef
+            joinRef: channel.joinRef
         )
     }
     
@@ -159,7 +160,7 @@ public class Push {
     /// Reverses the result on channel.on(ChannelEvent, callback) that spawned the Push
     func cancelRefEvent() {
         guard let refEvent = self.refEvent else { return }
-        self.channel.off(refEvent)
+        self.channel?.off(refEvent)
     }
     
     /// Cancel any ongoing Timeout Timer
@@ -172,22 +173,25 @@ public class Push {
     /// time, in milliseconds, is reached.
     func startTimeout() {
         if let _ = self.timeoutTimer { self.cancelTimeout() }
+        guard let channel = channel, let socket = channel.socket else { return }
         
-        let ref = self.channel.socket.makeRef()
+        let ref = socket.makeRef()
         self.ref = ref
-        let refEvent = self.channel.replyEventName(ref)
+        let refEvent = channel.replyEventName(ref)
         self.refEvent = refEvent
         
         /// If a response is received  before the Timer triggers, cancel timer
         /// and match the recevied event to it's corresponding hook
-        self.channel.on(refEvent) { (message) in
-            self.cancelRefEvent()
-            self.cancelTimeout()
-            self.receivedMessage = message
+        channel.on(refEvent) { [weak self] (message) in
+            guard let strongSelf = self else { return }
+
+            strongSelf.cancelRefEvent()
+            strongSelf.cancelTimeout()
+            strongSelf.receivedMessage = message
             
             /// Check if there is event a status available
             guard let status = message.status else { return }
-            self.matchReceive(status, message: message)
+            strongSelf.matchReceive(status, message: message)
         }
         
         /// Start the Timeout timer.
@@ -232,6 +236,6 @@ public class Push {
         mutPayload["status"] = status
         
         let message = Message(ref: refEvent, payload: mutPayload)
-        self.channel.trigger(message)
+        self.channel?.trigger(message)
     }
 }
