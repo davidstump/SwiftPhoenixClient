@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Classes  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Section/Classes" class="dashAnchor"></a>
+    <a title="Classes  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html">SwiftPhoenixClient Docs</a> (50% documented)</p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html">SwiftPhoenixClient Reference</a>
+        <img id="carat" src="img/carat.png" />
+        Classes  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/Channel.html">Channel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Message.html">Message</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Presence.html">Presence</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Presence/PresenceEventType.html">– PresenceEventType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D7OptionsV">– PresenceOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Push.html">Push</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Socket.html">Socket</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Global Variables.html">Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Global Variables.html#/s:18SwiftPhoenixClient25PHOENIX_DEFAULT_HEARTBEATSivp">PHOENIX_DEFAULT_HEARTBEAT</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Global Variables.html#/s:18SwiftPhoenixClient23PHOENIX_DEFAULT_TIMEOUTSivp">PHOENIX_DEFAULT_TIMEOUT</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Enums/ChannelState.html">ChannelState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/SocketState.html">SocketState</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Structs/ChannelEvent.html">ChannelEvent</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Typealiases.html#/s:18SwiftPhoenixClient7Payloada">Payload</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>Classes</h1>
+            <p>The following classes are available globally.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient7ChannelC"></a>
+                    <a name="//apple_ref/swift/Class/Channel" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient7ChannelC">Channel</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Represents a Channel which is bound to a topic</p>
+
+<p>A Channel can bind to multiple events on a given topic and
+be informed when those events occur within a topic.</p>
+
+<p>Example:
+    let channel = socket.channel(<q>room:123</q>, params: [<q>token</q>: <q>Room Token</q>])
+    channel.on(<q>new_msg</q>) { payload in print(<q>Got message</q>, payload<q>) }
+    channel.push(</q>new_msg, payload: [<q>body</q>: <q>This is a message</q>])
+        .receive(<q>ok</q>) { payload in print(<q>Sent message</q>, payload) }
+        .receive(<q>error</q>) { payload in print(<q>Send failed</q>, payload) }
+        .receive(<q>timeout</q>) { payload in print(<q>Networking issue&hellip;</q>, payload) }</p>
+<pre class="highlight swift"><code><span class="n">channel</span><span class="o">.</span><span class="nf">join</span><span class="p">()</span>
+    <span class="o">.</span><span class="nf">receive</span><span class="p">(</span><span class="s">"ok"</span><span class="p">)</span> <span class="p">{</span> <span class="n">payload</span> <span class="k">in</span> <span class="nf">print</span><span class="p">(</span><span class="s">"Channel Joined"</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span> <span class="p">}</span>
+    <span class="o">.</span><span class="nf">receive</span><span class="p">(</span><span class="s">"error"</span><span class="p">)</span> <span class="p">{</span> <span class="n">payload</span> <span class="k">in</span> <span class="nf">print</span><span class="p">(</span><span class="s">"Failed ot join"</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span> <span class="p">}</span>
+    <span class="o">.</span><span class="nf">receive</span><span class="p">(</span><span class="s">"timeout"</span><span class="p">)</span> <span class="p">{</span> <span class="n">payload</span> <span class="k">in</span> <span class="nf">print</span><span class="p">(</span><span class="s">"Networking issue..."</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span> <span class="p">}</span>
+</code></pre>
+
+                        <a href="Classes/Channel.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Channel</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient7MessageC"></a>
+                    <a name="//apple_ref/swift/Class/Message" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient7MessageC">Message</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Represents a Message that has been received by the client from the Server. You should
+never need to create this class, only ever consume it&rsquo;s values.</p>
+
+                        <a href="Classes/Message.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Message</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC"></a>
+                    <a name="//apple_ref/swift/Class/Presence" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC">Presence</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                        <a href="Classes/Presence.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">Presence</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient4PushC"></a>
+                    <a name="//apple_ref/swift/Class/Push" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient4PushC">Push</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                        <a href="Classes/Push.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Push</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient6SocketC"></a>
+                    <a name="//apple_ref/swift/Class/Socket" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient6SocketC">Socket</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                        <a href="Classes/Socket.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Socket</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2019 <a class="link" href="https://github.com/davidstump/SwiftPhoenixClient" target="_blank" rel="external">David Stump</a>. All rights reserved. (Last updated: 2019-01-17)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
