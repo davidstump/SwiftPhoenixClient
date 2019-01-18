@@ -6,9 +6,69 @@
 import Foundation
 import Starscream
 
+
+/// Provides customization when enoding and decoding data within the Socket
+protocol Serializer {
+    
+    /// Convert a message into Data to be sent over the Socket
+    func encode(_ message: [String: Any]) throws -> Data
+    
+    /// Convert data from the Socket into a Message
+    func decode(_ data: Data) -> Message?
+}
+
+
+/// Default class to Serialize data within a Socket
+class DefaultSerializer: Serializer {
+    
+    func encode(_ message: [String: Any]) throws -> Data {
+        return try JSONSerialization.data(withJSONObject: message,
+                                          options: JSONSerialization.WritingOptions())
+    }
+    
+    func decode(_ data: Data) -> Message? {
+        do {
+            guard let jsonObject = try JSONSerialization
+                    .jsonObject(with: data, options: JSONSerialization.ReadingOptions()) as? Payload
+                else { return nil }
+            
+            let ref = jsonObject["ref"] as? String ?? ""
+            let joinRef = jsonObject["join_ref"] as? String
+            
+            guard
+                let topic = jsonObject["topic"] as? String,
+                let event = jsonObject["event"] as? String,
+                let payload = jsonObject["payload"] as? Payload else { return  nil }
+                
+            return Message(ref: ref, topic: topic, event: event, payload: payload, joinRef: joinRef)
+            
+        } catch {
+            return nil
+        }
+    }
+}
+
+
+
+
 /// Alias for a JSON dictionary [String: Any]
 public typealias Payload = [String: Any]
 
+
+
+/// ## Socket Connection
+/// A single connection is established to the server and
+/// channels are multiplexed over the connection.
+/// Connect to the server using the `Socket` class:
+///
+/// ```Swift
+/// let socket = new Socket("/socket", {params: {userToken: "123"}})
+///    * socket.connect()
+/// ```
+///
+/// The `Socket` constructor takes the mount point of the socket,
+/// the authentication params, as well as options that can be found in
+/// the Socket docs, such as configuring the heartbeat.
 public class Socket {
     
     //----------------------------------------------------------------------
