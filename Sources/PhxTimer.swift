@@ -49,6 +49,7 @@ class PhxTimer {
         let timeout = timerCalc(self.tries)
         let timeoutInSeconds = TimeInterval(timeout / 1000)
         if #available(iOS 10.0, *) {
+        
             self.timer = Timer.scheduledTimer(withTimeInterval: timeoutInSeconds,
                                                      repeats: false) { (timer) in
                                                         self.onTimerTriggered()

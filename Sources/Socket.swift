@@ -8,7 +8,7 @@ import Starscream
 
 
 /// Provides customization when enoding and decoding data within the Socket
-protocol Serializer {
+public protocol Serializer {
     
     /// Convert a message into Data to be sent over the Socket
     func encode(_ message: [String: Any]) throws -> Data
@@ -61,9 +61,9 @@ public typealias Payload = [String: Any]
 /// channels are multiplexed over the connection.
 /// Connect to the server using the `Socket` class:
 ///
-/// ```Swift
+/// ```swift
 /// let socket = new Socket("/socket", {params: {userToken: "123"}})
-///    * socket.connect()
+/// socket.connect()
 /// ```
 ///
 /// The `Socket` constructor takes the mount point of the socket,
@@ -124,7 +124,7 @@ public class Socket {
     }
     #endif
     
-    
+    public var serializer: Serializer = DefaultSerializer()
     
     //----------------------------------------------------------------------
     // MARK: - Private Attributes
@@ -439,7 +439,7 @@ public class Socket {
         
         guard
             let data = rawMessage.data(using: String.Encoding.utf8),
-            let message = Message(data: data)
+            let message = serializer.decode(data)
             else {
                 self.logItems("receive: Unable to parse JSON: \(rawMessage)")
                 return }

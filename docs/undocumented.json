@@ -303,49 +303,35 @@
     },
     {
       "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/Socket.swift",
-      "line": null,
-      "symbol": "Socket",
-      "symbol_kind": "source.lang.swift.decl.extension",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/Socket.swift",
-      "line": 12,
-      "symbol": "Socket",
-      "symbol_kind": "source.lang.swift.decl.class",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/Socket.swift",
-      "line": 174,
+      "line": 234,
       "symbol": "Socket.connectionState",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/Socket.swift",
-      "line": 453,
+      "line": 513,
       "symbol": "Socket.websocketDidConnect(socket:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/Socket.swift",
-      "line": 457,
+      "line": 517,
       "symbol": "Socket.websocketDidDisconnect(socket:error:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/Socket.swift",
-      "line": 465,
+      "line": 525,
       "symbol": "Socket.websocketDidReceiveMessage(socket:text:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/Socket.swift",
-      "line": 469,
+      "line": 529,
       "symbol": "Socket.websocketDidReceiveData(socket:data:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"

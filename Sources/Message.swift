@@ -1,38 +1,46 @@
+// Copyright (c) 2019 Daniel Rees <daniel.rees18@gmail.com>
 //
-//  Response.swift
-//  SwiftPhoenixClient
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 //
-//  All the credit in the world to the Birdsong repo for a good swift
-//  implementation of Presence. Please check out that repo/library for
-//  a good Swift Channels alternative
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 //
-//  Created by Simon Manning on 6/07/2016.
-//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 
-import Foundation
 
-/// Represents a Message that has been received by the client from the Server. You should
-/// never need to create this class, only ever consume it's values.
+/// Data that is received from the Server.
 public class Message {
     
-    /// The unique string ref. Empty if not present
+    /// Reference number. Empty if missing
     public let ref: String
     
-    /// The ref sent during a join event. Empty if not present.
-    /// Visible only to the library
-    let joinRef: String?
+    /// Join Reference number
+    internal let joinRef: String?
     
-    /// The string topic or topic:subtopic pair namespace, for example "messages", "messages:123"
+    /// Message topic
     public let topic: String
     
-    /// The string event name, for example "phx_join"
+    /// Message event
     public let event: String
     
-    /// The message payload
+    /// Message payload
     public var payload: Payload
     
-    /// Convenience var to access the message's payload's status. Equivalent
-    /// to checking message.payload["status"] yourself
+    /// Convenience accessor. Equivalent to getting the status as such:
+    /// ```swift
+    /// message.payload["status"]
+    /// ```
     public var status: String? {
         return payload["status"] as? String
     }
@@ -50,33 +58,5 @@ public class Message {
         self.event = event
         self.payload = payload
         self.joinRef = joinRef
-    }
-    
-    
-    init?(data: Data) {
-        do {
-            guard let jsonObject
-                = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions())
-                    as? Payload
-                else { return nil }
-            
-            self.ref = jsonObject["ref"] as? String ?? ""
-            self.joinRef = jsonObject["join_ref"] as? String
-            
-            if
-                let topic = jsonObject["topic"] as? String,
-                let event = jsonObject["event"] as? String,
-                let payload = jsonObject["payload"] as? Payload {
-                
-                self.topic = topic
-                self.event = event
-                self.payload = payload
-            } else {
-                return nil
-            }
-        
-        } catch {
-            return nil
-        }
     }
 }

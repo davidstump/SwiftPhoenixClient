@@ -14,7 +14,7 @@
     <a title="Classes  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">SwiftPhoenixClient Docs</a> (50% documented)</p>
+        <p><a href="index.html">SwiftPhoenixClient Docs</a> (52% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -261,7 +261,18 @@ never need to create this class, only ever consume it&rsquo;s values.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <h2 id='socket-connection' class='heading'>Socket Connection</h2>
+
+<p>A single connection is established to the server and
+channels are multiplexed over the connection.
+Connect to the server using the <code>Socket</code> class:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">Socket</span><span class="p">(</span><span class="s">"/socket"</span><span class="p">,</span> <span class="p">{</span><span class="nv">params</span><span class="p">:</span> <span class="p">{</span><span class="nv">userToken</span><span class="p">:</span> <span class="s">"123"</span><span class="p">}})</span>
+<span class="n">socket</span><span class="o">.</span><span class="nf">connect</span><span class="p">()</span>
+</code></pre>
+
+<p>The <code>Socket</code> constructor takes the mount point of the socket,
+the authentication params, as well as options that can be found in
+the Socket docs, such as configuring the heartbeat.</p>
 
                         <a href="Classes/Socket.html" class="slightly-smaller">See more</a>
                       </div>
