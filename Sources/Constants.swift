@@ -9,6 +9,9 @@
 /// Default timeout when making a connection set to 10 seconds
 public let PHOENIX_DEFAULT_TIMEOUT: Int = 10000
 
+// Default timeout when making a connetion, set to 10.0 seconds
+public let PHOENIX_DEFAULT_TIMEOUT_INTERVAL: TimeInterval = 10.0
+
 /// Default heartbeat interval set to 30 seconds
 public let PHOENIX_DEFAULT_HEARTBEAT: Int = 30000
 

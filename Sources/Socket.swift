@@ -338,7 +338,7 @@ public class Socket {
     /// - parameter topic: Topic of the channel
     /// - parameter params: Parameters for the channel
     /// - return: A new channel
-    public func channel(_ topic: String, params: [String: Any]? = nil) -> Channel {
+    public func channel(_ topic: String, params: [String: Any] = [:]) -> Channel {
         let channel = Channel(topic: topic, params: params, socket: self)
         self.channels.append(channel)
         

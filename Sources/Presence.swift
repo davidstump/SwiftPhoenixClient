@@ -66,7 +66,7 @@ public final class Presence {
     self.state = [:]
     self.options = options
     if let state = self.options.events[PresenceEventType.state] {
-      channel.on(state) { (message: Message) in
+      channel.on(state, owner: self) { (self, message) in
         if let newState = message.payload as? PresenceState {
           self.joinRef = channel.joinRef
           self.state = Presence.syncState(self.state, newState: newState, onJoin: self.onJoin, onLeave: self.onLeave)
@@ -82,7 +82,7 @@ public final class Presence {
       }
     }
     if let diff = self.options.events[PresenceEventType.diff] {
-      channel.on(diff) { (message: Message) in
+      channel.on(diff, owner: self) { (self, message) in
         if let diff = message.payload as? Diff {
           if self.isPendingSyncState {
             self.pendingDiffs.append(diff)

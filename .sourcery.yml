@@ -1,0 +1,7 @@
+sources:
+  - Sources/client/
+  - Carthage/Checkouts/Starscream/Sources/Starscream/
+templates:
+  - sourcery/
+output:
+  Tests/mocks/
