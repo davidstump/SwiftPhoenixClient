@@ -10,10 +10,13 @@
 public let PHOENIX_DEFAULT_TIMEOUT: Int = 10000
 
 // Default timeout when making a connetion, set to 10.0 seconds
-public let PHOENIX_DEFAULT_TIMEOUT_INTERVAL: TimeInterval = 10.0
+public let PHOENIX_TIMEOUT_INTERVAL: TimeInterval = 10.0
 
 /// Default heartbeat interval set to 30 seconds
 public let PHOENIX_DEFAULT_HEARTBEAT: Int = 30000
+
+/// Default heartbeat interval set to 30.0 seconds
+public let PHOENIX_HEARTBEAT_INTERVAL: TimeInterval = 30.0
 
 
 
@@ -25,13 +28,6 @@ public enum ChannelState: String {
     case joined = "joined"
     case joining = "joining"
     case leaving = "leaving"
-}
-
-public enum SocketState: String {
-    case connecting = "connecting"
-    case open = "open"
-    case closing = "closing"
-    case closed = "closed"
 }
 
 /// Represents the different events that can be sent through

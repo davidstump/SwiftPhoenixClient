@@ -36,8 +36,6 @@ public class Channel {
     /// The Socket that the channel belongs to
     weak var socket: Socket?
 
-    
-    
     /// Current state of the Channel
     var state: ChannelState
     
@@ -79,19 +77,21 @@ public class Channel {
         self.socket = socket
         self.bindingsDel = []
         self.bindingRef = 0
-        self.timeout = PHOENIX_DEFAULT_TIMEOUT_INTERVAL // socket.timeout
+        self.timeout = socket.timeout
         self.joinedOnce = false
         self.pushBuffer = []
         self.rejoinTimer = TimeoutTimer()
     
         // Setup Timer delgation
-        self.rejoinTimer.callback.delegate(to: self) { (_) in self.rejoinUntilConnected() }
-        self.rejoinTimer.timerCalculation.delegate(to: self) { (_, tries) -> TimeInterval in
-//            self.socket?.reconnectAfterMs(tries) ?? 10.0
-            return tries > 2 ? 1 : [1, 5, 10][tries - 1]
-        }
+        self.rejoinTimer.callback
+            .delegate(to: self) { (_) in self.rejoinUntilConnected() }
         
-        
+        self.rejoinTimer.timerCalculation
+            .delegate(to: self) { (self, tries) -> TimeInterval in
+                return self.socket?.reconnectAfter(tries) ?? 10.0
+            }
+       
+        // Setup Push Event to be sent when joining
         self.joinPush = Push(channel: self,
                              event: ChannelEvent.join,
                              payload: self.params,
@@ -198,7 +198,7 @@ public class Channel {
     }
     
     
-    /// Hook into when the Channel is closed. Does not handles retain cycles.
+    /// Hook into when the Channel is closed. Does not handle retain cycles.
     /// Use `onClose()` for automatic handling of retain cycles.
     ///
     /// Example:
@@ -225,7 +225,7 @@ public class Channel {
     ///         self.print("Channel \(message.topic) has closed"
     ///     }
     ///
-    /// - parameter owner: Class containing the callback. Usually `self`
+    /// - parameter owner: Class registering the callback. Usually `self`
     /// - parameter callback: Called when the Channel closes
     /// - return: Ref counter of the subscription. See `func off()`
     @discardableResult
@@ -234,7 +234,7 @@ public class Channel {
         return self.on(ChannelEvent.close, owner: owner, callback: callback)
     }
     
-    /// Hook into when the Channel receives an Error. Does not handles retain
+    /// Hook into when the Channel receives an Error. Does not handle retain
     /// cycles. Use `onError()` for automatic handling of retain cycles.
     ///
     /// Example:
@@ -261,7 +261,7 @@ public class Channel {
     ///         self.print("Channel \(message.topic) has closed"
     ///     }
     ///
-    /// - parameter owner: Class containing the callback. Usually `self`
+    /// - parameter owner: Class registering the callback. Usually `self`
     /// - parameter callback: Called when the Channel closes
     /// - return: Ref counter of the subscription. See `func off()`
     @discardableResult
@@ -311,10 +311,10 @@ public class Channel {
     /// Example:
     ///
     ///     let channel = socket.channel("topic")
-    ///     let ref1 = channel.on("event", owner: self) { (message) in
+    ///     let ref1 = channel.on("event", owner: self) { (self, message) in
     ///         self?.print("do stuff")
     ///     }
-    ///     let ref2 = channel.on("event", owner: self) { (message) in
+    ///     let ref2 = channel.on("event", owner: self) { (self, message) in
     ///         self?.print("do other stuff")
     ///     }
     ///     channel.off("event", ref1)
@@ -323,7 +323,7 @@ public class Channel {
     /// stuff" will keep on printing on the "event"
     ///
     /// - parameter event: Event to receive
-    /// - parameter owner: Class containing the callback. Usually `self`
+    /// - parameter owner: Class registering the callback. Usually `self`
     /// - parameter callback: Called with the event's message
     /// - return: Ref counter of the subscription. See `func off()`
     @discardableResult
@@ -373,12 +373,19 @@ public class Channel {
     
     /// Push a payload to the Channel
     ///
+    /// Example:
+    ///
+    ///     channel
+    ///         .push("event", payload: ["message": "hello")
+    ///         .receive("ok") { _ in { print("message sent") }
+    ///
     /// - parameter event: Event to push
     /// - parameter payload: Payload to push
     /// - parameter timeout: Optional timeout
+    @discardableResult
     public func push(_ event: String,
                      payload: Payload,
-                     timeout: TimeInterval = PHOENIX_DEFAULT_TIMEOUT_INTERVAL) -> Push {
+                     timeout: TimeInterval = PHOENIX_TIMEOUT_INTERVAL) -> Push {
         guard joinedOnce else { fatalError("Tried to push \(event) to \(self.topic) before joining. Use channel.join() before pushing events") }
         
         let pushEvent = Push(channel: self,
@@ -412,7 +419,7 @@ public class Channel {
     /// - parameter timeout: Optional timeout
     /// - return: Push that can add receive hooks
     @discardableResult
-    public func leave(timeout: TimeInterval = PHOENIX_DEFAULT_TIMEOUT_INTERVAL) -> Push {
+    public func leave(timeout: TimeInterval = PHOENIX_TIMEOUT_INTERVAL) -> Push {
         self.state = .leaving
         
         /// Delegated callback for a successful or a failed channel leave

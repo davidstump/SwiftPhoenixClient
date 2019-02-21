@@ -76,7 +76,7 @@ public class Push {
     
     /// Resets and sends the Push
     /// - parameter timeout: Optional. The push timeout. Default is 10.0s
-    public func resend(_ timeout: TimeInterval = PHOENIX_DEFAULT_TIMEOUT_INTERVAL) {
+    public func resend(_ timeout: TimeInterval = PHOENIX_TIMEOUT_INTERVAL) {
         self.timeout = timeout
         self.reset()
         self.send()

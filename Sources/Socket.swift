@@ -71,20 +71,17 @@ public typealias Payload = [String: Any]
 /// the Socket docs, such as configuring the heartbeat.
 public class Socket {
     
-    //----------------------------------------------------------------------
-    // MARK: - Public Attributes
-    //----------------------------------------------------------------------
+    // RFC 6455 Section 7.4: Status code 1000 indicates a normal closure
+    private let WS_CLOSE_NORMAL: UInt16 = 1000
+    
     /// Timeout to use when opening connections
-    public var timeout: Int = PHOENIX_DEFAULT_TIMEOUT
+    public var timeout: TimeInterval
     
     /// Interval between sending a heartbeat
-    public var heartbeatIntervalMs: Int = PHOENIX_DEFAULT_HEARTBEAT
+    public var heartbeatInterval: TimeInterval
     
     /// Internval between socket reconnect attempts
-    public var reconnectAfterMs: (_ tryCount: Int) -> Int = { tryCount in
-        guard tryCount < 4 else { return 10000 } // After 4 tries, default to 10 second retries
-        return [1000, 2000, 5000, 10000][tryCount]
-    }
+    public var reconnectAfter: (Int) -> TimeInterval
     
     /// Hook for custom logging into the client
     public var logger: ((_ msg: String) -> Void)?
@@ -92,10 +89,9 @@ public class Socket {
     /// Disable sending Heartbeats by setting to true
     public var skipHeartbeat: Bool = false
     
-    /// Socket will attempt to reconnect if the Socket was closed. Will not
-    /// reconnect if the Socket errored (e.g. connection refused.) Default
-    /// is set to true
-    public var autoReconnect: Bool = true
+    /// The fully qualified endpoint the socket is connected to
+    public private(set) var endpointUrl: URL
+    
     
     /// Enable/Disable SSL certificate validation by setting the value on the 
     /// underlying WebSocket.
@@ -129,44 +125,32 @@ public class Socket {
     //----------------------------------------------------------------------
     // MARK: - Private Attributes
     //----------------------------------------------------------------------
-    /// Collection of callbacks for onOpen socket events
-    private var onOpenCallbacks: [() -> Void] = []
-    
-    /// Collection of callbacks for onClose socket events
-    private var onCloseCallbacks: [() -> Void] = []
-    
-    /// Collection of callbacks for onError socket events
-    private var onErrorCallbacks: [(Error) -> Void] = []
-    
-    /// Collection of callbacks for onMessage socket events
-    private var onMessageCallbacks: [(Message) -> Void] = []
-    
+    /// Callbacks for socket state changes
+    var stateChangeCallbacks: StateChangeCallbacks
+
     /// Collection on channels created for the Socket
-    private var channels: [Channel] = []
+    var channels: [Channel]
     
     /// Buffers messages that need to be sent once the socket has connected
-    private var sendBuffer: [() throws -> ()] = []
+    var sendBuffer: [() throws -> ()]
     
     /// Ref counter for messages
-    private var ref: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
+    var ref: Int
     
     /// Params appendend to the URL when connecting
-    private var params: Payload?
-    
-    /// Internal endpoint that the Socket is connecting to
-    private var _endpoint: URL
+    var params: Payload?
     
     /// Timer that triggers sending new Heartbeat messages
-    private var heartbeatTimer: Timer?
+    var heartbeatTimer: Timer?
     
     /// Ref counter for the last heartbeat that was sent
-    private var pendingHeartbeatRef: String?
+    var pendingHeartbeatRef: String?
     
     /// Timer to use when attempting to reconnect
-    private var reconnectTimer: PhxTimer!
+    var reconnectTimer: TimeoutTimer
     
     /// Websocket connection to the server
-    private let connection: WebSocket
+    let connection: WebSocket
     
     
     //----------------------------------------------------------------------
@@ -176,31 +160,49 @@ public class Socket {
     ///
     /// - parameter connection: Websocket connection to maintain
     init(connection: WebSocket) {
+        self.stateChangeCallbacks = StateChangeCallbacks()
+        self.channels = []
+        self.sendBuffer = []
+        self.ref = Int.min
+        self.timeout = PHOENIX_TIMEOUT_INTERVAL
+        self.heartbeatInterval = PHOENIX_HEARTBEAT_INTERVAL
+        self.reconnectAfter = { $0 > 4 ? 10 : [1, 2, 5, 10][$0 - 1] }
+        
         self.connection = connection
-        self._endpoint = connection.currentURL
-        self.reconnectTimer = PhxTimer(callback: { [weak self] in
-            self?.disconnect({ self?.connect() })
-        }, timerCalc: { [weak self] tryCount in
-            return self?.reconnectAfterMs(tryCount) ?? 10000
-        })
+        self.endpointUrl = connection.currentURL
+        
+        self.reconnectTimer = TimeoutTimer()
+        self.reconnectTimer.callback.delegate(to: self) { (self, _) in
+            self.teardown() { self.connect() }
+        }
+        self.reconnectTimer.timerCalculation
+            .delegate(to: self) { (self, tries) -> TimeInterval in
+                return self.reconnectAfter(tries)
+        }
     }
     
     /// Initializes the Socket
     ///
-    /// - parameter url: The string Websocket endpoint. ie "ws://example.com/socket", "wss://example.com/socket
+    /// - parameter url: The string Websocket endpoint.
+    ///                  ie "ws://example.com/socket", "wss://example.com/socket
     /// - parameter params: Optional parameters to pass when connecting
     public convenience init(url: URL, params: [String: Any]? = nil) {
-        guard
-            var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false),
-            let params = params
+        guard let safeParams = params,
+            var urlComponents = URLComponents(url: url,
+                                              resolvingAgainstBaseURL: false)
             else {
                 self.init(connection: WebSocket(url: url))
-                return }
+                return
+        }
         
-        urlComponents.queryItems
-            = params.map({ return URLQueryItem(name: $0.key,
-                                               value: String(describing: $0.value)) })
-        guard let url = urlComponents.url else { fatalError("Malformed URL while adding paramters") }
+        urlComponents.queryItems = safeParams.map({
+            return URLQueryItem(name: $0.key, value: String(describing: $0.value))
+        })
+        
+        guard
+            let url = urlComponents.url
+            else { fatalError("Malformed URL while adding paramters") }
+        
         self.init(connection: WebSocket(url: url))
     }
     
@@ -209,7 +211,10 @@ public class Socket {
     /// - parameter url: String representation of URL to point to
     /// - parameter params: Optional query parameters to append to the URL
     public convenience init(url: String, params: [String: Any]? = nil) {
-        guard let parsedUrl = URL(string: url) else { fatalError("Malformed URL String \(url)") }
+        guard
+            let parsedUrl = URL(string: url)
+            else { fatalError("Malformed URL String \(url)") }
+        
         self.init(url: parsedUrl, params: params)
     }
     
@@ -221,37 +226,10 @@ public class Socket {
     // MARK: - Public
     //----------------------------------------------------------------------
     /// Returns the socket protocol
-    public var websocketProtocol: String {
-        get { return _endpoint.scheme ?? "" }
-    }
-    
-    /// The fully qualified socket URL
-    public var endpointUrl:  URL {
-        get { return _endpoint }
-    }
-    
-    // TODO:
-    public var connectionState: SocketState {
-        return SocketState.closed
-    }
+    public var websocketProtocol: String? { return endpointUrl.scheme }
     
     /// - return: True if the socket is connected
-    public var isConnected: Bool {
-        return self.connection.isConnected
-    }
-    
-    /// Disconnects the Socket. onClose() will be fired when the socket closes
-    ///
-    /// - parameter callback: Called when disconnected
-    public func disconnect(_ callback: (() -> Void)? = nil) {
-        connection.delegate = nil
-        connection.disconnect()
-
-        self.heartbeatTimer?.invalidate()
-        self.onCloseCallbacks.forEach( { $0() } )
-        
-        callback?()
-    }
+    public var isConnected: Bool { return self.connection.isConnected }
     
     /// Connects the Socket. The params passed to the Socket on initialization
     /// will be sent through the connection. If the Socket is already connected,
@@ -264,92 +242,237 @@ public class Socket {
         connection.connect()
     }
     
-    /// Registers a callback for connection open events
+    /// Disconnects the socket
+    ///
+    /// - parameter code: Optional. Closing status code
+    /// - parameter reason: Optional. Reason for closure
+    /// - paramter callback: Optional. Called when disconnected
+    public func disconnect(code: Int? = nil,
+                           reason: String? = nil,
+                           callback: (() -> Void)? = nil) {
+        self.reconnectTimer.reset()
+        self.teardown(code: code, reason: reason, callback: callback)
+    }
+    
+    
+    public func teardown(code: Int? = nil,
+                         reason: String? = nil,
+                         callback: (() -> Void)? = nil) {
+        if isConnected {
+            self.connection.delegate = nil
+            
+            if let closeCode = code {
+                connection.disconnect(closeCode: UInt16(closeCode))
+            } else {
+                connection.disconnect()
+            }
+            
+            // TODO: This?
+            //        self.heartbeatTimer?.invalidate()
+            //        self.onCloseCallbacks.forEach( { $0() } )
+        }
+        
+        callback?()
+    }
+    
+    
+    
+    //----------------------------------------------------------------------
+    // MARK: - Register Socket State Callbacks
+    //----------------------------------------------------------------------
+    
+    /// Registers callbacks for connection open events. Does not handle retain
+    /// cycles. Use `onOpen(_:)` for automatic handling of retain cycles.
     ///
     /// Example:
-    ///     socket.onOpen { [unowned self] in
-    ///         print("Socket Connection Opened")
+    ///
+    ///     socket.manualOnOpen() { [weak self] in
+    ///         self?.print("Socket Connection Open")
     ///     }
     ///
-    /// - parameter callback: Callback to register
-    public func onOpen(callback: @escaping () -> Void) {
-        self.onOpenCallbacks.append(callback)
+    /// - parameter callback: Called when the Socket is opened
+    public func manualOnOpen(callback: @escaping () -> Void) {
+        var delegated = Delegated<Void, Void>()
+        delegated.manuallyDelegate(with: callback)
+        self.stateChangeCallbacks.open.append(delegated)
     }
     
-    
-    /// Registers a callback for connection close events
+    /// Registers callbacks for connection open events. Automatically handles
+    /// retain cycles. Use `manualOnOpen()` to handle yourself.
     ///
     /// Example:
-    ///     socket.onClose { [unowned self] in
-    ///         print("Socket Connection Closed")
+    ///
+    ///     socket.onOpen(self) { self in
+    ///         self.print("Socket Connection Open")
     ///     }
     ///
-    /// - parameter callback: Callback to register
-    public func onClose(callback: @escaping () -> Void) {
-        self.onCloseCallbacks.append(callback)
+    /// - parameter owner: Class registering the callback. Usually `self`
+    /// - parameter callback: Called when the Socket is opened
+    public func onOpen<T: AnyObject>(_ owner: T,
+                                     callback: @escaping ((T) -> Void)) {
+        var delegated = Delegated<Void, Void>()
+        delegated.delegate(to: owner, with: callback)
+        self.stateChangeCallbacks.open.append(delegated)
     }
     
-    /// Registers a callback for connection error events
+    /// Registers callbacks for connection close events. Does not handle retain
+    /// cycles. Use `onClose(_:)` for automatic handling of retain cycles.
     ///
     /// Example:
-    ///     socket.onError { [unowned self] (error) in
-    ///         print("Socket Connection Error")
+    ///
+    ///     socket.manualOnClose() { [weak self] in
+    ///         self?.print("Socket Connection Close")
     ///     }
     ///
-    /// - parameter callback: Callback to register
-    public func onError(callback: @escaping (Error) -> Void) {
-        self.onErrorCallbacks.append(callback)
+    /// - parameter callback: Called when the Socket is closed
+    public func manualOnClose(callback: @escaping () -> Void) {
+        var delegated = Delegated<Void, Void>()
+        delegated.manuallyDelegate(with: callback)
+        self.stateChangeCallbacks.close.append(delegated)
     }
     
-    /// Registers a callback for connection message events
+    /// Registers callbacks for connection close events. Automatically handles
+    /// retain cycles. Use `manualOnClose()` to handle yourself.
     ///
     /// Example:
-    ///     socket.onMessage { [unowned self] (message) in
-    ///         print("Socket Connection Message")
+    ///
+    ///     socket.onClose(self) { self in
+    ///         self.print("Socket Connection Close")
     ///     }
     ///
-    /// - parameter callback: Callback to register
-    public func onMessage(callback: @escaping (Message) -> Void) {
-        self.onMessageCallbacks.append(callback)
-    }
-    
-    /// Releases all stored callback hooks (onError, onOpen, onClose, etc.) You should
-    /// call this method when you are finished when the Socket in order to release
-    /// any references held by the socket.
-    public func removeAllCallbacks() {
-        self.onOpenCallbacks.removeAll()
-        self.onCloseCallbacks.removeAll()
-        self.onErrorCallbacks.removeAll()
-        self.onMessageCallbacks.removeAll()
+    /// - parameter owner: Class registering the callback. Usually `self`
+    /// - parameter callback: Called when the Socket is closed
+    public func onClose<T: AnyObject>(_ owner: T,
+                                     callback: @escaping ((T) -> Void)) {
+        var delegated = Delegated<Void, Void>()
+        delegated.delegate(to: owner, with: callback)
+        self.stateChangeCallbacks.close.append(delegated)
     }
     
     
-    /// Removes the Channel from the socket. This does not cause the channel to
-    /// inform the server that it is leaving. You should call channel.leave() first.
-    public func remove(_ channel: Channel) {
-        self.channels = channels.filter( { $0.joinRef != channel.joinRef } )
-    }
-    
-    /// Initialize a new Channel with a given topic
+    /// Registers callbacks for connection error events. Does not handle retain
+    /// cycles. Use `onError(_:)` for automatic handling of retain cycles.
     ///
     /// Example:
+    ///
+    ///     socket.manualOnError() { [weak self] (error) in
+    ///         self?.print("Socket Connection Error", error)
+    ///     }
+    ///
+    /// - parameter callback: Called when the Socket errors
+    public func manualOnError(callback: @escaping (Error) -> Void) {
+        var delegated = Delegated<Error, Void>()
+        delegated.manuallyDelegate(with: callback)
+        self.stateChangeCallbacks.error.append(delegated)
+    }
+    
+    /// Registers callbacks for connection error events. Automatically handles
+    /// retain cycles. Use `manualOnError()` to handle yourself.
+    ///
+    /// Example:
+    ///
+    ///     socket.onError(self) { (self, error) in
+    ///         self.print("Socket Connection Error", error)
+    ///     }
+    ///
+    /// - parameter owner: Class registering the callback. Usually `self`
+    /// - parameter callback: Called when the Socket errors
+    public func onClose<T: AnyObject>(_ owner: T,
+                                      callback: @escaping ((T, Error) -> Void)) {
+        var delegated = Delegated<Error, Void>()
+        delegated.delegate(to: owner, with: callback)
+        self.stateChangeCallbacks.error.append(delegated)
+    }
+    
+    /// Registers callbacks for connection message events. Does not handle
+    /// retain cycles. Use `onMessage(_:)` for automatic handling of retain
+    /// cycles.
+    ///
+    /// Example:
+    ///
+    ///     socket.manualOnError() { [weak self] (message) in
+    ///         self?.print("Socket Connection Message", message)
+    ///     }
+    ///
+    /// - parameter callback: Called when the Socket receives a message event
+    public func manualOnMessage(callback: @escaping (Message) -> Void) {
+        var delegated = Delegated<Message, Void>()
+        delegated.manuallyDelegate(with: callback)
+        self.stateChangeCallbacks.message.append(delegated)
+    }
+    
+    /// Registers callbacks for connection message events. Automatically handles
+    /// retain cycles. Use `manualOnMessage()` to handle yourself.
+    ///
+    /// Example:
+    ///
+    ///     socket.onMessage(self) { (self, message) in
+    ///         self.print("Socket Connection Message", message)
+    ///     }
+    ///
+    /// - parameter owner: Class registering the callback. Usually `self`
+    /// - parameter callback: Called when the Socket receives a message event
+    public func onMessage<T: AnyObject>(_ owner: T,
+                                      callback: @escaping ((T, Message) -> Void)) {
+        var delegated = Delegated<Message, Void>()
+        delegated.delegate(to: owner, with: callback)
+        self.stateChangeCallbacks.message.append(delegated)
+    }
+    
+    
+    
+    //----------------------------------------------------------------------
+    // MARK: - Channel Initialization
+    //----------------------------------------------------------------------
+    /// Initialize a new Channel
+    ///
+    /// Example:
+    ///
     ///     let channel = socket.channel("rooms", params: ["user_id": "abc123"])
     ///
     /// - parameter topic: Topic of the channel
-    /// - parameter params: Parameters for the channel
+    /// - parameter params: Optional. Parameters for the channel
     /// - return: A new channel
-    public func channel(_ topic: String, params: [String: Any] = [:]) -> Channel {
+    public func channel(_ topic: String,
+                        params: [String: Any] = [:]) -> Channel {
         let channel = Channel(topic: topic, params: params, socket: self)
         self.channels.append(channel)
         
         return channel
     }
     
-    
-    /// Sends data through the Socket
+    /// Removes the Channel from the socket. This does not cause the channel to
+    /// inform the server that it is leaving. You should call channel.leave()
+    /// prior to removing the Channel.
     ///
-    /// - parameter data: Data to send
-    public func push(topic: String, event: String, payload: Payload, ref: String? = nil, joinRef: String? = nil) {
+    /// Example:
+    ///
+    ///     channel.leave()
+    ///     socket.remove(channel)
+    ///
+    /// - parameter channel: Channel to remove
+    public func remove(_ channel: Channel) {
+        self.channels.removeAll(where: { $0.joinRef == channel.joinRef })
+    }
+    
+    
+    //----------------------------------------------------------------------
+    // MARK: - Sending Data
+    //----------------------------------------------------------------------
+    /// Sends data through the Socket. This method is internal. Instead, you
+    /// should call `push(_:, payload:, timeout:)` on the Channel you are
+    /// sending an event to.
+    ///
+    /// - parameter topic:
+    /// - parameter event:
+    /// - parameter payload:
+    /// - parameter ref: Optional. Defaults to nil
+    /// - parameter joinRef: Optional. Defaults to nil
+    internal func push(topic: String,
+                       event: String,
+                       payload: Payload,
+                       ref: String? = nil,
+                       joinRef: String? = nil) {
         
         let callback: (() throws -> ()) = {
             var body: [String: Any] = [
@@ -380,37 +503,31 @@ public class Socket {
     }
     
     /// - return: the next message ref, accounting for overflows
-    public func makeRef() -> String {
+    internal func makeRef() -> String {
         let newRef = self.ref + 1
         self.ref = (newRef == UInt64.max) ? 0 : newRef
         
         return String(newRef)
     }
     
-    
-    
-    //----------------------------------------------------------------------
-    // MARK: - Library Internal
-    //----------------------------------------------------------------------
     /// Logs the message. Override Socket.logger for specialized logging. noops by default
     ///
     /// - paramter items: List of items to be logged. Behaves just like debugPrint()
-    func logItems(_ items: Any...) {
+    internal func logItems(_ items: Any...) {
         let msg = items.map( { return String(describing: $0) } ).joined(separator: ", ")
         self.logger?("SwiftPhoenixClient: \(msg)")
     }
     
     
     //----------------------------------------------------------------------
-    // MARK: - Private
+    // MARK: - Connection Events
     //----------------------------------------------------------------------
     /// Called when the underlying Websocket connects to it's host
     private func onConnectionOpen() {
-        self.logItems("transport", "Connected to \(_endpoint.absoluteString)")
+        self.logItems("transport", "Connected to \(endpointUrl.absoluteString)")
         self.flushSendBuffer()
         self.reconnectTimer.reset()
-
-        
+    
         // Start sending heartbeats if enabled
         if !skipHeartbeat { self.startHeartbeatTimer() }
         
@@ -473,34 +590,58 @@ public class Socket {
     }
     
     //----------------------------------------------------------------------
-    // MARK: - Timers
+    // MARK: - Heartbeat
     //----------------------------------------------------------------------
-    /// Initializes a 30s timer to let Phoenix know this device is still alive
-    func startHeartbeatTimer() {
-        let heartbeatInterval = TimeInterval(heartbeatIntervalMs / 1000)
-        heartbeatTimer?.invalidate()
-        heartbeatTimer = Timer.scheduledTimer(timeInterval: heartbeatInterval,
-                                              target: self,
-                                              selector: #selector(sendHeartbeat),
-                                              userInfo: nil, repeats: true)
+    func resetHeartbeat() {
+        // Clear anything related to the heartbeat
+        self.pendingHeartbeatRef = nil
+        self.heartbeatTimer?.invalidate()
+        self.heartbeatTimer = nil
+        
+        // Do not start up the heartbeat timer if skipHeartbeat is true
+        guard !skipHeartbeat else { return }
+        
+        // Start the timer based on the correct iOS version
+        if #available(iOS 10.0, *) {
+            self.heartbeatTimer
+                = Timer.scheduledTimer(withTimeInterval: heartbeatInterval,
+                                       repeats: true) { _ in self.sendHeartbeat() }
+        } else {
+            self.heartbeatTimer
+                = Timer.scheduledTimer(timeInterval: heartbeatInterval,
+                                       target: self,
+                                       selector: #selector(sendHeartbeat),
+                                       userInfo: nil,
+                                       repeats: false)
+        }
     }
     
-    
-    //----------------------------------------------------------------------
-    // MARK: - Selectors
-    //----------------------------------------------------------------------
     /// Sends a hearbeat payload to the phoenix serverss
     @objc func sendHeartbeat() {
+        // Do not send if the connection is closed
         guard isConnected else { return }
+        
+        
+        // If there is a pending heartbeat ref, then the last heartbeat was
+        // never acknowledged by the server. Close the connection and attempt
+        // to reconnect.
         if let _ = self.pendingHeartbeatRef {
             self.pendingHeartbeatRef = nil
-            self.logItems("transport", "heartbeat timeout. Attempting to re-establish connection")
-            self.connection.disconnect()
+            self.logItems("transport",
+                          "heartbeat timeout. Attempting to re-establish connection")
+            
+            // Disconnect the socket manually. Do not use `teardown` or
+            // `disconnect` as they will nil out the websocket delegate
+            self.connection.disconnect(closeCode: WS_CLOSE_NORMAL)
             return
         }
         
+        // The last heartbeat was acknowledged by the server. Send another one
         self.pendingHeartbeatRef = self.makeRef()
-        self.push(topic: "phoenix", event: ChannelEvent.heartbeat, payload: [:], ref: self.pendingHeartbeatRef)
+        self.push(topic: "phoenix",
+                  event: ChannelEvent.heartbeat,
+                  payload: [:],
+                  ref: self.pendingHeartbeatRef)
     }
 }
 
@@ -522,7 +663,8 @@ extension Socket: WebSocketDelegate {
         self.onConnectionError(error)
     }
     
-    public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
+    public func websocketDidReceiveMessage(socket: WebSocketClient,
+                                           text: String) {
         self.onConnectionMessage(text)
     }
     

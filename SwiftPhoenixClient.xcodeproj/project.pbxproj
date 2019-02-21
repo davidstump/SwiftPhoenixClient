@@ -17,6 +17,7 @@
 		12252F58202EA52C000BA6A2 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BFAE4E41DA84F59000B3CD3 /* SwiftPhoenixClient.framework */; };
 		124A083521F14BF4003D1400 /* DefaultSerializerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 124A083321F14BB9003D1400 /* DefaultSerializerSpec.swift */; };
 		124A083721F1575B003D1400 /* TimeoutTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 124A083621F1575B003D1400 /* TimeoutTimer.swift */; };
+		128AB993221DECCB00F09EE3 /* StateChangeCallbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128AB992221DECCB00F09EE3 /* StateChangeCallbacks.swift */; };
 		12A3983D20D00050003203DF /* PushSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 124B95C120AF41190012006C /* PushSpec.swift */; };
 		12BCCB452210CED9001A55E1 /* Delegated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12BCCB442210CED9001A55E1 /* Delegated.swift */; };
 		12BCCB482210D4D7001A55E1 /* TimeoutTimerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12BCCB472210D4D7001A55E1 /* TimeoutTimerSpec.swift */; };
@@ -61,6 +62,7 @@
 		124A083321F14BB9003D1400 /* DefaultSerializerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSerializerSpec.swift; sourceTree = "<group>"; };
 		124A083621F1575B003D1400 /* TimeoutTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeoutTimer.swift; sourceTree = "<group>"; };
 		124B95C120AF41190012006C /* PushSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushSpec.swift; sourceTree = "<group>"; };
+		128AB992221DECCB00F09EE3 /* StateChangeCallbacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateChangeCallbacks.swift; sourceTree = "<group>"; };
 		12BCCB442210CED9001A55E1 /* Delegated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Delegated.swift; sourceTree = "<group>"; };
 		12BCCB472210D4D7001A55E1 /* TimeoutTimerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeoutTimerSpec.swift; sourceTree = "<group>"; };
 		12BD54222093B20600C049F2 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 				0B8517E41DAC12F40093A015 /* Channel.swift */,
 				124A083621F1575B003D1400 /* TimeoutTimer.swift */,
 				12EA0590221C660C00F2A135 /* Binding.swift */,
+				128AB992221DECCB00F09EE3 /* StateChangeCallbacks.swift */,
 			);
 			path = client;
 			sourceTree = "<group>";
@@ -324,6 +327,7 @@
 				0B8517E31DAC11C80093A015 /* Socket.swift in Sources */,
 				1220C3F9202FA808001664A2 /* Push.swift in Sources */,
 				12F879272097A3FC00161C02 /* PhxTimer.swift in Sources */,
+				128AB993221DECCB00F09EE3 /* StateChangeCallbacks.swift in Sources */,
 				0B8517E51DAC12F40093A015 /* Channel.swift in Sources */,
 				63CD64321DB1272400C406A6 /* Message.swift in Sources */,
 				124A083721F1575B003D1400 /* TimeoutTimer.swift in Sources */,
