@@ -24,73 +24,81 @@ class ViewController: UIViewController {
     var topic: String = "rooms:lobby"
     var lobbyChannel: Channel!
     
-    
   
-  @IBAction func sendMessage(_ sender: UIButton) {
-    let payload = ["user":userField.text!, "body": messageField.text!]
-    
-    self.lobbyChannel
-        .push("new:msg", payload: payload)
-        .receive("ok") { (message) in
-            print("success", message)
-        }
-        .receive("error") { (errorMessage) in
-            print("error: ", errorMessage)
-        }
-    
-    messageField.text = ""
-  }
-  
-  override func viewDidLoad() {
-    super.viewDidLoad()
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
-    socket.onOpen {
-        print("Socket has opened")
-    }
-    
-    socket.onClose {
-        print("Socket has closed")
-    }
-    
-    socket.onError { error in
-        print("Socket has errored: ", error.localizedDescription)
-    }
-    
-    socket.logger = { msg in
-        print(msg)
-    }
-
-    socket.connect()
-    
-    let channel = socket.channel(topic, params: ["status":"joining"])
-    channel.on("join") { (payload) in
-        self.chatWindow.text = "You joined the room.\n"
-    }
-    
-    channel.on("new:msg") { (message) in
-        let payload = message.payload
-        guard let username = payload["user"], let body = payload["body"] else { return }
-        let newMessage = "[\(username)] \(body)\n"
-        let updatedText = self.chatWindow.text.appending(newMessage)
-        self.chatWindow.text = updatedText
-    }
-
-    channel.on("user:entered") { (message) in
-        let username = "anonymous"
-        self.chatWindow.text = self.chatWindow.text.appending("[\(username) entered]\n")
-    }
-    
-    channel
-        .join()
-        .receive("ok") { (payload) in
-            print("Joined Channel")
-        }.receive("error") { (payload) in
-            print("Failed to join channel: ", payload)
+        socket.onOpen {
+            print("Socket has opened")
         }
+        
+        socket.onClose {
+            print("Socket has closed")
+        }
+        
+        socket.onError { error in
+            print("Socket has errored: ", error.localizedDescription)
+        }
+        
+        socket.logger = { msg in
+            print(msg)
+        }
+
+        let channel = socket.channel(topic, params: ["status":"joining"])
+        channel.on("join") { (payload) in
+            self.chatWindow.text = "You joined the room.\n"
+        }
+        
+        channel.on("new:msg") { [weak self] (message) in
+            let payload = message.payload
+            guard let username = payload["user"], let body = payload["body"] else { return }
+            let newMessage = "[\(username)] \(body)\n"
+            let updatedText = self?.chatWindow.text.appending(newMessage)
+            self?.chatWindow.text = updatedText
+        }
+
+        channel.on("user:entered") { [weak self] (message) in
+            let username = "anonymous"
+            self?.chatWindow.text = self?.chatWindow.text.appending("[\(username) entered]\n")
+        }
+        
+        channel
+            .join()
+            .receive("ok") { (payload) in
+                print("Joined Channel")
+            }.receive("error") { (payload) in
+                print("Failed to join channel: ", payload)
+            }
+        
+        
+        self.lobbyChannel = channel
+    }
     
     
-    self.lobbyChannel = channel
+    //----------------------------------------------------------------------
+    // MARK: - IBActions
+    //----------------------------------------------------------------------
+    @IBAction func onConnectButtonPressed(_ sender: Any) {
+        socket.connect()
+    }
     
-  }
+    @IBAction func onDisconnectButtonPressed(_ sender: Any) {
+        socket.disconnect()
+    }
+    
+    @IBAction func sendMessage(_ sender: UIButton) {
+        let payload = ["user":userField.text!, "body": messageField.text!]
+        
+        self.lobbyChannel
+            .push("new:msg", payload: payload)
+            .receive("ok") { (message) in
+                print("success", message)
+            }
+            .receive("error") { (errorMessage) in
+                print("error: ", errorMessage)
+        }
+        
+        messageField.text = ""
+    }
 
 }

@@ -102,7 +102,7 @@ public class Push {
     /// Receive a specific event when sending an Outbound message. Subscribing
     /// to status events with this method does not guarantees no retain cycles.
     /// You should pass `weak self` in the capture list of the callback. You
-    /// can call `.receive(status:, owner:, callback:) and the library will
+    /// can call `.delegateReceive(status:, to:, callback:) and the library will
     /// handle it for you.
     ///
     /// Example:
@@ -116,7 +116,8 @@ public class Push {
     /// - parameter status: Status to receive
     /// - parameter callback: Callback to fire when the status is recevied
     @discardableResult
-    public func manualReceive(_ status: String, callback: @escaping ((Message) -> ())) -> Push {
+    public func receive(_ status: String,
+                        callback: @escaping ((Message) -> ())) -> Push {
         var delegated = Delegated<Message, Void>()
         delegated.manuallyDelegate(with: callback)
         
@@ -131,7 +132,7 @@ public class Push {
     ///
     ///     channel
     ///         .send(event:"custom", payload: ["body": "example"])
-    ///         .receive("error", owner: self) { payload in
+    ///         .delegateReceive("error", to: self) { payload in
     ///             print("Error: ", payload)
     ///         }
     ///
@@ -139,9 +140,9 @@ public class Push {
     /// - parameter owner: The class that is calling .receive. Usually `self`
     /// - parameter callback: Callback to fire when the status is recevied
     @discardableResult
-    public func receive<Target: AnyObject>(_ status: String,
-                                           owner: Target,
-                                           callback: @escaping ((Target, Message) -> ())) -> Push {
+    public func delegateReceive<Target: AnyObject>(_ status: String,
+                                                   to owner: Target,
+                                                   callback: @escaping ((Target, Message) -> ())) -> Push {
         var delegated = Delegated<Message, Void>()
         delegated.delegate(to: owner, with: callback)
         
@@ -213,7 +214,7 @@ public class Push {
         
         /// If a response is received  before the Timer triggers, cancel timer
         /// and match the recevied event to it's corresponding hook
-        channel.on(refEvent, owner: self) { (self, message) in
+        channel.delegateOn(refEvent, to: self) { (self, message) in
             self.cancelRefEvent()
             self.cancelTimeout()
             self.receivedMessage = message

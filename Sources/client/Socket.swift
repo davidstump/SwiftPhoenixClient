@@ -135,7 +135,7 @@ public class Socket {
     var sendBuffer: [() throws -> ()]
     
     /// Ref counter for messages
-    var ref: Int
+    var ref: Int = 0
     
     /// Params appendend to the URL when connecting
     var params: Payload?
@@ -163,7 +163,6 @@ public class Socket {
         self.stateChangeCallbacks = StateChangeCallbacks()
         self.channels = []
         self.sendBuffer = []
-        self.ref = Int.min
         self.timeout = PHOENIX_TIMEOUT_INTERVAL
         self.heartbeatInterval = PHOENIX_HEARTBEAT_INTERVAL
         self.reconnectAfter = { $0 > 4 ? 10 : [1, 2, 5, 10][$0 - 1] }
@@ -282,68 +281,68 @@ public class Socket {
     //----------------------------------------------------------------------
     
     /// Registers callbacks for connection open events. Does not handle retain
-    /// cycles. Use `onOpen(_:)` for automatic handling of retain cycles.
+    /// cycles. Use `delegateOnOpen(to:)` for automatic handling of retain cycles.
     ///
     /// Example:
     ///
-    ///     socket.manualOnOpen() { [weak self] in
+    ///     socket.onOpen() { [weak self] in
     ///         self?.print("Socket Connection Open")
     ///     }
     ///
     /// - parameter callback: Called when the Socket is opened
-    public func manualOnOpen(callback: @escaping () -> Void) {
+    public func onOpen(callback: @escaping () -> Void) {
         var delegated = Delegated<Void, Void>()
         delegated.manuallyDelegate(with: callback)
         self.stateChangeCallbacks.open.append(delegated)
     }
     
     /// Registers callbacks for connection open events. Automatically handles
-    /// retain cycles. Use `manualOnOpen()` to handle yourself.
+    /// retain cycles. Use `onOpen()` to handle yourself.
     ///
     /// Example:
     ///
-    ///     socket.onOpen(self) { self in
+    ///     socket.delegateOnOpen(to: self) { self in
     ///         self.print("Socket Connection Open")
     ///     }
     ///
     /// - parameter owner: Class registering the callback. Usually `self`
     /// - parameter callback: Called when the Socket is opened
-    public func onOpen<T: AnyObject>(_ owner: T,
-                                     callback: @escaping ((T) -> Void)) {
+    public func delegateOnOpen<T: AnyObject>(to owner: T,
+                                             callback: @escaping ((T) -> Void)) {
         var delegated = Delegated<Void, Void>()
         delegated.delegate(to: owner, with: callback)
         self.stateChangeCallbacks.open.append(delegated)
     }
     
     /// Registers callbacks for connection close events. Does not handle retain
-    /// cycles. Use `onClose(_:)` for automatic handling of retain cycles.
+    /// cycles. Use `delegateOnClose(_:)` for automatic handling of retain cycles.
     ///
     /// Example:
     ///
-    ///     socket.manualOnClose() { [weak self] in
+    ///     socket.onClose() { [weak self] in
     ///         self?.print("Socket Connection Close")
     ///     }
     ///
     /// - parameter callback: Called when the Socket is closed
-    public func manualOnClose(callback: @escaping () -> Void) {
+    public func onClose(callback: @escaping () -> Void) {
         var delegated = Delegated<Void, Void>()
         delegated.manuallyDelegate(with: callback)
         self.stateChangeCallbacks.close.append(delegated)
     }
     
     /// Registers callbacks for connection close events. Automatically handles
-    /// retain cycles. Use `manualOnClose()` to handle yourself.
+    /// retain cycles. Use `onClose()` to handle yourself.
     ///
     /// Example:
     ///
-    ///     socket.onClose(self) { self in
+    ///     socket.delegateOnClose(self) { self in
     ///         self.print("Socket Connection Close")
     ///     }
     ///
     /// - parameter owner: Class registering the callback. Usually `self`
     /// - parameter callback: Called when the Socket is closed
-    public func onClose<T: AnyObject>(_ owner: T,
-                                     callback: @escaping ((T) -> Void)) {
+    public func delegateOnClose<T: AnyObject>(to owner: T,
+                                              callback: @escaping ((T) -> Void)) {
         var delegated = Delegated<Void, Void>()
         delegated.delegate(to: owner, with: callback)
         self.stateChangeCallbacks.close.append(delegated)
@@ -351,16 +350,16 @@ public class Socket {
     
     
     /// Registers callbacks for connection error events. Does not handle retain
-    /// cycles. Use `onError(_:)` for automatic handling of retain cycles.
+    /// cycles. Use `delegateOnError(to:)` for automatic handling of retain cycles.
     ///
     /// Example:
     ///
-    ///     socket.manualOnError() { [weak self] (error) in
+    ///     socket.onError() { [weak self] (error) in
     ///         self?.print("Socket Connection Error", error)
     ///     }
     ///
     /// - parameter callback: Called when the Socket errors
-    public func manualOnError(callback: @escaping (Error) -> Void) {
+    public func onError(callback: @escaping (Error) -> Void) {
         var delegated = Delegated<Error, Void>()
         delegated.manuallyDelegate(with: callback)
         self.stateChangeCallbacks.error.append(delegated)
@@ -371,49 +370,49 @@ public class Socket {
     ///
     /// Example:
     ///
-    ///     socket.onError(self) { (self, error) in
+    ///     socket.delegateOnError(to: self) { (self, error) in
     ///         self.print("Socket Connection Error", error)
     ///     }
     ///
     /// - parameter owner: Class registering the callback. Usually `self`
     /// - parameter callback: Called when the Socket errors
-    public func onClose<T: AnyObject>(_ owner: T,
-                                      callback: @escaping ((T, Error) -> Void)) {
+    public func delegateOnError<T: AnyObject>(to owner: T,
+                                              callback: @escaping ((T, Error) -> Void)) {
         var delegated = Delegated<Error, Void>()
         delegated.delegate(to: owner, with: callback)
         self.stateChangeCallbacks.error.append(delegated)
     }
     
     /// Registers callbacks for connection message events. Does not handle
-    /// retain cycles. Use `onMessage(_:)` for automatic handling of retain
-    /// cycles.
+    /// retain cycles. Use `delegateOnMessage(_to:)` for automatic handling of
+    /// retain cycles.
     ///
     /// Example:
     ///
-    ///     socket.manualOnError() { [weak self] (message) in
+    ///     socket.onMessage() { [weak self] (message) in
     ///         self?.print("Socket Connection Message", message)
     ///     }
     ///
     /// - parameter callback: Called when the Socket receives a message event
-    public func manualOnMessage(callback: @escaping (Message) -> Void) {
+    public func onMessage(callback: @escaping (Message) -> Void) {
         var delegated = Delegated<Message, Void>()
         delegated.manuallyDelegate(with: callback)
         self.stateChangeCallbacks.message.append(delegated)
     }
     
     /// Registers callbacks for connection message events. Automatically handles
-    /// retain cycles. Use `manualOnMessage()` to handle yourself.
+    /// retain cycles. Use `onMessage()` to handle yourself.
     ///
     /// Example:
     ///
-    ///     socket.onMessage(self) { (self, message) in
+    ///     socket.delegateOnMessage(self) { (self, message) in
     ///         self.print("Socket Connection Message", message)
     ///     }
     ///
     /// - parameter owner: Class registering the callback. Usually `self`
     /// - parameter callback: Called when the Socket receives a message event
-    public func onMessage<T: AnyObject>(_ owner: T,
-                                      callback: @escaping ((T, Message) -> Void)) {
+    public func delegateOnMessage<T: AnyObject>(to owner: T,
+                                                callback: @escaping ((T, Message) -> Void)) {
         var delegated = Delegated<Message, Void>()
         delegated.delegate(to: owner, with: callback)
         self.stateChangeCallbacks.message.append(delegated)
@@ -505,7 +504,7 @@ public class Socket {
     /// - return: the next message ref, accounting for overflows
     internal func makeRef() -> String {
         let newRef = self.ref + 1
-        self.ref = (newRef == UInt64.max) ? 0 : newRef
+        self.ref = (newRef == Int.max - 1) ? 0 : newRef
         
         return String(newRef)
     }
