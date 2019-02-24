@@ -525,35 +525,50 @@ public class Socket {
     /// Called when the underlying Websocket connects to it's host
     private func onConnectionOpen() {
         self.logItems("transport", "Connected to \(endpointUrl.absoluteString)")
-        self.flushSendBuffer()
-        self.reconnectTimer.reset()
-    
-        // Start sending heartbeats if enabled
-        if !skipHeartbeat { self.startHeartbeatTimer() }
         
+        // Send any messages that were waiting for a connection
+        self.flushSendBuffer()
+        
+        // Reset how the socket tried to reconnect
+        self.reconnectTimer.reset()
+        
+        // Restart the heartbeat timer
+        self.resetHeartbeat()
+
         // Inform all onOpen callbacks that the Socket has opened
-        self.onOpenCallbacks.forEach( { $0() } )
+        self.stateChangeCallbacks.open.forEach({ $0.call() })
     }
     
     private func onConnectionClosed() {
         self.logItems("transport", "close")
         self.triggerChannelError()
+        
+        // Prevent the heartbeat from triggering if the
         self.heartbeatTimer?.invalidate()
+        self.heartbeatTimer = nil
         
         // Attempt to reconnect the socket
-        if autoReconnect { self.reconnectTimer.scheduleTimeout() }
-        self.onCloseCallbacks.forEach( { $0() } )
+        // TODO:?
+//        if(event && event.code !== WS_CLOSE_NORMAL) {
+//            this.reconnectTimer.scheduleTimeout()
+//        }
+//        if autoReconnect { self.reconnectTimer.scheduleTimeout() }
+        
+        self.stateChangeCallbacks.close.forEach({ $0.call() })
     }
     
     private func onConnectionError(_ error: Error) {
         self.logItems("transport", error)
-        self.onErrorCallbacks.forEach( { $0(error) } )
+        // Send an error to all channels
         self.triggerChannelError()
+        
+        // Inform any state callabcks of the error
+        self.stateChangeCallbacks.error.forEach({ $0.call(error) })
     }
     
     private func onConnectionMessage(_ rawMessage: String) {
         self.logItems("receive ", rawMessage)
-        
+
         guard
             let data = rawMessage.data(using: String.Encoding.utf8),
             let message = serializer.decode(data)
@@ -561,25 +576,22 @@ public class Socket {
                 self.logItems("receive: Unable to parse JSON: \(rawMessage)")
                 return }
         
+        // Clear heartbeat ref, preventing a heartbeat timeout disconnect
+        if message.ref == pendingHeartbeatRef { pendingHeartbeatRef = nil }
+        
+        
         // Dispatch the message to all channels that belong to the topic
         self.channels
             .filter( { $0.isMember(message) } )
             .forEach( { $0.trigger(message) } )
         
         // Inform all onMessage callbacks of the message
-        self.onMessageCallbacks.forEach( { $0(message) } )
-        
-        // Check if this message was a pending heartbeat
-        if message.ref == pendingHeartbeatRef {
-            self.logItems("received pending heartbeat")
-            pendingHeartbeatRef = nil
-        }
+        self.stateChangeCallbacks.message.forEach({ $0.call(message) })
     }
     
     /// Triggers an error event to all of the connected Channels
     private func triggerChannelError() {
-        let errorMessage = Message(event: ChannelEvent.error)
-        self.channels.forEach( { $0.trigger(errorMessage) } )
+        self.channels.forEach( { $0.trigger(event: ChannelEvent.error) } )
     }
     
     /// Send all messages that were buffered before the socket opened

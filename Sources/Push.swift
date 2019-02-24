@@ -53,7 +53,7 @@ public class Push {
     init(channel: Channel,
          event: String,
          payload: Payload = [:],
-         timeout: TimeInterval = PHOENIX_DEFAULT_TIMEOUT_INTERVAL) {
+         timeout: TimeInterval = PHOENIX_TIMEOUT_INTERVAL) {
         self.channel = channel
         self.event = event
         self.payload = payload
