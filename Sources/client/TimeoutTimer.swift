@@ -19,6 +19,22 @@
 // THE SOFTWARE.
 
 // sourcery: MockableProtocol
+protocol TimeoutTimeable {
+    
+    /// Callback to be informed when the underlying Timer fires
+    var callback: Delegated<(), Void> { get set }
+    
+    /// Provides TimeInterval to use when scheduling the timer
+    var timerCalculation: Delegated<Int, TimeInterval>  { get set }
+    
+    /// Resets the Timer, clearing the number of tries and stops
+    /// any scheduled timeout.
+    func reset()
+    
+    /// Schedules a callback to fire after a calculated timeout duration.
+    func scheduleTimeout()
+}
+
 /// Creates a timer that can perform calculated reties by setting
 /// `timerCalculation` , such as exponential backoff.
 ///
@@ -40,7 +56,7 @@
 ///     reconnectTimer.scheduleTimeout() // fires after 5000ms
 ///     reconnectTimer.reset()
 ///     reconnectTimer.scheduleTimeout() // fires after 1000ms
-class TimeoutTimer {
+class TimeoutTimer: TimeoutTimeable {
     
     /// Callback to be informed when the underlying Timer fires
     var callback = Delegated<(), Void>()

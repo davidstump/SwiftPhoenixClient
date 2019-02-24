@@ -58,7 +58,7 @@ public class Channel {
     var pushBuffer: [Push]
     
     /// Timer to attempt to rejoin
-    var rejoinTimer: TimeoutTimer
+    var rejoinTimer: TimeoutTimeable
     
 
 

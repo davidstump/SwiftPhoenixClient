@@ -13,13 +13,7 @@ class DefaultSerializerSpec: QuickSpec {
     
     override func spec() {
         
-        var serializer: Serializer!
-        
-        beforeEach {
-            serializer = DefaultSerializer()
-        }
-        
-        
+
         describe("encode and decode") {
             it("converts dictionary to Data and back to Message", closure: {
                 let body: [String: Any] = [
@@ -30,10 +24,13 @@ class DefaultSerializerSpec: QuickSpec {
                     "payload": ["user_id": "abc123"]
                 ]
                 
-                let data = try? serializer.encode(body)
+                
+                let data = Defaults.encode(body)
                 expect(data).toNot(beNil())
                 
-                let message = serializer.decode(data!)
+                let json = Defaults.decode(data)
+                
+                let message = Message(json: json!)
                 expect(message?.ref).to(equal("ref"))
                 expect(message?.joinRef).to(equal("join_ref"))
                 expect(message?.topic).to(equal("topic"))

@@ -59,4 +59,21 @@ public class Message {
         self.payload = payload
         self.joinRef = joinRef
     }
+    
+    init?(json: [String: Any]) {
+        self.ref = json["ref"] as? String ?? ""
+        self.joinRef = json["join_ref"] as? String
+        
+        if
+            let topic = json["topic"] as? String,
+            let event = json["event"] as? String,
+            let payload = json["payload"] as? Payload {
+            
+            self.topic = topic
+            self.event = event
+            self.payload = payload
+        } else {
+            return nil
+        }
+    }
 }

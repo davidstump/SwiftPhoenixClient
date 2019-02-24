@@ -3,52 +3,7 @@
 //  SwiftPhoenixClient
 //
 
-import Foundation
 import Starscream
-
-
-/// Provides customization when enoding and decoding data within the Socket
-public protocol Serializer {
-    
-    /// Convert a message into Data to be sent over the Socket
-    func encode(_ message: [String: Any]) throws -> Data
-    
-    /// Convert data from the Socket into a Message
-    func decode(_ data: Data) -> Message?
-}
-
-
-/// Default class to Serialize data within a Socket
-class DefaultSerializer: Serializer {
-    
-    func encode(_ message: [String: Any]) throws -> Data {
-        return try JSONSerialization.data(withJSONObject: message,
-                                          options: JSONSerialization.WritingOptions())
-    }
-    
-    func decode(_ data: Data) -> Message? {
-        do {
-            guard let jsonObject = try JSONSerialization
-                    .jsonObject(with: data, options: JSONSerialization.ReadingOptions()) as? Payload
-                else { return nil }
-            
-            let ref = jsonObject["ref"] as? String ?? ""
-            let joinRef = jsonObject["join_ref"] as? String
-            
-            guard
-                let topic = jsonObject["topic"] as? String,
-                let event = jsonObject["event"] as? String,
-                let payload = jsonObject["payload"] as? Payload else { return  nil }
-                
-            return Message(ref: ref, topic: topic, event: event, payload: payload, joinRef: joinRef)
-            
-        } catch {
-            return nil
-        }
-    }
-}
-
-
 
 
 /// Alias for a JSON dictionary [String: Any]
@@ -71,74 +26,78 @@ public typealias Payload = [String: Any]
 /// the Socket docs, such as configuring the heartbeat.
 public class Socket {
     
-    // RFC 6455 Section 7.4: Status code 1000 indicates a normal closure
-    private let WS_CLOSE_NORMAL: UInt16 = 1000
+    //----------------------------------------------------------------------
+    // MARK: - Public Attributes
+    //----------------------------------------------------------------------
+    /// The string WebSocket endpoint (ie `"ws://example.com/socket"`,
+    /// `"wss://example.com"`, etc.) That was passed to the Socket during
+    /// initialization. The URL endpoint will be modified by the Socket to
+    /// include `"/websocket"` if missing.
+    public let endPoint: String
+    
+    /// The fully qualified socket URL
+    public let endPointUrl: URL
+    
+    /// The optional params to pass when connecting. Must be set when
+    /// initializing the Socket. These will be appended to the URL
+    public let params: [String: Any]?
+    
+    /// The WebSocket transport. Default behavior is to provide a Starscream
+    /// WebSocket instance. Potentially allows changing WebSockets in future
+    private let transport:((URL) -> WebSocketClient)
+    
+    /// Override to provide custom encoding of data before writing to the socket
+    public var encode: ([String: Any]) -> Data = Defaults.encode
+    
+    /// Override to provide customd decoding of data read from the socket
+    public var decode: (Data) -> [String: Any]? = Defaults.decode
     
     /// Timeout to use when opening connections
-    public var timeout: TimeInterval
+    public var timeout: TimeInterval = Defaults.timeoutInterval
     
     /// Interval between sending a heartbeat
-    public var heartbeatInterval: TimeInterval
+    public var heartbeatInterval: TimeInterval = Defaults.heartbeatInterval
     
     /// Internval between socket reconnect attempts
-    public var reconnectAfter: (Int) -> TimeInterval
+    public var reconnectAfter: (Int) -> TimeInterval = Defaults.steppedBackOff
     
-    /// Hook for custom logging into the client
-    public var logger: ((_ msg: String) -> Void)?
+    /// The optional function to receive logs
+    public var logger: ((String) -> Void)?
     
-    /// Disable sending Heartbeats by setting to true
+    /// Disables heartbeats from being sent. Default is false.
     public var skipHeartbeat: Bool = false
     
-    /// The fully qualified endpoint the socket is connected to
-    public private(set) var endpointUrl: URL
+    /// Enable/Disable SSL certificate validation. Default is false. This
+    /// must be set before calling `socket.connect()` in order to be applied
+    public var disableSSLCertValidation: Bool = false
     
-    
-    /// Enable/Disable SSL certificate validation by setting the value on the 
-    /// underlying WebSocket.
-    /// See https://github.com/daltoniam/Starscream#self-signed-ssl
-    public var disableSSLCertValidation: Bool {
-        get { return connection.disableSSLCertValidation }
-        set { connection.disableSSLCertValidation = newValue }
-    }
-
     #if os(Linux)
     #else
-    /// Configure custom SSL validation logic, eg. SSL pinning, by setting the 
-    /// value on the underlyting WebSocket.
-    /// See https://github.com/daltoniam/Starscream#ssl-pinning
-    public var security: SSLTrustValidator? {
-        get { return connection.security }
-        set { connection.security = newValue }
-    }
+    /// Configure custom SSL validation logic, eg. SSL pinning. This
+    /// must be set before calling `socket.connect()` in order to apply.
+    public var security: SSLTrustValidator?
     
-    /// Configure the encryption used by your client by setting the allowed 
-    /// cipher suites supported by your server.
-    /// See https://github.com/daltoniam/Starscream#ssl-cipher-suites
-    public var enabledSSLCipherSuites: [SSLCipherSuite]? {
-        get { return connection.enabledSSLCipherSuites }
-        set { connection.enabledSSLCipherSuites = newValue }
-    }
+    /// Configure the encryption used by your client by setting the
+    /// allowed cipher suites supported by your server. This must be
+    /// set before calling `socket.connect()` in order to apply.
+    public var enabledSSLCipherSuites: [SSLCipherSuite]?
     #endif
-    
-    public var serializer: Serializer = DefaultSerializer()
+
     
     //----------------------------------------------------------------------
     // MARK: - Private Attributes
     //----------------------------------------------------------------------
     /// Callbacks for socket state changes
-    var stateChangeCallbacks: StateChangeCallbacks
+    var stateChangeCallbacks: StateChangeCallbacks = StateChangeCallbacks()
 
     /// Collection on channels created for the Socket
-    var channels: [Channel]
+    var channels: [Channel] = []
     
     /// Buffers messages that need to be sent once the socket has connected
-    var sendBuffer: [() throws -> ()]
+    var sendBuffer: [() throws -> ()] = []
     
     /// Ref counter for messages
-    var ref: Int = 0
-    
-    /// Params appendend to the URL when connecting
-    var params: Payload?
+    var ref: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
     
     /// Timer that triggers sending new Heartbeat messages
     var heartbeatTimer: Timer?
@@ -147,28 +106,59 @@ public class Socket {
     var pendingHeartbeatRef: String?
     
     /// Timer to use when attempting to reconnect
-    var reconnectTimer: TimeoutTimer
+    var reconnectTimer: TimeoutTimeable
     
     /// Websocket connection to the server
-    let connection: WebSocket
+    var connection: WebSocketClient?
     
     
     //----------------------------------------------------------------------
     // MARK: - Initialization
     //----------------------------------------------------------------------
-    /// Initializes a Socket
-    ///
-    /// - parameter connection: Websocket connection to maintain
-    init(connection: WebSocket) {
-        self.stateChangeCallbacks = StateChangeCallbacks()
-        self.channels = []
-        self.sendBuffer = []
-        self.timeout = PHOENIX_TIMEOUT_INTERVAL
-        self.heartbeatInterval = PHOENIX_HEARTBEAT_INTERVAL
-        self.reconnectAfter = { $0 > 4 ? 10 : [1, 2, 5, 10][$0 - 1] }
+    public convenience init(_ endPoint: String,
+                            params: [String: Any]? = nil) {
+        self.init(endPoint: endPoint,
+                  transport: { url in return WebSocket(url: url) },
+                  params: params)
+    }
+    
+    
+    init(endPoint: String,
+         transport: @escaping ((URL) -> WebSocketClient),
+         params: [String: Any]? = nil) {
+        self.transport = transport
+        self.params = params
         
-        self.connection = connection
-        self.endpointUrl = connection.currentURL
+        guard
+            let url = URL(string: endPoint),
+            var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
+            else { fatalError("Malformed URL: \(endPoint)") }
+        
+        // Ensure that the URL ends with "/websocket
+        if !urlComponents.path.contains("/websocket") {
+            // Do not duplicate '/' in the path
+            if urlComponents.path.last != "/" {
+                urlComponents.path.append("/")
+            }
+            
+            // append 'websocket' to the path
+            urlComponents.path.append("websocket")
+            
+        }
+        
+        // Store the endpoint before potentially adding params to them
+        let modifiedEndpoint = urlComponents.url?.absoluteString
+        
+        // If there are parameters, append them to the URL
+        urlComponents.queryItems
+            = params?.map({ return URLQueryItem(name: $0.key,
+                                                value: String(describing: $0.value)) })
+        
+        guard let qualifiedUrl = urlComponents.url
+            else { fatalError("Malformed URL while adding paramters") }
+        
+        self.endPoint = modifiedEndpoint ?? qualifiedUrl.absoluteString
+        self.endPointUrl = qualifiedUrl
         
         self.reconnectTimer = TimeoutTimer()
         self.reconnectTimer.callback.delegate(to: self) { (self, _) in
@@ -180,43 +170,6 @@ public class Socket {
         }
     }
     
-    /// Initializes the Socket
-    ///
-    /// - parameter url: The string Websocket endpoint.
-    ///                  ie "ws://example.com/socket", "wss://example.com/socket
-    /// - parameter params: Optional parameters to pass when connecting
-    public convenience init(url: URL, params: [String: Any]? = nil) {
-        guard let safeParams = params,
-            var urlComponents = URLComponents(url: url,
-                                              resolvingAgainstBaseURL: false)
-            else {
-                self.init(connection: WebSocket(url: url))
-                return
-        }
-        
-        urlComponents.queryItems = safeParams.map({
-            return URLQueryItem(name: $0.key, value: String(describing: $0.value))
-        })
-        
-        guard
-            let url = urlComponents.url
-            else { fatalError("Malformed URL while adding paramters") }
-        
-        self.init(connection: WebSocket(url: url))
-    }
-    
-    /// Initializes a Socket
-    ///
-    /// - parameter url: String representation of URL to point to
-    /// - parameter params: Optional query parameters to append to the URL
-    public convenience init(url: String, params: [String: Any]? = nil) {
-        guard
-            let parsedUrl = URL(string: url)
-            else { fatalError("Malformed URL String \(url)") }
-        
-        self.init(url: parsedUrl, params: params)
-    }
-    
     deinit {
         reconnectTimer.reset()
     }
@@ -224,11 +177,19 @@ public class Socket {
     //----------------------------------------------------------------------
     // MARK: - Public
     //----------------------------------------------------------------------
-    /// Returns the socket protocol
-    public var websocketProtocol: String? { return endpointUrl.scheme }
+    /// - return: The socket protocol, wss or ws
+    public var websocketProtocol: String {
+        switch endPointUrl.scheme {
+        case "https": return "wss"
+        case "http": return "ws"
+        default: return endPointUrl.scheme ?? ""
+        }
+    }
     
     /// - return: True if the socket is connected
-    public var isConnected: Bool { return self.connection.isConnected }
+    public var isConnected: Bool {
+        return self.connection != nil && self.connection!.isConnected
+    }
     
     /// Connects the Socket. The params passed to the Socket on initialization
     /// will be sent through the connection. If the Socket is already connected,
@@ -237,40 +198,44 @@ public class Socket {
         // Do not attempt to reconnect if the socket is currently connected
         guard !isConnected else { return }
         
-        connection.delegate = self
-        connection.connect()
+        self.connection = self.transport(endPointUrl)
+        self.connection?.delegate = self
+        self.connection?.disableSSLCertValidation = disableSSLCertValidation
+        
+        #if os(Linux)
+        #else
+        self.connection?.security = security
+        self.connection?.enabledSSLCipherSuites = enabledSSLCipherSuites
+        #endif
+        
+        self.connection?.connect()
     }
     
     /// Disconnects the socket
     ///
     /// - parameter code: Optional. Closing status code
-    /// - parameter reason: Optional. Reason for closure
     /// - paramter callback: Optional. Called when disconnected
-    public func disconnect(code: Int? = nil,
-                           reason: String? = nil,
+    public func disconnect(code: CloseCode? = nil,
                            callback: (() -> Void)? = nil) {
         self.reconnectTimer.reset()
-        self.teardown(code: code, reason: reason, callback: callback)
+        self.teardown(code: code, callback: callback)
     }
     
     
-    public func teardown(code: Int? = nil,
-                         reason: String? = nil,
-                         callback: (() -> Void)? = nil) {
-        if isConnected {
-            self.connection.delegate = nil
-            
-            if let closeCode = code {
-                connection.disconnect(closeCode: UInt16(closeCode))
-            } else {
-                connection.disconnect()
-            }
-            
-            // TODO: This?
-            //        self.heartbeatTimer?.invalidate()
-            //        self.onCloseCallbacks.forEach( { $0() } )
+    internal func teardown(code: CloseCode? = nil, callback: (() -> Void)? = nil) {
+        self.connection?.delegate = nil
+        
+        if let safeCode = code {
+            self.connection?.disconnect(forceTimeout: nil, closeCode: safeCode.rawValue)
+        } else {
+            self.connection?.disconnect()
         }
         
+        self.connection = nil
+        
+        // TODO: This?
+        //        self.heartbeatTimer?.invalidate()
+        //        self.onCloseCallbacks.forEach( { $0() } )
         callback?()
     }
     
@@ -418,6 +383,16 @@ public class Socket {
         self.stateChangeCallbacks.message.append(delegated)
     }
     
+    /// Releases all stored callback hooks (onError, onOpen, onClose, etc.) You should
+    /// call this method when you are finished when the Socket in order to release
+    /// any references held by the socket.
+    public func releaseCallbacks() {
+        self.stateChangeCallbacks.open.removeAll()
+        self.stateChangeCallbacks.close.removeAll()
+        self.stateChangeCallbacks.error.removeAll()
+        self.stateChangeCallbacks.message.removeAll()
+    }
+    
     
     
     //----------------------------------------------------------------------
@@ -483,14 +458,12 @@ public class Socket {
             if let safeRef = ref { body["ref"] = safeRef }
             if let safeJoinRef = joinRef { body["join_ref"] = safeJoinRef}
             
-            let data = try JSONSerialization.data(withJSONObject: body, options: JSONSerialization.WritingOptions())
+            let data = self.encode(body)
             
             self.logItems("push", "Sending \(String(data: data, encoding: String.Encoding.utf8) ?? "")" )
-            self.connection.write(data: data)
+            self.connection?.write(data: data)
         }
-        
-        
-        
+
         /// If the socket is connected, then execute the callback immediately.
         if isConnected {
             try? callback()
@@ -502,17 +475,15 @@ public class Socket {
     }
     
     /// - return: the next message ref, accounting for overflows
-    internal func makeRef() -> String {
-        let newRef = self.ref + 1
-        self.ref = (newRef == Int.max - 1) ? 0 : newRef
-        
-        return String(newRef)
+    public func makeRef() -> String {
+        self.ref = (ref == UInt64.max) ? 0 : self.ref + 1
+        return String(ref)
     }
     
     /// Logs the message. Override Socket.logger for specialized logging. noops by default
     ///
     /// - paramter items: List of items to be logged. Behaves just like debugPrint()
-    internal func logItems(_ items: Any...) {
+    func logItems(_ items: Any...) {
         let msg = items.map( { return String(describing: $0) } ).joined(separator: ", ")
         self.logger?("SwiftPhoenixClient: \(msg)")
     }
@@ -522,8 +493,8 @@ public class Socket {
     // MARK: - Connection Events
     //----------------------------------------------------------------------
     /// Called when the underlying Websocket connects to it's host
-    private func onConnectionOpen() {
-        self.logItems("transport", "Connected to \(endpointUrl.absoluteString)")
+    internal func onConnectionOpen() {
+        self.logItems("transport", "Connected to \(endPoint)")
         
         // Send any messages that were waiting for a connection
         self.flushSendBuffer()
@@ -538,7 +509,7 @@ public class Socket {
         self.stateChangeCallbacks.open.forEach({ $0.call() })
     }
     
-    private func onConnectionClosed() {
+    internal func onConnectionClosed(code: Int?) {
         self.logItems("transport", "close")
         self.triggerChannelError()
         
@@ -546,18 +517,18 @@ public class Socket {
         self.heartbeatTimer?.invalidate()
         self.heartbeatTimer = nil
         
-        // Attempt to reconnect the socket
-        // TODO:?
-//        if(event && event.code !== WS_CLOSE_NORMAL) {
-//            this.reconnectTimer.scheduleTimeout()
-//        }
-//        if autoReconnect { self.reconnectTimer.scheduleTimeout() }
+        // If there was a non-normal event when the connection closed, attempt
+        // to schedule a reconnect attempt
+        if let safeCode = code, safeCode != CloseCode.normal.rawValue {
+            self.reconnectTimer.scheduleTimeout()
+        }
         
         self.stateChangeCallbacks.close.forEach({ $0.call() })
     }
     
-    private func onConnectionError(_ error: Error) {
+    internal func onConnectionError(_ error: Error) {
         self.logItems("transport", error)
+        
         // Send an error to all channels
         self.triggerChannelError()
         
@@ -565,19 +536,19 @@ public class Socket {
         self.stateChangeCallbacks.error.forEach({ $0.call(error) })
     }
     
-    private func onConnectionMessage(_ rawMessage: String) {
+    internal func onConnectionMessage(_ rawMessage: String) {
         self.logItems("receive ", rawMessage)
 
         guard
             let data = rawMessage.data(using: String.Encoding.utf8),
-            let message = serializer.decode(data)
+            let json = self.decode(data),
+            let message = Message(json: json)
             else {
                 self.logItems("receive: Unable to parse JSON: \(rawMessage)")
                 return }
         
         // Clear heartbeat ref, preventing a heartbeat timeout disconnect
         if message.ref == pendingHeartbeatRef { pendingHeartbeatRef = nil }
-        
         
         // Dispatch the message to all channels that belong to the topic
         self.channels
@@ -589,21 +560,22 @@ public class Socket {
     }
     
     /// Triggers an error event to all of the connected Channels
-    private func triggerChannelError() {
+    internal func triggerChannelError() {
         self.channels.forEach( { $0.trigger(event: ChannelEvent.error) } )
     }
     
     /// Send all messages that were buffered before the socket opened
-    private  func flushSendBuffer() {
+    internal func flushSendBuffer() {
         guard isConnected && sendBuffer.count > 0 else { return }
         self.sendBuffer.forEach( { try? $0() } )
         self.sendBuffer = []
     }
     
+    
     //----------------------------------------------------------------------
     // MARK: - Heartbeat
     //----------------------------------------------------------------------
-    func resetHeartbeat() {
+    internal func resetHeartbeat() {
         // Clear anything related to the heartbeat
         self.pendingHeartbeatRef = nil
         self.heartbeatTimer?.invalidate()
@@ -643,7 +615,8 @@ public class Socket {
             
             // Disconnect the socket manually. Do not use `teardown` or
             // `disconnect` as they will nil out the websocket delegate
-            self.connection.disconnect(closeCode: WS_CLOSE_NORMAL)
+            self.connection?.disconnect(forceTimeout: nil,
+                                        closeCode: CloseCode.normal.rawValue)
             return
         }
         
@@ -667,15 +640,11 @@ extension Socket: WebSocketDelegate {
     }
     
     public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-        guard let error = error else {
-            self.onConnectionClosed()
-            return }
-        
-        self.onConnectionError(error)
+        self.onConnectionClosed(code: (error as? WSError)?.code)
+        if let safeError = error { self.onConnectionError(safeError) }
     }
     
-    public func websocketDidReceiveMessage(socket: WebSocketClient,
-                                           text: String) {
+    public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
         self.onConnectionMessage(text)
     }
     
@@ -683,3 +652,4 @@ extension Socket: WebSocketDelegate {
         /* no-op */
     }
 }
+
