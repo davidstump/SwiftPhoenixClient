@@ -501,7 +501,7 @@ class SocketSpec: QuickSpec {
         describe("onConnectionOpen") {
             // Mocks
             var mockWebSocket: WebSocketClientMock!
-            var mockTimeoutTimer: TimeoutTimeableMock!
+            var mockTimeoutTimer:TimeoutTimerMock!
             let mockWebSocketTransport: ((URL) -> WebSocketClient) = { _ in return mockWebSocket }
             
             // UUT
@@ -509,7 +509,7 @@ class SocketSpec: QuickSpec {
             
             beforeEach {
                 mockWebSocket = WebSocketClientMock()
-                mockTimeoutTimer = TimeoutTimeableMock()
+                mockTimeoutTimer = TimeoutTimerMock()
                 socket = Socket(endPoint: "/socket", transport: mockWebSocketTransport)
                 socket.reconnectAfter = { _ in return 10 }
                 socket.reconnectTimer = mockTimeoutTimer
@@ -551,7 +551,7 @@ class SocketSpec: QuickSpec {
         describe("resetHeartbeat") {
             // Mocks
             var mockWebSocket: WebSocketClientMock!
-            var mockTimeoutTimer: TimeoutTimeableMock!
+            var mockTimeoutTimer: TimeoutTimerMock!
             let mockWebSocketTransport: ((URL) -> WebSocketClient) = { _ in return mockWebSocket }
             
             // UUT
@@ -559,7 +559,7 @@ class SocketSpec: QuickSpec {
             
             beforeEach {
                 mockWebSocket = WebSocketClientMock()
-                mockTimeoutTimer = TimeoutTimeableMock()
+                mockTimeoutTimer = TimeoutTimerMock()
                 socket = Socket(endPoint: "/socket", transport: mockWebSocketTransport)
                 
             }
@@ -609,7 +609,7 @@ class SocketSpec: QuickSpec {
         describe("onConnectionClosed") {
             // Mocks
             var mockWebSocket: WebSocketClientMock!
-            var mockTimeoutTimer: TimeoutTimeableMock!
+            var mockTimeoutTimer: TimeoutTimerMock!
             let mockWebSocketTransport: ((URL) -> WebSocketClient) = { _ in return mockWebSocket }
             
             // UUT
@@ -617,7 +617,7 @@ class SocketSpec: QuickSpec {
             
             beforeEach {
                 mockWebSocket = WebSocketClientMock()
-                mockTimeoutTimer = TimeoutTimeableMock()
+                mockTimeoutTimer = TimeoutTimerMock()
                 socket = Socket(endPoint: "/socket", transport: mockWebSocketTransport)
                 socket.reconnectAfter = { _ in return 10 }
                 socket.reconnectTimer = mockTimeoutTimer
@@ -670,7 +670,7 @@ class SocketSpec: QuickSpec {
         describe("onConnectionError") {
             // Mocks
             var mockWebSocket: WebSocketClientMock!
-            var mockTimeoutTimer: TimeoutTimeableMock!
+            var mockTimeoutTimer: TimeoutTimerMock!
             let mockWebSocketTransport: ((URL) -> WebSocketClient) = { _ in return mockWebSocket }
             
             // UUT
@@ -678,7 +678,7 @@ class SocketSpec: QuickSpec {
             
             beforeEach {
                 mockWebSocket = WebSocketClientMock()
-                mockTimeoutTimer = TimeoutTimeableMock()
+                mockTimeoutTimer = TimeoutTimerMock()
                 socket = Socket(endPoint: "/socket", transport: mockWebSocketTransport)
                 socket.reconnectAfter = { _ in return 10 }
                 socket.reconnectTimer = mockTimeoutTimer
@@ -718,7 +718,7 @@ class SocketSpec: QuickSpec {
         describe("onConnectionMessage") {
             // Mocks
             var mockWebSocket: WebSocketClientMock!
-            var mockTimeoutTimer: TimeoutTimeableMock!
+            var mockTimeoutTimer: TimeoutTimerMock!
             let mockWebSocketTransport: ((URL) -> WebSocketClient) = { _ in return mockWebSocket }
             
             // UUT
@@ -726,7 +726,7 @@ class SocketSpec: QuickSpec {
             
             beforeEach {
                 mockWebSocket = WebSocketClientMock()
-                mockTimeoutTimer = TimeoutTimeableMock()
+                mockTimeoutTimer = TimeoutTimerMock()
                 socket = Socket(endPoint: "/socket", transport: mockWebSocketTransport)
                 socket.reconnectAfter = { _ in return 10 }
                 socket.reconnectTimer = mockTimeoutTimer

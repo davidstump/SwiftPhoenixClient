@@ -58,7 +58,7 @@ public class Channel {
     var pushBuffer: [Push]
     
     /// Timer to attempt to rejoin
-    var rejoinTimer: TimeoutTimeable
+    var rejoinTimer: TimeoutTimer
     
 
 
@@ -84,7 +84,7 @@ public class Channel {
     
         // Setup Timer delgation
         self.rejoinTimer.callback
-            .delegate(to: self) { (_) in self.rejoinUntilConnected() }
+            .delegate(to: self) { (self) in self.rejoinUntilConnected() }
         
         self.rejoinTimer.timerCalculation
             .delegate(to: self) { (self, tries) -> TimeInterval in

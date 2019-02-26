@@ -106,7 +106,7 @@ public class Socket {
     var pendingHeartbeatRef: String?
     
     /// Timer to use when attempting to reconnect
-    var reconnectTimer: TimeoutTimeable
+    var reconnectTimer: TimeoutTimer
     
     /// Websocket connection to the server
     var connection: WebSocketClient?

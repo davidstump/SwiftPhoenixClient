@@ -14,19 +14,107 @@ class ChannelSpec: QuickSpec {
     override func spec() {
     
         /// Mocks
-//        var mockSocket: SocketMock!
-        var onCloseCalledCount: Int!
-        var onErrorCalledCount: Int!
-        
-        
+        var socket: Socket!
+
         /// UUT
         var channel: Channel!
         
-//        beforeEach {
-//            mockSocket = SocketMock()
-//            channel = Channel(topic: "topic", params: ["one": 2], socket: mockSocket)
-//        }
+        describe("constructor") {
+            beforeEach {
+                socket = Socket("wss://localhost:4000/socket")
+            }
+            
+            it("sets defaults", closure: {
+                
+                channel = Channel(topic: "topic", params: ["one": "two"], socket: socket)
+                
+                expect(channel.state).to(equal(ChannelState.closed))
+                expect(channel.topic).to(equal("topic"))
+                expect(channel.params["one"] as? String).to(equal("two"))
+                expect(channel.socket === socket).to(beTrue())
+                expect(channel.timeout).to(equal(10))
+                expect(channel.joinedOnce).to(beFalse())
+                expect(channel.joinPush).toNot(beNil())
+                expect(channel.pushBuffer).to(beEmpty())
+            })
+            
+            it("sets up joinPush with literal params", closure: {
+                channel = Channel(topic: "topic", params: ["one": "two"], socket: socket)
+                let joinPush = channel.joinPush
+                
+                expect(joinPush?.channel === channel).to(beTrue())
+                expect(joinPush?.payload["one"] as? String).to(equal("two"))
+                expect(joinPush?.event).to(equal("phx_join"))
+                expect(joinPush?.timeout).to(equal(10))
+            })
+            
+            it("should not introduce any retain cycles", closure: {
+                weak var weakChannel = Channel(topic: "topic", params: ["one": 2], socket: socket)
+                expect(weakChannel).to(beNil())
+            })
+        }
+        
+        
+        describe("join") {
+            beforeEach {
+                socket = Socket("wss://localhost:4000/socket")
+//                socket.timeout = self
 //
+//                mockSocket = SocketMock("/socket")
+//                mockSocket.timeout = self.defaultTimeout
+//                mockSocket.makeRefReturnValue = "0"
+//
+                channel = Channel(topic: "topic", params: ["one": "two"], socket: socket)
+            }
+            
+            it("sets state to joining", closure: {
+                let _ = channel.join()
+                expect(channel.state.rawValue).to(equal("joining"))
+            })
+            
+            it("sets joinedOnce to true", closure: {
+                expect(channel.joinedOnce).to(beFalse())
+                
+                let _ = channel.join()
+                expect(channel.joinedOnce).to(beTrue())
+            })
+            
+            it("triggers socket push with channel params", closure: {
+//                let defaultRef = String(self.defaultRef)
+//                mockSocket.makeRefReturnValue = defaultRef
+//                let _ = channel.join()
+//
+//                expect(mockSocket.pushTopicEventPayloadRefJoinRefCalled).to(beTrue())
+//
+//                let args = mockSocket.pushTopicEventPayloadRefJoinRefReceivedArguments
+//                expect(args?.topic).to(equal("topic"))
+//                expect(args?.event).to(equal("phx_join"))
+//                expect(args?.payload["one"] as? String).to(equal("two"))
+//                expect(args?.ref).to(equal(defaultRef))
+//                expect(args?.joinRef).to(equal(channel.joinRef))
+            })
+            
+            it("can set timeout on joinPush", closure: {
+//                let newTimeout = 2000
+//                let joinPush = channel.joinPush
+//
+//                expect(joinPush?.timeout).to(equal(self.defaultTimeout))
+//
+//                let _ = channel.join(joinParams: nil, timeout: newTimeout)
+//                expect(joinPush?.timeout).to(equal(newTimeout))
+            })
+            
+            it("can set params on joinPush", closure: {
+//                let joinPush = channel.joinPush
+//                expect(joinPush?.payload["one"] as? String).to(equal("two"))
+//
+//                let _ = channel.join(joinParams: ["one": "three"])
+//                expect(joinPush?.payload["one"] as? String).to(equal("three"))
+            })
+        }
+        
+        
+
 //        /// Utility method to easily filter the bindings for a channel by their event
 //        func eventBindings(_ event: String) -> [(event: String, ref: Int, callback: (Message) -> Void)]? {
 //            return channel.bindings.filter( { $0.event == event } )

@@ -10,6 +10,14 @@ import Starscream
     var {% call swiftifyMethodName method.selectorName %}ThrowableError: Error?
 {% endmacro %}
 
+
+{% macro argumentsBlock arguments %}{% filter removeNewlines:"leading" %}
+  {% for argument in arguments %}
+    {{argument.name}}{% if not forloop.last %}, {% endif %}
+  {% endfor %}
+{% endfilter %}{% endmacro %}
+
+
 {% macro methodThrowableErrorUsage method %}
         if let error = {% call swiftifyMethodName method.selectorName %}ThrowableError {
             throw error
@@ -56,13 +64,16 @@ import Starscream
     {% endif %}
     {% call methodClosureDeclaration method %}
 
-{% if method.isInitializer %}
-    required {{ method.name }} {
+{% if method.isInitializer or method.isDeinitializer %}
+    {#{% if not method.isConvenienceInitializer %}
+    override {{ method.name }} {
+        super.{{ method.callName }}({% for param in method.parameters %}{{ param.name }}: {{ param.name }}{% ifnot forloop.last %}, {% endif %}{% endfor %})
         {% call methodReceivedParameters method %}
         {% call methodClosureName method %}?({% call methodClosureCallParameters method %})
     }
+    {% endif %}#}
 {% else %}
-    func {{ method.name }}{% if method.throws %} throws{% endif %}{% if not method.returnTypeName.isVoid %} -> {{ method.returnTypeName }}{% endif %} {
+    override func {{ method.name }}{% if method.throws %} throws{% endif %}{% if not method.returnTypeName.isVoid %} -> {{ method.returnTypeName }}{% endif %} {
         {% if method.throws %}
         {% call methodThrowableErrorUsage method %}
         {% endif %}
@@ -79,7 +90,18 @@ import Starscream
 {% endmacro %}
 
 {% macro mockOptionalVariable variable %}
-    var {% call mockedVariableName variable %}: {{ variable.typeName }}
+    {% if variable.writeAccess == "" %}
+    var {% call underlyingMockedVariableName variable %}: {{ variable.typeName }}!
+    override var {% call mockedVariableName variable %}: {{ variable.typeName }} {
+        return {% call underlyingMockedVariableName variable %}
+    }
+    {% else %}
+    var {{ variable.name }}SetCount: Int = 0
+    var {{ variable.name }}DidGetSet: Bool { return {{ variable.name }}SetCount > 0 }
+    override var {% call mockedVariableName variable %}: {{ variable.typeName }} {
+        didSet { {{ variable.name }}SetCount += 1 }
+    }
+    {% endif %}
 {% endmacro %}
 
 {% macro mockNonOptionalArrayOrDictionaryVariable variable %}
@@ -87,7 +109,7 @@ import Starscream
 {% endmacro %}
 
 {% macro mockNonOptionalVariable variable %}
-    var {% call mockedVariableName variable %}: {{ variable.typeName }} {
+    override var {% call mockedVariableName variable %}: {{ variable.typeName }} {
         get { return {% call underlyingMockedVariableName variable %} }
         set(value) { {% call underlyingMockedVariableName variable %} = value }
     }
@@ -97,14 +119,25 @@ import Starscream
 {% macro underlyingMockedVariableName variable %}underlying{{ variable.name|upperFirstLetter }}{% endmacro %}
 {% macro mockedVariableName variable %}{{ variable.name }}{% endmacro %}
 
-{% for type in types.protocols where type.based.MockableProtocol or type|annotated:"MockableProtocol" %}{% if type.name != "MockableProtocol" %}
-class {{ type.name }}Mock: {{ type.name }} {
-{% for variable in type.allVariables|!definedInExtension %}
-    {% if variable.isOptional %}{% call mockOptionalVariable variable %}{% elif variable.isArray or variable.isDictionary %}{% call mockNonOptionalArrayOrDictionaryVariable variable %}{% else %}{% call mockNonOptionalVariable variable %}{% endif %}
-{% endfor %}
 
-{% for method in type.allMethods|!definedInExtension %}
+
+
+
+
+
+
+
+{% for type in types.classes where type.name == "TimeoutTimer" %}
+class {{ type.name }}Mock: {{ type.name }} {
+{# Generate all variable mocks #}
+{#{% for variable in type.allVariables|!definedInExtension where variable.readAccess != "private" %}
+    {% if variable.isOptional %}{% call mockOptionalVariable variable %}{% elif variable.isArray or variable.isDictionary %}{% call mockNonOptionalArrayOrDictionaryVariable variable %}{% else %}{% call mockNonOptionalVariable variable %}{% endif %}
+{% endfor %} #}
+
+
+{% for method in type.allMethods|!definedInExtension where method.accessLevel != "private" and method.actualDefinedInTypeName.name != "WebSocketDelegate" %}
     {% call mockMethod method %}
+
 {% endfor %}
 }
-{% endif %}{% endfor %}
+{% endfor %}

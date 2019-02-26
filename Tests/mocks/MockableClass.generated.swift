@@ -19,17 +19,19 @@ import Starscream
 
 
 
-class TimeoutTimeableMock: TimeoutTimeable {
-    var callback: Delegated<(), Void> {
-        get { return underlyingCallback }
-        set(value) { underlyingCallback = value }
-    }
-    var underlyingCallback: Delegated<(), Void>!
-    var timerCalculation: Delegated<Int, TimeInterval> {
-        get { return underlyingTimerCalculation }
-        set(value) { underlyingTimerCalculation = value }
-    }
-    var underlyingTimerCalculation: Delegated<Int, TimeInterval>!
+
+
+
+
+
+
+
+
+
+
+
+class TimeoutTimerMock: TimeoutTimer {
+
 
     //MARK: - reset
 
@@ -39,10 +41,11 @@ class TimeoutTimeableMock: TimeoutTimeable {
     }
     var resetClosure: (() -> Void)?
 
-    func reset() {
+    override func reset() {
         resetCallsCount += 1
         resetClosure?()
     }
+
 
     //MARK: - scheduleTimeout
 
@@ -52,9 +55,24 @@ class TimeoutTimeableMock: TimeoutTimeable {
     }
     var scheduleTimeoutClosure: (() -> Void)?
 
-    func scheduleTimeout() {
+    override func scheduleTimeout() {
         scheduleTimeoutCallsCount += 1
         scheduleTimeoutClosure?()
     }
+
+
+    //MARK: - onTimerTriggered
+
+    var onTimerTriggeredCallsCount = 0
+    var onTimerTriggeredCalled: Bool {
+        return onTimerTriggeredCallsCount > 0
+    }
+    var onTimerTriggeredClosure: (() -> Void)?
+
+    override func onTimerTriggered() {
+        onTimerTriggeredCallsCount += 1
+        onTimerTriggeredClosure?()
+    }
+
 
 }
