@@ -45,49 +45,39 @@ class TimeoutTimerSpec: QuickSpec {
         
         describe("scheduleTimeout") {
             it("schedules timeouts, resets the timer, and schedules another timeout", closure: {
-                var callbackTimes: [Double] = []
+                var callbackTimes: [Date] = []
                 timer.callback.delegate(to: self) { (_) in
-                    callbackTimes.append(Date().timeIntervalSince1970)
+                    callbackTimes.append(Date())
                 }
                 
                 timer.timerCalculation.delegate(to: self) { (_, tries) -> TimeInterval in
-                    return tries > 2 ? 1 : [1, 5, 10][tries - 1]
+                    return tries > 2 ? 0.1 : [0.01, 0.05, 0.1][tries - 1]
                 }
                 
                 
                 let startTime0 = Date()
                 timer.scheduleTimeout()
-                
-                let duration0 = timer.underlyingTimer?.fireDate
-                timer.underlyingTimer?.fire()
-                
-                expect(self.secondsBetweenDates(startTime0, duration0!)).to(beCloseTo(1.0001))
-                
+                expect(timer.tries).toEventually(equal(1))
+                expect(self.secondsBetweenDates(startTime0, callbackTimes[0]))
+                    .to(beGreaterThanOrEqualTo(0.01))
                 
                 let startTime1 = Date()
                 timer.scheduleTimeout()
-                
-                let duration1 = timer.underlyingTimer?.fireDate
-                timer.underlyingTimer?.fire()
-                
-                expect(self.secondsBetweenDates(startTime1, duration1!)).to(beCloseTo(5.0001))
-                
-                
+                expect(timer.tries).toEventually(equal(2))
+                expect(self.secondsBetweenDates(startTime1, callbackTimes[1]))
+                    .to(beGreaterThanOrEqualTo(0.05))
+
                 let startTime2 = Date()
                 timer.reset()
                 timer.scheduleTimeout()
-                
-                let duration2 = timer.underlyingTimer?.fireDate
-                timer.underlyingTimer?.fire()
-                
-                expect(self.secondsBetweenDates(startTime2, duration2!)).to(beCloseTo(1.0001))
-                
-                expect(callbackTimes).to(haveCount(3))
+                expect(timer.tries).toEventually(equal(1))
+                expect(self.secondsBetweenDates(startTime2, callbackTimes[2]))
+                    .to(beGreaterThanOrEqualTo(0.01))
             })
             
             it("does not start timer if no interval is provided", closure: {
                 timer.scheduleTimeout()
-                expect(timer.underlyingTimer).to(beNil())
+                expect(timer.workItem).to(beNil())
             })
         }
     }

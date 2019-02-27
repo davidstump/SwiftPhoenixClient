@@ -49,7 +49,6 @@ class TimeoutTimer {
     
     /// The work to be done when the queue fires
     var workItem: DispatchWorkItem? = nil
-    var underlyingTimer: Timer? = nil
     
     /// The number of times the underlyingTimer hass been set off.
     var tries: Int = 0
@@ -77,35 +76,19 @@ class TimeoutTimer {
         // to milliseconds and round to the nearest millisecond.
         let dispatchInterval = Int(round(timeInterval * 1000))
         
-
         let dispatchTime = DispatchTime.now() + .milliseconds(dispatchInterval)
-        DispatchQueue.main.asyncAfter(deadline: <#T##DispatchTime#>, execute: <#T##DispatchWorkItem#>)
-        // Start the timer based on the correct iOS version
-        if #available(iOS 10.0, *) {
-            self.underlyingTimer
-                = Timer.scheduledTimer(withTimeInterval: timeInterval,
-                                       repeats: false) { (timer) in self.onTimerTriggered() }
-        } else {
-            self.underlyingTimer
-                = Timer.scheduledTimer(timeInterval: timeInterval,
-                                       target: self,
-                                       selector: #selector(onTimerTriggered),
-                                       userInfo: nil,
-                                       repeats: false)
+        let workItem = DispatchWorkItem {
+            self.tries += 1
+            self.callback.call()
         }
+        
+        self.workItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: dispatchTime, execute: workItem)
     }
     
     /// Invalidates any ongoing Timer. Will not clear how many tries have been made
     private func clearTimer() {
         self.workItem?.cancel()
         self.workItem = nil
-        self.underlyingTimer?.invalidate()
-        self.underlyingTimer = nil
-    }
-    
-    /// Called once the Timer is triggered after it's TimeInterval has been reached
-    @objc func onTimerTriggered() {
-        self.tries += 1
-        self.callback.call()
     }
 }
