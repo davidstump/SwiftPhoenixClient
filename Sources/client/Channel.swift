@@ -31,7 +31,9 @@ public class Channel {
     public let topic: String
     
     /// The params sent when joining the channel
-    var params: Payload
+    public var params: Payload {
+        didSet { self.joinPush.payload = params }
+    }
 
     /// The Socket that the channel belongs to
     weak var socket: Socket?
@@ -112,6 +114,7 @@ public class Channel {
         
         // Handle when the join push times out when sending after join()
         self.joinPush.delegateReceive("timeout", to: self) { (self, _) in
+            print("Join Push received Timeout")
             // Only handle a timeout if the Channel is in the 'joining' state
             guard self.isJoining else { return }
             
@@ -119,7 +122,9 @@ public class Channel {
             self.socket?.logItems("channel", "timeout \(self.topic) \(self.joinRef ?? "") after \(self.timeout)s")
             
             // Send a Push to the server to leave the channel
-            let leavePush = Push(channel: self, event: ChannelEvent.leave, timeout: self.timeout)
+            let leavePush = Push(channel: self,
+                                 event: ChannelEvent.leave,
+                                 timeout: self.timeout)
             leavePush.send()
             
             // Mark the Channel as in an error and attempt to rejoin
@@ -143,11 +148,12 @@ public class Channel {
         
         /// Perfom when the Channel errors
         self.delegateOnError(to: self) { (self, message) in
-            // Do not emit error if the channel is in the process of leaving or already closed
+            // Do not emit error if the channel is in the process of leaving
+            // or if it has already closed
             guard !self.isLeaving, !self.isClosed else { return }
             
             // Log that the channel received an error
-            self.socket?.logItems("channel", "error topic: \(self.topic)  joinRef: \(self.joinRef ?? "nil") mesage: \(message)")
+            self.socket?.logItems("channel", "error topic: \(self.topic)joinRef: \(self.joinRef ?? "nil") mesage: \(message)")
             
             // Mark the channel as errored and attempt to rejoin
             self.state = ChannelState.errored
@@ -185,6 +191,7 @@ public class Channel {
     ///
     /// - parameter timeout: Optional. Defaults to Channel's timeout
     /// - return: Push event
+    @discardableResult
     public func join(timeout: TimeInterval? = nil) -> Push {
         guard !joinedOnce else {
             fatalError("tried to join multiple times. 'join' "
@@ -367,11 +374,10 @@ public class Channel {
     /// - parameter event: Event to unsubscribe from
     /// - paramter ref: Ref counter returned when subscribing. Can be omitted
     public func off(_ event: String, ref: Int? = nil) {
+        print("Removing event binding: ", event)
         self.bindingsDel.removeAll { (bind) -> Bool in
             bind.event == event && (ref == nil || ref == bind.ref)
         }
-        
-        print("Bindings Removed!")
     }
     
     /// Push a payload to the Channel

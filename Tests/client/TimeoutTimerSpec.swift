@@ -34,10 +34,12 @@ class TimeoutTimerSpec: QuickSpec {
                     weakTimerCalled = true
                 }
                 
+                timer.timerCalculation.delegate(to: weakTimer!) { _,_ in 0.01 }
+                
                 weakTimer = nil
                 timer.scheduleTimeout()
-                timer.underlyingTimer?.fire()
-                
+                sleep(1)
+                expect(timer.tries).toNotEventually(equal(1))
                 expect(weakTimerCalled).to(beFalse())
             })
         }
@@ -60,7 +62,7 @@ class TimeoutTimerSpec: QuickSpec {
                 expect(timer.tries).toEventually(equal(1))
                 expect(self.secondsBetweenDates(startTime0, callbackTimes[0]))
                     .to(beGreaterThanOrEqualTo(0.01))
-                
+
                 let startTime1 = Date()
                 timer.scheduleTimeout()
                 expect(timer.tries).toEventually(equal(2))

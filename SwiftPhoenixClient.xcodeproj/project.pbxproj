@@ -14,6 +14,7 @@
 		120B42C722233A0D00FE483D /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B42C622233A0D00FE483D /* Defaults.swift */; };
 		120B42C9222341CF00FE483D /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B42C8222341CF00FE483D /* TestHelpers.swift */; };
 		120B42CB2223481600FE483D /* MockableClass.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B42CA2223481500FE483D /* MockableClass.generated.swift */; };
+		121F6E7E2226329500F4E898 /* ManualMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121F6E7D2226329500F4E898 /* ManualMocks.swift */; };
 		1220C3F9202FA808001664A2 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1220C3F8202FA808001664A2 /* Push.swift */; };
 		12252F56202EA467000BA6A2 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12252F54202EA467000BA6A2 /* Quick.framework */; };
 		12252F57202EA467000BA6A2 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12252F55202EA467000BA6A2 /* Nimble.framework */; };
@@ -58,6 +59,7 @@
 		120B42C622233A0D00FE483D /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		120B42C8222341CF00FE483D /* TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
 		120B42CA2223481500FE483D /* MockableClass.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockableClass.generated.swift; sourceTree = "<group>"; };
+		121F6E7D2226329500F4E898 /* ManualMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualMocks.swift; sourceTree = "<group>"; };
 		1220C3F8202FA808001664A2 /* Push.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; };
 		12252F54202EA467000BA6A2 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
 		12252F55202EA467000BA6A2 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
@@ -205,6 +207,7 @@
 			children = (
 				120B42CA2223481500FE483D /* MockableClass.generated.swift */,
 				12F7830A2210D56D00291614 /* MockableWebSocketClient.generated.swift */,
+				121F6E7D2226329500F4E898 /* ManualMocks.swift */,
 			);
 			path = mocks;
 			sourceTree = "<group>";
@@ -331,6 +334,7 @@
 				12BD54232093B20600C049F2 /* Constants.swift in Sources */,
 				12EA0591221C660C00F2A135 /* Binding.swift in Sources */,
 				120B42C722233A0D00FE483D /* Defaults.swift in Sources */,
+				121F6E7E2226329500F4E898 /* ManualMocks.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

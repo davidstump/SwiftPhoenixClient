@@ -87,7 +87,6 @@ public class Push {
     public func send() {
         guard !hasReceived(status: "timeout") else { return }
         
-        if hasReceived(status: "timeout") { return }
         self.startTimeout()
         self.sent = true
         self.channel?.socket?.push(
@@ -244,7 +243,6 @@ public class Push {
         var mutPayload = payload
         mutPayload["status"] = status
         
-        let message = Message(ref: refEvent, payload: mutPayload)
-        self.channel?.trigger(message)
+         self.channel?.trigger(event: refEvent, payload: mutPayload)
     }
 }

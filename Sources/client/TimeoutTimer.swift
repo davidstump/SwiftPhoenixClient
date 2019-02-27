@@ -53,6 +53,9 @@ class TimeoutTimer {
     /// The number of times the underlyingTimer hass been set off.
     var tries: Int = 0
     
+    /// The Queue to execute on. In testing, this is overridden
+    var queue: DispatchQueue = DispatchQueue.main
+    
     
     /// Resets the Timer, clearing the number of tries and stops
     /// any scheduled timeout.
@@ -83,7 +86,7 @@ class TimeoutTimer {
         }
         
         self.workItem = workItem
-        DispatchQueue.main.asyncAfter(deadline: dispatchTime, execute: workItem)
+        self.queue.asyncAfter(deadline: dispatchTime, execute: workItem)
     }
     
     /// Invalidates any ongoing Timer. Will not clear how many tries have been made
