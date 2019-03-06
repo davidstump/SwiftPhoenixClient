@@ -12,7 +12,6 @@ import Starscream
 
 class ChannelSpec: QuickSpec {
     
-    
     override func spec() {
     
         // Mocks
@@ -22,8 +21,7 @@ class ChannelSpec: QuickSpec {
         // Constants
         let kDefaultRef = "1"
         let kDefaultTimeout: TimeInterval = 10.0
-        
-        
+
         // UUT
         var channel: Channel!
         
@@ -36,6 +34,13 @@ class ChannelSpec: QuickSpec {
             mockSocket.timeout = kDefaultTimeout
             channel = Channel(topic: "topic", params: ["one": "two"], socket: mockSocket)
         }
+        
+        /// Utility method to easily filter the bindings for a channel by their event
+        func getBindings(_ event: String) -> [Binding]? {
+            return channel.bindingsDel.filter({ $0.event == event })
+        }
+        
+        
         
         describe("constructor") {
             it("sets defaults", closure: {
@@ -279,6 +284,44 @@ class ChannelSpec: QuickSpec {
                 
                 it("clears timeoutTimer", closure: {
                     expect(joinPush.timeoutTimer).toNot(beNil())
+                    
+                    joinPush.trigger("ok", payload: [:])
+                    expect(joinPush.timeoutTimer).to(beNil())
+                })
+                
+                it("sets receivedMessage", closure: {
+                    expect(joinPush.receivedMessage).to(beNil())
+                    
+                    joinPush.trigger("ok", payload: ["a": "b"])
+                    expect(joinPush.receivedMessage).toNot(beNil())
+                    expect(joinPush.receivedMessage?.status).to(equal("ok"))
+                    expect(joinPush.receivedMessage?.payload["a"] as? String).to(equal("b"))
+                })
+                
+                it("removes channel binding", closure: {
+                    var bindings = getBindings("chan_reply_1")
+                    expect(bindings).to(haveCount(1))
+                    
+                    joinPush.trigger("ok", payload: [:])
+                    bindings = getBindings("chan_reply_1")
+                    expect(bindings).to(haveCount(0))
+                })
+                
+                it("sets channel state to joined", closure: {
+                    joinPush.trigger("ok", payload: [:])
+                    expect(channel.state).to(equal(.joined))
+                })
+                
+                it("resets channel rejoinTimer", closure: {
+                    let mockRejoinTimer = TimeoutTimerMock()
+                    channel.rejoinTimer = mockRejoinTimer
+                    
+                    joinPush.trigger("ok", payload: [:])
+                    expect(mockRejoinTimer.resetCalled).to(beTrue())
+                })
+                
+                it("sends and empties channel's buffered pushEvents", closure: {
+                    
                 })
             })
             

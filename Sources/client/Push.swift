@@ -28,7 +28,7 @@ public class Push {
     var receivedMessage: Message?
     
     /// Timer which triggers a timeout event
-    var timeoutTimer: TimeoutTimer
+    var timeoutTimer: TimeoutTimer?
     
     /// Hooks into a Push. Where .receive("ok", callback(Payload)) are stored
     var receiveHooks: [String: [Delegated<Message, Void>]]
@@ -63,13 +63,7 @@ public class Push {
         self.receiveHooks = [:]
         self.sent = false
         self.ref = nil
-        
-        
-        // Setup the Timer
-        self.timeoutTimer.timerCalculation.delegate(to: self) { _,_ in self.timeout }
-        self.timeoutTimer.callback.delegate(to: self) { _ in
-            self.trigger("timeout", payload: [:])
-        }
+        self.timeoutTimer = nil
     }
     
     
@@ -195,7 +189,9 @@ public class Push {
     
     /// Cancel any ongoing Timeout Timer
     internal func cancelTimeout() {
-        self.timeoutTimer.reset()
+        self.timeoutTimer?.reset()
+        self.timeoutTimer = nil
+        
     }
     
     /// Starts the Timer which will trigger a timeout after a specific _timeout_
@@ -223,8 +219,15 @@ public class Push {
             self.matchReceive(status, message: message)
         }
         
-        /// Start the Timeout timer.
-        self.timeoutTimer.scheduleTimeout()
+        /// Setup and start the Timeout timer.
+        let timeoutTimer = TimeoutTimer()
+        timeoutTimer.timerCalculation.delegate(to: self) { _,_ in self.timeout }
+        timeoutTimer.callback.delegate(to: self) { _ in
+            self.trigger("timeout", payload: [:])
+        }
+        
+        self.timeoutTimer = timeoutTimer
+        self.timeoutTimer?.scheduleTimeout()
     }
     
     /// Checks if a status has already been received by the Push.
