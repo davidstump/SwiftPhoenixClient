@@ -10,10 +10,11 @@ import Nimble
 import Starscream
 @testable import SwiftPhoenixClient
 
+
 class ChannelSpec: QuickSpec {
     
     override func spec() {
-    
+
         // Mocks
         var mockClient: WebSocketClientMock!
         var mockSocket: SocketMock!
@@ -22,18 +23,12 @@ class ChannelSpec: QuickSpec {
         let kDefaultRef = "1"
         let kDefaultTimeout: TimeInterval = 10.0
 
+        // Clock
+        var fakeClock: FakeTimerQueue!
+        
         // UUT
         var channel: Channel!
         
-        beforeEach {
-            mockClient = WebSocketClientMock()
-        
-            mockSocket = SocketMock("/socket")
-            mockSocket.connection = mockClient
-            
-            mockSocket.timeout = kDefaultTimeout
-            channel = Channel(topic: "topic", params: ["one": "two"], socket: mockSocket)
-        }
         
         /// Utility method to easily filter the bindings for a channel by their event
         func getBindings(_ event: String) -> [Binding]? {
@@ -41,6 +36,29 @@ class ChannelSpec: QuickSpec {
         }
         
         
+        beforeEach {
+            // Any TimeoutTimer that is created will receive the fake clock
+            // when scheduling work items
+            fakeClock = FakeTimerQueue()
+            TimerQueue.main = fakeClock
+            
+            mockClient = WebSocketClientMock()
+        
+            mockSocket = SocketMock("/socket")
+            mockSocket.connection = mockClient
+            mockSocket.timeout = kDefaultTimeout
+            mockSocket.makeRefReturnValue = kDefaultRef
+            mockSocket.reconnectAfter = { tries -> TimeInterval in
+                return tries > 3 ? 10 : [1, 2, 5, 10][tries - 1]
+            }
+            
+            channel = Channel(topic: "topic", params: ["one": "two"], socket: mockSocket)
+            mockSocket.channelParamsReturnValue = channel
+        }
+        
+        afterEach {
+            fakeClock.reset()
+        }
         
         describe("constructor") {
             it("sets defaults", closure: {
@@ -115,12 +133,6 @@ class ChannelSpec: QuickSpec {
 
 
         describe("join") {
-            beforeEach {
-                mockSocket.timeout = kDefaultTimeout
-                mockSocket.makeRefReturnValue = kDefaultRef
-                channel = Channel(topic: "topic", params: ["one": "two"], socket: mockSocket)
-            }
-
             it("sets state to joining", closure: {
                 channel.join()
                 expect(channel.state.rawValue).to(equal("joining"))
@@ -137,7 +149,7 @@ class ChannelSpec: QuickSpec {
                 channel.join()
 
                 // Method is not marked to throw
-                expect { try channel.join() }.to(throwAssertion())
+                expect { channel.join() }.to(throwAssertion())
             })
 
             it("triggers socket push with channel params", closure: {
@@ -166,135 +178,324 @@ class ChannelSpec: QuickSpec {
         
         
         describe("timeout behavior") {
+            
+            var ref: Int!
             var joinPush: Push!
+            var timeout: TimeInterval!
             
             beforeEach {
-                joinPush = channel.joinPush
-                mockSocket.makeRefReturnValue = kDefaultRef
-                mockSocket.reconnectAfter = { tries -> TimeInterval in
-                    print("Reconnect try: ", tries)
-                    return tries > 2 ? 10 : [1, 2, 5, 10][tries - 1]
+                mockClient.isConnected = true
+                
+                ref = 0
+                mockSocket.makeRefClosure = {
+                    ref += 1
+                    return "\(ref!)"
                 }
+                
+                joinPush = channel.joinPush
+                timeout = joinPush.timeout
             }
             
             it("succeeds before timeout", closure: {
-                mockClient.isConnected = true
-                
                 channel.join()
                 expect(mockSocket.pushTopicEventPayloadRefJoinRefCallsCount)
                     .to(equal(1))
-                
+
+                fakeClock.tick(timeout / 2)
+
                 joinPush.trigger("ok", payload: [:])
-                
                 expect(channel.state).to(equal(.joined))
+
+                fakeClock.tick(timeout)
                 expect(mockSocket.pushTopicEventPayloadRefJoinRefCallsCount)
                     .to(equal(1))
             })
             
-            
-            // TODO: Mock the timer?
-//            it("retries with backoff after timeout", closure: {
-//                mockClient.isConnected = true
-//
-//                channel.join()
-//                expect(mockSocket.pushTopicEventPayloadRefJoinRefCallsCount)
-//                    .to(equal(1))
-//                expect(mockSocket.pushTopicEventPayloadRefJoinRefCallsCount)
-//                    .toEventually(equal(2)) // leave pushed to server
-//
-//                joinPush.trigger("timeout", payload: [:])
-//                expect(mockSocket.pushTopicEventPayloadRefJoinRefCallsCount)
-//                    .toEventually(equal(3))
-//
-//                joinPush.trigger("timeout", payload: [:])
-//                expect(mockSocket.pushTopicEventPayloadRefJoinRefCallsCount)
-//                    .toEventually(equal(4))
-//
-//                joinPush.trigger("timeout", payload: [:])
-//                expect(mockSocket.pushTopicEventPayloadRefJoinRefCallsCount)
-//                    .toEventually(equal(5))
-//
-//                joinPush.trigger("timeout", payload: [:])
-//                expect(mockSocket.pushTopicEventPayloadRefJoinRefCallsCount)
-//                    .toEventually(equal(6))
-//
-//                joinPush.trigger("ok", payload: [:])
-//                expect(channel.state).toEventually(equal(.joined))
-//
-//                expect(channel.state).toEventually(equal(.joined))
-//                expect(mockSocket.pushTopicEventPayloadRefJoinRefCallsCount)
-//                    .toEventually(equal(6))
-//            })
-            
-        }
-        
-        describe("joinPush") {
-            
-            var joinPush: Push!
-            
-            beforeEach {
-                joinPush = channel.joinPush
-                
-                mockSocket.makeRefReturnValue = kDefaultRef
-                mockSocket.reconnectAfter = { tries -> TimeInterval in
-                    print("Reconnect try: ", tries)
-                    return tries > 2 ? 10 : [1, 2, 5, 10][tries - 1]
+            it("retries with backoff after timeout", closure: {
+                var callsCount: Int {
+                    return mockSocket.pushTopicEventPayloadRefJoinRefCallsCount
                 }
                 
                 channel.join()
+                expect(callsCount).to(equal(1))
+                
+                fakeClock.tick(timeout)
+                expect(callsCount).to(equal(2)) // leave pushed to server
+
+                fakeClock.tick(1.0) // begin stepped back off
+                expect(callsCount).to(equal(3))
+                
+                fakeClock.tick(2.0)
+                expect(callsCount).to(equal(4))
+                
+                fakeClock.tick(5.0)
+                expect(callsCount).to(equal(5))
+                
+                fakeClock.tick(10.0)
+                expect(callsCount).to(equal(6))
+
+                joinPush.trigger("ok", payload: [:])
+                expect(channel.state).to(equal(.joined))
+
+                fakeClock.tick(10.0)
+                expect(callsCount).to(equal(6))
+                expect(channel.state).to(equal(.joined))
+            })
+            
+            
+            it("with socket and join delay", closure: {
+                mockClient.isConnected = false
+                var callsCount: Int {
+                    return mockSocket.pushTopicEventPayloadRefJoinRefCallsCount
+                }
+                
+                channel.join()
+                expect(callsCount).to(equal(1))
+                
+                // Open the socket after a delay
+                fakeClock.tick(9.0)
+                expect(callsCount).to(equal(1))
+                
+                // join request returns between timeouts
+                fakeClock.tick(1.0)
+                
+                mockClient.isConnected = true
+                joinPush.trigger("ok", payload: [:])
+                
+                expect(channel.state).to(equal(.errored))
+                
+                fakeClock.tick(1.0)
+                expect(channel.state).to(equal(.joining))
+                
+                joinPush.trigger("ok", payload: [:])
+                expect(channel.state).to(equal(.joined))
+                
+                expect(callsCount).to(equal(3))
+            })
+            
+            it("with socket delay only", closure: {
+                channel.join()
+                
+                
+                // connect socket after a delay
+                fakeClock.tick(6.0)
+                mockClient.isConnected = true
+                
+                // open socket after delay
+                fakeClock.tick(5.0)
+                joinPush.trigger("ok", payload: [:])
+                
+                fakeClock.tick(2.0)
+                expect(channel.state).to(equal(.joining))
+                
+                joinPush.trigger("ok", payload: [:])
+                expect(channel.state).to(equal(.joined))
+            })
+        }
+        
+        describe("joinPush") {
+
+            var ref: Int!
+            var joinPush: Push!
+            
+            beforeEach {
+                mockClient.isConnected = true
+                
+                ref = 0
+                mockSocket.makeRefClosure = {
+                    ref += 1
+                    return "\(ref!)"
+                }
+                
+                joinPush = channel.joinPush
+                channel.join()
             }
             
+            func receivesOk() {
+                fakeClock.tick(joinPush.timeout / 2) // before timeout
+                joinPush.trigger("ok", payload: ["a": "b"])
+            }
+            
+            func receivesTimeout() {
+                fakeClock.tick(joinPush.timeout * 2) // afte timeout
+            }
+            
+            func receiveError() {
+                fakeClock.tick(joinPush.timeout / 2) // before timeout
+                joinPush.trigger("error", payload: ["a": "b"])
+            }
+            
+
             describe("receives 'ok'", {
                 it("sets channel state to joined", closure: {
                     expect(channel.state).toNot(equal(.joined))
-                    
+
                     joinPush.trigger("ok", payload: [:])
                     expect(channel.state).to(equal(.joined))
                 })
-                
+
                 it("triggers receive(ok) callback after ok response", closure: {
                     var callbackCallCount: Int = 0
                     joinPush.receive("ok", callback: {_ in callbackCallCount += 1})
-                    
-                    joinPush.trigger("ok", payload: [:])
+
+                    receivesOk()
                     expect(callbackCallCount).to(equal(1))
                 })
-                
+
                 it("triggers receive('ok') callback if ok response already received", closure: {
-                    joinPush.trigger("ok", payload: [:])
-                    
+                    receivesOk()
+
                     var callbackCallCount: Int = 0
                     joinPush.receive("ok", callback: {_ in callbackCallCount += 1})
-                    
+
                     expect(callbackCallCount).to(equal(1))
                 })
-                
-                // TODO: Contains clock
-//                it("does not trigger other receive callbacks after ok response", closure: {
-//                    var callbackCallCount: Int = 0
-//                    joinPush
-//                        .receive("error", callback: {_ in callbackCallCount += 1})
-//                        .receive("timeout", callback: {_ in callbackCallCount += 1})
-//
-//                    joinPush.receive("ok", callback: {_ in callbackCallCount += 1})
-//
-//                    expect(callbackCallCount).to(equal(0))
-//
-//                })
-                
-                it("clears timeoutTimer", closure: {
-                    expect(joinPush.timeoutTimer).toNot(beNil())
+
+                it("does not trigger other receive callbacks after ok response", closure: {
+                    var callbackCallCount: Int = 0
+                    joinPush
+                        .receive("error", callback: {_ in callbackCallCount += 1})
+                        .receive("timeout", callback: {_ in callbackCallCount += 1})
+
+                    receivesOk()
+                    fakeClock.tick(channel.timeout * 2)
+
+                    expect(callbackCallCount).to(equal(0))
+
+                })
+
+                it("clears timeoutTimer workItem", closure: {
+                    expect(joinPush.timeoutWorkItem).toNot(beNil())
                     
+                    receivesOk()
+                    expect(joinPush.timeoutWorkItem).to(beNil())
+                })
+
+                it("sets receivedMessage", closure: {
+                    expect(joinPush.receivedMessage).to(beNil())
+
+                    receivesOk()
+                    expect(joinPush.receivedMessage).toNot(beNil())
+                    expect(joinPush.receivedMessage?.status).to(equal("ok"))
+                    expect(joinPush.receivedMessage?.payload["a"] as? String).to(equal("b"))
+                })
+
+                it("removes channel binding", closure: {
+                    var bindings = getBindings("chan_reply_1")
+                    expect(bindings).to(haveCount(1))
+
+                    receivesOk()
+                    bindings = getBindings("chan_reply_1")
+                    expect(bindings).to(haveCount(0))
+                })
+
+                it("sets channel state to joined", closure: {
+                    receivesOk()
+                    expect(channel.state).to(equal(.joined))
+                })
+
+                it("resets channel rejoinTimer", closure: {
+                    let mockRejoinTimer = TimeoutTimerMock()
+                    channel.rejoinTimer = mockRejoinTimer
+
+                    receivesOk()
+                    expect(mockRejoinTimer.resetCallsCount).to(equal(1))
+                })
+
+                it("sends and empties channel's buffered pushEvents", closure: {
+                    let mockPush = PushMock(channel: channel, event: "new:msg")
+                    channel.pushBuffer.append(mockPush)
+
+                    receivesOk()
+                    expect(mockPush.sendCalled).to(beTrue())
+                    expect(channel.pushBuffer).to(haveCount(0))
+                })
+            })
+
+            describe("receives 'timeout'", {
+                it("sets channel state to errored", closure: {
+                    receivesTimeout()
+                    expect(channel.state).to(equal(.errored))
+                })
+
+                it("triggers receive('timeout') callback after ok response", closure: {
+                    var receiveTimeoutCallCount = 0
+                    joinPush.receive("timeout", callback: { (_) in
+                        receiveTimeoutCallCount += 1
+                    })
+
+                    receivesTimeout()
+                    expect(receiveTimeoutCallCount).to(equal(1))
+                })
+
+                it("does not trigger other receive callbacks after timeout response", closure: {
+                    var receiveOkCallCount = 0
+                    var receiveErrorCallCount = 0
+                    joinPush
+                        .receive("ok") {_ in receiveOkCallCount += 1 }
+                        .receive("error") {_ in receiveErrorCallCount += 1 }
+
+                    receivesTimeout()
                     joinPush.trigger("ok", payload: [:])
-                    expect(joinPush.timeoutTimer).to(beNil())
+
+                    expect(receiveOkCallCount).to(equal(0))
+                    expect(receiveErrorCallCount).to(equal(0))
+                })
+
+                it("schedules rejoinTimer timeout", closure: {
+                    let mockRejoinTimer = TimeoutTimerMock()
+                    channel.rejoinTimer = mockRejoinTimer
+
+                    receivesTimeout()
+                    expect(mockRejoinTimer.scheduleTimeoutCalled).to(beTrue())
+                })
+            })
+
+            describe("receives `error`", {
+                it("triggers receive('error') callback after error response", closure: {
+                    var errorCallsCount = 0
+                    joinPush.receive("error") { (_) in errorCallsCount += 1 }
+                    
+                    receiveError()
+                    expect(errorCallsCount).to(equal(1))
+                })
+                
+                it("triggers receive('error') callback if error response already received", closure: {
+                    receiveError()
+                    
+                    var errorCallsCount = 0
+                    joinPush.receive("error") { (_) in errorCallsCount += 1 }
+
+                    expect(errorCallsCount).to(equal(1))
+                })
+                
+                it("does not trigger other receive callbacks after ok response", closure: {
+                    var receiveOkCallCount = 0
+                    var receiveTimeoutCallCount = 0
+                    joinPush
+                        .receive("ok") {_ in receiveOkCallCount += 1 }
+                        .receive("timeout") {_ in receiveTimeoutCallCount += 1 }
+                    
+                    receiveError()
+                    fakeClock.tick(channel.timeout * 2)
+                    
+                    expect(receiveOkCallCount).to(equal(0))
+                    expect(receiveTimeoutCallCount).to(equal(0))
+                })
+                
+                it("clears timeoutTimer workItem", closure: {
+                    expect(joinPush.timeoutWorkItem).toNot(beNil())
+                    
+                    receiveError()
+                    expect(joinPush.timeoutWorkItem).to(beNil())
                 })
                 
                 it("sets receivedMessage", closure: {
                     expect(joinPush.receivedMessage).to(beNil())
                     
-                    joinPush.trigger("ok", payload: ["a": "b"])
+                    receiveError()
                     expect(joinPush.receivedMessage).toNot(beNil())
-                    expect(joinPush.receivedMessage?.status).to(equal("ok"))
+                    expect(joinPush.receivedMessage?.status).to(equal("error"))
                     expect(joinPush.receivedMessage?.payload["a"] as? String).to(equal("b"))
                 })
                 
@@ -302,33 +503,143 @@ class ChannelSpec: QuickSpec {
                     var bindings = getBindings("chan_reply_1")
                     expect(bindings).to(haveCount(1))
                     
-                    joinPush.trigger("ok", payload: [:])
+                    receiveError()
                     bindings = getBindings("chan_reply_1")
                     expect(bindings).to(haveCount(0))
                 })
                 
-                it("sets channel state to joined", closure: {
-                    joinPush.trigger("ok", payload: [:])
-                    expect(channel.state).to(equal(.joined))
+                it("does not sets channel state to joined", closure: {
+                    receiveError()
+                    expect(channel.state).to(equal(.joining))
                 })
                 
-                it("resets channel rejoinTimer", closure: {
-                    let mockRejoinTimer = TimeoutTimerMock()
-                    channel.rejoinTimer = mockRejoinTimer
+                it("does not trigger channel's buffered pushEvents", closure: {
+                    let mockPush = PushMock(channel: channel, event: "new:msg")
+                    channel.pushBuffer.append(mockPush)
                     
-                    joinPush.trigger("ok", payload: [:])
-                    expect(mockRejoinTimer.resetCalled).to(beTrue())
-                })
-                
-                it("sends and empties channel's buffered pushEvents", closure: {
-                    
+                    receiveError()
+                    expect(mockPush.sendCalled).to(beFalse())
+                    expect(channel.pushBuffer).to(haveCount(1))
                 })
             })
+        }
+
+        describe("onError") {
+            beforeEach {
+                mockClient.isConnected = true
+                channel.join()
+            }
+
+            it("sets channel state to .errored", closure: {
+                expect(channel.state).toNot(equal(.errored))
+                
+                channel.trigger(event: ChannelEvent.error)
+                expect(channel.state).to(equal(.errored))
+            })
             
+            it("tries to rejoin with backoff", closure: {
+                let mockRejoinTimer = TimeoutTimerMock()
+                channel.rejoinTimer = mockRejoinTimer
+                
+                channel.trigger(event: ChannelEvent.error)
+                expect(mockRejoinTimer.scheduleTimeoutCalled).to(beTrue())
+            })
             
-            
+            it("does not rejoin if channel leaving", closure: {
+                channel.state = .leaving
+                
+                let mockPush = PushMock(channel: channel, event: "event")
+                channel.joinPush = mockPush
+                
+                channel.trigger(event: ChannelEvent.error)
+                
+                fakeClock.tick(1.0)
+                expect(mockPush.sendCallsCount).to(equal(0))
+                
+                fakeClock.tick(2.0)
+                expect(mockPush.sendCallsCount).to(equal(0))
+                
+                expect(channel.state).to(equal(.leaving))
+            })
+
+            it("does nothing if channel is closed", closure: {
+                channel.state = .closed
+                
+                let mockPush = PushMock(channel: channel, event: "event")
+                channel.joinPush = mockPush
+                
+                channel.trigger(event: ChannelEvent.error)
+                
+                fakeClock.tick(1.0)
+                expect(mockPush.sendCallsCount).to(equal(0))
+                
+                fakeClock.tick(2.0)
+                expect(mockPush.sendCallsCount).to(equal(0))
+                
+                expect(channel.state).to(equal(.closed))
+            })
+
+            it("triggers additional callbacks", closure: {
+                var onErrorCallCount = 0
+                channel.onError({ (_) in
+                    onErrorCallCount += 1
+                })
+
+                channel.trigger(event: ChannelEvent.error)
+                expect(onErrorCallCount).to(equal(1))
+            })
+        }
+
+        describe("onClose") {
+            beforeEach {
+                mockClient.isConnected = true
+                channel.join()
+            }
+
+            it("sets state to closed", closure: {
+                expect(channel.state).toNot(equal(.closed))
+                channel.trigger(event: ChannelEvent.close)
+                expect(channel.state).to(equal(.closed))
+            })
+
+            it("does not rejoin", closure: {
+                let mockJoinPush = PushMock(channel: channel, event: "phx_join")
+                channel.joinPush = mockJoinPush
+
+                channel.trigger(event: ChannelEvent.close)
+                expect(mockJoinPush.sendCalled).to(beFalse())
+            })
+
+            it("resets the rejoin timer", closure: {
+                let mockRejoinTimer = TimeoutTimerMock()
+                channel.rejoinTimer = mockRejoinTimer
+
+                channel.trigger(event: ChannelEvent.close)
+                expect(mockRejoinTimer.resetCalled).to(beTrue())
+            })
+
+            it("removes self from socket", closure: {
+                channel.trigger(event: ChannelEvent.close)
+                expect(mockSocket.removeCalled).to(beTrue())
+
+                let removedChannel = mockSocket.removeReceivedChannel
+                expect(removedChannel === channel).to(beTrue())
+            })
+
+            it("triggers additional callbacks", closure: {
+                var onCloseCallCount = 0
+                channel.onClose({ (_) in
+                    onCloseCallCount += 1
+                })
+
+                channel.trigger(event: ChannelEvent.close)
+                expect(onCloseCallCount).to(equal(1))
+            })
         }
         
+        
+        
+        /// BReAK HEREA
 
 //        /// Utility method to easily filter the bindings for a channel by their event
 //        func eventBindings(_ event: String) -> [(event: String, ref: Int, callback: (Message) -> Void)]? {

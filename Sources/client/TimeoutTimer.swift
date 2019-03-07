@@ -54,7 +54,7 @@ class TimeoutTimer {
     var tries: Int = 0
     
     /// The Queue to execute on. In testing, this is overridden
-    var queue: DispatchQueue = DispatchQueue.main
+    var queue: TimerQueue = TimerQueue.main
     
     
     /// Resets the Timer, clearing the number of tries and stops
@@ -74,19 +74,14 @@ class TimeoutTimer {
         // start the timer if the interval is returned as nil.
         guard let timeInterval
             = self.timerCalculation.call(self.tries + 1) else { return }
-        
-        // TimeInterval is always in seconds. Multiply it by 1000 to convert
-        // to milliseconds and round to the nearest millisecond.
-        let dispatchInterval = Int(round(timeInterval * 1000))
-        
-        let dispatchTime = DispatchTime.now() + .milliseconds(dispatchInterval)
+
         let workItem = DispatchWorkItem {
             self.tries += 1
             self.callback.call()
         }
         
         self.workItem = workItem
-        self.queue.asyncAfter(deadline: dispatchTime, execute: workItem)
+        self.queue.queue(timeInterval: timeInterval, execute: workItem)
     }
     
     /// Invalidates any ongoing Timer. Will not clear how many tries have been made
@@ -95,3 +90,22 @@ class TimeoutTimer {
         self.workItem = nil
     }
 }
+
+
+/// Wrapper class around a DispatchQueue. Allows for providing a fake clock
+/// during tests.
+class TimerQueue {
+    
+    // Can be overriden in tests
+    static var main = TimerQueue()
+    
+    func queue(timeInterval: TimeInterval, execute: DispatchWorkItem) {
+        // TimeInterval is always in seconds. Multiply it by 1000 to convert
+        // to milliseconds and round to the nearest millisecond.
+        let dispatchInterval = Int(round(timeInterval * 1000))
+        
+        let dispatchTime = DispatchTime.now() + .milliseconds(dispatchInterval)
+        DispatchQueue.main.asyncAfter(deadline: dispatchTime, execute: execute)
+    }
+}
+

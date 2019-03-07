@@ -28,7 +28,10 @@ public class Push {
     var receivedMessage: Message?
     
     /// Timer which triggers a timeout event
-    var timeoutTimer: TimeoutTimer?
+    var timeoutTimer: TimerQueue
+    
+    /// WorkItem to be performed when the timeout timer fires
+    var timeoutWorkItem: DispatchWorkItem?
     
     /// Hooks into a Push. Where .receive("ok", callback(Payload)) are stored
     var receiveHooks: [String: [Delegated<Message, Void>]]
@@ -59,11 +62,10 @@ public class Push {
         self.payload = payload
         self.timeout = timeout
         self.receivedMessage = nil
-        self.timeoutTimer = TimeoutTimer()
+        self.timeoutTimer = TimerQueue.main
         self.receiveHooks = [:]
         self.sent = false
         self.ref = nil
-        self.timeoutTimer = nil
     }
     
     
@@ -189,21 +191,25 @@ public class Push {
     
     /// Cancel any ongoing Timeout Timer
     internal func cancelTimeout() {
-        self.timeoutTimer?.reset()
-        self.timeoutTimer = nil
-        
+        self.timeoutWorkItem?.cancel()
+        self.timeoutWorkItem = nil
     }
     
     /// Starts the Timer which will trigger a timeout after a specific _timeout_
     /// time, in milliseconds, is reached.
     internal func startTimeout() {
+        // Cancel any existing timeout before starting a new one
+        if let safeWorkItem = timeoutWorkItem, !safeWorkItem.isCancelled {
+            self.cancelTimeout()
+        }
+        
         guard
             let channel = channel,
             let socket = channel.socket else { return }
         
         let ref = socket.makeRef()
         let refEvent = channel.replyEventName(ref)
-        
+
         self.ref = ref
         self.refEvent = refEvent
         
@@ -220,14 +226,12 @@ public class Push {
         }
         
         /// Setup and start the Timeout timer.
-        let timeoutTimer = TimeoutTimer()
-        timeoutTimer.timerCalculation.delegate(to: self) { _,_ in self.timeout }
-        timeoutTimer.callback.delegate(to: self) { _ in
+        let workItem = DispatchWorkItem {
             self.trigger("timeout", payload: [:])
         }
         
-        self.timeoutTimer = timeoutTimer
-        self.timeoutTimer?.scheduleTimeout()
+        self.timeoutWorkItem = workItem
+        self.timeoutTimer.queue(timeInterval: timeout, execute: workItem)
     }
     
     /// Checks if a status has already been received by the Push.

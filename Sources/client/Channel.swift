@@ -86,7 +86,9 @@ public class Channel {
     
         // Setup Timer delgation
         self.rejoinTimer.callback
-            .delegate(to: self) { (self) in self.rejoinUntilConnected() }
+            .delegate(to: self) { (self) in
+                self.rejoinUntilConnected()
+        }
         
         self.rejoinTimer.timerCalculation
             .delegate(to: self) { (self, tries) -> TimeInterval in
@@ -114,7 +116,6 @@ public class Channel {
         
         // Handle when the join push times out when sending after join()
         self.joinPush.delegateReceive("timeout", to: self) { (self, _) in
-            print("Join Push received Timeout")
             // Only handle a timeout if the Channel is in the 'joining' state
             guard self.isJoining else { return }
             
@@ -374,7 +375,6 @@ public class Channel {
     /// - parameter event: Event to unsubscribe from
     /// - paramter ref: Ref counter returned when subscribing. Can be omitted
     public func off(_ event: String, ref: Int? = nil) {
-        print("Removing event binding: ", event)
         self.bindingsDel.removeAll { (bind) -> Bool in
             bind.event == event && (ref == nil || ref == bind.ref)
         }

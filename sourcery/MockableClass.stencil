@@ -28,7 +28,7 @@ import Starscream
     {%if method.parameters.count == 1 %}
         {% call swiftifyMethodName method.selectorName %}Received{% for param in method.parameters %}{{ param.name|upperFirstLetter }} = {{ param.name }}{% endfor %}
     {% else %}
-    {% if not method.parameters.count == 0 and method.isGeneric == false %}
+    {% if not method.parameters.count == 0 %}
     {% call swiftifyMethodName method.selectorName %}ReceivedArguments = ({% for param in method.parameters %}{{ param.name }}: {{ param.name }}{% if not forloop.last%}, {% endif %}{% endfor %})
     {% endif %}
     {% endif %}
@@ -39,9 +39,7 @@ import Starscream
 {% macro methodClosureName method %}{% call swiftifyMethodName method.selectorName %}Closure{% endmacro %}
 
 {% macro methodClosureDeclaration method %}
-    {% if method.isGeneric == false %}
     var {% call methodClosureName method %}: (({% for param in method.parameters %}{{ param.typeName }}{% if not forloop.last %}, {% endif %}{% endfor %}) {% if method.throws %}throws {% endif %}-> {% if method.isInitializer %}Void{% else %}{{ method.returnTypeName }}{% endif %})?
-    {% endif %}
 {% endmacro %}
 
 {% macro methodClosureCallParameters method %}{% for param in method.parameters %}{{ param.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endmacro %}
@@ -58,7 +56,7 @@ import Starscream
         return {% call swiftifyMethodName method.selectorName %}CallsCount > 0
     }
     {% endif %}
-    {% if method.parameters.count == 1 %}
+    {% if method.parameters.count == 1 and method.isGeneric == false %}
     var {% call swiftifyMethodName method.selectorName %}Received{% for param in method.parameters %}{{ param.name|upperFirstLetter }}: {% if param.isClosure %}({% endif %}{{ param.typeName.unwrappedTypeName }}{% if param.isClosure %}){% endif %}?{% endfor %}
     {% else %}{% if not method.parameters.count == 0 and method.isGeneric == false %}
     var {% call swiftifyMethodName method.selectorName %}ReceivedArguments: ({% for param in method.parameters %}{{ param.name }}: {% if param.typeAttributes.escaping %}{{ param.unwrappedTypeName }}{% else %}{{ param.typeName }}{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %})?
@@ -66,7 +64,9 @@ import Starscream
     {% if not method.returnTypeName.isVoid and not method.isInitializer %}
     var {% call swiftifyMethodName method.selectorName %}ReturnValue: {{ method.returnTypeName }}!
     {% endif %}
+    {% if method.isGeneric == false %}
     {% call methodClosureDeclaration method %}
+    {% endif %}
 
 {% if method.isInitializer or method.isDeinitializer %}
     {#{% if not method.isConvenienceInitializer %}
@@ -82,16 +82,18 @@ import Starscream
         {% call methodThrowableErrorUsage method %}
         {% endif %}
         {% call swiftifyMethodName method.selectorName %}CallsCount += 1
+        {% if method.isGeneric == false %}
         {% call methodReceivedParameters method %}
+        {% endif %}
         {% if method.returnTypeName.isVoid %}
-        {% if method.isGeneric == false} %}
+        {% if method.isGeneric == false %}
         {% if method.throws %}try {% endif %}{% call methodClosureName method %}?({% call methodClosureCallParameters method %})
         {% endif %}
         {% else %}
-        {% if method.isGeneric == false} %}
-        return {% if method.throws %}try {% endif %}{% call methodClosureName method %}.map({ {% if method.throws %}try {% endif %}$0({% call methodClosureCallParameters method %}) }) ?? {% call swiftifyMethodName method.selectorName %}ReturnValue
-        {% else %}
+        {% if method.isGeneric == true %}
         return {% call swiftifyMethodName method.selectorName %}ReturnValue
+        {% else %}
+        return {% if method.throws %}try {% endif %}{% call methodClosureName method %}.map({ {% if method.throws %}try {% endif %}$0({% call methodClosureCallParameters method %}) }) ?? {% call swiftifyMethodName method.selectorName %}ReturnValue
         {% endif %}
         {% endif %}
     }
@@ -137,7 +139,7 @@ import Starscream
 
 
 
-{% for type in types.classes where type.name == "TimeoutTimer" or type.name == "Socket" %}
+{% for type in types.classes where type.name == "TimeoutTimer" or type.name == "Socket" or type.name == "Push" %}
 class {{ type.name }}Mock: {{ type.name }} {
 {# Generate all variable mocks #}
 {% for variable in type.allVariables|!definedInExtension where variable.readAccess != "private" and variable.isMutable %}

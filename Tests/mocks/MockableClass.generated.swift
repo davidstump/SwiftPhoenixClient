@@ -32,6 +32,209 @@ import Starscream
 
 
 
+class PushMock: Push {
+    var channelSetCount: Int = 0
+    var channelDidGetSet: Bool { return channelSetCount > 0 }
+    override var channel: Channel? {
+        didSet { channelSetCount += 1 }
+    }
+    override var timeout: TimeInterval {
+        get { return underlyingTimeout }
+        set(value) { underlyingTimeout = value }
+    }
+    var underlyingTimeout: (TimeInterval)!
+    var receivedMessageSetCount: Int = 0
+    var receivedMessageDidGetSet: Bool { return receivedMessageSetCount > 0 }
+    override var receivedMessage: Message? {
+        didSet { receivedMessageSetCount += 1 }
+    }
+    override var timeoutTimer: TimerQueue {
+        get { return underlyingTimeoutTimer }
+        set(value) { underlyingTimeoutTimer = value }
+    }
+    var underlyingTimeoutTimer: (TimerQueue)!
+    var timeoutWorkItemSetCount: Int = 0
+    var timeoutWorkItemDidGetSet: Bool { return timeoutWorkItemSetCount > 0 }
+    override var timeoutWorkItem: DispatchWorkItem? {
+        didSet { timeoutWorkItemSetCount += 1 }
+    }
+    override var sent: Bool {
+        get { return underlyingSent }
+        set(value) { underlyingSent = value }
+    }
+    var underlyingSent: (Bool)!
+    var refSetCount: Int = 0
+    var refDidGetSet: Bool { return refSetCount > 0 }
+    override var ref: String? {
+        didSet { refSetCount += 1 }
+    }
+    var refEventSetCount: Int = 0
+    var refEventDidGetSet: Bool { return refEventSetCount > 0 }
+    override var refEvent: String? {
+        didSet { refEventSetCount += 1 }
+    }
+
+
+    //MARK: - init
+
+    var initChannelEventPayloadTimeoutReceivedArguments: (channel: Channel, event: String, payload: Payload, timeout: TimeInterval)?
+    var initChannelEventPayloadTimeoutClosure: ((Channel, String, Payload, TimeInterval) -> Void)?
+
+
+    //MARK: - resend
+
+    var resendCallsCount = 0
+    var resendCalled: Bool {
+        return resendCallsCount > 0
+    }
+    var resendReceivedTimeout: TimeInterval?
+    var resendClosure: ((TimeInterval) -> Void)?
+
+    override func resend(_ timeout: TimeInterval = PHOENIX_TIMEOUT_INTERVAL) {
+        resendCallsCount += 1
+        resendReceivedTimeout = timeout
+        resendClosure?(timeout)
+    }
+
+
+    //MARK: - send
+
+    var sendCallsCount = 0
+    var sendCalled: Bool {
+        return sendCallsCount > 0
+    }
+    var sendClosure: (() -> Void)?
+
+    override func send() {
+        sendCallsCount += 1
+        sendClosure?()
+    }
+
+
+    //MARK: - receive
+
+    var receiveCallbackCallsCount = 0
+    var receiveCallbackCalled: Bool {
+        return receiveCallbackCallsCount > 0
+    }
+    var receiveCallbackReceivedArguments: (status: String, callback: (Message) -> ())?
+    var receiveCallbackReturnValue: Push!
+    var receiveCallbackClosure: ((String, @escaping ((Message) -> ())) -> Push)?
+
+    override func receive(_ status: String,                        callback: @escaping ((Message) -> ())) -> Push {
+        receiveCallbackCallsCount += 1
+    receiveCallbackReceivedArguments = (status: status, callback: callback)
+        return receiveCallbackClosure.map({ $0(status, callback) }) ?? receiveCallbackReturnValue
+    }
+
+
+    //MARK: - delegateReceive<Target: AnyObject>
+
+    var delegateReceiveToCallbackCallsCount = 0
+    var delegateReceiveToCallbackCalled: Bool {
+        return delegateReceiveToCallbackCallsCount > 0
+    }
+    var delegateReceiveToCallbackReturnValue: Push!
+
+    override func delegateReceive<Target: AnyObject>(_ status: String,                                                   to owner: Target,                                                   callback: @escaping ((Target, Message) -> ())) -> Push {
+        delegateReceiveToCallbackCallsCount += 1
+        return delegateReceiveToCallbackReturnValue
+    }
+
+
+    //MARK: - receive
+
+    var receiveDelegatedCallsCount = 0
+    var receiveDelegatedCalled: Bool {
+        return receiveDelegatedCallsCount > 0
+    }
+    var receiveDelegatedReceivedArguments: (status: String, delegated: Delegated<Message, Void>)?
+    var receiveDelegatedReturnValue: Push!
+    var receiveDelegatedClosure: ((String, Delegated<Message, Void>) -> Push)?
+
+    override func receive(_ status: String, delegated: Delegated<Message, Void>) -> Push {
+        receiveDelegatedCallsCount += 1
+    receiveDelegatedReceivedArguments = (status: status, delegated: delegated)
+        return receiveDelegatedClosure.map({ $0(status, delegated) }) ?? receiveDelegatedReturnValue
+    }
+
+
+    //MARK: - reset
+
+    var resetCallsCount = 0
+    var resetCalled: Bool {
+        return resetCallsCount > 0
+    }
+    var resetClosure: (() -> Void)?
+
+    override func reset() {
+        resetCallsCount += 1
+        resetClosure?()
+    }
+
+
+    //MARK: - cancelTimeout
+
+    var cancelTimeoutCallsCount = 0
+    var cancelTimeoutCalled: Bool {
+        return cancelTimeoutCallsCount > 0
+    }
+    var cancelTimeoutClosure: (() -> Void)?
+
+    override func cancelTimeout() {
+        cancelTimeoutCallsCount += 1
+        cancelTimeoutClosure?()
+    }
+
+
+    //MARK: - startTimeout
+
+    var startTimeoutCallsCount = 0
+    var startTimeoutCalled: Bool {
+        return startTimeoutCallsCount > 0
+    }
+    var startTimeoutClosure: (() -> Void)?
+
+    override func startTimeout() {
+        startTimeoutCallsCount += 1
+        startTimeoutClosure?()
+    }
+
+
+    //MARK: - hasReceived
+
+    var hasReceivedStatusCallsCount = 0
+    var hasReceivedStatusCalled: Bool {
+        return hasReceivedStatusCallsCount > 0
+    }
+    var hasReceivedStatusReceivedStatus: String?
+    var hasReceivedStatusReturnValue: Bool!
+    var hasReceivedStatusClosure: ((String) -> Bool)?
+
+    override func hasReceived(status: String) -> Bool {
+        hasReceivedStatusCallsCount += 1
+        hasReceivedStatusReceivedStatus = status
+        return hasReceivedStatusClosure.map({ $0(status) }) ?? hasReceivedStatusReturnValue
+    }
+
+
+    //MARK: - trigger
+
+    var triggerPayloadCallsCount = 0
+    var triggerPayloadCalled: Bool {
+        return triggerPayloadCallsCount > 0
+    }
+    var triggerPayloadReceivedArguments: (status: String, payload: Payload)?
+    var triggerPayloadClosure: ((String, Payload) -> Void)?
+
+    override func trigger(_ status: String, payload: Payload) {
+        triggerPayloadCallsCount += 1
+    triggerPayloadReceivedArguments = (status: status, payload: payload)
+        triggerPayloadClosure?(status, payload)
+    }
+
+
+}
 class SocketMock: Socket {
     override var encode: ([String: Any]) -> Data {
         get { return underlyingEncode }
@@ -146,6 +349,7 @@ class SocketMock: Socket {
 
     override func connect() {
         connectCallsCount += 1
+        connectClosure?()
     }
 
 
@@ -161,6 +365,7 @@ class SocketMock: Socket {
     override func disconnect(code: CloseCode? = nil,                           callback: (() -> Void)? = nil) {
         disconnectCodeCallbackCallsCount += 1
     disconnectCodeCallbackReceivedArguments = (code: code, callback: callback)
+        disconnectCodeCallbackClosure?(code, callback)
     }
 
 
@@ -176,6 +381,7 @@ class SocketMock: Socket {
     override func teardown(code: CloseCode? = nil, callback: (() -> Void)? = nil) {
         teardownCodeCallbackCallsCount += 1
     teardownCodeCallbackReceivedArguments = (code: code, callback: callback)
+        teardownCodeCallbackClosure?(code, callback)
     }
 
 
@@ -191,6 +397,7 @@ class SocketMock: Socket {
     override func onOpen(callback: @escaping () -> Void) {
         onOpenCallbackCallsCount += 1
         onOpenCallbackReceivedCallback = callback
+        onOpenCallbackClosure?(callback)
     }
 
 
@@ -218,6 +425,7 @@ class SocketMock: Socket {
     override func onClose(callback: @escaping () -> Void) {
         onCloseCallbackCallsCount += 1
         onCloseCallbackReceivedCallback = callback
+        onCloseCallbackClosure?(callback)
     }
 
 
@@ -245,6 +453,7 @@ class SocketMock: Socket {
     override func onError(callback: @escaping (Error) -> Void) {
         onErrorCallbackCallsCount += 1
         onErrorCallbackReceivedCallback = callback
+        onErrorCallbackClosure?(callback)
     }
 
 
@@ -272,6 +481,7 @@ class SocketMock: Socket {
     override func onMessage(callback: @escaping (Message) -> Void) {
         onMessageCallbackCallsCount += 1
         onMessageCallbackReceivedCallback = callback
+        onMessageCallbackClosure?(callback)
     }
 
 
@@ -297,6 +507,7 @@ class SocketMock: Socket {
 
     override func releaseCallbacks() {
         releaseCallbacksCallsCount += 1
+        releaseCallbacksClosure?()
     }
 
 
@@ -313,7 +524,7 @@ class SocketMock: Socket {
     override func channel(_ topic: String,                        params: [String: Any] = [:]) -> Channel {
         channelParamsCallsCount += 1
     channelParamsReceivedArguments = (topic: topic, params: params)
-        return channelParamsReturnValue
+        return channelParamsClosure.map({ $0(topic, params) }) ?? channelParamsReturnValue
     }
 
 
@@ -329,6 +540,7 @@ class SocketMock: Socket {
     override func remove(_ channel: Channel) {
         removeCallsCount += 1
         removeReceivedChannel = channel
+        removeClosure?(channel)
     }
 
 
@@ -344,6 +556,7 @@ class SocketMock: Socket {
     override func push(topic: String,                       event: String,                       payload: Payload,                       ref: String? = nil,                       joinRef: String? = nil) {
         pushTopicEventPayloadRefJoinRefCallsCount += 1
     pushTopicEventPayloadRefJoinRefReceivedArguments = (topic: topic, event: event, payload: payload, ref: ref, joinRef: joinRef)
+        pushTopicEventPayloadRefJoinRefClosure?(topic, event, payload, ref, joinRef)
     }
 
 
@@ -358,7 +571,7 @@ class SocketMock: Socket {
 
     override func makeRef() -> String {
         makeRefCallsCount += 1
-        return makeRefReturnValue
+        return makeRefClosure.map({ $0() }) ?? makeRefReturnValue
     }
 
 
@@ -374,6 +587,7 @@ class SocketMock: Socket {
     override func logItems(_ items: Any...) {
         logItemsCallsCount += 1
         logItemsReceivedItems = items
+        logItemsClosure?(items)
     }
 
 
@@ -387,6 +601,7 @@ class SocketMock: Socket {
 
     override func onConnectionOpen() {
         onConnectionOpenCallsCount += 1
+        onConnectionOpenClosure?()
     }
 
 
@@ -402,6 +617,7 @@ class SocketMock: Socket {
     override func onConnectionClosed(code: Int?) {
         onConnectionClosedCodeCallsCount += 1
         onConnectionClosedCodeReceivedCode = code
+        onConnectionClosedCodeClosure?(code)
     }
 
 
@@ -417,6 +633,7 @@ class SocketMock: Socket {
     override func onConnectionError(_ error: Error) {
         onConnectionErrorCallsCount += 1
         onConnectionErrorReceivedError = error
+        onConnectionErrorClosure?(error)
     }
 
 
@@ -432,6 +649,7 @@ class SocketMock: Socket {
     override func onConnectionMessage(_ rawMessage: String) {
         onConnectionMessageCallsCount += 1
         onConnectionMessageReceivedRawMessage = rawMessage
+        onConnectionMessageClosure?(rawMessage)
     }
 
 
@@ -445,6 +663,7 @@ class SocketMock: Socket {
 
     override func triggerChannelError() {
         triggerChannelErrorCallsCount += 1
+        triggerChannelErrorClosure?()
     }
 
 
@@ -458,6 +677,7 @@ class SocketMock: Socket {
 
     override func flushSendBuffer() {
         flushSendBufferCallsCount += 1
+        flushSendBufferClosure?()
     }
 
 
@@ -471,6 +691,7 @@ class SocketMock: Socket {
 
     override func resetHeartbeat() {
         resetHeartbeatCallsCount += 1
+        resetHeartbeatClosure?()
     }
 
 
@@ -484,6 +705,7 @@ class SocketMock: Socket {
 
     override func sendHeartbeat() {
         sendHeartbeatCallsCount += 1
+        sendHeartbeatClosure?()
     }
 
 
@@ -509,6 +731,11 @@ class TimeoutTimerMock: TimeoutTimer {
         set(value) { underlyingTries = value }
     }
     var underlyingTries: (Int)!
+    override var queue: TimerQueue {
+        get { return underlyingQueue }
+        set(value) { underlyingQueue = value }
+    }
+    var underlyingQueue: (TimerQueue)!
 
 
     //MARK: - reset
@@ -521,6 +748,7 @@ class TimeoutTimerMock: TimeoutTimer {
 
     override func reset() {
         resetCallsCount += 1
+        resetClosure?()
     }
 
 
@@ -534,6 +762,7 @@ class TimeoutTimerMock: TimeoutTimer {
 
     override func scheduleTimeout() {
         scheduleTimeoutCallsCount += 1
+        scheduleTimeoutClosure?()
     }
 
 
