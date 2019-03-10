@@ -437,7 +437,7 @@ public class Channel {
             self.socket?.logItems("channel", "leave \(self.topic)")
             
             // Triggers onClose() hooks
-            self.trigger(event: ChannelEvent.leave)
+            self.trigger(event: ChannelEvent.close, payload: ["reason": "leave"])
         }
         
         // Push event to send to the server

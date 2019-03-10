@@ -637,246 +637,306 @@ class ChannelSpec: QuickSpec {
             })
         }
         
-        
-        
-        /// BReAK HEREA
+        describe("canPush") {
+            it("returns true when socket connected and channel joined", closure: {
+                channel.state = .joined
+                mockClient.isConnected = true
+                expect(channel.canPush).to(beTrue())
+            })
+            
+            it("otherwise returns false", closure: {
+                channel.state = .joined
+                mockClient.isConnected = false
+                expect(channel.canPush).to(beFalse())
+                
+                channel.state = .joining
+                mockClient.isConnected = true
+                expect(channel.canPush).to(beFalse())
+                
+                channel.state = .joining
+                mockClient.isConnected = false
+                expect(channel.canPush).to(beFalse())
+            })
+        }
 
-//        /// Utility method to easily filter the bindings for a channel by their event
-//        func eventBindings(_ event: String) -> [(event: String, ref: Int, callback: (Message) -> Void)]? {
-//            return channel.bindings.filter( { $0.event == event } )
-//        }
-//
-//
-//
-//        describe(".init(topic:, parms:, socket:)") {
-//            it("sets defaults", closure: {
-//                expect(channel.state).to(equal(ChannelState.closed))
-//                expect(channel.topic).to(equal("topic"))
-//                expect(channel.params["one"] as? Int).to(equal(2))
-//                expect(channel.socket).to(beAKindOf(SocketMock.self))
-//                expect(channel.timeout).to(equal(PHOENIX_DEFAULT_TIMEOUT))
-//                expect(channel.joinedOnce).to(beFalse())
-//                expect(channel.pushBuffer).to(beEmpty())
-//            })
-//
-//            it("handles nil params", closure: {
-//                channel = Channel(topic: "topic", params: nil, socket: mockSocket)
-//                expect(channel.params).toNot(beNil())
-//                expect(channel.params).to(beEmpty())
-//            })
-//
-//            it("sets up the joinPush", closure: {
-//                let joinPush = channel.joinPush
-//                expect(joinPush?.channel?.topic).to(equal(channel.topic))
-//                expect(joinPush?.payload["one"] as? Int).to(equal(2))
-//                expect(joinPush?.event).to(equal(ChannelEvent.join))
-//                expect(joinPush?.timeout).to(equal(PHOENIX_DEFAULT_TIMEOUT))
-//            })
-//
-//            it("should not introduce any retain cycles", closure: {
-//                weak var channel = Channel(topic: "topic", params: ["one": 2], socket: mockSocket)
-//                expect(channel).to(beNil())
-//            })
-//        }
-//
-//        describe("message") {
-//            it("defaults to return just the given message", closure: {
-//                let message = Message(ref: "ref", topic: "topic", event: "event", payload: [:])
-//                let result = channel.onMessage(message)
-//
-//                expect(result.ref).to(equal("ref"))
-//                expect(result.topic).to(equal("topic"))
-//                expect(result.event).to(equal("event"))
-//                expect(result.payload).to(beEmpty())
-//            })
-//        }
-//
-//        describe(".join(joinParams:, timout:)") {
-//            it("should override the joinPush params if given", closure: {
-//                let push = channel.join(joinParams: ["override": true])
-//                expect(push.payload["one"]).to(beNil())
-//                expect(push.payload["override"] as? Bool).to(beTrue())
-//                expect(channel.joinedOnce).to(beTrue())
-//            })
-//        }
-//
-//
-//        describe("on(event:, callback:)") {
-//            it("should add a binder and then remove that same binder", closure: {
-//                let bindingsCountBefore = channel.bindings.count
-//                let closeRef = channel.onClose({ (_) in })
-//
-//                expect(closeRef).to(equal(channel.bindingRef - 1))
-//                expect(channel.bindings).to(haveCount(bindingsCountBefore + 1))
-//
-//                // Now remove just the closeRef binding
-//                channel.off(ChannelEvent.close, ref: closeRef)
-//                expect(channel.bindings).to(haveCount(bindingsCountBefore))
-//            })
-//        }
-//
-//        describe(".off(event:)") {
-//            it("should remove all bindings of an event type", closure: {
-//                channel.on("test", callback: { (_) in })
-//                channel.on("test", callback: { (_) in })
-//                channel.on("test", callback: { (_) in })
-//                expect(channel.bindings.filter({$0.event == "test"}).count).to(equal(3))
-//
-//                channel.off("test")
-//                expect(channel.bindings.filter({$0.event == "test"}).count).to(equal(0))
-//            })
-//        }
-//
-//        describe(".push(event:, payload:, timeout:)") {
-//            it("should send the push if the channel can push", closure: {
-//                channel.joinedOnce = true
-//                channel.state = ChannelState.joined
-//                mockSocket.isConnected = true
-//
-//                let push = channel.push("test", payload: ["number": 1])
-//                expect(mockSocket.pushCalled).to(beTrue())
-//                let args = mockSocket.pushArgs
-//                expect(args?.topic).to(equal(channel.topic))
-//                expect(args?.event).to(equal(push.event))
-//                expect(args?.payload["number"] as? Int).to(equal(1))
-//            })
-//
-//            it("should buffer the push if channel cannot push", closure: {
-//                channel.joinedOnce = true
-//                channel.state = ChannelState.closed
-//                mockSocket.isConnected = true
-//                mockSocket.makeRefReturnValue = "stubbed"
-//
-//                let push = channel.push("test", payload: ["number": 1])
-//                expect(mockSocket.pushCalled).to(beFalse())
-//
-//                expect(push.ref).to(equal("stubbed"))
-//                expect(push.refEvent).to(equal("chan_reply_stubbed"))
-//
-//                let pushTimeoutBinding = eventBindings("chan_reply_stubbed")
-//                expect(pushTimeoutBinding).to(haveCount(1))
-//
-//                expect(channel.pushBuffer).to(haveCount(1))
-//                expect(channel.pushBuffer[0].event).to(equal(push.event))
-//            })
-//        }
-//
-//        //----------------------------------------------------------------------
-//        // MARK: - Internals
-//        //----------------------------------------------------------------------
-//        describe(".isMember(message:)") {
-//            it("should return false if the member's topic does not match the channel's topic", closure: {
-//                let message = Message(topic: "other_topic")
-//                expect(channel.isMember(message)).to(beFalse())
-//            })
-//
-//            it("should return false if isLifecycleEvent and joinRefs are not equal", closure: {
-//                channel.joinPush.ref = "join_ref_1"
-//                let message = Message(topic: "topic", event: ChannelEvent.join, joinRef: "join_ref_2")
-//                expect(channel.isMember(message)).to(beFalse())
-//            })
-//
-//            it("should return true if the message belongs in the channel", closure: {
-//                let message = Message(topic: "topic", event: "test_event")
-//                expect(channel.isMember(message)).to(beTrue())
-//            })
-//        }
-//
-//
-//        describe(".sendJoin()") {
-//
-//        }
-//
-//        describe(".trigger(message:)") {
-//            it("sends the message to the appropiate event binding", closure: {
-//                channel.onMessage({ (message) -> Message in
-//                    message.payload["other_number"] = 2
-//                    return message
-//                })
-//
-//
-//                var onTestEventCalled = false
-//                channel.on("test_event", callback: { (message) in
-//                    onTestEventCalled = true
-//                    expect(message.ref).to(equal("ref"))
-//                    expect(message.topic).to(equal("topic"))
-//                    expect(message.event).to(equal("test_event"))
-//                    expect(message.payload["number"] as? Int).to(equal(1))
-//                    expect(message.payload["other_number"] as? Int).to(equal(2))
-//                })
-//
-//                let message = Message(ref: "ref", topic: "topic", event: "test_event", payload: ["number": 1])
-//                channel.trigger(message)
-//                expect(onTestEventCalled).to(beTrue())
-//            })
-//        }
-//
-//        describe("canPush") {
-//            it("returns true if joined and connected", closure: {
-//                channel.state = .joined
-//                mockSocket.isConnected = true
-//                expect(channel.canPush).to(beTrue())
-//
-//                channel.state = .joined
-//                mockSocket.isConnected = false
-//                expect(channel.canPush).to(beFalse())
-//
-//                channel.state = .joining
-//                mockSocket.isConnected = true
-//                expect(channel.canPush).to(beFalse())
-//            })
-//        }
-//
-//
-//        describe("isClosed") {
-//            it("returns true if state is .closed", closure: {
-//                channel.state = .joined
-//                expect(channel.isClosed).to(beFalse())
-//
-//                channel.state = .closed
-//                expect(channel.isClosed).to(beTrue())
-//            })
-//        }
-//
-//        describe("isErrored") {
-//            it("returns true if state is .errored", closure: {
-//                channel.state = .joined
-//                expect(channel.isErrored).to(beFalse())
-//
-//                channel.state = .errored
-//                expect(channel.isErrored).to(beTrue())
-//            })
-//        }
-//
-//        describe("isJoined") {
-//            it("returns true if state is .joined", closure: {
-//                channel.state = .leaving
-//                expect(channel.isJoined).to(beFalse())
-//
-//                channel.state = .joined
-//                expect(channel.isJoined).to(beTrue())
-//            })
-//        }
-//
-//        describe("isJoining") {
-//            it("returns true if state is .joining", closure: {
-//                channel.state = .joined
-//                expect(channel.isJoining).to(beFalse())
-//
-//                channel.state = .joining
-//                expect(channel.isJoining).to(beTrue())
-//            })
-//        }
-//
-//        describe("isLeaving") {
-//            it("returns true if state is .leaving", closure: {
-//                channel.state = .joined
-//                expect(channel.isLeaving).to(beFalse())
-//
-//                channel.state = .leaving
-//                expect(channel.isLeaving).to(beTrue())
-//            })
-//        }
+        describe("on") {
+            beforeEach {
+                mockSocket.makeRefClosure = nil
+                mockSocket.makeRefReturnValue = kDefaultRef
+            }
+            
+            it("sets up callback for event", closure: {
+                var onCallCount = 0
+                
+                channel.trigger(event: "event", ref: kDefaultRef)
+                expect(onCallCount).to(equal(0))
+                
+                channel.on("event", callback: { (_) in
+                    onCallCount += 1
+                })
+                
+                channel.trigger(event: "event", ref: kDefaultRef)
+                expect(onCallCount).to(equal(1))
+            })
+            
+            it("other event callbacks are ignored", closure: {
+                var onCallCount = 0
+                let ignoredOnCallCount = 0
+                
+                channel.trigger(event: "event", ref: kDefaultRef)
+                expect(ignoredOnCallCount).to(equal(0))
+                
+                channel.on("event", callback: { (_) in
+                    onCallCount += 1
+                })
+                
+                channel.trigger(event: "event", ref: kDefaultRef)
+                expect(ignoredOnCallCount).to(equal(0))
+            })
+            
+            it("generates unique refs for callbacks ", closure: {
+                let ref1 = channel.on("event1", callback: { _ in })
+                let ref2 = channel.on("event2", callback: { _ in })
+                expect(ref1).toNot(equal(ref2))
+                expect(ref1 + 1).to(equal(ref2))
+
+            })
+        }
+        
+        describe("off") {
+            beforeEach {
+                mockSocket.makeRefClosure = nil
+                mockSocket.makeRefReturnValue = kDefaultRef
+            }
+            
+            it("removes all callbacks for event", closure: {
+                var callCount1 = 0
+                var callCount2 = 0
+                var callCount3 = 0
+                
+                channel.on("event", callback: { _ in callCount1 += 1})
+                channel.on("event", callback: { _ in callCount2 += 1})
+                channel.on("other", callback: { _ in callCount3 += 1})
+                
+                channel.off("event")
+                channel.trigger(event: "event", ref: kDefaultRef)
+                channel.trigger(event: "other", ref: kDefaultRef)
+                
+                expect(callCount1).to(equal(0))
+                expect(callCount2).to(equal(0))
+                expect(callCount3).to(equal(1))
+            })
+            
+            it("removes callback by ref", closure: {
+                var callCount1 = 0
+                var callCount2 = 0
+                
+                let ref1 = channel.on("event", callback: { _ in callCount1 += 1})
+                let _ = channel.on("event", callback: { _ in callCount2 += 1})
+                
+                channel.off("event", ref: ref1)
+                channel.trigger(event: "event", ref: kDefaultRef)
+                
+                expect(callCount1).to(equal(0))
+                expect(callCount2).to(equal(1))
+            })
+        }
+        
+        describe("push") {
+            
+            beforeEach {
+                mockSocket.makeRefClosure = nil
+                mockSocket.makeRefReturnValue = kDefaultRef
+                mockClient.isConnected = true
+            }
+            
+            it("sends push event when successfully joined", closure: {
+                channel.join().trigger("ok", payload: [:])
+                channel.push("event", payload: ["foo": "bar"])
+                
+                expect(mockSocket.pushTopicEventPayloadRefJoinRefCalled).to(beTrue())
+                let args = mockSocket.pushTopicEventPayloadRefJoinRefReceivedArguments
+                expect(args?.topic).to(equal("topic"))
+                expect(args?.event).to(equal("event"))
+                expect(args?.payload["foo"] as? String).to(equal("bar"))
+                expect(args?.joinRef).to(equal(channel.joinRef))
+                expect(args?.ref).to(equal(kDefaultRef))
+            })
+            
+            it("enqueues push event to be sent once join has succeeded", closure: {
+                let joinPush = channel.join()
+                channel.push("event", payload: ["foo": "bar"])
+                
+                let args = mockSocket.pushTopicEventPayloadRefJoinRefReceivedArguments
+                expect(args?.payload["foo"]).to(beNil())
+                
+                fakeClock.tick(channel.timeout / 2)
+                joinPush.trigger("ok", payload: [:])
+                
+                expect(mockSocket.pushTopicEventPayloadRefJoinRefCalled).to(beTrue())
+                let args2 = mockSocket.pushTopicEventPayloadRefJoinRefReceivedArguments
+                expect(args2?.payload["foo"] as? String).to(equal("bar"))
+            })
+            
+            it("does not push if channel join times out", closure: {
+                let joinPush = channel.join()
+                channel.push("event", payload: ["foo": "bar"])
+                
+                let args = mockSocket.pushTopicEventPayloadRefJoinRefReceivedArguments
+                expect(args?.payload["foo"]).to(beNil())
+                
+                fakeClock.tick(channel.timeout * 2)
+                joinPush.trigger("ok", payload: [:])
+                
+                expect(mockSocket.pushTopicEventPayloadRefJoinRefCalled).to(beTrue())
+                let args2 = mockSocket.pushTopicEventPayloadRefJoinRefReceivedArguments
+                expect(args2?.payload["foo"]).to(beNil())
+            })
+            
+            it("uses channel timeout by default", closure: {
+                channel.join().trigger("ok", payload: [:])
+                
+                var timeoutCallsCount = 0
+                channel
+                    .push("event", payload: ["foo": "bar"])
+                    .receive("timeout", callback: { (_) in
+                        timeoutCallsCount += 1
+                    })
+                
+                fakeClock.tick(channel.timeout / 2)
+                expect(timeoutCallsCount).to(equal(0))
+                
+                fakeClock.tick(channel.timeout)
+                expect(timeoutCallsCount).to(equal(1))
+            })
+            
+            it("accepts timeout arg", closure: {
+                channel.join().trigger("ok", payload: [:])
+                
+                var timeoutCallsCount = 0
+                channel
+                    .push("event", payload: ["foo": "bar"], timeout: channel.timeout * 2)
+                    .receive("timeout", callback: { (_) in
+                        timeoutCallsCount += 1
+                    })
+                
+                fakeClock.tick(channel.timeout)
+                expect(timeoutCallsCount).to(equal(0))
+                
+                fakeClock.tick(channel.timeout * 2)
+                expect(timeoutCallsCount).to(equal(1))
+            })
+            
+            it("does not time out after receiving 'ok'", closure: {
+                channel.join().trigger("ok", payload: [:])
+                
+                var timeoutCallsCount = 0
+                let push = channel.push("event", payload: ["foo": "bar"])
+                push.receive("timeout", callback: { (_) in
+                    timeoutCallsCount += 1
+                })
+                
+                fakeClock.tick(channel.timeout / 2)
+                expect(timeoutCallsCount).to(equal(0))
+                
+                push.trigger("ok", payload: [:])
+                
+                fakeClock.tick(channel.timeout)
+                expect(timeoutCallsCount).to(equal(0))
+            })
+            
+            it("throws if channel has not been joined", closure: {
+                expect { channel.push("event", payload: [:]) }.to(throwAssertion())
+            })
+        }
+        
+        describe("leave") {
+            beforeEach {
+                mockClient.isConnected = true
+                channel.join().trigger("ok", payload: [:])
+            }
+            
+            it("unsubscribes from server events", closure: {
+                mockSocket.makeRefClosure = nil
+                mockSocket.makeRefReturnValue = kDefaultRef
+                
+                let joinRef = channel.joinRef
+                channel.leave()
+                
+                expect(mockSocket.pushTopicEventPayloadRefJoinRefCalled).to(beTrue())
+                let args = mockSocket.pushTopicEventPayloadRefJoinRefReceivedArguments
+                expect(args?.topic).to(equal("topic"))
+                expect(args?.event).to(equal("phx_leave"))
+                expect(args?.payload).to(beEmpty())
+                expect(args?.joinRef).to(equal(joinRef))
+                expect(args?.ref).to(equal(kDefaultRef))
+            })
+            
+            it("closes channel on 'ok' from server", closure: {
+                let socket = Socket(endPoint: "/socket", transport: { _ in return mockClient })
+                
+                let channel = socket.channel("topic", params: ["one": "two"])
+                channel.join().trigger("ok", payload: [:])
+                
+                let anotherChannel = socket.channel("another", params: ["three": "four"])
+                
+                expect(socket.channels).to(haveCount(2))
+                
+                channel.leave().trigger("ok", payload: [:])
+                expect(socket.channels).to(haveCount(1))
+                expect(socket.channels.first === anotherChannel).to(beTrue())
+            })
+        }
+        
+        describe("isClosed") {
+            it("returns true if state is .closed", closure: {
+                channel.state = .joined
+                expect(channel.isClosed).to(beFalse())
+
+                channel.state = .closed
+                expect(channel.isClosed).to(beTrue())
+            })
+        }
+
+        describe("isErrored") {
+            it("returns true if state is .errored", closure: {
+                channel.state = .joined
+                expect(channel.isErrored).to(beFalse())
+
+                channel.state = .errored
+                expect(channel.isErrored).to(beTrue())
+            })
+        }
+
+        describe("isJoined") {
+            it("returns true if state is .joined", closure: {
+                channel.state = .leaving
+                expect(channel.isJoined).to(beFalse())
+
+                channel.state = .joined
+                expect(channel.isJoined).to(beTrue())
+            })
+        }
+
+        describe("isJoining") {
+            it("returns true if state is .joining", closure: {
+                channel.state = .joined
+                expect(channel.isJoining).to(beFalse())
+
+                channel.state = .joining
+                expect(channel.isJoining).to(beTrue())
+            })
+        }
+
+        describe("isLeaving") {
+            it("returns true if state is .leaving", closure: {
+                channel.state = .joined
+                expect(channel.isLeaving).to(beFalse())
+
+                channel.state = .leaving
+                expect(channel.isLeaving).to(beTrue())
+            })
+        }
         
     }
 }
