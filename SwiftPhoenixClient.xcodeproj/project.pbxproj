@@ -11,20 +11,28 @@
 		0B8517E51DAC12F40093A015 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B8517E41DAC12F40093A015 /* Channel.swift */; };
 		0BFAE4F51DA84F59000B3CD3 /* SwiftPhoenixClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BFAE4E71DA84F59000B3CD3 /* SwiftPhoenixClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		12046066202E9AAD00036A92 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12046065202E9AAD00036A92 /* Starscream.framework */; };
+		120B42C722233A0D00FE483D /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B42C622233A0D00FE483D /* Defaults.swift */; };
+		120B42C9222341CF00FE483D /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B42C8222341CF00FE483D /* TestHelpers.swift */; };
+		120B42CB2223481600FE483D /* MockableClass.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120B42CA2223481500FE483D /* MockableClass.generated.swift */; };
 		1220C3F9202FA808001664A2 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1220C3F8202FA808001664A2 /* Push.swift */; };
 		12252F56202EA467000BA6A2 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12252F54202EA467000BA6A2 /* Quick.framework */; };
 		12252F57202EA467000BA6A2 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12252F55202EA467000BA6A2 /* Nimble.framework */; };
 		12252F58202EA52C000BA6A2 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BFAE4E41DA84F59000B3CD3 /* SwiftPhoenixClient.framework */; };
+		124A083521F14BF4003D1400 /* DefaultSerializerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 124A083321F14BB9003D1400 /* DefaultSerializerSpec.swift */; };
+		124A083721F1575B003D1400 /* TimeoutTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 124A083621F1575B003D1400 /* TimeoutTimer.swift */; };
+		128AB993221DECCB00F09EE3 /* StateChangeCallbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128AB992221DECCB00F09EE3 /* StateChangeCallbacks.swift */; };
+		12A0B0E622317752007ED590 /* FakeTimerQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A0B0E522317752007ED590 /* FakeTimerQueue.swift */; };
 		12A3983D20D00050003203DF /* PushSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 124B95C120AF41190012006C /* PushSpec.swift */; };
+		12BCCB452210CED9001A55E1 /* Delegated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12BCCB442210CED9001A55E1 /* Delegated.swift */; };
+		12BCCB482210D4D7001A55E1 /* TimeoutTimerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12BCCB472210D4D7001A55E1 /* TimeoutTimerSpec.swift */; };
 		12BD54232093B20600C049F2 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12BD54222093B20600C049F2 /* Constants.swift */; };
 		12C140D920AF416600184725 /* ChannelSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C140D720AF415900184725 /* ChannelSpec.swift */; };
-		12C140DB20AF41A900184725 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C140DA20AF41A900184725 /* Mocks.swift */; };
+		12EA0591221C660C00F2A135 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EA0590221C660C00F2A135 /* Binding.swift */; };
 		12EAFF29202F656300685575 /* SocketSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EAFF27202F654300685575 /* SocketSpec.swift */; };
-		12F879272097A3FC00161C02 /* PhxTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12F879262097A3FC00161C02 /* PhxTimer.swift */; };
+		12F7830C2210D56D00291614 /* MockableWebSocketClient.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12F7830A2210D56D00291614 /* MockableWebSocketClient.generated.swift */; };
 		63CD642E1DB11E8400C406A6 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD642D1DB11E8400C406A6 /* Presence.swift */; };
 		63CD64321DB1272400C406A6 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD64311DB1272400C406A6 /* Message.swift */; };
 		B425205C2165203200700CBD /* PresenceStateSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B425205B2165203200700CBD /* PresenceStateSpec.swift */; };
-		B425205E2165D48900700CBD /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B425205D2165D48900700CBD /* Helpers.swift */; };
 		B48458A82164E3D300466E32 /* PresenceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48458A62164E28500466E32 /* PresenceSpec.swift */; };
 /* End PBXBuildFile section */
 
@@ -48,19 +56,27 @@
 		0BFAE4F41DA84F59000B3CD3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0BFAE5081DA853B5000B3CD3 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = "Vendor/Starscream/build/Debug-iphoneos/Starscream.framework"; sourceTree = "<group>"; };
 		12046065202E9AAD00036A92 /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
+		120B42C622233A0D00FE483D /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
+		120B42C8222341CF00FE483D /* TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
+		120B42CA2223481500FE483D /* MockableClass.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockableClass.generated.swift; sourceTree = "<group>"; };
 		1220C3F8202FA808001664A2 /* Push.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; };
 		12252F54202EA467000BA6A2 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
 		12252F55202EA467000BA6A2 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
+		124A083321F14BB9003D1400 /* DefaultSerializerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSerializerSpec.swift; sourceTree = "<group>"; };
+		124A083621F1575B003D1400 /* TimeoutTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeoutTimer.swift; sourceTree = "<group>"; };
 		124B95C120AF41190012006C /* PushSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushSpec.swift; sourceTree = "<group>"; };
+		128AB992221DECCB00F09EE3 /* StateChangeCallbacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateChangeCallbacks.swift; sourceTree = "<group>"; };
+		12A0B0E522317752007ED590 /* FakeTimerQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeTimerQueue.swift; sourceTree = "<group>"; };
+		12BCCB442210CED9001A55E1 /* Delegated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Delegated.swift; sourceTree = "<group>"; };
+		12BCCB472210D4D7001A55E1 /* TimeoutTimerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeoutTimerSpec.swift; sourceTree = "<group>"; };
 		12BD54222093B20600C049F2 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		12C140D720AF415900184725 /* ChannelSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelSpec.swift; sourceTree = "<group>"; };
-		12C140DA20AF41A900184725 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
+		12EA0590221C660C00F2A135 /* Binding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Binding.swift; sourceTree = "<group>"; };
 		12EAFF27202F654300685575 /* SocketSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketSpec.swift; sourceTree = "<group>"; };
-		12F879262097A3FC00161C02 /* PhxTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhxTimer.swift; sourceTree = "<group>"; };
+		12F7830A2210D56D00291614 /* MockableWebSocketClient.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockableWebSocketClient.generated.swift; sourceTree = "<group>"; };
 		63CD642D1DB11E8400C406A6 /* Presence.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = Presence.swift; sourceTree = "<group>"; tabWidth = 2; };
 		63CD64311DB1272400C406A6 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		B425205B2165203200700CBD /* PresenceStateSpec.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = PresenceStateSpec.swift; sourceTree = "<group>"; tabWidth = 2; };
-		B425205D2165D48900700CBD /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		B48458A62164E28500466E32 /* PresenceSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenceSpec.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -108,15 +124,9 @@
 		0BFAE4E61DA84F59000B3CD3 /* SwiftPhoenixClient */ = {
 			isa = PBXGroup;
 			children = (
-				0B8517E41DAC12F40093A015 /* Channel.swift */,
-				12BD54222093B20600C049F2 /* Constants.swift */,
-				0BFAE4E81DA84F59000B3CD3 /* Info.plist */,
-				12F879262097A3FC00161C02 /* PhxTimer.swift */,
-				63CD642D1DB11E8400C406A6 /* Presence.swift */,
-				1220C3F8202FA808001664A2 /* Push.swift */,
-				63CD64311DB1272400C406A6 /* Message.swift */,
-				0B8517E21DAC11C80093A015 /* Socket.swift */,
-				0BFAE4E71DA84F59000B3CD3 /* SwiftPhoenixClient.h */,
+				124A083821F174C2003D1400 /* client */,
+				124A083921F174C9003D1400 /* project */,
+				12BCCB432210CEC9001A55E1 /* utility */,
 			);
 			name = SwiftPhoenixClient;
 			path = Sources;
@@ -125,14 +135,15 @@
 		0BFAE4F11DA84F59000B3CD3 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				0BFAE4F41DA84F59000B3CD3 /* Info.plist */,
-				12EAFF27202F654300685575 /* SocketSpec.swift */,
-				124B95C120AF41190012006C /* PushSpec.swift */,
+				12A0B0E422317740007ED590 /* helpers */,
+				12F783092210D53200291614 /* mocks */,
+				12BCCB462210D4C9001A55E1 /* client */,
 				12C140D720AF415900184725 /* ChannelSpec.swift */,
-				12C140DA20AF41A900184725 /* Mocks.swift */,
+				0BFAE4F41DA84F59000B3CD3 /* Info.plist */,
 				B48458A62164E28500466E32 /* PresenceSpec.swift */,
 				B425205B2165203200700CBD /* PresenceStateSpec.swift */,
-				B425205D2165D48900700CBD /* Helpers.swift */,
+				124B95C120AF41190012006C /* PushSpec.swift */,
+				120B42C8222341CF00FE483D /* TestHelpers.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -146,6 +157,67 @@
 				0BFAE5081DA853B5000B3CD3 /* Starscream.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		124A083821F174C2003D1400 /* client */ = {
+			isa = PBXGroup;
+			children = (
+				12EA0590221C660C00F2A135 /* Binding.swift */,
+				0B8517E41DAC12F40093A015 /* Channel.swift */,
+				12BD54222093B20600C049F2 /* Constants.swift */,
+				63CD64311DB1272400C406A6 /* Message.swift */,
+				63CD642D1DB11E8400C406A6 /* Presence.swift */,
+				1220C3F8202FA808001664A2 /* Push.swift */,
+				0B8517E21DAC11C80093A015 /* Socket.swift */,
+				128AB992221DECCB00F09EE3 /* StateChangeCallbacks.swift */,
+				124A083621F1575B003D1400 /* TimeoutTimer.swift */,
+			);
+			path = client;
+			sourceTree = "<group>";
+		};
+		124A083921F174C9003D1400 /* project */ = {
+			isa = PBXGroup;
+			children = (
+				0BFAE4E71DA84F59000B3CD3 /* SwiftPhoenixClient.h */,
+				0BFAE4E81DA84F59000B3CD3 /* Info.plist */,
+			);
+			path = project;
+			sourceTree = "<group>";
+		};
+		12A0B0E422317740007ED590 /* helpers */ = {
+			isa = PBXGroup;
+			children = (
+				12A0B0E522317752007ED590 /* FakeTimerQueue.swift */,
+			);
+			path = helpers;
+			sourceTree = "<group>";
+		};
+		12BCCB432210CEC9001A55E1 /* utility */ = {
+			isa = PBXGroup;
+			children = (
+				12BCCB442210CED9001A55E1 /* Delegated.swift */,
+				120B42C622233A0D00FE483D /* Defaults.swift */,
+			);
+			path = utility;
+			sourceTree = "<group>";
+		};
+		12BCCB462210D4C9001A55E1 /* client */ = {
+			isa = PBXGroup;
+			children = (
+				124A083321F14BB9003D1400 /* DefaultSerializerSpec.swift */,
+				12EAFF27202F654300685575 /* SocketSpec.swift */,
+				12BCCB472210D4D7001A55E1 /* TimeoutTimerSpec.swift */,
+			);
+			path = client;
+			sourceTree = "<group>";
+		};
+		12F783092210D53200291614 /* mocks */ = {
+			isa = PBXGroup;
+			children = (
+				120B42CA2223481500FE483D /* MockableClass.generated.swift */,
+				12F7830A2210D56D00291614 /* MockableWebSocketClient.generated.swift */,
+			);
+			path = mocks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -259,13 +331,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12BCCB452210CED9001A55E1 /* Delegated.swift in Sources */,
 				0B8517E31DAC11C80093A015 /* Socket.swift in Sources */,
 				1220C3F9202FA808001664A2 /* Push.swift in Sources */,
-				12F879272097A3FC00161C02 /* PhxTimer.swift in Sources */,
+				128AB993221DECCB00F09EE3 /* StateChangeCallbacks.swift in Sources */,
 				0B8517E51DAC12F40093A015 /* Channel.swift in Sources */,
 				63CD64321DB1272400C406A6 /* Message.swift in Sources */,
+				124A083721F1575B003D1400 /* TimeoutTimer.swift in Sources */,
 				63CD642E1DB11E8400C406A6 /* Presence.swift in Sources */,
 				12BD54232093B20600C049F2 /* Constants.swift in Sources */,
+				12EA0591221C660C00F2A135 /* Binding.swift in Sources */,
+				120B42C722233A0D00FE483D /* Defaults.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,13 +349,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				124A083521F14BF4003D1400 /* DefaultSerializerSpec.swift in Sources */,
 				12A3983D20D00050003203DF /* PushSpec.swift in Sources */,
-				B425205E2165D48900700CBD /* Helpers.swift in Sources */,
+				12BCCB482210D4D7001A55E1 /* TimeoutTimerSpec.swift in Sources */,
+				12A0B0E622317752007ED590 /* FakeTimerQueue.swift in Sources */,
 				B425205C2165203200700CBD /* PresenceStateSpec.swift in Sources */,
+				12F7830C2210D56D00291614 /* MockableWebSocketClient.generated.swift in Sources */,
 				12C140D920AF416600184725 /* ChannelSpec.swift in Sources */,
+				120B42CB2223481600FE483D /* MockableClass.generated.swift in Sources */,
 				12EAFF29202F656300685575 /* SocketSpec.swift in Sources */,
-				12C140DB20AF41A900184725 /* Mocks.swift in Sources */,
 				B48458A82164E3D300466E32 /* PresenceSpec.swift in Sources */,
+				120B42C9222341CF00FE483D /* TestHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,7 +504,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = Sources/Info.plist;
+				INFOPLIST_FILE = Sources/project/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -451,7 +531,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = Sources/Info.plist;
+				INFOPLIST_FILE = Sources/project/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

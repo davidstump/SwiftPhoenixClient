@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="d3J-cV-Pt3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="d3J-cV-Pt3">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="HWN-01-0kc">
             <objects>
-                <viewController id="d3J-cV-Pt3" customClass="ViewController" customModule="SwiftPhoenixClient_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="d3J-cV-Pt3" customClass="ViewController" customModule="ChatExample" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ywi-x9-aSY"/>
                         <viewControllerLayoutGuide type="bottom" id="kKL-ax-tiR"/>
@@ -19,14 +22,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UvR-pK-85C">
+                                <rect key="frame" x="16" y="82" width="343" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Chat..." textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="f0j-lc-zNe">
+                                <rect key="frame" x="16" y="120" width="343" height="489"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ijj-wb-YW8">
+                                <rect key="frame" x="264" y="617" width="100" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="Y8v-eO-EqQ"/>
                                 </constraints>
@@ -36,9 +42,24 @@
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Message" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qpO-sc-lSJ">
+                                <rect key="frame" x="16" y="617" width="240" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4rt-hv-AUZ">
+                                <rect key="frame" x="16" y="36" width="59" height="30"/>
+                                <state key="normal" title="Connect"/>
+                                <connections>
+                                    <action selector="onConnectButtonPressed:" destination="d3J-cV-Pt3" eventType="touchUpInside" id="Ea9-z4-XYv"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KdX-6Q-sA7">
+                                <rect key="frame" x="281" y="36" width="78" height="30"/>
+                                <state key="normal" title="Disconnect"/>
+                                <connections>
+                                    <action selector="onDisconnectButtonPressed:" destination="d3J-cV-Pt3" eventType="touchUpInside" id="nAf-wd-puI"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -48,12 +69,16 @@
                             <constraint firstItem="f0j-lc-zNe" firstAttribute="trailing" secondItem="Us2-Xz-QKY" secondAttribute="trailingMargin" id="8sq-5y-uKB"/>
                             <constraint firstItem="UvR-pK-85C" firstAttribute="leading" secondItem="Us2-Xz-QKY" secondAttribute="leadingMargin" id="Ben-TA-huZ"/>
                             <constraint firstItem="ijj-wb-YW8" firstAttribute="top" secondItem="f0j-lc-zNe" secondAttribute="bottom" constant="8" symbolic="YES" id="EBZ-qB-9nU"/>
+                            <constraint firstItem="UvR-pK-85C" firstAttribute="top" secondItem="4rt-hv-AUZ" secondAttribute="bottom" constant="16" id="Equ-B1-aJa"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ijj-wb-YW8" secondAttribute="trailing" constant="-5" id="JBe-78-HDQ"/>
                             <constraint firstItem="ijj-wb-YW8" firstAttribute="centerY" secondItem="qpO-sc-lSJ" secondAttribute="centerY" id="KaO-Wu-6L4"/>
                             <constraint firstItem="f0j-lc-zNe" firstAttribute="top" secondItem="UvR-pK-85C" secondAttribute="bottom" constant="8" symbolic="YES" id="M6Q-yf-e5U"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="KdX-6Q-sA7" secondAttribute="trailing" id="QM6-dS-Itd"/>
+                            <constraint firstItem="KdX-6Q-sA7" firstAttribute="top" secondItem="ywi-x9-aSY" secondAttribute="bottom" constant="16" id="Xi2-AI-JQT"/>
                             <constraint firstItem="UvR-pK-85C" firstAttribute="trailing" secondItem="Us2-Xz-QKY" secondAttribute="trailingMargin" id="bH7-Wq-0z8"/>
+                            <constraint firstItem="4rt-hv-AUZ" firstAttribute="top" secondItem="ywi-x9-aSY" secondAttribute="bottom" constant="16" id="cgd-SN-CuG"/>
                             <constraint firstItem="ijj-wb-YW8" firstAttribute="leading" secondItem="qpO-sc-lSJ" secondAttribute="trailing" constant="8" symbolic="YES" id="nOA-F5-PE5"/>
-                            <constraint firstItem="UvR-pK-85C" firstAttribute="top" secondItem="ywi-x9-aSY" secondAttribute="bottom" constant="8" symbolic="YES" id="rIn-eo-MeB"/>
+                            <constraint firstItem="4rt-hv-AUZ" firstAttribute="leading" secondItem="Us2-Xz-QKY" secondAttribute="leadingMargin" id="qgM-Kz-rWx"/>
                             <constraint firstItem="f0j-lc-zNe" firstAttribute="leading" secondItem="Us2-Xz-QKY" secondAttribute="leadingMargin" id="u0j-as-Ouw"/>
                         </constraints>
                     </view>
