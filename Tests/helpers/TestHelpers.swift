@@ -25,11 +25,3 @@ func toWebSocketText(data: [String: Any]) -> String {
     let encoded = Defaults.encode(data)
     return String(decoding: encoded, as: UTF8.self)
 }
-
-
-extension Channel {
-    /// Utility method to easily filter the bindings for a channel by their event
-    func getBindings(_ event: String) -> [Binding]? {
-        return self.bindingsDel.filter({ $0.event == event })
-    }
-}

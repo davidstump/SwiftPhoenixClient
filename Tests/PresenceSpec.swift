@@ -26,15 +26,15 @@ class PresenceSpec: QuickSpec {
         var presence: Presence!
         
         beforeEach {
-            let mockClient = WebSocketClientMock()
-            mockSocket = SocketMock("/socket")
-            mockSocket.connection = mockClient
-            mockSocket.timeout = 10.0
-            mockSocket.makeRefReturnValue = "1"
-            mockSocket.reconnectAfter = { _ in return 1 }
-            
-            mockChannel = ChannelMock(topic: "topic", socket: mockSocket)
-            mockChannel.delegateOnToCallbackReturnValue = 1
+//            let mockClient = WebSocketClientMock()
+//            mockSocket = SocketMock("/socket")
+//            mockSocket.connection = mockClient
+//            mockSocket.timeout = 10.0
+//            mockSocket.makeRefReturnValue = "1"
+//            mockSocket.reconnectAfter = { _ in return 1 }
+//            
+//            mockChannel = ChannelMock(topic: "topic", socket: mockSocket)
+//            mockChannel.delegateOnToCallbackReturnValue = 1
 //
 //            mockSocket = SocketMock()
 //            channel = Channel(topic: "topic", params: ["one": 2], socket: mockSocket)
@@ -46,24 +46,24 @@ class PresenceSpec: QuickSpec {
 //            return channel.bindings.filter( { $0.event == event } )
 //        }
         
-        describe("init") {
-
-            it("sets defaults", closure: {
-                let presence = Presence(channel: mockChannel)
-                expect(presence.state).to(beEmpty())
-                expect(presence.pendingDiffs).to(beEmpty())
-                expect(presence.channel === mockChannel).to(beTrue())
-                expect(presence.joinRef).to(beNil())
-            })
-            
-            it("binds to channel with default options", closure: {
-                
-            })
-            
-            it("binds to channel with custom options ", closure: {
-                
-            })
-        }
+//        describe("init") {
+//
+//            it("sets defaults", closure: {
+//                let presence = Presence(channel: mockChannel)
+//                expect(presence.state).to(beEmpty())
+//                expect(presence.pendingDiffs).to(beEmpty())
+//                expect(presence.channel === mockChannel).to(beTrue())
+//                expect(presence.joinRef).to(beNil())
+//            })
+//
+//            it("binds to channel with default options", closure: {
+//
+//            })
+//
+//            it("binds to channel with custom options ", closure: {
+//
+//            })
+//        }
         
         
 //        describe(".init(channel:, options:)") {
