@@ -139,7 +139,7 @@ import Starscream
 
 
 
-{% for type in types.classes where type.name == "TimeoutTimer" or type.name == "Socket" or type.name == "Push" %}
+{% for type in types.classes where type.name == "TimeoutTimer" or type.name == "Socket" or type.name == "Push" or type.name == "Channel" %}
 class {{ type.name }}Mock: {{ type.name }} {
 {# Generate all variable mocks #}
 {% for variable in type.allVariables|!definedInExtension where variable.readAccess != "private" and variable.isMutable %}
