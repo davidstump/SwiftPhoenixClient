@@ -143,7 +143,6 @@
 				B48458A62164E28500466E32 /* PresenceSpec.swift */,
 				B425205B2165203200700CBD /* PresenceStateSpec.swift */,
 				124B95C120AF41190012006C /* PushSpec.swift */,
-				120B42C8222341CF00FE483D /* TestHelpers.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -187,6 +186,7 @@
 		12A0B0E422317740007ED590 /* helpers */ = {
 			isa = PBXGroup;
 			children = (
+				120B42C8222341CF00FE483D /* TestHelpers.swift */,
 				12A0B0E522317752007ED590 /* FakeTimerQueue.swift */,
 			);
 			path = helpers;

@@ -35,22 +35,6 @@ class FakeTimerQueue: TimerQueue {
         print("Removed ")
     }
     
-//    func tick(_ milliseconds: Int) {
-//        self.tickTime = tickTime + .milliseconds(milliseconds)
-//
-//        let pastDue = queue.filter { (deadline, workItem) -> Bool in
-//            return tickTime >= deadline
-//        }
-//
-//        pastDue.forEach({
-//            print("Performing Work Item")
-//            $1.perform()
-//        })
-//        self.queue.removeFirst(pastDue.count)
-//        print("Queue Count: ", self.queue.count)
-//    }
-    
-    
     override func queue(timeInterval: TimeInterval, execute: DispatchWorkItem) {
         let deadline = tickTime + timeInterval
         self.queue.append((deadline, execute))

@@ -32,6 +32,339 @@ import Starscream
 
 
 
+class ChannelMock: Channel {
+    var socketSetCount: Int = 0
+    var socketDidGetSet: Bool { return socketSetCount > 0 }
+    override var socket: Socket? {
+        didSet { socketSetCount += 1 }
+    }
+    override var state: ChannelState {
+        get { return underlyingState }
+        set(value) { underlyingState = value }
+    }
+    var underlyingState: (ChannelState)!
+    override var bindingRef: Int {
+        get { return underlyingBindingRef }
+        set(value) { underlyingBindingRef = value }
+    }
+    var underlyingBindingRef: (Int)!
+    override var timeout: TimeInterval {
+        get { return underlyingTimeout }
+        set(value) { underlyingTimeout = value }
+    }
+    var underlyingTimeout: (TimeInterval)!
+    override var joinedOnce: Bool {
+        get { return underlyingJoinedOnce }
+        set(value) { underlyingJoinedOnce = value }
+    }
+    var underlyingJoinedOnce: (Bool)!
+    var joinPushSetCount: Int = 0
+    var joinPushDidGetSet: Bool { return joinPushSetCount > 0 }
+    override var joinPush: Push! {
+        didSet { joinPushSetCount += 1 }
+    }
+    override var rejoinTimer: TimeoutTimer {
+        get { return underlyingRejoinTimer }
+        set(value) { underlyingRejoinTimer = value }
+    }
+    var underlyingRejoinTimer: (TimeoutTimer)!
+    override var onMessage: (_ message: Message) -> Message {
+        get { return underlyingOnMessage }
+        set(value) { underlyingOnMessage = value }
+    }
+    var underlyingOnMessage: ((_ message: Message) -> Message)!
+
+
+    //MARK: - init
+
+    var initTopicParamsSocketReceivedArguments: (topic: String, params: [String: Any], socket: Socket)?
+    var initTopicParamsSocketClosure: ((String, [String: Any], Socket) -> Void)?
+
+
+    //MARK: - deinit
+
+    var deinitCallsCount = 0
+    var deinitCalled: Bool {
+        return deinitCallsCount > 0
+    }
+    var deinitClosure: (() -> Void)?
+
+
+    //MARK: - join
+
+    var joinTimeoutCallsCount = 0
+    var joinTimeoutCalled: Bool {
+        return joinTimeoutCallsCount > 0
+    }
+    var joinTimeoutReceivedTimeout: TimeInterval?
+    var joinTimeoutReturnValue: Push!
+    var joinTimeoutClosure: ((TimeInterval?) -> Push)?
+
+    override func join(timeout: TimeInterval? = nil) -> Push {
+        joinTimeoutCallsCount += 1
+        joinTimeoutReceivedTimeout = timeout
+        return joinTimeoutClosure.map({ $0(timeout) }) ?? joinTimeoutReturnValue
+    }
+
+
+    //MARK: - onClose
+
+    var onCloseCallsCount = 0
+    var onCloseCalled: Bool {
+        return onCloseCallsCount > 0
+    }
+    var onCloseReceivedCallback: ((Message) -> Void)?
+    var onCloseReturnValue: Int!
+    var onCloseClosure: ((@escaping ((Message) -> Void)) -> Int)?
+
+    override func onClose(_ callback: @escaping ((Message) -> Void)) -> Int {
+        onCloseCallsCount += 1
+        onCloseReceivedCallback = callback
+        return onCloseClosure.map({ $0(callback) }) ?? onCloseReturnValue
+    }
+
+
+    //MARK: - delegateOnClose<Target: AnyObject>
+
+    var delegateOnCloseToCallbackCallsCount = 0
+    var delegateOnCloseToCallbackCalled: Bool {
+        return delegateOnCloseToCallbackCallsCount > 0
+    }
+    var delegateOnCloseToCallbackReturnValue: Int!
+
+    override func delegateOnClose<Target: AnyObject>(to owner: Target,                                                   callback: @escaping ((Target, Message) -> Void)) -> Int {
+        delegateOnCloseToCallbackCallsCount += 1
+        return delegateOnCloseToCallbackReturnValue
+    }
+
+
+    //MARK: - onError
+
+    var onErrorCallsCount = 0
+    var onErrorCalled: Bool {
+        return onErrorCallsCount > 0
+    }
+    var onErrorReceivedCallback: ((_ message: Message) -> Void)?
+    var onErrorReturnValue: Int!
+    var onErrorClosure: ((@escaping ((_ message: Message) -> Void)) -> Int)?
+
+    override func onError(_ callback: @escaping ((_ message: Message) -> Void)) -> Int {
+        onErrorCallsCount += 1
+        onErrorReceivedCallback = callback
+        return onErrorClosure.map({ $0(callback) }) ?? onErrorReturnValue
+    }
+
+
+    //MARK: - delegateOnError<Target: AnyObject>
+
+    var delegateOnErrorToCallbackCallsCount = 0
+    var delegateOnErrorToCallbackCalled: Bool {
+        return delegateOnErrorToCallbackCallsCount > 0
+    }
+    var delegateOnErrorToCallbackReturnValue: Int!
+
+    override func delegateOnError<Target: AnyObject>(to owner: Target,                                                   callback: @escaping ((Target, Message) -> Void)) -> Int {
+        delegateOnErrorToCallbackCallsCount += 1
+        return delegateOnErrorToCallbackReturnValue
+    }
+
+
+    //MARK: - on
+
+    var onCallbackCallsCount = 0
+    var onCallbackCalled: Bool {
+        return onCallbackCallsCount > 0
+    }
+    var onCallbackReceivedArguments: (event: String, callback: (Message) -> Void)?
+    var onCallbackReturnValue: Int!
+    var onCallbackClosure: ((String, @escaping ((Message) -> Void)) -> Int)?
+
+    override func on(_ event: String, callback: @escaping ((Message) -> Void)) -> Int {
+        onCallbackCallsCount += 1
+    onCallbackReceivedArguments = (event: event, callback: callback)
+        return onCallbackClosure.map({ $0(event, callback) }) ?? onCallbackReturnValue
+    }
+
+
+    //MARK: - delegateOn<Target: AnyObject>
+
+    var delegateOnToCallbackCallsCount = 0
+    var delegateOnToCallbackCalled: Bool {
+        return delegateOnToCallbackCallsCount > 0
+    }
+    var delegateOnToCallbackReturnValue: Int!
+
+    override func delegateOn<Target: AnyObject>(_ event: String,                                              to owner: Target,                                              callback: @escaping ((Target, Message) -> Void)) -> Int {
+        delegateOnToCallbackCallsCount += 1
+        return delegateOnToCallbackReturnValue
+    }
+
+
+    //MARK: - off
+
+    var offRefCallsCount = 0
+    var offRefCalled: Bool {
+        return offRefCallsCount > 0
+    }
+    var offRefReceivedArguments: (event: String, ref: Int?)?
+    var offRefClosure: ((String, Int?) -> Void)?
+
+    override func off(_ event: String, ref: Int? = nil) {
+        offRefCallsCount += 1
+    offRefReceivedArguments = (event: event, ref: ref)
+        offRefClosure?(event, ref)
+    }
+
+
+    //MARK: - push
+
+    var pushPayloadTimeoutCallsCount = 0
+    var pushPayloadTimeoutCalled: Bool {
+        return pushPayloadTimeoutCallsCount > 0
+    }
+    var pushPayloadTimeoutReceivedArguments: (event: String, payload: Payload, timeout: TimeInterval)?
+    var pushPayloadTimeoutReturnValue: Push!
+    var pushPayloadTimeoutClosure: ((String, Payload, TimeInterval) -> Push)?
+
+    override func push(_ event: String,                     payload: Payload,                     timeout: TimeInterval = PHOENIX_TIMEOUT_INTERVAL) -> Push {
+        pushPayloadTimeoutCallsCount += 1
+    pushPayloadTimeoutReceivedArguments = (event: event, payload: payload, timeout: timeout)
+        return pushPayloadTimeoutClosure.map({ $0(event, payload, timeout) }) ?? pushPayloadTimeoutReturnValue
+    }
+
+
+    //MARK: - leave
+
+    var leaveTimeoutCallsCount = 0
+    var leaveTimeoutCalled: Bool {
+        return leaveTimeoutCallsCount > 0
+    }
+    var leaveTimeoutReceivedTimeout: TimeInterval?
+    var leaveTimeoutReturnValue: Push!
+    var leaveTimeoutClosure: ((TimeInterval) -> Push)?
+
+    override func leave(timeout: TimeInterval = PHOENIX_TIMEOUT_INTERVAL) -> Push {
+        leaveTimeoutCallsCount += 1
+        leaveTimeoutReceivedTimeout = timeout
+        return leaveTimeoutClosure.map({ $0(timeout) }) ?? leaveTimeoutReturnValue
+    }
+
+
+    //MARK: - onMessage
+
+    var onMessageCallbackCallsCount = 0
+    var onMessageCallbackCalled: Bool {
+        return onMessageCallbackCallsCount > 0
+    }
+    var onMessageCallbackReceivedCallback: ((Message) -> Message)?
+    var onMessageCallbackClosure: ((@escaping (Message) -> Message) -> Void)?
+
+    override func onMessage(callback: @escaping (Message) -> Message) {
+        onMessageCallbackCallsCount += 1
+        onMessageCallbackReceivedCallback = callback
+        onMessageCallbackClosure?(callback)
+    }
+
+
+    //MARK: - isMember
+
+    var isMemberCallsCount = 0
+    var isMemberCalled: Bool {
+        return isMemberCallsCount > 0
+    }
+    var isMemberReceivedMessage: Message?
+    var isMemberReturnValue: Bool!
+    var isMemberClosure: ((Message) -> Bool)?
+
+    override func isMember(_ message: Message) -> Bool {
+        isMemberCallsCount += 1
+        isMemberReceivedMessage = message
+        return isMemberClosure.map({ $0(message) }) ?? isMemberReturnValue
+    }
+
+
+    //MARK: - sendJoin
+
+    var sendJoinCallsCount = 0
+    var sendJoinCalled: Bool {
+        return sendJoinCallsCount > 0
+    }
+    var sendJoinReceivedTimeout: TimeInterval?
+    var sendJoinClosure: ((TimeInterval) -> Void)?
+
+    override func sendJoin(_ timeout: TimeInterval) {
+        sendJoinCallsCount += 1
+        sendJoinReceivedTimeout = timeout
+        sendJoinClosure?(timeout)
+    }
+
+
+    //MARK: - rejoin
+
+    var rejoinCallsCount = 0
+    var rejoinCalled: Bool {
+        return rejoinCallsCount > 0
+    }
+    var rejoinReceivedTimeout: TimeInterval?
+    var rejoinClosure: ((TimeInterval?) -> Void)?
+
+    override func rejoin(_ timeout: TimeInterval? = nil) {
+        rejoinCallsCount += 1
+        rejoinReceivedTimeout = timeout
+        rejoinClosure?(timeout)
+    }
+
+
+    //MARK: - trigger
+
+    var triggerCallsCount = 0
+    var triggerCalled: Bool {
+        return triggerCallsCount > 0
+    }
+    var triggerReceivedMessage: Message?
+    var triggerClosure: ((Message) -> Void)?
+
+    override func trigger(_ message: Message) {
+        triggerCallsCount += 1
+        triggerReceivedMessage = message
+        triggerClosure?(message)
+    }
+
+
+    //MARK: - trigger
+
+    var triggerEventPayloadRefJoinRefCallsCount = 0
+    var triggerEventPayloadRefJoinRefCalled: Bool {
+        return triggerEventPayloadRefJoinRefCallsCount > 0
+    }
+    var triggerEventPayloadRefJoinRefReceivedArguments: (event: String, payload: Payload, ref: String, joinRef: String?)?
+    var triggerEventPayloadRefJoinRefClosure: ((String, Payload, String, String?) -> Void)?
+
+    override func trigger(event: String,                 payload: Payload = [:],                 ref: String = "",                 joinRef: String? = nil) {
+        triggerEventPayloadRefJoinRefCallsCount += 1
+    triggerEventPayloadRefJoinRefReceivedArguments = (event: event, payload: payload, ref: ref, joinRef: joinRef)
+        triggerEventPayloadRefJoinRefClosure?(event, payload, ref, joinRef)
+    }
+
+
+    //MARK: - replyEventName
+
+    var replyEventNameCallsCount = 0
+    var replyEventNameCalled: Bool {
+        return replyEventNameCallsCount > 0
+    }
+    var replyEventNameReceivedRef: String?
+    var replyEventNameReturnValue: String!
+    var replyEventNameClosure: ((String) -> String)?
+
+    override func replyEventName(_ ref: String) -> String {
+        replyEventNameCallsCount += 1
+        replyEventNameReceivedRef = ref
+        return replyEventNameClosure.map({ $0(ref) }) ?? replyEventNameReturnValue
+    }
+
+
+}
 class PushMock: Push {
     var channelSetCount: Int = 0
     var channelDidGetSet: Bool { return channelSetCount > 0 }
