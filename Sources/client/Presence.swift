@@ -136,7 +136,7 @@ public final class Presence {
   }
   
   
-  public init(channel: Channel, options: Options = Options.defaults) {
+  public init(channel: Channel, opts: Options = Options.defaults) {
     self.state = [:]
     self.pendingDiffs = []
     self.channel = channel
@@ -144,8 +144,8 @@ public final class Presence {
     self.caller = Caller()
     
     guard // Do not subscribe to events if they were not provided
-      let stateEvent = options.events[.state],
-      let diffEvent = options.events[.diff] else { return }
+      let stateEvent = opts.events[.state],
+      let diffEvent = opts.events[.diff] else { return }
     
     
     self.channel?.delegateOn(stateEvent, to: self) { (self, message) in
@@ -234,10 +234,11 @@ public final class Presence {
   // disconnects and reconnects with the server.
   //
   // - returns: Presence.State
+  @discardableResult
   public static func syncState(_ currentState: State,
                                newState: State,
-                               onJoin: OnJoin,
-                               onLeave: OnLeave) -> State {
+                               onJoin: OnJoin = {_,_,_ in },
+                               onLeave: OnLeave = {_,_,_ in }) -> State {
     let state = currentState
     var leaves = state.filter { (key, _) -> Bool in
       !newState.contains(where: { $0.key == key })
@@ -302,7 +303,7 @@ public final class Presence {
       onJoin(key, currentPresence, newPresence)
     }
     
-    diff["joins"]?.forEach({ (key, leftPresence) in
+    diff["leaves"]?.forEach({ (key, leftPresence) in
       guard let curPresence = state[key] else { return }
       let refsToRemove = leftPresence["metas"]!.map { $0["phx_ref"] as! String }
       let keepMetas = curPresence["metas"]!.filter { (meta: Meta) -> Bool in
