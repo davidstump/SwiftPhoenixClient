@@ -226,7 +226,7 @@ class ChannelMock: Channel {
     var pushPayloadTimeoutReturnValue: Push!
     var pushPayloadTimeoutClosure: ((String, Payload, TimeInterval) -> Push)?
 
-    override func push(_ event: String,                     payload: Payload,                     timeout: TimeInterval = PHOENIX_TIMEOUT_INTERVAL) -> Push {
+    override func push(_ event: String,                     payload: Payload,                     timeout: TimeInterval = Defaults.timeoutInterval) -> Push {
         pushPayloadTimeoutCallsCount += 1
     pushPayloadTimeoutReceivedArguments = (event: event, payload: payload, timeout: timeout)
         return pushPayloadTimeoutClosure.map({ $0(event, payload, timeout) }) ?? pushPayloadTimeoutReturnValue
@@ -243,7 +243,7 @@ class ChannelMock: Channel {
     var leaveTimeoutReturnValue: Push!
     var leaveTimeoutClosure: ((TimeInterval) -> Push)?
 
-    override func leave(timeout: TimeInterval = PHOENIX_TIMEOUT_INTERVAL) -> Push {
+    override func leave(timeout: TimeInterval = Defaults.timeoutInterval) -> Push {
         leaveTimeoutCallsCount += 1
         leaveTimeoutReceivedTimeout = timeout
         return leaveTimeoutClosure.map({ $0(timeout) }) ?? leaveTimeoutReturnValue
@@ -423,7 +423,7 @@ class PushMock: Push {
     var resendReceivedTimeout: TimeInterval?
     var resendClosure: ((TimeInterval) -> Void)?
 
-    override func resend(_ timeout: TimeInterval = PHOENIX_TIMEOUT_INTERVAL) {
+    override func resend(_ timeout: TimeInterval = Defaults.timeoutInterval) {
         resendCallsCount += 1
         resendReceivedTimeout = timeout
         resendClosure?(timeout)

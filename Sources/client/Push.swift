@@ -69,7 +69,7 @@ public class Push {
     init(channel: Channel,
          event: String,
          payload: Payload = [:],
-         timeout: TimeInterval = PHOENIX_TIMEOUT_INTERVAL) {
+         timeout: TimeInterval = Defaults.timeoutInterval) {
         self.channel = channel
         self.event = event
         self.payload = payload
@@ -85,7 +85,7 @@ public class Push {
     
     /// Resets and sends the Push
     /// - parameter timeout: Optional. The push timeout. Default is 10.0s
-    public func resend(_ timeout: TimeInterval = PHOENIX_TIMEOUT_INTERVAL) {
+    public func resend(_ timeout: TimeInterval = Defaults.timeoutInterval) {
         self.timeout = timeout
         self.reset()
         self.send()

@@ -20,28 +20,28 @@
 
 
 /// A collection of default values and behaviors used accross the Client
-class Defaults {
+public class Defaults {
     
     /// Default timeout when sending messages
-    static let timeoutInterval: TimeInterval = 10.0
+    public static let timeoutInterval: TimeInterval = 10.0
     
     /// Default interval to send heartbeats on
-    static let heartbeatInterval: TimeInterval = 30.0
+    public static let heartbeatInterval: TimeInterval = 30.0
     
     /// Default reconnect function
-    static let steppedBackOff: (Int) -> TimeInterval = { tries in
+    public static let steppedBackOff: (Int) -> TimeInterval = { tries in
         return tries > 4 ? 10 : [1, 2, 5, 10][tries - 1]
     }
     
     /// Default encode function, utilizing JSONSerialization.data
-    static let encode: ([String: Any]) -> Data = { json in
+    public static let encode: ([String: Any]) -> Data = { json in
         return try! JSONSerialization
             .data(withJSONObject: json,
                   options: JSONSerialization.WritingOptions())
     }
     
     /// Default decode function, utilizing JSONSerialization.jsonObject
-    static let decode: (Data) -> [String: Any]? = { data in
+    public static let decode: (Data) -> [String: Any]? = { data in
         guard
             let json = try? JSONSerialization
                 .jsonObject(with: data,
@@ -49,5 +49,34 @@ class Defaults {
                 as? [String: Any]
             else { return nil }
         return json
+    }
+}
+
+
+/// Represents the multiple states that a Channel can be in
+/// throughout it's lifecycle.
+public enum ChannelState: String {
+    case closed = "closed"
+    case errored = "errored"
+    case joined = "joined"
+    case joining = "joining"
+    case leaving = "leaving"
+}
+
+/// Represents the different events that can be sent through
+/// a channel regarding a Channel's lifecycle.
+public struct ChannelEvent {
+    public static let heartbeat = "heartbeat"
+    public static let join      = "phx_join"
+    public static let leave     = "phx_leave"
+    public static let reply     = "phx_reply"
+    public static let error     = "phx_error"
+    public static let close     = "phx_close"
+    
+    static func isLifecyleEvent(_ event: String) -> Bool {
+        switch event {
+        case join, leave, reply, error, close: return true
+        default: return false
+        }
     }
 }

@@ -20,6 +20,20 @@
 
 import Swift
 
+/// Container class of bindings to the channel
+struct Binding {
+    
+    // The event that the Binding is bound to
+    let event: String
+    
+    // The reference number of the Binding
+    let ref: Int
+    
+    // The callback to be triggered
+    let callback: Delegated<Message, Void>
+}
+
+
 ///
 /// Represents a Channel which is bound to a topic
 ///
@@ -357,7 +371,7 @@ public class Channel {
         let ref = bindingRef
         self.bindingRef = ref + 1
         
-        self.bindingsDel.append(Binding(event, ref, delegated))
+        self.bindingsDel.append(Binding(event: event, ref: ref, callback: delegated))
         return ref
     }
     
@@ -400,7 +414,7 @@ public class Channel {
     @discardableResult
     public func push(_ event: String,
                      payload: Payload,
-                     timeout: TimeInterval = PHOENIX_TIMEOUT_INTERVAL) -> Push {
+                     timeout: TimeInterval = Defaults.timeoutInterval) -> Push {
         guard joinedOnce else { fatalError("Tried to push \(event) to \(self.topic) before joining. Use channel.join() before pushing events") }
         
         let pushEvent = Push(channel: self,
@@ -434,7 +448,7 @@ public class Channel {
     /// - parameter timeout: Optional timeout
     /// - return: Push that can add receive hooks
     @discardableResult
-    public func leave(timeout: TimeInterval = PHOENIX_TIMEOUT_INTERVAL) -> Push {
+    public func leave(timeout: TimeInterval = Defaults.timeoutInterval) -> Push {
         self.state = .leaving
         
         /// Delegated callback for a successful or a failed channel leave

@@ -25,6 +25,13 @@ import Starscream
 /// Alias for a JSON dictionary [String: Any]
 public typealias Payload = [String: Any]
 
+/// Struct that gathers callbacks assigned to the Socket
+struct StateChangeCallbacks {
+    var open: [Delegated<Void, Void>] = []
+    var close: [Delegated<Void, Void>] = []
+    var error: [Delegated<Error, Void>] = []
+    var message: [Delegated<Message, Void>] = []
+}
 
 
 /// ## Socket Connection
@@ -41,6 +48,8 @@ public typealias Payload = [String: Any]
 /// the authentication params, as well as options that can be found in
 /// the Socket docs, such as configuring the heartbeat.
 public class Socket {
+    
+    
     
     //----------------------------------------------------------------------
     // MARK: - Public Attributes
