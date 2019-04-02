@@ -1,0 +1,264 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Presence.swift",
+      "line": 118,
+      "symbol": "Presence.Events.state",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Presence.swift",
+      "line": 119,
+      "symbol": "Presence.Events.diff",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Presence.swift",
+      "line": 136,
+      "symbol": "Presence.Diff",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Presence.swift",
+      "line": 173,
+      "symbol": "Presence.isPendingSyncState",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Presence.swift",
+      "line": 212,
+      "symbol": "Presence.init(channel:opts:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Presence.swift",
+      "line": 285,
+      "symbol": "Presence.syncState(_:newState:onJoin:onLeave:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Presence.swift",
+      "line": 340,
+      "symbol": "Presence.syncDiff(_:diff:onJoin:onLeave:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Presence.swift",
+      "line": 380,
+      "symbol": "Presence.filter(_:by:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Presence.swift",
+      "line": 386,
+      "symbol": "Presence.listBy(_:transformer:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Socket.swift",
+      "line": 143,
+      "symbol": "Socket.init(_:params:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Socket.swift",
+      "line": 663,
+      "symbol": "Socket.websocketDidConnect(socket:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Socket.swift",
+      "line": 667,
+      "symbol": "Socket.websocketDidDisconnect(socket:error:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Socket.swift",
+      "line": 672,
+      "symbol": "Socket.websocketDidReceiveMessage(socket:text:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Socket.swift",
+      "line": 676,
+      "symbol": "Socket.websocketDidReceiveData(socket:data:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Defaults.swift",
+      "line": 59,
+      "symbol": "ChannelState.closed",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Defaults.swift",
+      "line": 60,
+      "symbol": "ChannelState.errored",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Defaults.swift",
+      "line": 61,
+      "symbol": "ChannelState.joined",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Defaults.swift",
+      "line": 62,
+      "symbol": "ChannelState.joining",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Defaults.swift",
+      "line": 63,
+      "symbol": "ChannelState.leaving",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Defaults.swift",
+      "line": 69,
+      "symbol": "ChannelEvent.heartbeat",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Defaults.swift",
+      "line": 70,
+      "symbol": "ChannelEvent.join",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Defaults.swift",
+      "line": 71,
+      "symbol": "ChannelEvent.leave",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Defaults.swift",
+      "line": 72,
+      "symbol": "ChannelEvent.reply",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Defaults.swift",
+      "line": 73,
+      "symbol": "ChannelEvent.error",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Defaults.swift",
+      "line": 74,
+      "symbol": "ChannelEvent.close",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Delegated.swift",
+      "line": 31,
+      "symbol": "Delegated.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Delegated.swift",
+      "line": 33,
+      "symbol": "Delegated.delegate(to:with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Delegated.swift",
+      "line": 43,
+      "symbol": "Delegated.call(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Delegated.swift",
+      "line": 47,
+      "symbol": "Delegated.isDelegateSet",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Delegated.swift",
+      "line": 55,
+      "symbol": "Delegated.stronglyDelegate(to:with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Delegated.swift",
+      "line": 62,
+      "symbol": "Delegated.manuallyDelegate(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Delegated.swift",
+      "line": 66,
+      "symbol": "Delegated.removeDelegate()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Delegated.swift",
+      "line": 74,
+      "symbol": "Delegated.delegate(to:with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Delegated.swift",
+      "line": 79,
+      "symbol": "Delegated.stronglyDelegate(to:with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Delegated.swift",
+      "line": 88,
+      "symbol": "Delegated.call()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Delegated.swift",
+      "line": 96,
+      "symbol": "Delegated.call(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Utilities/Delegated.swift",
+      "line": 104,
+      "symbol": "Delegated.call()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/drees/src/github/phoenix/SwiftPhoenixClient"
+}
