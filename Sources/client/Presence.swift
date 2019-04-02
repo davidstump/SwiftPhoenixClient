@@ -82,36 +82,6 @@ public final class Presence {
   /// The channel's joinRef, set when state events occur
   private(set) public var joinRef: String?
   
-  
-  
-//  static let phx_ref = "phx_ref"
-//  static let diff_joins = "joins"
-//  static let diff_leaves = "leaves"
-//
-//  static public let defaultOptions = PresenceOptions(events: [PresenceEventType.state: "presence_state", PresenceEventType.diff: "presence_diff"])
-//
-//  // MARK: - Enum declarations and classes
-//  public enum PresenceEventType: String {
-//    case state = "state", diff = "diff"
-//  }
-//
-//  public struct PresenceOptions {
-//    let events: [PresenceEventType: String]
-//  }
-  
-  // MARK: - Convenience typealiases
-//  public typealias PresenceMap = [String: Array<Meta>]
-//  public typealias PresenceState = [String: PresenceMap]
-  // Diff has keys "joins" and "leaves", pointing to a PresenceState each
-  // containing the users that joined and left, respectively...
-  
-//  public typealias Meta = [String: Any]
-//  public typealias OnJoinCallback = ((_ key: String, _ currentPresence: PresenceMap?, _ newPresence: PresenceMap) -> Void)?
-//  public typealias OnLeaveCallback = ((_ key: String, _ currentPresence: PresenceMap, _ leftPresence: PresenceMap) -> Void)?
-//  public typealias OnSync = (() -> ())?
-
-//
-
   public var isPendingSyncState: Bool {
     guard let safeJoinRef = self.joinRef else { return true }
     return safeJoinRef != self.channel?.joinRef
