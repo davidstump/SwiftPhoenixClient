@@ -110,7 +110,7 @@ public final class Presence {
 //  public typealias OnLeaveCallback = ((_ key: String, _ currentPresence: PresenceMap, _ leftPresence: PresenceMap) -> Void)?
 //  public typealias OnSync = (() -> ())?
 
-//  public typealias ListBy = (_ key: String, _ presence: PresenceMap) -> Any
+//
 
   public var isPendingSyncState: Bool {
     guard let safeJoinRef = self.joinRef else { return true }
@@ -123,10 +123,20 @@ public final class Presence {
     set { caller.onJoin = newValue }
   }
   
+  /// Set the OnJoin callback
+  public func onJoin(_ callback: @escaping OnJoin) {
+    self.onJoin = callback
+  }
+  
   /// Callback to be informed of leaves
   public var onLeave: OnLeave {
     get { return caller.onLeave }
     set { caller.onLeave = newValue }
+  }
+  
+  /// Set the OnLeave callback
+  public func onLeave(_ callback: @escaping OnLeave) {
+    self.onLeave = callback
   }
   
   /// Callback to be informed of synces
@@ -135,8 +145,13 @@ public final class Presence {
     set { caller.onSync = newValue }
   }
   
+  /// Set the OnSync callback
+  public func onSync(_ callback: @escaping OnSync) {
+    self.onSync = callback
+  }
   
-  public init(channel: Channel, options: Options = Options.defaults) {
+  
+  public init(channel: Channel, opts: Options = Options.defaults) {
     self.state = [:]
     self.pendingDiffs = []
     self.channel = channel
@@ -144,8 +159,8 @@ public final class Presence {
     self.caller = Caller()
     
     guard // Do not subscribe to events if they were not provided
-      let stateEvent = options.events[.state],
-      let diffEvent = options.events[.diff] else { return }
+      let stateEvent = opts.events[.state],
+      let diffEvent = opts.events[.diff] else { return }
     
     
     self.channel?.delegateOn(stateEvent, to: self) { (self, message) in
@@ -182,47 +197,21 @@ public final class Presence {
     }
   }
   
-//  // MARK: - Initialisation
-//  public convenience init(channel: Channel) {
-//    self.init(channel: channel, options: Presence.defaultOptions)
-//  }
-//
-//  public init(channel: Channel, options: PresenceOptions) {
-//    self.channel = channel
-//    self.state = [:]
-//    self.options = options
-//    if let state = self.options.events[PresenceEventType.state] {
-//      channel.delegateOn(state, to: self) { (self, message) in
-//        if let newState = message.payload as? PresenceState {
-//          self.joinRef = channel.joinRef
-//          self.state = Presence.syncState(self.state, newState: newState, onJoin: self.onJoin, onLeave: self.onLeave)
-//
-//          for diff in self.pendingDiffs {
-//            self.state = Presence.syncDiff(self.state, diff: diff, onJoin: self.onJoin, onLeave: self.onLeave)
-//          }
-//          self.pendingDiffs = []
-//          if let onSync = self.onSync {
-//            onSync()
-//          }
-//        }
-//      }
-//    }
-//    if let diff = self.options.events[PresenceEventType.diff] {
-//      channel.delegateOn(diff, to: self) { (self, message) in
-//        if let diff = message.payload as? Diff {
-//          if self.isPendingSyncState {
-//            self.pendingDiffs.append(diff)
-//          } else {
-//            self.state = Presence.syncDiff(self.state, diff: diff, onJoin: self.onJoin, onLeave: self.onLeave)
-//            if let onSync = self.onSync {
-//              onSync()
-//            }
-//          }
-//        }
-//      }
-//    }
-//  }
+  /// Returns the array of presences, with deault selected metadata.
+  public func list() -> [Map] {
+    return self.list(by: { _, pres in pres })
+  }
   
+  /// Returns the array of presences, with selected metadata
+  public func list<T>(by transformer: (String, Map) -> T) -> [T] {
+    return Presence.listBy(self.state, transformer: transformer)
+  }
+  
+  /// Filter the Presence state with a given function
+  public func filter(by filter: ((String, Map) -> Bool)?) -> State {
+    return Presence.filter(self.state, by: filter)
+  }
+
   
   //----------------------------------------------------------------------
   // MARK: - Static
@@ -234,38 +223,45 @@ public final class Presence {
   // disconnects and reconnects with the server.
   //
   // - returns: Presence.State
+  @discardableResult
   public static func syncState(_ currentState: State,
                                newState: State,
-                               onJoin: OnJoin,
-                               onLeave: OnLeave) -> State {
+                               onJoin: OnJoin = {_,_,_ in },
+                               onLeave: OnLeave = {_,_,_ in }) -> State {
     let state = currentState
-    var leaves = state.filter { (key, _) -> Bool in
-      !newState.contains(where: { $0.key == key })
-    }
-    
-    var joins = newState.filter { (key, _) -> Bool in
-      !state.contains(where: { $0.key == key })
-    }
-    
-    newState.forEach { (key, newPresence) in
-      guard let currentPresence = state[key] else { return }
-      
-      let newRefs = newPresence["meta"]!.map({ $0["phx_ref"] as! String })
-      let curRefs = currentPresence["meta"]!.map({ $0["phx_ref"] as! String })
-      
-      let joinedMetas = newPresence["meta"]!.filter({ (meta: Meta) -> Bool in
-        curRefs.contains { $0 == meta["phx_ref"] as! String }
-      })
-      let leftMetas = currentPresence["metas"]!.filter({ (meta: Meta) -> Bool in
-        newRefs.contains { $0 == meta["phx_ref"] as! String }
-      })
-  
-      if joinedMetas.count > 0 {
-        joins[key] = ["metas": joinedMetas]
+    var leaves: Presence.State = [:]
+    var joins: Presence.State = [:]
+
+    state.forEach { (key, presence) in
+      if newState[key] == nil {
+        leaves[key] = presence
       }
-      
-      if leftMetas.count > 0 {
-        leaves[key] = ["metas": leftMetas]
+    }
+
+    newState.forEach { (key, newPresence) in
+      if let currentPresence = state[key] {
+        let newRefs = newPresence["metas"]!.map({ $0["phx_ref"] as! String })
+        let curRefs = currentPresence["metas"]!.map({ $0["phx_ref"] as! String })
+        
+        let joinedMetas = newPresence["metas"]!.filter({ (meta: Meta) -> Bool in
+          !curRefs.contains { $0 == meta["phx_ref"] as! String }
+        })
+        let leftMetas = currentPresence["metas"]!.filter({ (meta: Meta) -> Bool in
+          !newRefs.contains { $0 == meta["phx_ref"] as! String }
+        })
+    
+        
+        if joinedMetas.count > 0 {
+          joins[key] = newPresence
+          joins[key]!["metas"] = joinedMetas
+        }
+        
+        if leftMetas.count > 0 {
+          leaves[key] = currentPresence
+          leaves[key]!["metas"] = leftMetas
+        }
+      } else {
+        joins[key] = newPresence
       }
     }
 
@@ -282,6 +278,7 @@ public final class Presence {
   // joining or leaving from a device.
   //
   // - returns: Presence.State
+  @discardableResult
   public static func syncDiff(_ currentState: State,
                               diff: Diff,
                               onJoin: OnJoin = {_,_,_ in },
@@ -294,21 +291,22 @@ public final class Presence {
       if let curPresence = currentPresence {
         let joinedRefs = state[key]!["metas"]!.map({ $0["phx_ref"] as! String })
         let curMetas = curPresence["metas"]!.filter { (meta: Meta) -> Bool in
-          joinedRefs.contains { $0 == meta["phx_ref"] as! String }
+          !joinedRefs.contains { $0 == meta["phx_ref"] as! String }
         }
-        state[key]!["metas"]!.append(contentsOf: curMetas)
+        state[key]!["metas"]!.insert(contentsOf: curMetas, at: 0)
       }
       
       onJoin(key, currentPresence, newPresence)
     }
     
-    diff["joins"]?.forEach({ (key, leftPresence) in
-      guard let curPresence = state[key] else { return }
+    diff["leaves"]?.forEach({ (key, leftPresence) in
+      guard var curPresence = state[key] else { return }
       let refsToRemove = leftPresence["metas"]!.map { $0["phx_ref"] as! String }
       let keepMetas = curPresence["metas"]!.filter { (meta: Meta) -> Bool in
         !refsToRemove.contains { $0 == meta["phx_ref"] as! String }
       }
-
+      
+      curPresence["metas"] = keepMetas
       onLeave(key, curPresence, leftPresence)
 
       if keepMetas.count > 0 {
@@ -321,143 +319,14 @@ public final class Presence {
     return state
   }
   
+  public static func filter(_ presences: State,
+                            by filter: ((String, Map) -> Bool)?) -> State {
+    let safeFilter = filter ?? { key, pres in true }
+    return presences.filter(safeFilter)
+  }
   
-//  public static func list(_ state: State, chooser: ()
-  
-  
-  
-  // MARK: - Syncing
-  /**
-   Used to sync the list of presences on the server
-   with the client's state. An optional `onJoin` and `onLeave` callback can
-   be provided to react to changes in the client's local presences across
-   disconnects and reconnects with the server.
-   
-   - Parameter pState: the current PresenceState
-   
-   - Parameter pNewState: the new PresenceState sent from the server
-   
-   - Parameter pOnJoin: an optional callback for the client to react to new users joining
-
-   - Parameter pOnLeave: an optional callback for the client to react to users leaving
-
-   - Returns: A new PresenceState
-   */
-//  static public func syncState(_ pState: PresenceState, newState pNewState: PresenceState,
-//                   onJoin pOnJoin: OnJoinCallback, onLeave pOnLeave: OnLeaveCallback) -> PresenceState {
-//    var state = pState
-//    var leaves = pState.filter { (key, value) -> Bool in
-//      !pNewState.contains(where: { $0.key == key })
-//    }
-//    var joins = pNewState.filter { (key, value) -> Bool in
-//      !pState.contains(where: { $0.key == key })
-//    }
-//
-//    pNewState.forEach { (key: String, newPresence: PresenceMap) in
-//      // Looking for differences in metadata of already present users.
-//      if let currentPresence = state[key] {
-//        let curRefs = currentPresence["metas"]!.map { $0[phx_ref] as! String }
-//        let newMetas = newPresence["metas"]!.filter({ (meta: Meta) -> Bool in
-//          curRefs.contains { $0 == meta[phx_ref] as! String }
-//        })
-//        if newMetas.count > 0 {
-//          joins[key] = ["metas": newMetas]
-//        }
-//
-//        let newRefs = newPresence["metas"]!.map { $0[phx_ref] as! String }
-//        let leftMetas = currentPresence["metas"]!.filter({ (meta: Meta) -> Bool in
-//          newRefs.contains { $0 == meta[phx_ref] as! String }
-//        })
-//        if leftMetas.count > 0 {
-//          leaves[key] = ["metas": leftMetas]
-//        }
-//      }
-//    }
-//
-//    return Presence.syncDiff(state, diff: [diff_joins: joins, diff_leaves: leaves], onJoin: pOnJoin, onLeave: pOnLeave)
-//  }
-  
-//  static public func syncDiff(_ pState: PresenceState, diff: Diff,
-//                       onJoin pOnJoin: OnJoinCallback, onLeave pOnLeave: OnLeaveCallback) -> PresenceState {
-//    var state = pState
-//    guard let joins = diff[diff_joins],
-//      let leaves = diff[diff_leaves]
-//      else {
-//        // TODO: Do something about this or just force cast instead of guard?
-//        return [:]
-//    }
-//
-//    for (key, newPresence) in joins {
-//      let currentPresence: PresenceMap? = state[key]
-//      state[key] = newPresence
-//      if currentPresence != nil {
-//        let joinedRefs = state[key]!["metas"]!.map { $0[phx_ref] as! String }
-//        let curMetas = currentPresence!["metas"]!.filter { (meta: Meta) -> Bool in
-//          joinedRefs.contains { $0 == meta[phx_ref] as! String }
-//        }
-//        state[key]!["metas"]!.append(contentsOf: curMetas)
-//      }
-//      if let onJoin = pOnJoin {
-//        onJoin(key, currentPresence, newPresence)
-//      }
-//    }
-//
-//    for (key, leftPresence) in leaves {
-//      if let currentPresence = state[key] {
-//        let refsToRemove = leftPresence["metas"]!.map { $0[phx_ref] as! String }
-//        let keepMetas = currentPresence["metas"]!.filter { (meta: Meta) -> Bool in
-//          !refsToRemove.contains { $0 == meta[phx_ref] as! String }
-//        }
-//
-//        if let onLeave = pOnLeave {
-//          onLeave(key, currentPresence, leftPresence)
-//        }
-//        if keepMetas.count > 0 {
-//          state[key]!["metas"] = keepMetas
-//        } else {
-//          state.removeValue(forKey: key)
-//        }
-//      }
-//    }
-//
-//    return state
-//  }
-  
-  // MARK: - Presence access convenience
-  
-//  public func metas(id: String) -> PresenceMap? {
-//    return state[id]
-//  }
-//
-//  public func firstMeta(id: String) -> PresenceMap? {
-//    return state[id]?.first
-//  }
-//
-//  public func firstMetas() -> [String: Meta] {
-//    var result = [String: Meta]()
-//    state.forEach { id, metas in
-//      result[id] = metas.first
-//    }
-//
-//    return result
-//  }
-//
-//  public func firstMetaValue<T>(id: String, key: String) -> T? {
-//    guard let meta = state[id]?.first, let value = meta[key] as? T else {
-//      return nil
-//    }
-//
-//    return value
-//  }
-//
-//  public func firstMetaValues<T>(key: String) -> [T] {
-//    var result = [T]()
-//    state.forEach { id, metas in
-//      if let meta = metas.first, let value = meta[key] as? T {
-//        result.append(value)
-//      }
-//    }
-//
-//    return result
-//  }
+  public static func listBy<T>(_ presences: State,
+                               transformer: (String, Map) -> T) -> [T] {
+    return presences.map(transformer)
+  }
 }
