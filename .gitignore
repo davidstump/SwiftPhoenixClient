@@ -31,7 +31,7 @@ xcuserdata/
 ## Jazzy
 #
 # Uncomment if you are updating the docs
-docs/
+# docs/
 
 ## Obj-C/Swift specific
 *.hmap

@@ -44,10 +44,7 @@ public class Message {
     public var status: String? {
         return payload["status"] as? String
     }
-    
-    //----------------------------------------------------------------------
-    // MARK: - Internal
-    //----------------------------------------------------------------------
+
     init(ref: String = "",
          topic: String = "",
          event: String = "",

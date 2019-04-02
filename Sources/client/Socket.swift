@@ -1,7 +1,23 @@
+// Copyright (c) 2019 David Stump <david@davidstump.net>
 //
-//  Socket.swift
-//  SwiftPhoenixClient
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 //
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 
 import Starscream
 
@@ -9,6 +25,13 @@ import Starscream
 /// Alias for a JSON dictionary [String: Any]
 public typealias Payload = [String: Any]
 
+/// Struct that gathers callbacks assigned to the Socket
+struct StateChangeCallbacks {
+    var open: [Delegated<Void, Void>] = []
+    var close: [Delegated<Void, Void>] = []
+    var error: [Delegated<Error, Void>] = []
+    var message: [Delegated<Message, Void>] = []
+}
 
 
 /// ## Socket Connection
@@ -25,6 +48,8 @@ public typealias Payload = [String: Any]
 /// the authentication params, as well as options that can be found in
 /// the Socket docs, such as configuring the heartbeat.
 public class Socket {
+    
+    
     
     //----------------------------------------------------------------------
     // MARK: - Public Attributes
