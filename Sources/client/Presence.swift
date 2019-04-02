@@ -21,18 +21,107 @@
 
 import Foundation
 
+/// The Presence object provides features for syncing presence information from
+/// the server with the client and handling presences joining and leaving.
+///
+/// ## Syncing state from the server
+///
+/// To sync presence state from the server, first instantiate an object and pass
+/// your channel in to track lifecycle events:
+///
+///     let channel = socket.channel("some:topic")
+///     let presence = Presence(channel)
+///
+/// If you have custom syncing state events, you can configure the `Presence`
+/// object to use those instead.
+///
+///     let options = Options(events: [.state: "my_state", .diff: "my_diff"])
+///     let presence = Presence(channel, opts: options)
+///
+/// Next, use the presence.onSync callback to react to state changes from the
+/// server. For example, to render the list of users every time the list
+/// changes, you could write:
+///
+///     presence.onSync { renderUsers(presence.list()) }
+///
+/// ## Listing Presences
+///
+/// presence.list is used to return a list of presence information based on the
+/// local state of metadata. By default, all presence metadata is returned, but
+/// a listBy function can be supplied to allow the client to select which
+/// metadata to use for a given presence. For example, you may have a user
+/// online from different devices with a metadata status of "online", but they
+/// have set themselves to "away" on another device. In this case, the app may
+/// choose to use the "away" status for what appears on the UI. The example
+/// below defines a listBy function which prioritizes the first metadata which
+/// was registered for each user. This could be the first tab they opened, or
+/// the first device they came online from:
+///
+///     let listBy: (String, Presence.Map) -> Presence.Meta = { id, pres in
+///         let first = pres["metas"]!.first!
+///         first["count"] = pres["metas"]!.count
+///         first["id"] = id
+///         return first
+///     }
+///     let onlineUsers = presence.list(by: listBy)
+///
+/// (NOTE: The underlying behavior is a `map` on the `presence.state`. You are
+/// mapping the `state` dictionary into whatever datastructure suites your needs)
+///
+/// ## Handling individual presence join and leave events
+///
+/// The presence.onJoin and presence.onLeave callbacks can be used to react to
+/// individual presences joining and leaving the app. For example:
+///
+///     let presence = Presence(channel)
+///     presence.onJoin { [weak self] (key, current, newPres) in
+///         if let cur = current {
+///             print("user additional presence", cur)
+///         } else {
+///             print("user entered for the first time", newPres)
+///         }
+///     }
+///
+///     presence.onLeave { [weak self] (key, current, leftPres) in
+///         if current["metas"]?.isEmpty == true {
+///             print("user has left from all devices", leftPres)
+///         } else {
+///             print("user left from a device", current)
+///         }
+///     }
+///
+///     presence.onSync { renderUsers(presence.list()) }
 public final class Presence {
   
   
   //----------------------------------------------------------------------
-  // MARK: - Enums, Structs, and typealiases
+  // MARK: - Enums and Structs
   //----------------------------------------------------------------------
+  /// Custom options that can be provided when creating Presence
+  ///
+  /// ### Example:
+  ///
+  ///     let options = Options(events: [.state: "my_state", .diff: "my_diff"])
+  ///     let presence = Presence(channel, opts: options)
+  public struct Options {
+    let events: [Events: String]
+    
+    /// Default set of Options used when creating Presence. Uses the
+    /// phoenix events "presence_state" and "presence_diff"
+    static public let defaults
+      = Options(events: [.state: "presence_state",
+                         .diff: "presence_diff"])
+  }
+  
   /// Presense Events
   public enum Events: String {
     case state = "state"
     case diff = "diff"
   }
   
+  //----------------------------------------------------------------------
+  // MARK: - Typaliases
+  //----------------------------------------------------------------------
   /// Meta details of a Presence. Just a dictionary of properties
   public typealias Meta = [String: Any]
   
@@ -45,17 +134,7 @@ public final class Presence {
   // Diff has keys "joins" and "leaves", pointing to a Presence.State each
   // containing the users that joined and left.
   public typealias Diff = [String: State]
-  
-  /// Custom options that can be provided when creating Presence
-  public struct Options {
-    let events: [Events: String]
-    
-    /// Default set of Options used when creating Presence
-    static public let defaults
-      = Options(events: [.state: "presence_state",
-                         .diff: "presence_diff"])
-  }
-  
+
   /// Closure signature of OnJoin callbacks
   public typealias OnJoin = (_ key: String, _ current: Map?, _ new: Map) -> Void
   
