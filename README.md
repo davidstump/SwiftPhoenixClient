@@ -60,6 +60,10 @@ Check out the wiki page for [getting started](https://github.com/davidstump/Swif
 
 Tested with the [Phoenix Chat Server example](https://github.com/chrismccord/phoenix_chat_example), upgraded to Phoenix 1.2.
 
+## Thanks
+
+Many many thanks to [Daniel Rees](https://github.com/dsrees) for his many contributions and continued maintenance of this project!
+
 ## License
 
 SwiftPhoenixClient is available under the MIT license. See the LICENSE file for more info.
