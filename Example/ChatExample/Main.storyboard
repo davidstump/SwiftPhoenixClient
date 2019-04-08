@@ -27,7 +27,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="f0j-lc-zNe">
-                                <rect key="frame" x="16" y="66" width="343" height="543"/>
+                                <rect key="frame" x="16" y="104" width="343" height="505"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
@@ -46,6 +46,13 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sin-0b-oS9">
+                                <rect key="frame" x="158" y="66" width="59" height="30"/>
+                                <state key="normal" title="Connect"/>
+                                <connections>
+                                    <action selector="onSocketButtonPressed:" destination="d3J-cV-Pt3" eventType="touchUpInside" id="s8U-g2-bLa"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -57,10 +64,12 @@
                             <constraint firstItem="ijj-wb-YW8" firstAttribute="top" secondItem="f0j-lc-zNe" secondAttribute="bottom" constant="8" symbolic="YES" id="EBZ-qB-9nU"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ijj-wb-YW8" secondAttribute="trailing" constant="-5" id="JBe-78-HDQ"/>
                             <constraint firstItem="ijj-wb-YW8" firstAttribute="centerY" secondItem="qpO-sc-lSJ" secondAttribute="centerY" id="KaO-Wu-6L4"/>
-                            <constraint firstItem="f0j-lc-zNe" firstAttribute="top" secondItem="UvR-pK-85C" secondAttribute="bottom" constant="8" symbolic="YES" id="M6Q-yf-e5U"/>
                             <constraint firstItem="UvR-pK-85C" firstAttribute="top" secondItem="ywi-x9-aSY" secondAttribute="bottom" constant="8" id="ZfE-I3-Hlk"/>
                             <constraint firstItem="UvR-pK-85C" firstAttribute="trailing" secondItem="Us2-Xz-QKY" secondAttribute="trailingMargin" id="bH7-Wq-0z8"/>
+                            <constraint firstItem="Sin-0b-oS9" firstAttribute="top" secondItem="UvR-pK-85C" secondAttribute="bottom" constant="8" id="exd-gr-AUU"/>
                             <constraint firstItem="ijj-wb-YW8" firstAttribute="leading" secondItem="qpO-sc-lSJ" secondAttribute="trailing" constant="8" symbolic="YES" id="nOA-F5-PE5"/>
+                            <constraint firstItem="f0j-lc-zNe" firstAttribute="top" secondItem="Sin-0b-oS9" secondAttribute="bottom" constant="8" id="s3K-HM-Hop"/>
+                            <constraint firstItem="Sin-0b-oS9" firstAttribute="centerX" secondItem="Us2-Xz-QKY" secondAttribute="centerX" id="t96-kS-hce"/>
                             <constraint firstItem="f0j-lc-zNe" firstAttribute="leading" secondItem="Us2-Xz-QKY" secondAttribute="leadingMargin" id="u0j-as-Ouw"/>
                         </constraints>
                     </view>
@@ -68,12 +77,13 @@
                         <outlet property="chatWindow" destination="f0j-lc-zNe" id="NaA-Ef-2Fj"/>
                         <outlet property="messageField" destination="qpO-sc-lSJ" id="bd3-Xi-cRq"/>
                         <outlet property="sendButton" destination="ijj-wb-YW8" id="v23-xv-lrL"/>
+                        <outlet property="socketButton" destination="Sin-0b-oS9" id="1Xc-TV-IX3"/>
                         <outlet property="userField" destination="UvR-pK-85C" id="Qzf-8t-dGS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gdC-AB-Ime" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="554" y="265"/>
+            <point key="canvasLocation" x="552.79999999999995" y="264.91754122938534"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="hUU-3e-5sc">
