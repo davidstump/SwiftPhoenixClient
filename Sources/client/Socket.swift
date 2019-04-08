@@ -187,6 +187,7 @@ public class Socket {
         
         self.reconnectTimer = TimeoutTimer()
         self.reconnectTimer.callback.delegate(to: self) { (self, _) in
+            self.logItems("Reconnect Timer fired")
             self.teardown() { self.connect() }
         }
         self.reconnectTimer.timerCalculation
@@ -233,6 +234,7 @@ public class Socket {
         self.connection?.enabledSSLCipherSuites = enabledSSLCipherSuites
         #endif
         
+        self.logItems("Attempting to connect")
         self.connection?.connect()
     }
     
@@ -545,6 +547,9 @@ public class Socket {
         // If there was a non-normal event when the connection closed, attempt
         // to schedule a reconnect attempt
         if let safeCode = code, safeCode != CloseCode.normal.rawValue {
+            self.reconnectTimer.scheduleTimeout()
+        } else if code == nil {
+            self.logItems("Code was nil")
             self.reconnectTimer.scheduleTimeout()
         }
         

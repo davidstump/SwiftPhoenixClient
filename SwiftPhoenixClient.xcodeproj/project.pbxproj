@@ -119,7 +119,6 @@
 			isa = PBXGroup;
 			children = (
 				124A083821F174C2003D1400 /* client */,
-				12BCCB432210CEC9001A55E1 /* utility */,
 			);
 			name = SwiftPhoenixClient;
 			path = Sources;
@@ -191,13 +190,6 @@
 				120B42C622233A0D00FE483D /* Defaults.swift */,
 			);
 			path = Utilities;
-			sourceTree = "<group>";
-		};
-		12BCCB432210CEC9001A55E1 /* utility */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = utility;
 			sourceTree = "<group>";
 		};
 		12BCCB462210D4C9001A55E1 /* client */ = {

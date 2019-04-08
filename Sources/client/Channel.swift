@@ -164,7 +164,7 @@ public class Channel {
             self.rejoinTimer.reset()
             
             // Log that the channel was left
-            self.socket?.logItems("channel", "close \(self.topic)")
+            self.socket?.logItems("channel", "close topic: \(self.topic)joinRef: \(self.joinRef ?? "nil")")
             
             // Mark the channel as closed and remove it from the socket
             self.state = ChannelState.closed
