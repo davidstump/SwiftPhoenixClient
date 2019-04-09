@@ -5,6 +5,9 @@ This product uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.1]
+* Fixed issue with Carthage installs
+
 ## [1.0.0]
 * Rewrite of large parts of the Socket and Channel classes
 * Optional API for automatic retain cycle handling
