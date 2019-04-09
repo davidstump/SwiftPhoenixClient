@@ -269,13 +269,43 @@ class SocketSpec: QuickSpec {
             })
             
             it("calls callback", closure: {
+                var callCount = 0
                 socket.connect()
-                socket.disconnect(code: CloseCode.goingAway)
+                socket.disconnect(code: CloseCode.goingAway) {
+                    callCount += 1
+                }
                 
                 expect(mockWebSocket.disconnectForceTimeoutCloseCodeCalled).to(beTrue())
                 expect(mockWebSocket.disconnectForceTimeoutCloseCodeReceivedArguments?.forceTimeout).to(beNil())
                 expect(mockWebSocket.disconnectForceTimeoutCloseCodeReceivedArguments?.closeCode)
                     .to(equal(CloseCode.goingAway.rawValue))
+                expect(callCount).to(equal(1))
+
+            })
+            
+            it("calls onClose for all state callbacks", closure: {
+                var callCount = 0
+                socket.onClose {
+                    callCount += 1
+                }
+                
+                socket.disconnect()
+                expect(callCount).to(equal(1))
+
+            })
+            
+            it("invalidates and releases the heartbeat timer", closure: {
+                var timerCalled = 0
+                let timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: false, block: { (_) in
+                    timerCalled += 1
+                })
+                
+                socket.heartbeatTimer = timer
+                
+                socket.disconnect()
+                expect(socket.heartbeatTimer).to(beNil())
+                timer.fire()
+                expect(timerCalled).to(equal(0))
             })
             
             it("does nothing if not connected", closure: {

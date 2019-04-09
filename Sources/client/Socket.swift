@@ -186,7 +186,8 @@ public class Socket {
         self.endPointUrl = qualifiedUrl
         
         self.reconnectTimer = TimeoutTimer()
-        self.reconnectTimer.callback.delegate(to: self) { (self, _) in
+        self.reconnectTimer.callback.delegate(to: self) { (self) in
+            self.logItems("Socket attempting to reconnect")
             self.teardown() { self.connect() }
         }
         self.reconnectTimer.timerCalculation
@@ -240,27 +241,25 @@ public class Socket {
     ///
     /// - parameter code: Optional. Closing status code
     /// - paramter callback: Optional. Called when disconnected
-    public func disconnect(code: CloseCode? = nil,
+    public func disconnect(code: CloseCode = CloseCode.normal,
                            callback: (() -> Void)? = nil) {
         self.reconnectTimer.reset()
         self.teardown(code: code, callback: callback)
     }
     
     
-    internal func teardown(code: CloseCode? = nil, callback: (() -> Void)? = nil) {
+    internal func teardown(code: CloseCode = CloseCode.normal, callback: (() -> Void)? = nil) {
         self.connection?.delegate = nil
-        
-        if let safeCode = code {
-            self.connection?.disconnect(forceTimeout: nil, closeCode: safeCode.rawValue)
-        } else {
-            self.connection?.disconnect()
-        }
-        
+        self.connection?.disconnect(forceTimeout: nil, closeCode: code.rawValue)
         self.connection = nil
         
-        // TODO: This?
-        //        self.heartbeatTimer?.invalidate()
-        //        self.onCloseCallbacks.forEach( { $0() } )
+        // The socket connection has been torndown, heartbeats are not needed
+        self.heartbeatTimer?.invalidate()
+        self.heartbeatTimer = nil
+        
+        // Since the connection's delegate was nil'd out, inform all state
+        // callbacks that the connection has closed
+        self.stateChangeCallbacks.close.forEach({ $0.call() })
         callback?()
     }
     
@@ -542,13 +541,13 @@ public class Socket {
         self.heartbeatTimer?.invalidate()
         self.heartbeatTimer = nil
         
+        self.stateChangeCallbacks.close.forEach({ $0.call() })
+        
         // If there was a non-normal event when the connection closed, attempt
         // to schedule a reconnect attempt
-        if let safeCode = code, safeCode != CloseCode.normal.rawValue {
-            self.reconnectTimer.scheduleTimeout()
-        }
-        
-        self.stateChangeCallbacks.close.forEach({ $0.call() })
+        let closeCode = CloseCode.init(rawValue: UInt16(code ?? 0))
+        guard closeCode != CloseCode.normal else { return }
+        self.reconnectTimer.scheduleTimeout()
     }
     
     internal func onConnectionError(_ error: Error) {

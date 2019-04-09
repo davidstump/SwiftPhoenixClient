@@ -7,30 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		072D04A5DE45B04FC14AB0C41063D0A6 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF69CA1A7247E506781F6C63FA46295 /* Push.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		06C4A4A9087266D23BC33EF917B988F4 /* Delegated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E18500EB0DD389F5E112538AF610106 /* Delegated.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		17470826CA9BE6230FE9D5BCF0487E00 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE6342425BC9AC34A483A548F137816 /* Message.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		1A990348F3389018BCFF4736D136CFFA /* Pods-ChatExample-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6305A7F7E3BE5845060709E057709268 /* Pods-ChatExample-dummy.m */; };
-		2A9B8CCE08919EEBFA9806AAE6F06C3A /* TimeoutTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1187F3231E915741D2343FFB14B492E3 /* TimeoutTimer.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		37B6A6D9F7BB1CF761FE0432CE3ACF07 /* SSLClientCertificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722B7A5196E76DAE17188C05D685DF4C /* SSLClientCertificate.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		3C1115097AF977677E66A47B7A6042E8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 276140B1EDA081793CA6BDD7582E1B4B /* Foundation.framework */; };
 		3C742A7F6C5C16B9B3A2DB60EE79BA90 /* Starscream-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 677BC8911948C9658703184E269F0032 /* Starscream-dummy.m */; };
-		3CD573012DA8A831777BE74585A448D6 /* SwiftPhoenixClient-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FB9E1842B6CA805D81A77CD81ABE232 /* SwiftPhoenixClient-dummy.m */; };
-		3DDCB0A889D19379195B6B3FC5487865 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883BE13BAFCFB6F5297D6B89889EF5DF /* Message.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		441C660E3DD11D391C8D5A1C01E4DB9D /* Delegated.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4402E87ABD1671D385F6C76CB325F61 /* Delegated.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		456A39B68C032D89EB674E8BD613E25C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 276140B1EDA081793CA6BDD7582E1B4B /* Foundation.framework */; };
-		9AF443493EB36A71522C7AEEB7FE53A5 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312EE71C3278DA1F548E071F2D01FC94 /* Channel.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		76B167AE8C3D6B545C8FFAEA2AA2F7A4 /* SwiftPhoenixClient-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 331DD9CEAC50C58A6BE7442E7E42A8BE /* SwiftPhoenixClient-dummy.m */; };
+		8130AC459082C692F00AD435598278DD /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3371ED4635BDCE3F24420708B0F488CD /* Socket.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		8BB365610BD6DD90472AA137A843B165 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF209B8C542AF73A5150922754573BEA /* Defaults.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		91C45B49F590685BB901653F0A8F0DD3 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E718F6D525A96AA8CFAB423C8DFA4A /* Channel.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		9B617F399EED4F24A9DE69ED5933776D /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF667E69ACDB807B282E380354DB273 /* WebSocket.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		AE6A8721566E80F16C980B7FC1E1C495 /* Compression.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F18693C1114E37BBFBEC8EE8686FDC /* Compression.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		B1D2731B3DD9AC7569D542C189BD5026 /* SwiftPhoenixClient-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = F4195FE5ED9CD8805590C3A0C8BC9F4F /* SwiftPhoenixClient-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B1D2731B3DD9AC7569D542C189BD5026 /* SwiftPhoenixClient-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E2E1E155EDD2C3275557338425D1EA4 /* SwiftPhoenixClient-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B7C5DCC270091B42B57D16C712E65C28 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB268AF97FFA3EDB3566E378D760E046 /* Presence.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		BA688907DF7CFAD5049B788B11846968 /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F52249DD4D3DD3159B64A42F2E7349B /* Starscream.framework */; };
 		C349B6243A2B667D8DB6DE35685DD071 /* Pods-ChatExample-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C780E30A1AECA11F6D93AA3B5F6ED34 /* Pods-ChatExample-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D30345AEAD6E5EF752E4FF27281C42E4 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30E85FA0BDF2F1A90D6310D13886F46D /* Presence.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		D4969B8B98D20DB29CA17388BD193113 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB7C81280F793633F8EE3AF704F9F5B /* Binding.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		D79DD6CE9EB1DB3FFA27D3A7259C5CC2 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7254C930EB78EB6200B61F39E2A0A4C /* Socket.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		D456F19D8EC88CC32F8D595A0CC8D5C8 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD40E39481516DEE20EAEF187CFA97E /* Push.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		DAEA69A2F2285AC83D9F745078DA3231 /* Starscream-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 74687D9F2CCAEE0A7C24845698666DB3 /* Starscream-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FA3B4DFD6744F4DC35F48FAABC09356C /* StateChangeCallbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00171C0409971FDB1B7E8824EC382DBE /* StateChangeCallbacks.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		E3430BF9D634B22D9BAA59693D3D9A09 /* TimeoutTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AADC2A78EE4041E349339CEB23CD1C14 /* TimeoutTimer.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		FC51E5A7A31ECAA83DEFD0661655BA18 /* SSLSecurity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 805889F6E182005B68A4EDCFEF2FAF7D /* SSLSecurity.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		FD991E6534210E1DA68CB1EB3BE909F2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 276140B1EDA081793CA6BDD7582E1B4B /* Foundation.framework */; };
-		FFFD1DD1260B6E24024D9FC1E169A4E9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2330BDC9021AE57B1026C39617EB7ECE /* Constants.swift */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,110 +56,110 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		00171C0409971FDB1B7E8824EC382DBE /* StateChangeCallbacks.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StateChangeCallbacks.swift; sourceTree = "<group>"; };
-		06FCBF64C98CC3B8071E0AF8785F140D /* jazzy.js */ = {isa = PBXFileReference; includeInIndex = 1; name = jazzy.js; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/js/jazzy.js; sourceTree = "<group>"; };
-		09148D4B03DE704C6E7AE04AA40304AE /* jazzy.css */ = {isa = PBXFileReference; includeInIndex = 1; name = jazzy.css; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/css/jazzy.css; sourceTree = "<group>"; };
-		093B90B69F8DB8FB47CC51552BD56694 /* ChannelState.html */ = {isa = PBXFileReference; includeInIndex = 1; name = ChannelState.html; path = docs/Enums/ChannelState.html; sourceTree = "<group>"; };
-		09A4181343733C1D94F1B1E9399A713B /* SwiftPhoenixClient.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; path = SwiftPhoenixClient.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		0C188E2CC407E59DD38302557911DDC8 /* Typealiases.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Typealiases.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Typealiases.html; sourceTree = "<group>"; };
-		0D8D0FEF832EF0A401E84B8A4A152746 /* Global Variables.html */ = {isa = PBXFileReference; includeInIndex = 1; name = "Global Variables.html"; path = "docs/Global Variables.html"; sourceTree = "<group>"; };
+		048CC02A5A42426650BB92C87A241618 /* Delegated.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Delegated.html; path = docs/Structs/Delegated.html; sourceTree = "<group>"; };
+		05E6AC6C9295917F50A4939C4D012545 /* jazzy.css */ = {isa = PBXFileReference; includeInIndex = 1; name = jazzy.css; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/css/jazzy.css; sourceTree = "<group>"; };
+		0C3279281195DC530C615C4CBD36CE50 /* jazzy.js */ = {isa = PBXFileReference; includeInIndex = 1; name = jazzy.js; path = docs/js/jazzy.js; sourceTree = "<group>"; };
+		0ED3AAA7FF5DDC7B27ABA19D6847563E /* Message.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Message.html; path = docs/Classes/Message.html; sourceTree = "<group>"; };
 		0F52249DD4D3DD3159B64A42F2E7349B /* Starscream.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Starscream.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		10CE38F8ACDEAE7BD94DAFBA5E574CC1 /* Starscream-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Starscream-prefix.pch"; sourceTree = "<group>"; };
-		112D39C1AC4DF5F540237AF5BA3B8D01 /* gh.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = gh.png; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/img/gh.png; sourceTree = "<group>"; };
-		1187F3231E915741D2343FFB14B492E3 /* TimeoutTimer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TimeoutTimer.swift; sourceTree = "<group>"; };
 		133EDBD706EF899D0A8C27600993729A /* Pods-ChatExample-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-ChatExample-acknowledgements.plist"; sourceTree = "<group>"; };
 		1458B06DC7458B1125CD4CD60AD6016E /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1AB7C81280F793633F8EE3AF704F9F5B /* Binding.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Binding.swift; sourceTree = "<group>"; };
-		1D32DA1AAC57C5284C83BE4CAF69EF2E /* undocumented.json */ = {isa = PBXFileReference; includeInIndex = 1; name = undocumented.json; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/undocumented.json; sourceTree = "<group>"; };
-		1EA392B6258E56175AC439FB680E7740 /* Protocols.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Protocols.html; path = docs/Protocols.html; sourceTree = "<group>"; };
+		1C0FAD010F192A0E6747C7D4336EF0DF /* Delegated.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Delegated.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Structs/Delegated.html; sourceTree = "<group>"; };
+		1D5CDCBC1067613A1F1A15FBDB7BA096 /* ChannelEvent.html */ = {isa = PBXFileReference; includeInIndex = 1; name = ChannelEvent.html; path = docs/Structs/ChannelEvent.html; sourceTree = "<group>"; };
 		1EF8702E5E1C2CC2C646CB222E5F8E10 /* Pods-ChatExample-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ChatExample-resources.sh"; sourceTree = "<group>"; };
-		22A59248E9D702AA1295782A316297F0 /* SwiftPhoenixClient-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftPhoenixClient-prefix.pch"; sourceTree = "<group>"; };
-		2330BDC9021AE57B1026C39617EB7ECE /* Constants.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		24EDC9912C7FE005B7060A1752B9F649 /* Protocols.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Protocols.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Protocols.html; sourceTree = "<group>"; };
+		1F5722CC799B22AAD1FC90F9C651A329 /* SwiftPhoenixClient-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftPhoenixClient-prefix.pch"; sourceTree = "<group>"; };
+		1FF0B14F94236816F841D0674A8F7931 /* SwiftPhoenixClient.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = SwiftPhoenixClient.modulemap; sourceTree = "<group>"; };
 		276140B1EDA081793CA6BDD7582E1B4B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		2877E07E6608A16072D114C15AC52D78 /* dash.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = dash.png; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/img/dash.png; sourceTree = "<group>"; };
 		2C780E30A1AECA11F6D93AA3B5F6ED34 /* Pods-ChatExample-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-ChatExample-umbrella.h"; sourceTree = "<group>"; };
 		301BDAB58F7B8DBA2F7DEFCFDDB527A3 /* Pods-ChatExample-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-ChatExample-acknowledgements.markdown"; sourceTree = "<group>"; };
-		30E85FA0BDF2F1A90D6310D13886F46D /* Presence.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Presence.swift; sourceTree = "<group>"; };
 		3111104C5AC661E19379538CE82A587B /* Pods-ChatExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ChatExample.debug.xcconfig"; sourceTree = "<group>"; };
-		312EE71C3278DA1F548E071F2D01FC94 /* Channel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
-		31654FDDBEC94E95460734CFA315F573 /* Channel.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Channel.html; path = docs/Classes/Channel.html; sourceTree = "<group>"; };
-		331DCAB683E40FD0962FF72085204283 /* Socket.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Socket.html; path = docs/Classes/Socket.html; sourceTree = "<group>"; };
+		331DD9CEAC50C58A6BE7442E7E42A8BE /* SwiftPhoenixClient-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SwiftPhoenixClient-dummy.m"; sourceTree = "<group>"; };
+		3371ED4635BDCE3F24420708B0F488CD /* Socket.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Socket.swift; path = Sources/client/Socket.swift; sourceTree = "<group>"; };
 		35B75D02BB246E6B7EABEF61F78891EC /* Starscream.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Starscream.modulemap; sourceTree = "<group>"; };
-		3D0B76D4F2E2587E9B5B2B189B00987D /* Structs.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Structs.html; path = docs/Structs.html; sourceTree = "<group>"; };
-		3EECFBE154B5A2781BEAB73BC4991603 /* Push.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Push.html; path = docs/Classes/Push.html; sourceTree = "<group>"; };
-		44F635A3DE7839366FF3678A7E8F1DDC /* gh.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = gh.png; path = docs/img/gh.png; sourceTree = "<group>"; };
-		4754C1453507466A547C7B55543EF09A /* Message.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Message.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Classes/Message.html; sourceTree = "<group>"; };
-		4DF0F4884F2F234EBF33C1BFF6E0E137 /* ChannelEvent.html */ = {isa = PBXFileReference; includeInIndex = 1; name = ChannelEvent.html; path = docs/Structs/ChannelEvent.html; sourceTree = "<group>"; };
+		36D204B789C129A695EC0B9080EF488D /* Push.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Push.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Classes/Push.html; sourceTree = "<group>"; };
+		3E2E1E155EDD2C3275557338425D1EA4 /* SwiftPhoenixClient-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftPhoenixClient-umbrella.h"; sourceTree = "<group>"; };
+		3F061E6A6220360C7A4E665E755F6411 /* Structs.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Structs.html; path = docs/Structs.html; sourceTree = "<group>"; };
+		47D5666E4AF3D41E867E05510EB6537E /* highlight.css */ = {isa = PBXFileReference; includeInIndex = 1; name = highlight.css; path = docs/css/highlight.css; sourceTree = "<group>"; };
+		48B28454DD9053134504D38EF5D2A081 /* ChannelEvent.html */ = {isa = PBXFileReference; includeInIndex = 1; name = ChannelEvent.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Structs/ChannelEvent.html; sourceTree = "<group>"; };
+		4CD3DEC0FE9F0AC284A93942C0A6EA35 /* Options.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Options.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Classes/Presence/Options.html; sourceTree = "<group>"; };
+		4CD40E39481516DEE20EAEF187CFA97E /* Push.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Push.swift; path = Sources/client/Push.swift; sourceTree = "<group>"; };
+		4EC449B09664B1B127DCD88C1CA39BAA /* SwiftPhoenixClient.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; path = SwiftPhoenixClient.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		4F5F2F64FB7C40C6E38FFD9B8FE2521F /* Starscream.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Starscream.framework; path = Starscream.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4FB9E1842B6CA805D81A77CD81ABE232 /* SwiftPhoenixClient-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SwiftPhoenixClient-dummy.m"; sourceTree = "<group>"; };
-		560603B862BDAE7EA0AE0D6CE7832D68 /* Message.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Message.html; path = docs/Classes/Message.html; sourceTree = "<group>"; };
-		5A71B5B198D3D5666B60ADB07689400F /* jquery.min.js */ = {isa = PBXFileReference; includeInIndex = 1; name = jquery.min.js; path = docs/js/jquery.min.js; sourceTree = "<group>"; };
+		4F9C323447F2A105CB74A73E5B9E154B /* highlight.css */ = {isa = PBXFileReference; includeInIndex = 1; name = highlight.css; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/css/highlight.css; sourceTree = "<group>"; };
+		50406E94975C82592BD951079E9B5429 /* Socket.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Socket.html; path = docs/Classes/Socket.html; sourceTree = "<group>"; };
+		52F131D01D993AC067941AF6DF20A336 /* badge.svg */ = {isa = PBXFileReference; includeInIndex = 1; name = badge.svg; path = docs/badge.svg; sourceTree = "<group>"; };
+		539115E4E4BC385B665EA72A05B4CEDF /* Push.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Push.html; path = docs/Classes/Push.html; sourceTree = "<group>"; };
+		55CA529B7AEAA4573DBD97C25288F05F /* Options.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Options.html; path = docs/Classes/Presence/Options.html; sourceTree = "<group>"; };
+		58C28BD6FA6881B476B5574B3CF0B3E3 /* Enums.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Enums.html; path = docs/Enums.html; sourceTree = "<group>"; };
+		58D554D602959773AC32D029A4EB437B /* Serializer.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Serializer.html; path = docs/Protocols/Serializer.html; sourceTree = "<group>"; };
 		5A9D17B37705B99972E40CA15F05BB20 /* Pods-ChatExample-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-ChatExample-frameworks.sh"; sourceTree = "<group>"; };
-		5AEDB29DC155DF17E5504C98C6C940DE /* jazzy.js */ = {isa = PBXFileReference; includeInIndex = 1; name = jazzy.js; path = docs/js/jazzy.js; sourceTree = "<group>"; };
-		5B30BD6557A32CC2D34E04DE993C14E5 /* PresenceEventType.html */ = {isa = PBXFileReference; includeInIndex = 1; name = PresenceEventType.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Classes/Presence/PresenceEventType.html; sourceTree = "<group>"; };
-		5EDC07EA0BAB68CD1751584A43C3AF10 /* Classes.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Classes.html; path = docs/Classes.html; sourceTree = "<group>"; };
-		60C4762D5B9AED080BF63EC90E63BA58 /* highlight.css */ = {isa = PBXFileReference; includeInIndex = 1; name = highlight.css; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/css/highlight.css; sourceTree = "<group>"; };
-		60CAC82C86B217B51D0680C623E4F39D /* ChannelEvent.html */ = {isa = PBXFileReference; includeInIndex = 1; name = ChannelEvent.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Structs/ChannelEvent.html; sourceTree = "<group>"; };
-		62FBFFF93CE97B0ABB058C86DCA4BB1F /* SocketState.html */ = {isa = PBXFileReference; includeInIndex = 1; name = SocketState.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Enums/SocketState.html; sourceTree = "<group>"; };
+		5B01C7A7BD44CC36D48A18E4CEC06E36 /* Message.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Message.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Classes/Message.html; sourceTree = "<group>"; };
+		5BE270B66FA01307C687D400DB8B761B /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		624A28AB773F1C0F981FC1EDE3831616 /* undocumented.json */ = {isa = PBXFileReference; includeInIndex = 1; name = undocumented.json; path = docs/undocumented.json; sourceTree = "<group>"; };
 		6305A7F7E3BE5845060709E057709268 /* Pods-ChatExample-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-ChatExample-dummy.m"; sourceTree = "<group>"; };
+		64EFB0FC19735624285050C02D59BE29 /* Serializer.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Serializer.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Protocols/Serializer.html; sourceTree = "<group>"; };
+		6555AA29F150E9FDF1785ED95E4901F0 /* carat.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = carat.png; path = docs/img/carat.png; sourceTree = "<group>"; };
+		65686E733BDA68D4CA3D87A8A5B13256 /* Channel.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Channel.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Classes/Channel.html; sourceTree = "<group>"; };
+		659B9B27CDEF29FCE22C5060AF1718A1 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Info.plist; sourceTree = "<group>"; };
+		669E22F9CA1DF6930721F7E2AFCC0C08 /* search.json */ = {isa = PBXFileReference; includeInIndex = 1; name = search.json; path = docs/search.json; sourceTree = "<group>"; };
 		677BC8911948C9658703184E269F0032 /* Starscream-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Starscream-dummy.m"; sourceTree = "<group>"; };
-		68BC7B40A2DC174BE8A0ED64CE67EEFE /* Socket.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Socket.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Classes/Socket.html; sourceTree = "<group>"; };
-		68D6633B41F6B81BC66A09D10B68D57B /* Delegated.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Delegated.html; path = docs/Structs/Delegated.html; sourceTree = "<group>"; };
-		69319590378E4C57A4440B4FE52FDC38 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
-		6D677E3F8382C65B547F76E7848F5AC1 /* highlight.css */ = {isa = PBXFileReference; includeInIndex = 1; name = highlight.css; path = docs/css/highlight.css; sourceTree = "<group>"; };
-		70A405A1A30CE2529D9E86FCAAF566CC /* Global Variables.html */ = {isa = PBXFileReference; includeInIndex = 1; name = "Global Variables.html"; path = "docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Global Variables.html"; sourceTree = "<group>"; };
+		6D75B4276CC94369B6CA97C49A85ADC9 /* docSet.dsidx */ = {isa = PBXFileReference; includeInIndex = 1; name = docSet.dsidx; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/docSet.dsidx; sourceTree = "<group>"; };
+		6EC900D8120142928ABDA371CAF94D5C /* index.html */ = {isa = PBXFileReference; includeInIndex = 1; name = index.html; path = docs/index.html; sourceTree = "<group>"; };
 		722B7A5196E76DAE17188C05D685DF4C /* SSLClientCertificate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SSLClientCertificate.swift; path = Sources/Starscream/SSLClientCertificate.swift; sourceTree = "<group>"; };
 		74687D9F2CCAEE0A7C24845698666DB3 /* Starscream-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Starscream-umbrella.h"; sourceTree = "<group>"; };
-		782AA87CA76613063283423D4D49E4F8 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		79D114B52B198DC183B0533B2BF9BDCB /* ChannelState.html */ = {isa = PBXFileReference; includeInIndex = 1; name = ChannelState.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Enums/ChannelState.html; sourceTree = "<group>"; };
-		7D0712C46BC7E10EC9FA16721D76504B /* jazzy.css */ = {isa = PBXFileReference; includeInIndex = 1; name = jazzy.css; path = docs/css/jazzy.css; sourceTree = "<group>"; };
+		76033BE1B2FCB6246DF52694D45E64E3 /* index.html */ = {isa = PBXFileReference; includeInIndex = 1; name = index.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/index.html; sourceTree = "<group>"; };
+		7E3CC31CBA5B20F8A2BB6CBF73834640 /* Presence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Presence.html; path = docs/Classes/Presence.html; sourceTree = "<group>"; };
 		805889F6E182005B68A4EDCFEF2FAF7D /* SSLSecurity.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SSLSecurity.swift; path = Sources/Starscream/SSLSecurity.swift; sourceTree = "<group>"; };
-		82F99331E5B4D5C7570FA1F81806AC3B /* undocumented.json */ = {isa = PBXFileReference; includeInIndex = 1; name = undocumented.json; path = docs/undocumented.json; sourceTree = "<group>"; };
+		808EFA76CAA82A1F18202E6FA491DA05 /* dash.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = dash.png; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/img/dash.png; sourceTree = "<group>"; };
+		818204D2CEF1C6D6F48A3DE9DE025582 /* Classes.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Classes.html; path = docs/Classes.html; sourceTree = "<group>"; };
+		83210F4274BB40F686E66426957B96E9 /* Defaults.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Defaults.html; path = docs/Classes/Defaults.html; sourceTree = "<group>"; };
 		84F18C8C8F2DDCA8727E7AD9EE4A7DFE /* Pods-ChatExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-ChatExample.release.xcconfig"; sourceTree = "<group>"; };
-		86E89171EC9BFD03000155955B1531B8 /* jquery.min.js */ = {isa = PBXFileReference; includeInIndex = 1; name = jquery.min.js; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/js/jquery.min.js; sourceTree = "<group>"; };
-		883BE13BAFCFB6F5297D6B89889EF5DF /* Message.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		89357487E62561AA436E3EC86672CFDE /* dash.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = dash.png; path = docs/img/dash.png; sourceTree = "<group>"; };
-		8B47F8A12716D7253D01FD98FEF29093 /* Enums.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Enums.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Enums.html; sourceTree = "<group>"; };
-		8BC61FABB694C6812C473609881C1009 /* Structs.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Structs.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Structs.html; sourceTree = "<group>"; };
-		90A76BE1A277819EFF761E745DDB296D /* badge.svg */ = {isa = PBXFileReference; includeInIndex = 1; name = badge.svg; path = docs/badge.svg; sourceTree = "<group>"; };
-		9325E5939452C70AC24A64A1783E53F0 /* SwiftPhoenixClient.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SwiftPhoenixClient.xcconfig; sourceTree = "<group>"; };
+		8964C5C7CE666AF3DA46A036E58C06AF /* Channel.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Channel.html; path = docs/Classes/Channel.html; sourceTree = "<group>"; };
+		8E18500EB0DD389F5E112538AF610106 /* Delegated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Delegated.swift; sourceTree = "<group>"; };
+		8E6D69FAC49F25F7364B5E6482871915 /* badge.svg */ = {isa = PBXFileReference; includeInIndex = 1; name = badge.svg; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/badge.svg; sourceTree = "<group>"; };
+		924E8C636DDCF4A237D6B4A7405472E1 /* Presence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Presence.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Classes/Presence.html; sourceTree = "<group>"; };
+		9314D58633CC06C000BBC68E5CAC042B /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9495B2E6EA9E5AD8EF2E35399B55FB3C /* jquery.min.js */ = {isa = PBXFileReference; includeInIndex = 1; name = jquery.min.js; path = docs/js/jquery.min.js; sourceTree = "<group>"; };
+		966BB2C30188058813B3EC2FA0F3C59F /* jquery.min.js */ = {isa = PBXFileReference; includeInIndex = 1; name = jquery.min.js; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/js/jquery.min.js; sourceTree = "<group>"; };
 		99D18BA96649BD0F2A32D0286652BC33 /* SwiftPhoenixClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = SwiftPhoenixClient.framework; path = SwiftPhoenixClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0018D722DEC9224FE9C48D7471EE655 /* Starscream.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Starscream.xcconfig; sourceTree = "<group>"; };
-		A362F87CDDF65A0F9A062A6023F230DD /* index.html */ = {isa = PBXFileReference; includeInIndex = 1; name = index.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/index.html; sourceTree = "<group>"; };
-		A4402E87ABD1671D385F6C76CB325F61 /* Delegated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Delegated.swift; sourceTree = "<group>"; };
+		A048338426E69ABD6E836AEDD07B87C4 /* Global Variables.html */ = {isa = PBXFileReference; includeInIndex = 1; name = "Global Variables.html"; path = "docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Global Variables.html"; sourceTree = "<group>"; };
+		A1EC49B180C9C54E1070B48D77EA0CAD /* undocumented.json */ = {isa = PBXFileReference; includeInIndex = 1; name = undocumented.json; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/undocumented.json; sourceTree = "<group>"; };
+		A5351274DE394FA5817795117E40D6F6 /* dash.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = dash.png; path = docs/img/dash.png; sourceTree = "<group>"; };
+		A53D5AD8BF24FA5E8815F0C37E9D3A48 /* Events.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Events.html; path = docs/Classes/Presence/Events.html; sourceTree = "<group>"; };
 		A9F18693C1114E37BBFBEC8EE8686FDC /* Compression.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Compression.swift; path = Sources/Starscream/Compression.swift; sourceTree = "<group>"; };
-		AD8D042A9EBCD686B5967ABC5784E8FA /* Enums.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Enums.html; path = docs/Enums.html; sourceTree = "<group>"; };
+		AADC2A78EE4041E349339CEB23CD1C14 /* TimeoutTimer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TimeoutTimer.swift; path = Sources/client/TimeoutTimer.swift; sourceTree = "<group>"; };
 		AEF667E69ACDB807B282E380354DB273 /* WebSocket.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WebSocket.swift; path = Sources/Starscream/WebSocket.swift; sourceTree = "<group>"; };
-		AFEE280128712A8D4519200F6FB4DB0C /* Presence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Presence.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Classes/Presence.html; sourceTree = "<group>"; };
-		B027861EA6022DAF3F13233FFD73DB35 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
-		BAC128C31B70F9B055564E310011B859 /* Classes.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Classes.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Classes.html; sourceTree = "<group>"; };
+		AF209B8C542AF73A5150922754573BEA /* Defaults.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
+		B21592CE6FD8647CCC045A6465E33083 /* SwiftPhoenixClient.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SwiftPhoenixClient.xcconfig; sourceTree = "<group>"; };
+		B2AC0C8C7F46CFF37D38B9B186C3C6F1 /* Defaults.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Defaults.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Classes/Defaults.html; sourceTree = "<group>"; };
+		B79511E301910F33D22F5112B878734B /* Structs.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Structs.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Structs.html; sourceTree = "<group>"; };
 		BB6B6883FFA69DA5D3CC9650653575F2 /* Pods-ChatExample.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-ChatExample.modulemap"; sourceTree = "<group>"; };
-		BC70343ABEF538B31A257865646B9A13 /* index.html */ = {isa = PBXFileReference; includeInIndex = 1; name = index.html; path = docs/index.html; sourceTree = "<group>"; };
-		BCDEB1838723DCC4795120A5BBB6C7F8 /* PresenceEventType.html */ = {isa = PBXFileReference; includeInIndex = 1; name = PresenceEventType.html; path = docs/Classes/Presence/PresenceEventType.html; sourceTree = "<group>"; };
-		C07D24CFCC17C8419B94A44D3BBE33FC /* SocketState.html */ = {isa = PBXFileReference; includeInIndex = 1; name = SocketState.html; path = docs/Enums/SocketState.html; sourceTree = "<group>"; };
-		C1064E588284A93C929C1C25C2F57872 /* badge.svg */ = {isa = PBXFileReference; includeInIndex = 1; name = badge.svg; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/badge.svg; sourceTree = "<group>"; };
-		C8560A38363257D50FEE95C84A11FED8 /* docSet.dsidx */ = {isa = PBXFileReference; includeInIndex = 1; name = docSet.dsidx; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/docSet.dsidx; sourceTree = "<group>"; };
-		C8D49A791D053718A9E840BA4E1C09D2 /* carat.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = carat.png; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/img/carat.png; sourceTree = "<group>"; };
-		CD604A3224B877D80FC3EED0B44A8A04 /* Serializer.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Serializer.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Protocols/Serializer.html; sourceTree = "<group>"; };
-		D1016440C8486E3FEDAFE386D60CF930 /* SwiftPhoenixClient.tgz */ = {isa = PBXFileReference; includeInIndex = 1; name = SwiftPhoenixClient.tgz; path = docs/docsets/SwiftPhoenixClient.tgz; sourceTree = "<group>"; };
-		D60DD5ADA9EE1B4647A9A56A3000C3B9 /* Push.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Push.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Classes/Push.html; sourceTree = "<group>"; };
-		D7254C930EB78EB6200B61F39E2A0A4C /* Socket.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
-		DAC264540C2F6A267434885FC1832C79 /* Serializer.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Serializer.html; path = docs/Protocols/Serializer.html; sourceTree = "<group>"; };
-		DC672ABAA609BAFC3A8E507EAAFAA7B2 /* SwiftPhoenixClient.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = SwiftPhoenixClient.modulemap; sourceTree = "<group>"; };
-		DCF69CA1A7247E506781F6C63FA46295 /* Push.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; };
+		BEE6342425BC9AC34A483A548F137816 /* Message.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Message.swift; path = Sources/client/Message.swift; sourceTree = "<group>"; };
+		C04A41F56935C4F608F85C3363886909 /* Events.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Events.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Classes/Presence/Events.html; sourceTree = "<group>"; };
+		C2C207E5DC5B261DB7610E55F2FFAEEA /* jazzy.js */ = {isa = PBXFileReference; includeInIndex = 1; name = jazzy.js; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/js/jazzy.js; sourceTree = "<group>"; };
+		C6D97B7D9335CD07741308F79BAA6AB2 /* Global Variables.html */ = {isa = PBXFileReference; includeInIndex = 1; name = "Global Variables.html"; path = "docs/Global Variables.html"; sourceTree = "<group>"; };
+		C70B1E2B554391F3566383C3222699C6 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		C754EFC40C0B95992DEF159938B8EFE2 /* ChannelState.html */ = {isa = PBXFileReference; includeInIndex = 1; name = ChannelState.html; path = docs/Enums/ChannelState.html; sourceTree = "<group>"; };
+		CAC8C6EED92065919C084A4B20618C09 /* carat.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = carat.png; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/img/carat.png; sourceTree = "<group>"; };
+		D3BD70D83630E64E35B8575826D79F02 /* Protocols.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Protocols.html; path = docs/Protocols.html; sourceTree = "<group>"; };
+		DDF0105E2B874CF5D18CC7678F673F33 /* Enums.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Enums.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Enums.html; sourceTree = "<group>"; };
+		DF3B76DCC22190AC5C9FCA50EDDE1A29 /* Socket.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Socket.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Classes/Socket.html; sourceTree = "<group>"; };
+		DFF43304821C1CED06C7710CEFBE51C8 /* ChannelState.html */ = {isa = PBXFileReference; includeInIndex = 1; name = ChannelState.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Enums/ChannelState.html; sourceTree = "<group>"; };
 		E5E944E3B1D60840C47A85FF22C4061F /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EB58A3796C3CF586A1141EF2E32F8C1D /* Channel.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Channel.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Classes/Channel.html; sourceTree = "<group>"; };
-		EC0319EA983241A573374A30367B7903 /* search.json */ = {isa = PBXFileReference; includeInIndex = 1; name = search.json; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/search.json; sourceTree = "<group>"; };
-		ED0C9565B2E1307DCEFA3D3D37CD5832 /* Typealiases.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Typealiases.html; path = docs/Typealiases.html; sourceTree = "<group>"; };
-		ED87CD72BAC9DDA0C689B8B27291B2ED /* search.json */ = {isa = PBXFileReference; includeInIndex = 1; name = search.json; path = docs/search.json; sourceTree = "<group>"; };
+		E97A2E33BE1843A0A22B04A51E1BBD98 /* jazzy.css */ = {isa = PBXFileReference; includeInIndex = 1; name = jazzy.css; path = docs/css/jazzy.css; sourceTree = "<group>"; };
+		EB2CCDF42DB10D14E9554632BBDFABBF /* SwiftPhoenixClient.tgz */ = {isa = PBXFileReference; includeInIndex = 1; name = SwiftPhoenixClient.tgz; path = docs/docsets/SwiftPhoenixClient.tgz; sourceTree = "<group>"; };
+		EC35CA96F6BCF4833ED9A62B9AE14D16 /* search.json */ = {isa = PBXFileReference; includeInIndex = 1; name = search.json; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/search.json; sourceTree = "<group>"; };
 		ED9166F023CBE2CC18CD5215EB745AFC /* Pods_ChatExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_ChatExample.framework; path = "Pods-ChatExample.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
-		EDA4A0865A4F886B2C003EB9A4E7B8AA /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; name = Info.plist; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Info.plist; sourceTree = "<group>"; };
-		EE240CFC5DC0537D0C8B93DEEEBC3D71 /* Presence.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Presence.html; path = docs/Classes/Presence.html; sourceTree = "<group>"; };
-		F3E245FC3340CFBF18123398455CFC01 /* carat.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = carat.png; path = docs/img/carat.png; sourceTree = "<group>"; };
-		F4195FE5ED9CD8805590C3A0C8BC9F4F /* SwiftPhoenixClient-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SwiftPhoenixClient-umbrella.h"; sourceTree = "<group>"; };
-		FD98FC9FA082385BBA7702BD8EDB0BEF /* Delegated.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Delegated.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Structs/Delegated.html; sourceTree = "<group>"; };
+		EF21959727351D6AB8C837FD16F6EA96 /* Classes.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Classes.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Classes.html; sourceTree = "<group>"; };
+		F0E9A00EE563787071754734D23AF8AF /* Typealiases.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Typealiases.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Typealiases.html; sourceTree = "<group>"; };
+		F4E718F6D525A96AA8CFAB423C8DFA4A /* Channel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Channel.swift; path = Sources/client/Channel.swift; sourceTree = "<group>"; };
+		F4E7DF1EA2106DB3D439F583141F44AF /* gh.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = gh.png; path = docs/img/gh.png; sourceTree = "<group>"; };
+		F6122F6446535AE4E9C83055C39DB36B /* Protocols.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Protocols.html; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/Protocols.html; sourceTree = "<group>"; };
+		FB268AF97FFA3EDB3566E378D760E046 /* Presence.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Presence.swift; path = Sources/client/Presence.swift; sourceTree = "<group>"; };
+		FD6599AD9D2E5E80E7A4F71DF440AE2D /* Typealiases.html */ = {isa = PBXFileReference; includeInIndex = 1; name = Typealiases.html; path = docs/Typealiases.html; sourceTree = "<group>"; };
+		FEBE9A930D506D41BB7C57897C81B92F /* gh.png */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = image.png; name = gh.png; path = docs/docsets/SwiftPhoenixClient.docset/Contents/Resources/Documents/img/gh.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,6 +212,14 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
+		29132E82BD8826C9CC978AF59BD6B8BB /* Development Pods */ = {
+			isa = PBXGroup;
+			children = (
+				37FD90F83E3EBE4CAE0A4C9ED78EA2AB /* SwiftPhoenixClient */,
+			);
+			name = "Development Pods";
+			sourceTree = "<group>";
+		};
 		2B0FDD84B727C02B747DE69360E99C20 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -238,32 +244,109 @@
 			path = "../Target Support Files/Starscream";
 			sourceTree = "<group>";
 		};
-		70663AA681D88F935375CAA453BE71D0 /* utility */ = {
+		2FB65C86D96EF9619254CF2F303AB3A8 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				A4402E87ABD1671D385F6C76CB325F61 /* Delegated.swift */,
+				AF209B8C542AF73A5150922754573BEA /* Defaults.swift */,
+				8E18500EB0DD389F5E112538AF610106 /* Delegated.swift */,
 			);
-			name = utility;
-			path = Sources/utility;
+			name = Utilities;
+			path = Sources/client/Utilities;
 			sourceTree = "<group>";
 		};
-		7B6A639DC3DDD97713A94F2F051EAD72 /* SwiftPhoenixClient */ = {
+		37FD90F83E3EBE4CAE0A4C9ED78EA2AB /* SwiftPhoenixClient */ = {
 			isa = PBXGroup;
 			children = (
-				C87E844AC53A7B79403A97C04D90CCB3 /* client */,
-				D01997447A304C58F8668C12FB05F366 /* Pod */,
-				C5C4E79B4A5F5E05C5BACE7DD281B0B0 /* Support Files */,
-				70663AA681D88F935375CAA453BE71D0 /* utility */,
+				F4E718F6D525A96AA8CFAB423C8DFA4A /* Channel.swift */,
+				BEE6342425BC9AC34A483A548F137816 /* Message.swift */,
+				FB268AF97FFA3EDB3566E378D760E046 /* Presence.swift */,
+				4CD40E39481516DEE20EAEF187CFA97E /* Push.swift */,
+				3371ED4635BDCE3F24420708B0F488CD /* Socket.swift */,
+				AADC2A78EE4041E349339CEB23CD1C14 /* TimeoutTimer.swift */,
+				7B738A7E68FAEE6F7BB174AECFB99E87 /* Pod */,
+				BCC9F2EC02422F33922A1AFDDA4F4737 /* Support Files */,
+				2FB65C86D96EF9619254CF2F303AB3A8 /* Utilities */,
 			);
 			name = SwiftPhoenixClient;
 			path = ../..;
+			sourceTree = "<group>";
+		};
+		7B738A7E68FAEE6F7BB174AECFB99E87 /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				52F131D01D993AC067941AF6DF20A336 /* badge.svg */,
+				8E6D69FAC49F25F7364B5E6482871915 /* badge.svg */,
+				6555AA29F150E9FDF1785ED95E4901F0 /* carat.png */,
+				CAC8C6EED92065919C084A4B20618C09 /* carat.png */,
+				65686E733BDA68D4CA3D87A8A5B13256 /* Channel.html */,
+				8964C5C7CE666AF3DA46A036E58C06AF /* Channel.html */,
+				48B28454DD9053134504D38EF5D2A081 /* ChannelEvent.html */,
+				1D5CDCBC1067613A1F1A15FBDB7BA096 /* ChannelEvent.html */,
+				C754EFC40C0B95992DEF159938B8EFE2 /* ChannelState.html */,
+				DFF43304821C1CED06C7710CEFBE51C8 /* ChannelState.html */,
+				818204D2CEF1C6D6F48A3DE9DE025582 /* Classes.html */,
+				EF21959727351D6AB8C837FD16F6EA96 /* Classes.html */,
+				808EFA76CAA82A1F18202E6FA491DA05 /* dash.png */,
+				A5351274DE394FA5817795117E40D6F6 /* dash.png */,
+				83210F4274BB40F686E66426957B96E9 /* Defaults.html */,
+				B2AC0C8C7F46CFF37D38B9B186C3C6F1 /* Defaults.html */,
+				048CC02A5A42426650BB92C87A241618 /* Delegated.html */,
+				1C0FAD010F192A0E6747C7D4336EF0DF /* Delegated.html */,
+				6D75B4276CC94369B6CA97C49A85ADC9 /* docSet.dsidx */,
+				58C28BD6FA6881B476B5574B3CF0B3E3 /* Enums.html */,
+				DDF0105E2B874CF5D18CC7678F673F33 /* Enums.html */,
+				A53D5AD8BF24FA5E8815F0C37E9D3A48 /* Events.html */,
+				C04A41F56935C4F608F85C3363886909 /* Events.html */,
+				F4E7DF1EA2106DB3D439F583141F44AF /* gh.png */,
+				FEBE9A930D506D41BB7C57897C81B92F /* gh.png */,
+				A048338426E69ABD6E836AEDD07B87C4 /* Global Variables.html */,
+				C6D97B7D9335CD07741308F79BAA6AB2 /* Global Variables.html */,
+				47D5666E4AF3D41E867E05510EB6537E /* highlight.css */,
+				4F9C323447F2A105CB74A73E5B9E154B /* highlight.css */,
+				76033BE1B2FCB6246DF52694D45E64E3 /* index.html */,
+				6EC900D8120142928ABDA371CAF94D5C /* index.html */,
+				659B9B27CDEF29FCE22C5060AF1718A1 /* Info.plist */,
+				E97A2E33BE1843A0A22B04A51E1BBD98 /* jazzy.css */,
+				05E6AC6C9295917F50A4939C4D012545 /* jazzy.css */,
+				C2C207E5DC5B261DB7610E55F2FFAEEA /* jazzy.js */,
+				0C3279281195DC530C615C4CBD36CE50 /* jazzy.js */,
+				9495B2E6EA9E5AD8EF2E35399B55FB3C /* jquery.min.js */,
+				966BB2C30188058813B3EC2FA0F3C59F /* jquery.min.js */,
+				5BE270B66FA01307C687D400DB8B761B /* LICENSE */,
+				5B01C7A7BD44CC36D48A18E4CEC06E36 /* Message.html */,
+				0ED3AAA7FF5DDC7B27ABA19D6847563E /* Message.html */,
+				55CA529B7AEAA4573DBD97C25288F05F /* Options.html */,
+				4CD3DEC0FE9F0AC284A93942C0A6EA35 /* Options.html */,
+				7E3CC31CBA5B20F8A2BB6CBF73834640 /* Presence.html */,
+				924E8C636DDCF4A237D6B4A7405472E1 /* Presence.html */,
+				F6122F6446535AE4E9C83055C39DB36B /* Protocols.html */,
+				D3BD70D83630E64E35B8575826D79F02 /* Protocols.html */,
+				36D204B789C129A695EC0B9080EF488D /* Push.html */,
+				539115E4E4BC385B665EA72A05B4CEDF /* Push.html */,
+				C70B1E2B554391F3566383C3222699C6 /* README.md */,
+				EC35CA96F6BCF4833ED9A62B9AE14D16 /* search.json */,
+				669E22F9CA1DF6930721F7E2AFCC0C08 /* search.json */,
+				58D554D602959773AC32D029A4EB437B /* Serializer.html */,
+				64EFB0FC19735624285050C02D59BE29 /* Serializer.html */,
+				DF3B76DCC22190AC5C9FCA50EDDE1A29 /* Socket.html */,
+				50406E94975C82592BD951079E9B5429 /* Socket.html */,
+				B79511E301910F33D22F5112B878734B /* Structs.html */,
+				3F061E6A6220360C7A4E665E755F6411 /* Structs.html */,
+				4EC449B09664B1B127DCD88C1CA39BAA /* SwiftPhoenixClient.podspec */,
+				EB2CCDF42DB10D14E9554632BBDFABBF /* SwiftPhoenixClient.tgz */,
+				F0E9A00EE563787071754734D23AF8AF /* Typealiases.html */,
+				FD6599AD9D2E5E80E7A4F71DF440AE2D /* Typealiases.html */,
+				A1EC49B180C9C54E1070B48D77EA0CAD /* undocumented.json */,
+				624A28AB773F1C0F981FC1EDE3831616 /* undocumented.json */,
+			);
+			name = Pod;
 			sourceTree = "<group>";
 		};
 		7DB346D0F39D3F0E887471402A8071AB = {
 			isa = PBXGroup;
 			children = (
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
-				DB50641B6EF86C76673B931045121168 /* Development Pods */,
+				29132E82BD8826C9CC978AF59BD6B8BB /* Development Pods */,
 				C6C6CF85326A60B112CC4A77BAD281D7 /* Frameworks */,
 				B2F54CB704E1800078ACC2EEBFF040C5 /* Pods */,
 				2B0FDD84B727C02B747DE69360E99C20 /* Products */,
@@ -305,15 +388,15 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		C5C4E79B4A5F5E05C5BACE7DD281B0B0 /* Support Files */ = {
+		BCC9F2EC02422F33922A1AFDDA4F4737 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				782AA87CA76613063283423D4D49E4F8 /* Info.plist */,
-				DC672ABAA609BAFC3A8E507EAAFAA7B2 /* SwiftPhoenixClient.modulemap */,
-				9325E5939452C70AC24A64A1783E53F0 /* SwiftPhoenixClient.xcconfig */,
-				4FB9E1842B6CA805D81A77CD81ABE232 /* SwiftPhoenixClient-dummy.m */,
-				22A59248E9D702AA1295782A316297F0 /* SwiftPhoenixClient-prefix.pch */,
-				F4195FE5ED9CD8805590C3A0C8BC9F4F /* SwiftPhoenixClient-umbrella.h */,
+				9314D58633CC06C000BBC68E5CAC042B /* Info.plist */,
+				1FF0B14F94236816F841D0674A8F7931 /* SwiftPhoenixClient.modulemap */,
+				B21592CE6FD8647CCC045A6465E33083 /* SwiftPhoenixClient.xcconfig */,
+				331DD9CEAC50C58A6BE7442E7E42A8BE /* SwiftPhoenixClient-dummy.m */,
+				1F5722CC799B22AAD1FC90F9C651A329 /* SwiftPhoenixClient-prefix.pch */,
+				3E2E1E155EDD2C3275557338425D1EA4 /* SwiftPhoenixClient-umbrella.h */,
 			);
 			name = "Support Files";
 			path = "Example/Pods/Target Support Files/SwiftPhoenixClient";
@@ -326,100 +409,6 @@
 				1C9B10A654BCF9BD93C14FE0346B9148 /* iOS */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		C87E844AC53A7B79403A97C04D90CCB3 /* client */ = {
-			isa = PBXGroup;
-			children = (
-				1AB7C81280F793633F8EE3AF704F9F5B /* Binding.swift */,
-				312EE71C3278DA1F548E071F2D01FC94 /* Channel.swift */,
-				2330BDC9021AE57B1026C39617EB7ECE /* Constants.swift */,
-				883BE13BAFCFB6F5297D6B89889EF5DF /* Message.swift */,
-				30E85FA0BDF2F1A90D6310D13886F46D /* Presence.swift */,
-				DCF69CA1A7247E506781F6C63FA46295 /* Push.swift */,
-				D7254C930EB78EB6200B61F39E2A0A4C /* Socket.swift */,
-				00171C0409971FDB1B7E8824EC382DBE /* StateChangeCallbacks.swift */,
-				1187F3231E915741D2343FFB14B492E3 /* TimeoutTimer.swift */,
-			);
-			name = client;
-			path = Sources/client;
-			sourceTree = "<group>";
-		};
-		D01997447A304C58F8668C12FB05F366 /* Pod */ = {
-			isa = PBXGroup;
-			children = (
-				90A76BE1A277819EFF761E745DDB296D /* badge.svg */,
-				C1064E588284A93C929C1C25C2F57872 /* badge.svg */,
-				F3E245FC3340CFBF18123398455CFC01 /* carat.png */,
-				C8D49A791D053718A9E840BA4E1C09D2 /* carat.png */,
-				EB58A3796C3CF586A1141EF2E32F8C1D /* Channel.html */,
-				31654FDDBEC94E95460734CFA315F573 /* Channel.html */,
-				60CAC82C86B217B51D0680C623E4F39D /* ChannelEvent.html */,
-				4DF0F4884F2F234EBF33C1BFF6E0E137 /* ChannelEvent.html */,
-				79D114B52B198DC183B0533B2BF9BDCB /* ChannelState.html */,
-				093B90B69F8DB8FB47CC51552BD56694 /* ChannelState.html */,
-				BAC128C31B70F9B055564E310011B859 /* Classes.html */,
-				5EDC07EA0BAB68CD1751584A43C3AF10 /* Classes.html */,
-				89357487E62561AA436E3EC86672CFDE /* dash.png */,
-				2877E07E6608A16072D114C15AC52D78 /* dash.png */,
-				FD98FC9FA082385BBA7702BD8EDB0BEF /* Delegated.html */,
-				68D6633B41F6B81BC66A09D10B68D57B /* Delegated.html */,
-				C8560A38363257D50FEE95C84A11FED8 /* docSet.dsidx */,
-				8B47F8A12716D7253D01FD98FEF29093 /* Enums.html */,
-				AD8D042A9EBCD686B5967ABC5784E8FA /* Enums.html */,
-				44F635A3DE7839366FF3678A7E8F1DDC /* gh.png */,
-				112D39C1AC4DF5F540237AF5BA3B8D01 /* gh.png */,
-				70A405A1A30CE2529D9E86FCAAF566CC /* Global Variables.html */,
-				0D8D0FEF832EF0A401E84B8A4A152746 /* Global Variables.html */,
-				6D677E3F8382C65B547F76E7848F5AC1 /* highlight.css */,
-				60C4762D5B9AED080BF63EC90E63BA58 /* highlight.css */,
-				A362F87CDDF65A0F9A062A6023F230DD /* index.html */,
-				BC70343ABEF538B31A257865646B9A13 /* index.html */,
-				EDA4A0865A4F886B2C003EB9A4E7B8AA /* Info.plist */,
-				09148D4B03DE704C6E7AE04AA40304AE /* jazzy.css */,
-				7D0712C46BC7E10EC9FA16721D76504B /* jazzy.css */,
-				06FCBF64C98CC3B8071E0AF8785F140D /* jazzy.js */,
-				5AEDB29DC155DF17E5504C98C6C940DE /* jazzy.js */,
-				86E89171EC9BFD03000155955B1531B8 /* jquery.min.js */,
-				5A71B5B198D3D5666B60ADB07689400F /* jquery.min.js */,
-				69319590378E4C57A4440B4FE52FDC38 /* LICENSE */,
-				560603B862BDAE7EA0AE0D6CE7832D68 /* Message.html */,
-				4754C1453507466A547C7B55543EF09A /* Message.html */,
-				EE240CFC5DC0537D0C8B93DEEEBC3D71 /* Presence.html */,
-				AFEE280128712A8D4519200F6FB4DB0C /* Presence.html */,
-				5B30BD6557A32CC2D34E04DE993C14E5 /* PresenceEventType.html */,
-				BCDEB1838723DCC4795120A5BBB6C7F8 /* PresenceEventType.html */,
-				24EDC9912C7FE005B7060A1752B9F649 /* Protocols.html */,
-				1EA392B6258E56175AC439FB680E7740 /* Protocols.html */,
-				D60DD5ADA9EE1B4647A9A56A3000C3B9 /* Push.html */,
-				3EECFBE154B5A2781BEAB73BC4991603 /* Push.html */,
-				B027861EA6022DAF3F13233FFD73DB35 /* README.md */,
-				ED87CD72BAC9DDA0C689B8B27291B2ED /* search.json */,
-				EC0319EA983241A573374A30367B7903 /* search.json */,
-				CD604A3224B877D80FC3EED0B44A8A04 /* Serializer.html */,
-				DAC264540C2F6A267434885FC1832C79 /* Serializer.html */,
-				331DCAB683E40FD0962FF72085204283 /* Socket.html */,
-				68BC7B40A2DC174BE8A0ED64CE67EEFE /* Socket.html */,
-				62FBFFF93CE97B0ABB058C86DCA4BB1F /* SocketState.html */,
-				C07D24CFCC17C8419B94A44D3BBE33FC /* SocketState.html */,
-				3D0B76D4F2E2587E9B5B2B189B00987D /* Structs.html */,
-				8BC61FABB694C6812C473609881C1009 /* Structs.html */,
-				09A4181343733C1D94F1B1E9399A713B /* SwiftPhoenixClient.podspec */,
-				D1016440C8486E3FEDAFE386D60CF930 /* SwiftPhoenixClient.tgz */,
-				0C188E2CC407E59DD38302557911DDC8 /* Typealiases.html */,
-				ED0C9565B2E1307DCEFA3D3D37CD5832 /* Typealiases.html */,
-				82F99331E5B4D5C7570FA1F81806AC3B /* undocumented.json */,
-				1D32DA1AAC57C5284C83BE4CAF69EF2E /* undocumented.json */,
-			);
-			name = Pod;
-			sourceTree = "<group>";
-		};
-		DB50641B6EF86C76673B931045121168 /* Development Pods */ = {
-			isa = PBXGroup;
-			children = (
-				7B6A639DC3DDD97713A94F2F051EAD72 /* SwiftPhoenixClient */,
-			);
-			name = "Development Pods";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -495,7 +484,7 @@
 			buildConfigurationList = 1B92B2054603892068DF074CEA2D22C4 /* Build configuration list for PBXNativeTarget "SwiftPhoenixClient" */;
 			buildPhases = (
 				152AFB6D706D33B97863897C65FED1B9 /* Headers */,
-				16BA288D60643C9071C985770B14DB45 /* Sources */,
+				3C1AB042E12A50926DFC780989AAEC9A /* Sources */,
 				F2D323E272622232B77F4ED986EC6188 /* Frameworks */,
 				6CA5F98DD9B5D4D0166E350F83CAF6C6 /* Resources */,
 			);
@@ -562,29 +551,27 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		16BA288D60643C9071C985770B14DB45 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D4969B8B98D20DB29CA17388BD193113 /* Binding.swift in Sources */,
-				9AF443493EB36A71522C7AEEB7FE53A5 /* Channel.swift in Sources */,
-				FFFD1DD1260B6E24024D9FC1E169A4E9 /* Constants.swift in Sources */,
-				441C660E3DD11D391C8D5A1C01E4DB9D /* Delegated.swift in Sources */,
-				3DDCB0A889D19379195B6B3FC5487865 /* Message.swift in Sources */,
-				D30345AEAD6E5EF752E4FF27281C42E4 /* Presence.swift in Sources */,
-				072D04A5DE45B04FC14AB0C41063D0A6 /* Push.swift in Sources */,
-				D79DD6CE9EB1DB3FFA27D3A7259C5CC2 /* Socket.swift in Sources */,
-				FA3B4DFD6744F4DC35F48FAABC09356C /* StateChangeCallbacks.swift in Sources */,
-				3CD573012DA8A831777BE74585A448D6 /* SwiftPhoenixClient-dummy.m in Sources */,
-				2A9B8CCE08919EEBFA9806AAE6F06C3A /* TimeoutTimer.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		231353A5B87DA589BCF03F56F65BCC42 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				1A990348F3389018BCFF4736D136CFFA /* Pods-ChatExample-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3C1AB042E12A50926DFC780989AAEC9A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				91C45B49F590685BB901653F0A8F0DD3 /* Channel.swift in Sources */,
+				8BB365610BD6DD90472AA137A843B165 /* Defaults.swift in Sources */,
+				06C4A4A9087266D23BC33EF917B988F4 /* Delegated.swift in Sources */,
+				17470826CA9BE6230FE9D5BCF0487E00 /* Message.swift in Sources */,
+				B7C5DCC270091B42B57D16C712E65C28 /* Presence.swift in Sources */,
+				D456F19D8EC88CC32F8D595A0CC8D5C8 /* Push.swift in Sources */,
+				8130AC459082C692F00AD435598278DD /* Socket.swift in Sources */,
+				76B167AE8C3D6B545C8FFAEA2AA2F7A4 /* SwiftPhoenixClient-dummy.m in Sources */,
+				E3430BF9D634B22D9BAA59693D3D9A09 /* TimeoutTimer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -657,7 +644,7 @@
 		};
 		561ADD53CB5E51EDD181D21C61517F9F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9325E5939452C70AC24A64A1783E53F0 /* SwiftPhoenixClient.xcconfig */;
+			baseConfigurationReference = B21592CE6FD8647CCC045A6465E33083 /* SwiftPhoenixClient.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -751,7 +738,7 @@
 		};
 		855AD42E56A62EF65BD34E6C5161388F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9325E5939452C70AC24A64A1783E53F0 /* SwiftPhoenixClient.xcconfig */;
+			baseConfigurationReference = B21592CE6FD8647CCC045A6465E33083 /* SwiftPhoenixClient.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";

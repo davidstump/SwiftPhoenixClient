@@ -164,7 +164,7 @@ public class Channel {
             self.rejoinTimer.reset()
             
             // Log that the channel was left
-            self.socket?.logItems("channel", "close \(self.topic)")
+            self.socket?.logItems("channel", "close topic: \(self.topic) joinRef: \(self.joinRef ?? "nil")")
             
             // Mark the channel as closed and remove it from the socket
             self.state = ChannelState.closed
@@ -178,7 +178,7 @@ public class Channel {
             guard !self.isLeaving, !self.isClosed else { return }
             
             // Log that the channel received an error
-            self.socket?.logItems("channel", "error topic: \(self.topic)joinRef: \(self.joinRef ?? "nil") mesage: \(message)")
+            self.socket?.logItems("channel", "error topic: \(self.topic) joinRef: \(self.joinRef ?? "nil") mesage: \(message)")
             
             // Mark the channel as errored and attempt to rejoin
             self.state = ChannelState.errored
