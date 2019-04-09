@@ -1,10 +1,14 @@
 # CHANGELOG
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/)
 
-This product uses [Semantic Versioning](https://semver.org/). 
+This product uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.0.0]
+* Rewrite of large parts of the Socket and Channel classes
+* Optional API for automatic retain cycle handling
+* Presence support
 
 ## [0.9.3]
 
@@ -35,7 +39,7 @@ This product uses [Semantic Versioning](https://semver.org/).
 
 
 ## [0.9.0]
-Continue to improve the API and behavior of the library to behave similar to the JS library. This release introduces 
+Continue to improve the API and behavior of the library to behave similar to the JS library. This release introduces
 some breaking changes in the API that will require updates to your code. See the [usage guide] for help.
 
 ### Updated
