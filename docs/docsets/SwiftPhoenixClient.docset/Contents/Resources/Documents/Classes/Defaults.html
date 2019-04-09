@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>SocketState Enumeration Reference</title>
+    <title>Defaults Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -10,18 +10,18 @@
     
   </head>
   <body>
-    <a name="//apple_ref/swift/Enum/SocketState" class="dashAnchor"></a>
-    <a title="SocketState Enumeration Reference"></a>
+    <a name="//apple_ref/swift/Class/Defaults" class="dashAnchor"></a>
+    <a title="Defaults Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">SwiftPhoenixClient Docs</a> (50% documented)</p>
+        <p><a href="../index.html">SwiftPhoenixClient Docs</a> (72% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
       <p id="breadcrumbs">
         <a href="../index.html">SwiftPhoenixClient Reference</a>
         <img id="carat" src="../img/carat.png" />
-        SocketState Enumeration Reference
+        Defaults Class Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -34,16 +34,19 @@
                 <a href="../Classes/Channel.html">Channel</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/Defaults.html">Defaults</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/Message.html">Message</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Presence.html">Presence</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/Presence/PresenceEventType.html">– PresenceEventType</a>
+                <a href="../Classes/Presence/Options.html">– Options</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D7OptionsV">– PresenceOptions</a>
+                <a href="../Classes/Presence/Events.html">– Events</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Push.html">Push</a>
@@ -54,24 +57,10 @@
             </ul>
           </li>
           <li class="nav-group-name">
-            <a href="../Global Variables.html">Global Variables</a>
-            <ul class="nav-group-tasks">
-              <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:18SwiftPhoenixClient25PHOENIX_DEFAULT_HEARTBEATSivp">PHOENIX_DEFAULT_HEARTBEAT</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:18SwiftPhoenixClient23PHOENIX_DEFAULT_TIMEOUTSivp">PHOENIX_DEFAULT_TIMEOUT</a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-group-name">
             <a href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a href="../Enums/ChannelState.html">ChannelState</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Enums/SocketState.html">SocketState</a>
               </li>
             </ul>
           </li>
@@ -80,6 +69,9 @@
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a href="../Structs/ChannelEvent.html">ChannelEvent</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Delegated.html">Delegated</a>
               </li>
             </ul>
           </li>
@@ -96,14 +88,14 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>SocketState</h1>
+            <h1>Defaults</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">SocketState</span> <span class="p">:</span> <span class="kt">String</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Defaults</span></code></pre>
 
                 </div>
               </div>
-            <p>Undocumented</p>
+            <p>A collection of default values and behaviors used accross the Client</p>
 
           </section>
           <section class="section task-group-section">
@@ -112,9 +104,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:18SwiftPhoenixClient11SocketStateO10connectingyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/connecting" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient11SocketStateO10connectingyA2CmF">connecting</a>
+                    <a name="/s:18SwiftPhoenixClient8DefaultsC15timeoutIntervalSdvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/timeoutInterval" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8DefaultsC15timeoutIntervalSdvpZ">timeoutInterval</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -122,14 +114,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Default timeout when sending messages</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">connecting</span> <span class="o">=</span> <span class="s">"connecting"</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">timeoutInterval</span><span class="p">:</span> <span class="kt">TimeInterval</span></code></pre>
 
                         </div>
                       </div>
@@ -139,9 +131,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:18SwiftPhoenixClient11SocketStateO4openyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/open" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient11SocketStateO4openyA2CmF">open</a>
+                    <a name="/s:18SwiftPhoenixClient8DefaultsC17heartbeatIntervalSdvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/heartbeatInterval" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8DefaultsC17heartbeatIntervalSdvpZ">heartbeatInterval</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -149,14 +141,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Default interval to send heartbeats on</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="kd">open</span> <span class="o">=</span> <span class="s">"open"</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">heartbeatInterval</span><span class="p">:</span> <span class="kt">TimeInterval</span></code></pre>
 
                         </div>
                       </div>
@@ -166,9 +158,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:18SwiftPhoenixClient11SocketStateO7closingyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/closing" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient11SocketStateO7closingyA2CmF">closing</a>
+                    <a name="/s:18SwiftPhoenixClient8DefaultsC14steppedBackOffySdSicvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/steppedBackOff" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8DefaultsC14steppedBackOffySdSicvpZ">steppedBackOff</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -176,14 +168,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Default reconnect function</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">closing</span> <span class="o">=</span> <span class="s">"closing"</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">steppedBackOff</span><span class="p">:</span> <span class="p">(</span><span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">TimeInterval</span></code></pre>
 
                         </div>
                       </div>
@@ -193,9 +185,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:18SwiftPhoenixClient11SocketStateO6closedyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/closed" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient11SocketStateO6closedyA2CmF">closed</a>
+                    <a name="/s:18SwiftPhoenixClient8DefaultsC6encodey10Foundation4DataVSDySSypGcvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/encode" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8DefaultsC6encodey10Foundation4DataVSDySSypGcvpZ">encode</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -203,14 +195,41 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Default encode function, utilizing JSONSerialization.data</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">closed</span> <span class="o">=</span> <span class="s">"closed"</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">encode</span><span class="p">:</span> <span class="p">([</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">Data</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient8DefaultsC6decodeySDySSypGSg10Foundation4DataVcvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/decode" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8DefaultsC6decodeySDySSypGSg10Foundation4DataVcvpZ">decode</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Default decode function, utilizing JSONSerialization.jsonObject</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">decode</span><span class="p">:</span> <span class="p">(</span><span class="kt">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span></code></pre>
 
                         </div>
                       </div>
@@ -222,7 +241,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="https://github.com/davidstump/SwiftPhoenixClient" target="_blank" rel="external">David Stump</a>. All rights reserved. (Last updated: 2019-01-17)</p>
+          <p>&copy; 2019 <a class="link" href="https://github.com/davidstump/SwiftPhoenixClient" target="_blank" rel="external">David Stump</a>. All rights reserved. (Last updated: 2019-04-02)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

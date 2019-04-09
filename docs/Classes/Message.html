@@ -14,7 +14,7 @@
     <a title="Message Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">SwiftPhoenixClient Docs</a> (50% documented)</p>
+        <p><a href="../index.html">SwiftPhoenixClient Docs</a> (72% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -34,16 +34,19 @@
                 <a href="../Classes/Channel.html">Channel</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/Defaults.html">Defaults</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/Message.html">Message</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Presence.html">Presence</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/Presence/PresenceEventType.html">– PresenceEventType</a>
+                <a href="../Classes/Presence/Options.html">– Options</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D7OptionsV">– PresenceOptions</a>
+                <a href="../Classes/Presence/Events.html">– Events</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Push.html">Push</a>
@@ -54,24 +57,10 @@
             </ul>
           </li>
           <li class="nav-group-name">
-            <a href="../Global Variables.html">Global Variables</a>
-            <ul class="nav-group-tasks">
-              <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:18SwiftPhoenixClient25PHOENIX_DEFAULT_HEARTBEATSivp">PHOENIX_DEFAULT_HEARTBEAT</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:18SwiftPhoenixClient23PHOENIX_DEFAULT_TIMEOUTSivp">PHOENIX_DEFAULT_TIMEOUT</a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-group-name">
             <a href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a href="../Enums/ChannelState.html">ChannelState</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Enums/SocketState.html">SocketState</a>
               </li>
             </ul>
           </li>
@@ -80,6 +69,9 @@
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a href="../Structs/ChannelEvent.html">ChannelEvent</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Delegated.html">Delegated</a>
               </li>
             </ul>
           </li>
@@ -103,8 +95,7 @@
 
                 </div>
               </div>
-            <p>Represents a Message that has been received by the client from the Server. You should
-never need to create this class, only ever consume it&rsquo;s values.</p>
+            <p>Data that is received from the Server.</p>
 
           </section>
           <section class="section task-group-section">
@@ -123,7 +114,7 @@ never need to create this class, only ever consume it&rsquo;s values.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The unique string ref. Empty if not present</p>
+                        <p>Reference number. Empty if missing</p>
 
                       </div>
                       <div class="declaration">
@@ -150,7 +141,7 @@ never need to create this class, only ever consume it&rsquo;s values.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The string topic or topic:subtopic pair namespace, for example <q>messages</q>, <q>messages:123</q></p>
+                        <p>Message topic</p>
 
                       </div>
                       <div class="declaration">
@@ -177,7 +168,7 @@ never need to create this class, only ever consume it&rsquo;s values.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The string event name, for example <q>phx_join</q></p>
+                        <p>Message event</p>
 
                       </div>
                       <div class="declaration">
@@ -204,7 +195,7 @@ never need to create this class, only ever consume it&rsquo;s values.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The message payload</p>
+                        <p>Message payload</p>
 
                       </div>
                       <div class="declaration">
@@ -231,8 +222,9 @@ never need to create this class, only ever consume it&rsquo;s values.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Convenience var to access the message&rsquo;s payload&rsquo;s status. Equivalent
-to checking message.payload[<q>status</q>] yourself</p>
+                        <p>Convenience accessor. Equivalent to getting the status as such:</p>
+<pre class="highlight swift"><code><span class="n">message</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s">"status"</span><span class="p">]</span>
+</code></pre>
 
                       </div>
                       <div class="declaration">
@@ -251,7 +243,7 @@ to checking message.payload[<q>status</q>] yourself</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="https://github.com/davidstump/SwiftPhoenixClient" target="_blank" rel="external">David Stump</a>. All rights reserved. (Last updated: 2019-01-17)</p>
+          <p>&copy; 2019 <a class="link" href="https://github.com/davidstump/SwiftPhoenixClient" target="_blank" rel="external">David Stump</a>. All rights reserved. (Last updated: 2019-04-02)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

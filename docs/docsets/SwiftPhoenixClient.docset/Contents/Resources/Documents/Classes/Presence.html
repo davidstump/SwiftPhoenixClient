@@ -14,7 +14,7 @@
     <a title="Presence Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">SwiftPhoenixClient Docs</a> (50% documented)</p>
+        <p><a href="../index.html">SwiftPhoenixClient Docs</a> (72% documented)</p>
       </div>
     </header>
     <div class="content-wrapper">
@@ -34,16 +34,19 @@
                 <a href="../Classes/Channel.html">Channel</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/Defaults.html">Defaults</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/Message.html">Message</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Presence.html">Presence</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/Presence/PresenceEventType.html">– PresenceEventType</a>
+                <a href="../Classes/Presence/Options.html">– Options</a>
               </li>
               <li class="nav-group-task">
-                <a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D7OptionsV">– PresenceOptions</a>
+                <a href="../Classes/Presence/Events.html">– Events</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Push.html">Push</a>
@@ -54,24 +57,10 @@
             </ul>
           </li>
           <li class="nav-group-name">
-            <a href="../Global Variables.html">Global Variables</a>
-            <ul class="nav-group-tasks">
-              <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:18SwiftPhoenixClient25PHOENIX_DEFAULT_HEARTBEATSivp">PHOENIX_DEFAULT_HEARTBEAT</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Global Variables.html#/s:18SwiftPhoenixClient23PHOENIX_DEFAULT_TIMEOUTSivp">PHOENIX_DEFAULT_TIMEOUT</a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-group-name">
             <a href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a href="../Enums/ChannelState.html">ChannelState</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Enums/SocketState.html">SocketState</a>
               </li>
             </ul>
           </li>
@@ -80,6 +69,9 @@
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
                 <a href="../Structs/ChannelEvent.html">ChannelEvent</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Delegated.html">Delegated</a>
               </li>
             </ul>
           </li>
@@ -103,18 +95,91 @@
 
                 </div>
               </div>
-            <p>Undocumented</p>
+            <p>The Presence object provides features for syncing presence information from
+the server with the client and handling presences joining and leaving.</p>
+<h2 id='syncing-state-from-the-server' class='heading'>Syncing state from the server</h2>
+
+<p>To sync presence state from the server, first instantiate an object and pass
+your channel in to track lifecycle events:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">channel</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="nf">channel</span><span class="p">(</span><span class="s">"some:topic"</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">presence</span> <span class="o">=</span> <span class="kt">Presence</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+</code></pre>
+
+<p>If you have custom syncing state events, you can configure the <code>Presence</code>
+object to use those instead.</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">options</span> <span class="o">=</span> <span class="kt">Options</span><span class="p">(</span><span class="nv">events</span><span class="p">:</span> <span class="p">[</span><span class="o">.</span><span class="nv">state</span><span class="p">:</span> <span class="s">"my_state"</span><span class="p">,</span> <span class="o">.</span><span class="nv">diff</span><span class="p">:</span> <span class="s">"my_diff"</span><span class="p">])</span>
+<span class="k">let</span> <span class="nv">presence</span> <span class="o">=</span> <span class="kt">Presence</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="nv">opts</span><span class="p">:</span> <span class="n">options</span><span class="p">)</span>
+</code></pre>
+
+<p>Next, use the presence.onSync callback to react to state changes from the
+server. For example, to render the list of users every time the list
+changes, you could write:</p>
+<pre class="highlight swift"><code><span class="n">presence</span><span class="o">.</span><span class="n">onSync</span> <span class="p">{</span> <span class="nf">renderUsers</span><span class="p">(</span><span class="n">presence</span><span class="o">.</span><span class="nf">list</span><span class="p">())</span> <span class="p">}</span>
+</code></pre>
+<h2 id='listing-presences' class='heading'>Listing Presences</h2>
+
+<p>presence.list is used to return a list of presence information based on the
+local state of metadata. By default, all presence metadata is returned, but
+a listBy function can be supplied to allow the client to select which
+metadata to use for a given presence. For example, you may have a user
+online from different devices with a metadata status of <q>online</q>, but they
+have set themselves to <q>away</q> on another device. In this case, the app may
+choose to use the <q>away</q> status for what appears on the UI. The example
+below defines a listBy function which prioritizes the first metadata which
+was registered for each user. This could be the first tab they opened, or
+the first device they came online from:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">listBy</span><span class="p">:</span> <span class="p">(</span><span class="kt">String</span><span class="p">,</span> <span class="kt">Presence</span><span class="o">.</span><span class="kt">Map</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Presence</span><span class="o">.</span><span class="kt">Meta</span> <span class="o">=</span> <span class="p">{</span> <span class="n">id</span><span class="p">,</span> <span class="n">pres</span> <span class="k">in</span>
+    <span class="k">let</span> <span class="nv">first</span> <span class="o">=</span> <span class="n">pres</span><span class="p">[</span><span class="s">"metas"</span><span class="p">]</span><span class="o">!.</span><span class="n">first</span><span class="o">!</span>
+    <span class="n">first</span><span class="p">[</span><span class="s">"count"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pres</span><span class="p">[</span><span class="s">"metas"</span><span class="p">]</span><span class="o">!.</span><span class="n">count</span>
+    <span class="n">first</span><span class="p">[</span><span class="s">"id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">id</span>
+    <span class="k">return</span> <span class="n">first</span>
+<span class="p">}</span>
+<span class="k">let</span> <span class="nv">onlineUsers</span> <span class="o">=</span> <span class="n">presence</span><span class="o">.</span><span class="nf">list</span><span class="p">(</span><span class="nv">by</span><span class="p">:</span> <span class="n">listBy</span><span class="p">)</span>
+</code></pre>
+
+<p>(NOTE: The underlying behavior is a <code>map</code> on the <code>presence.state</code>. You are
+mapping the <code>state</code> dictionary into whatever datastructure suites your needs)</p>
+<h2 id='handling-individual-presence-join-and-leave-events' class='heading'>Handling individual presence join and leave events</h2>
+
+<p>The presence.onJoin and presence.onLeave callbacks can be used to react to
+individual presences joining and leaving the app. For example:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">presence</span> <span class="o">=</span> <span class="kt">Presence</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
+<span class="n">presence</span><span class="o">.</span><span class="n">onJoin</span> <span class="p">{</span> <span class="p">[</span><span class="k">weak</span> <span class="k">self</span><span class="p">]</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">current</span><span class="p">,</span> <span class="n">newPres</span><span class="p">)</span> <span class="k">in</span>
+    <span class="k">if</span> <span class="k">let</span> <span class="nv">cur</span> <span class="o">=</span> <span class="n">current</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"user additional presence"</span><span class="p">,</span> <span class="n">cur</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"user entered for the first time"</span><span class="p">,</span> <span class="n">newPres</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">presence</span><span class="o">.</span><span class="n">onLeave</span> <span class="p">{</span> <span class="p">[</span><span class="k">weak</span> <span class="k">self</span><span class="p">]</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">current</span><span class="p">,</span> <span class="n">leftPres</span><span class="p">)</span> <span class="k">in</span>
+    <span class="k">if</span> <span class="n">current</span><span class="p">[</span><span class="s">"metas"</span><span class="p">]?</span><span class="o">.</span><span class="n">isEmpty</span> <span class="o">==</span> <span class="kc">true</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"user has left from all devices"</span><span class="p">,</span> <span class="n">leftPres</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"user left from a device"</span><span class="p">,</span> <span class="n">current</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">presence</span><span class="o">.</span><span class="n">onSync</span> <span class="p">{</span> <span class="nf">renderUsers</span><span class="p">(</span><span class="n">presence</span><span class="o">.</span><span class="nf">list</span><span class="p">())</span> <span class="p">}</span>
+</code></pre>
 
           </section>
           <section class="section task-group-section">
             <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Enums%20and%20Structs"></a>
+                <a name="//apple_ref/swift/Section/Enums and Structs" class="dashAnchor"></a>
+                <a href="#/Enums%20and%20Structs">
+                  <h3 class="section-name">Enums and Structs</h3>
+                </a>
+              </div>
               <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC14defaultOptionsAC0dF0VvpZ"></a>
-                    <a name="//apple_ref/swift/Variable/defaultOptions" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC14defaultOptionsAC0dF0VvpZ">defaultOptions</a>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC7OptionsV"></a>
+                    <a name="//apple_ref/swift/Struct/Options" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC7OptionsV">Options</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -122,14 +187,47 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Custom options that can be provided when creating Presence</p>
+<h3 id='example' class='heading'>Example:</h3>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">options</span> <span class="o">=</span> <span class="kt">Options</span><span class="p">(</span><span class="nv">events</span><span class="p">:</span> <span class="p">[</span><span class="o">.</span><span class="nv">state</span><span class="p">:</span> <span class="s">"my_state"</span><span class="p">,</span> <span class="o">.</span><span class="nv">diff</span><span class="p">:</span> <span class="s">"my_diff"</span><span class="p">])</span>
+<span class="k">let</span> <span class="nv">presence</span> <span class="o">=</span> <span class="kt">Presence</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="nv">opts</span><span class="p">:</span> <span class="n">options</span><span class="p">)</span>
+</code></pre>
 
+                        <a href="../Classes/Presence/Options.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">defaultOptions</span><span class="p">:</span> <span class="kt">Presence</span><span class="o">.</span><span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D7OptionsV">PresenceOptions</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Options</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC6EventsO"></a>
+                    <a name="//apple_ref/swift/Enum/Events" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC6EventsO">Events</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Presense Events</p>
+
+                        <a href="../Classes/Presence/Events.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">Events</span> <span class="p">:</span> <span class="kt">String</span></code></pre>
 
                         </div>
                       </div>
@@ -140,19 +238,19 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/Enum%20declarations%20and%20classes"></a>
-                <a name="//apple_ref/swift/Section/Enum declarations and classes" class="dashAnchor"></a>
-                <a href="#/Enum%20declarations%20and%20classes">
-                  <h3 class="section-name">Enum declarations and classes</h3>
+                <a name="/Typaliases"></a>
+                <a name="//apple_ref/swift/Section/Typaliases" class="dashAnchor"></a>
+                <a href="#/Typaliases">
+                  <h3 class="section-name">Typaliases</h3>
                 </a>
               </div>
               <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC0D9EventTypeO"></a>
-                    <a name="//apple_ref/swift/Enum/PresenceEventType" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC0D9EventTypeO">PresenceEventType</a>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC4Metaa"></a>
+                    <a name="//apple_ref/swift/Alias/Meta" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC4Metaa">Meta</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -160,15 +258,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Meta details of a Presence. Just a dictionary of properties</p>
 
-                        <a href="../Classes/Presence/PresenceEventType.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">PresenceEventType</span> <span class="p">:</span> <span class="kt">String</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">Meta</span> <span class="o">=</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -178,9 +275,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC0D7OptionsV"></a>
-                    <a name="//apple_ref/swift/Struct/PresenceOptions" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC0D7OptionsV">PresenceOptions</a>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC3Mapa"></a>
+                    <a name="//apple_ref/swift/Alias/Map" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC3Mapa">Map</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -188,52 +285,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>A mapping of a String to an array of Metas. e.g. {<q>metas</q>: [{id: 1}]}</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">PresenceOptions</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Convenience%20typealiases"></a>
-                <a name="//apple_ref/swift/Section/Convenience typealiases" class="dashAnchor"></a>
-                <a href="#/Convenience%20typealiases">
-                  <h3 class="section-name">Convenience typealiases</h3>
-                </a>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC0D3Mapa"></a>
-                    <a name="//apple_ref/swift/Alias/PresenceMap" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC0D3Mapa">PresenceMap</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">PresenceMap</span> <span class="o">=</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">Array</span><span class="o">&lt;</span><span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC4Metaa">Meta</a></span><span class="o">&gt;</span><span class="p">]</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">Map</span> <span class="o">=</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC4Metaa">Meta</a></span><span class="p">]]</span></code></pre>
 
                         </div>
                       </div>
@@ -243,9 +302,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC0D5Statea"></a>
-                    <a name="//apple_ref/swift/Alias/PresenceState" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC0D5Statea">PresenceState</a>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC5Statea"></a>
+                    <a name="//apple_ref/swift/Alias/State" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC5Statea">State</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -253,14 +312,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>A mapping of a Presence state to a mapping of Metas</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">PresenceState</span> <span class="o">=</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D3Mapa">PresenceMap</a></span><span class="p">]</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">State</span> <span class="o">=</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC3Mapa">Map</a></span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -287,7 +346,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">Diff</span> <span class="o">=</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D5Statea">PresenceState</a></span><span class="p">]</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">Diff</span> <span class="o">=</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC5Statea">State</a></span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -297,9 +356,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC4Metaa"></a>
-                    <a name="//apple_ref/swift/Alias/Meta" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC4Metaa">Meta</a>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC6OnJoina"></a>
+                    <a name="//apple_ref/swift/Alias/OnJoin" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC6OnJoina">OnJoin</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -307,14 +366,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Closure signature of OnJoin callbacks</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">Meta</span> <span class="o">=</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">OnJoin</span> <span class="o">=</span> <span class="p">(</span><span class="n">_</span> <span class="nv">key</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">_</span> <span class="nv">current</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC3Mapa">Map</a></span><span class="p">?,</span> <span class="n">_</span> <span class="nv">new</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC3Mapa">Map</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -324,9 +383,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC14OnJoinCallbacka"></a>
-                    <a name="//apple_ref/swift/Alias/OnJoinCallback" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC14OnJoinCallbacka">OnJoinCallback</a>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC7OnLeavea"></a>
+                    <a name="//apple_ref/swift/Alias/OnLeave" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC7OnLeavea">OnLeave</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -334,41 +393,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Closure signature for OnLeave callbacks</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">OnJoinCallback</span> <span class="o">=</span> <span class="p">((</span><span class="n">_</span> <span class="nv">key</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">_</span> <span class="nv">currentPresence</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D3Mapa">PresenceMap</a></span><span class="p">?,</span> <span class="n">_</span> <span class="nv">newPresence</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D3Mapa">PresenceMap</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC15OnLeaveCallbacka"></a>
-                    <a name="//apple_ref/swift/Alias/OnLeaveCallback" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC15OnLeaveCallbacka">OnLeaveCallback</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">OnLeaveCallback</span> <span class="o">=</span> <span class="p">((</span><span class="n">_</span> <span class="nv">key</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">_</span> <span class="nv">currentPresence</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D3Mapa">PresenceMap</a></span><span class="p">,</span> <span class="n">_</span> <span class="nv">leftPresence</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D3Mapa">PresenceMap</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">OnLeave</span> <span class="o">=</span> <span class="p">(</span><span class="n">_</span> <span class="nv">key</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">_</span> <span class="nv">current</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC3Mapa">Map</a></span><span class="p">,</span> <span class="n">_</span> <span class="nv">left</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC3Mapa">Map</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -388,41 +420,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>/ Closure signature for OnSync callbacks</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">OnSync</span> <span class="o">=</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="p">())?</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC6ListBya"></a>
-                    <a name="//apple_ref/swift/Alias/ListBy" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC6ListBya">ListBy</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">ListBy</span> <span class="o">=</span> <span class="p">(</span><span class="n">_</span> <span class="nv">key</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">_</span> <span class="nv">presence</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D3Mapa">PresenceMap</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Any</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">OnSync</span> <span class="o">=</span> <span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Void</span></code></pre>
 
                         </div>
                       </div>
@@ -443,9 +448,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC7channelAA7ChannelCvp"></a>
-                    <a name="//apple_ref/swift/Property/channel" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC7channelAA7ChannelCvp">channel</a>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC5stateSDySSSDySSSaySDySSypGGGGvp"></a>
+                    <a name="//apple_ref/swift/Property/state" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC5stateSDySSSDySSSaySDySSypGGGGvp">state</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -453,41 +458,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>The state of the Presence</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">channel</span><span class="p">:</span> <span class="kt"><a href="../Classes/Channel.html">Channel</a></span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC7joinRefSSSgvp"></a>
-                    <a name="//apple_ref/swift/Property/joinRef" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC7joinRefSSSgvp">joinRef</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">private(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">joinRef</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">private(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">state</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC5Statea">State</a></span></code></pre>
 
                         </div>
                       </div>
@@ -507,14 +485,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Pending <code>join</code> and <code>leave</code> diffs that need to be synced</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">private(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">pendingDiffs</span><span class="p">:</span> <span class="kt">Array</span><span class="o">&lt;</span><span class="kt">Presence</span><span class="o">.</span><span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC4Diffa">Diff</a></span><span class="o">&gt;</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">private(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">pendingDiffs</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC4Diffa">Diff</a></span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -524,9 +502,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC5stateSDySSSDySSSaySDySSypGGGGvp"></a>
-                    <a name="//apple_ref/swift/Property/state" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC5stateSDySSSDySSSaySDySSypGGGGvp">state</a>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC7joinRefSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/joinRef" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC7joinRefSSSgvp">joinRef</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -534,41 +512,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>The channel&rsquo;s joinRef, set when state events occur</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">private(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">state</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D5Statea">PresenceState</a></span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC7optionsAC0D7OptionsVvp"></a>
-                    <a name="//apple_ref/swift/Property/options" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC7optionsAC0D7OptionsVvp">options</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">private(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">options</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D7OptionsV">PresenceOptions</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">private(set)</span> <span class="kd">public</span> <span class="k">var</span> <span class="nv">joinRef</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -602,23 +553,12 @@
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Callbacks"></a>
-                <a name="//apple_ref/swift/Section/Callbacks" class="dashAnchor"></a>
-                <a href="#/Callbacks">
-                  <h3 class="section-name">Callbacks</h3>
-                </a>
-              </div>
-              <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC6onJoinySS_SDySSSaySDySSypGGGSgAGtcSgvp"></a>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC6onJoinyySS_SDySSSaySDySSypGGGSgAGtcvp"></a>
                     <a name="//apple_ref/swift/Property/onJoin" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC6onJoinySS_SDySSSaySDySSypGGGSgAGtcSgvp">onJoin</a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC6onJoinyySS_SDySSSaySDySSypGGGSgAGtcvp">onJoin</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -626,14 +566,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Callback to be informed of joins</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">onJoin</span><span class="p">:</span> <span class="kt">Presence</span><span class="o">.</span><span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC14OnJoinCallbacka">OnJoinCallback</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">onJoin</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC6OnJoina">OnJoin</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -643,9 +583,36 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC7onLeaveySS_SDySSSaySDySSypGGGAGtcSgvp"></a>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC6onJoinyyySS_SDySSSaySDySSypGGGSgAGtcF"></a>
+                    <a name="//apple_ref/swift/Method/onJoin(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC6onJoinyyySS_SDySSSaySDySSypGGGSgAGtcF">onJoin(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Set the OnJoin callback</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">onJoin</span><span class="p">(</span><span class="n">_</span> <span class="nv">callback</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC6OnJoina">OnJoin</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC7onLeaveyySS_SDySSSaySDySSypGGGAGtcvp"></a>
                     <a name="//apple_ref/swift/Property/onLeave" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC7onLeaveySS_SDySSSaySDySSypGGGAGtcSgvp">onLeave</a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC7onLeaveyySS_SDySSSaySDySSypGGGAGtcvp">onLeave</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -653,14 +620,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Undocumented</p>
+                        <p>Callback to be informed of leaves</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">onLeave</span><span class="p">:</span> <span class="kt">Presence</span><span class="o">.</span><span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC15OnLeaveCallbacka">OnLeaveCallback</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">onLeave</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC7OnLeavea">OnLeave</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
 
                         </div>
                       </div>
@@ -670,9 +637,90 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC6onSyncyycSgvp"></a>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC7onLeaveyyySS_SDySSSaySDySSypGGGAGtcF"></a>
+                    <a name="//apple_ref/swift/Method/onLeave(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC7onLeaveyyySS_SDySSSaySDySSypGGGAGtcF">onLeave(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Set the OnLeave callback</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">onLeave</span><span class="p">(</span><span class="n">_</span> <span class="nv">callback</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC7OnLeavea">OnLeave</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC6onSyncyycvp"></a>
                     <a name="//apple_ref/swift/Property/onSync" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC6onSyncyycSgvp">onSync</a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC6onSyncyycvp">onSync</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Callback to be informed of synces</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">onSync</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC6OnSynca">OnSync</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC6onSyncyyyycF"></a>
+                    <a name="//apple_ref/swift/Method/onSync(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC6onSyncyyyycF">onSync(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Set the OnSync callback</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">onSync</span><span class="p">(</span><span class="n">_</span> <span class="nv">callback</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC6OnSynca">OnSync</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC7channel4optsAcA7ChannelC_AC7OptionsVtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(channel:opts:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC7channel4optsAcA7ChannelC_AC7OptionsVtcfc">init(channel:opts:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -687,7 +735,88 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">onSync</span><span class="p">:</span> <span class="kt">Presence</span><span class="o">.</span><span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC6OnSynca">OnSync</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">channel</span><span class="p">:</span> <span class="kt"><a href="../Classes/Channel.html">Channel</a></span><span class="p">,</span> <span class="nv">opts</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence/Options.html">Options</a></span> <span class="o">=</span> <span class="kt"><a href="../Classes/Presence/Options.html">Options</a></span><span class="o">.</span><span class="n">defaults</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC4listSaySDySSSaySDySSypGGGGyF"></a>
+                    <a name="//apple_ref/swift/Method/list()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC4listSaySDySSSaySDySSypGGGGyF">list()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the array of presences, with deault selected metadata.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">list</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC3Mapa">Map</a></span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC4list2bySayxGxSS_SDySSSaySDySSypGGGtXE_tlF"></a>
+                    <a name="//apple_ref/swift/Method/list(by:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC4list2bySayxGxSS_SDySSSaySDySSypGGGtXE_tlF">list(by:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Returns the array of presences, with selected metadata</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">list</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">by</span> <span class="nv">transformer</span><span class="p">:</span> <span class="p">(</span><span class="kt">String</span><span class="p">,</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC3Mapa">Map</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">T</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC6filter2bySDySSSDySSSaySDySSypGGGGSbSS_AHtcSg_tF"></a>
+                    <a name="//apple_ref/swift/Method/filter(by:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC6filter2bySDySSSDySSSaySDySSypGGGGSbSS_AHtcSg_tF">filter(by:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Filter the Presence state with a given function</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">filter</span><span class="p">(</span><span class="n">by</span> <span class="nv">filter</span><span class="p">:</span> <span class="p">((</span><span class="kt">String</span><span class="p">,</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC3Mapa">Map</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC5Statea">State</a></span></code></pre>
 
                         </div>
                       </div>
@@ -698,174 +827,19 @@
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/Initialisation"></a>
-                <a name="//apple_ref/swift/Section/Initialisation" class="dashAnchor"></a>
-                <a href="#/Initialisation">
-                  <h3 class="section-name">Initialisation</h3>
+                <a name="/Static"></a>
+                <a name="//apple_ref/swift/Section/Static" class="dashAnchor"></a>
+                <a href="#/Static">
+                  <h3 class="section-name">Static</h3>
                 </a>
               </div>
               <ul>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC7channelAcA7ChannelC_tcfc"></a>
-                    <a name="//apple_ref/swift/Method/init(channel:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC7channelAcA7ChannelC_tcfc">init(channel:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">channel</span><span class="p">:</span> <span class="kt"><a href="../Classes/Channel.html">Channel</a></span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC7channel7optionsAcA7ChannelC_AC0D7OptionsVtcfc"></a>
-                    <a name="//apple_ref/swift/Method/init(channel:options:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC7channel7optionsAcA7ChannelC_AC0D7OptionsVtcfc">init(channel:options:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Undocumented</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">channel</span><span class="p">:</span> <span class="kt"><a href="../Classes/Channel.html">Channel</a></span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D7OptionsV">PresenceOptions</a></span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/Syncing"></a>
-                <a name="//apple_ref/swift/Section/Syncing" class="dashAnchor"></a>
-                <a href="#/Syncing">
-                  <h3 class="section-name">Syncing</h3>
-                </a>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC9syncState_03newF06onJoin0H5LeaveSDySSSDySSSaySDySSypGGGGAK_AKySS_AJSgAJtcSgySS_A2JtcSgtFZ"></a>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC9syncState_03newF06onJoin0H5LeaveSDySSSDySSSaySDySSypGGGGAK_AKySS_AJSgAJtXEySS_A2JtXEtFZ"></a>
                     <a name="//apple_ref/swift/Method/syncState(_:newState:onJoin:onLeave:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC9syncState_03newF06onJoin0H5LeaveSDySSSDySSSaySDySSypGGGGAK_AKySS_AJSgAJtcSgySS_A2JtcSgtFZ">syncState(_:newState:onJoin:onLeave:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Used to sync the list of presences on the server
-with the client&rsquo;s state. An optional <code><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC6onJoinySS_SDySSSaySDySSypGGGSgAGtcSgvp">onJoin</a></code> and <code><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC7onLeaveySS_SDySSSaySDySSypGGGAGtcSgvp">onLeave</a></code> callback can
-be provided to react to changes in the client&rsquo;s local presences across
-disconnects and reconnects with the server.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">static</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">syncState</span><span class="p">(</span><span class="n">_</span> <span class="nv">pState</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D5Statea">PresenceState</a></span><span class="p">,</span> <span class="n">newState</span> <span class="nv">pNewState</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D5Statea">PresenceState</a></span><span class="p">,</span>
-                 <span class="n"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC6onJoinySS_SDySSSaySDySSypGGGSgAGtcSgvp">onJoin</a></span> <span class="nv">pOnJoin</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC14OnJoinCallbacka">OnJoinCallback</a></span><span class="p">,</span> <span class="n"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC7onLeaveySS_SDySSSaySDySSypGGGAGtcSgvp">onLeave</a></span> <span class="nv">pOnLeave</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC15OnLeaveCallbacka">OnLeaveCallback</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D5Statea">PresenceState</a></span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>pState</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>the current PresenceState</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>pNewState</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>the new PresenceState sent from the server</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>pOnJoin</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>an optional callback for the client to react to new users joining</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>pOnLeave</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>an optional callback for the client to react to users leaving</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>A new PresenceState</p>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:18SwiftPhoenixClient8PresenceC8syncDiff_4diff6onJoin0H5LeaveSDySSSDySSSaySDySSypGGGGAK_SDySSAKGySS_AJSgAJtcSgySS_A2JtcSgtFZ"></a>
-                    <a name="//apple_ref/swift/Method/syncDiff(_:diff:onJoin:onLeave:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC8syncDiff_4diff6onJoin0H5LeaveSDySSSDySSSaySDySSypGGGGAK_SDySSAKGySS_AJSgAJtcSgySS_A2JtcSgtFZ">syncDiff(_:diff:onJoin:onLeave:)</a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC9syncState_03newF06onJoin0H5LeaveSDySSSDySSSaySDySSypGGGGAK_AKySS_AJSgAJtXEySS_A2JtXEtFZ">syncState(_:newState:onJoin:onLeave:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -880,8 +854,98 @@ disconnects and reconnects with the server.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">static</span> <span class="kd">public</span> <span class="kd">func</span> <span class="nf">syncDiff</span><span class="p">(</span><span class="n">_</span> <span class="nv">pState</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D5Statea">PresenceState</a></span><span class="p">,</span> <span class="nv">diff</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC4Diffa">Diff</a></span><span class="p">,</span>
-                     <span class="n"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC6onJoinySS_SDySSSaySDySSypGGGSgAGtcSgvp">onJoin</a></span> <span class="nv">pOnJoin</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC14OnJoinCallbacka">OnJoinCallback</a></span><span class="p">,</span> <span class="n"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC7onLeaveySS_SDySSSaySDySSypGGGAGtcSgvp">onLeave</a></span> <span class="nv">pOnLeave</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC15OnLeaveCallbacka">OnLeaveCallback</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC0D5Statea">PresenceState</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">syncState</span><span class="p">(</span><span class="n">_</span> <span class="nv">currentState</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC5Statea">State</a></span><span class="p">,</span>
+                             <span class="nv">newState</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC5Statea">State</a></span><span class="p">,</span>
+                             <span class="nv">onJoin</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC6OnJoina">OnJoin</a></span> <span class="o">=</span> <span class="p">{</span><span class="n">_</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">_</span> <span class="k">in</span> <span class="p">},</span>
+                             <span class="nv">onLeave</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC7OnLeavea">OnLeave</a></span> <span class="o">=</span> <span class="p">{</span><span class="n">_</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">_</span> <span class="k">in</span> <span class="p">})</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC5Statea">State</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC8syncDiff_4diff6onJoin0H5LeaveSDySSSDySSSaySDySSypGGGGAK_SDySSAKGySS_AJSgAJtXEySS_A2JtXEtFZ"></a>
+                    <a name="//apple_ref/swift/Method/syncDiff(_:diff:onJoin:onLeave:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC8syncDiff_4diff6onJoin0H5LeaveSDySSSDySSSaySDySSypGGGGAK_SDySSAKGySS_AJSgAJtXEySS_A2JtXEtFZ">syncDiff(_:diff:onJoin:onLeave:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@discardableResult</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">syncDiff</span><span class="p">(</span><span class="n">_</span> <span class="nv">currentState</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC5Statea">State</a></span><span class="p">,</span>
+                            <span class="nv">diff</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC4Diffa">Diff</a></span><span class="p">,</span>
+                            <span class="nv">onJoin</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC6OnJoina">OnJoin</a></span> <span class="o">=</span> <span class="p">{</span><span class="n">_</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">_</span> <span class="k">in</span> <span class="p">},</span>
+                            <span class="nv">onLeave</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC7OnLeavea">OnLeave</a></span> <span class="o">=</span> <span class="p">{</span><span class="n">_</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">_</span> <span class="k">in</span> <span class="p">})</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC5Statea">State</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC6filter_2bySDySSSDySSSaySDySSypGGGGAI_SbSS_AHtcSgtFZ"></a>
+                    <a name="//apple_ref/swift/Method/filter(_:by:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC6filter_2bySDySSSDySSSaySDySSypGGGGAI_SbSS_AHtcSgtFZ">filter(_:by:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">filter</span><span class="p">(</span><span class="n">_</span> <span class="nv">presences</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC5Statea">State</a></span><span class="p">,</span>
+                          <span class="n">by</span> <span class="nv">filter</span><span class="p">:</span> <span class="p">((</span><span class="kt">String</span><span class="p">,</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC3Mapa">Map</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span><span class="p">)?)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC5Statea">State</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient8PresenceC6listBy_11transformerSayxGSDySSSDySSSaySDySSypGGGG_xSS_AItXEtlFZ"></a>
+                    <a name="//apple_ref/swift/Method/listBy(_:transformer:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient8PresenceC6listBy_11transformerSayxGSDySSSDySSSaySDySSypGGGG_xSS_AItXEtlFZ">listBy(_:transformer:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="n">listBy</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">presences</span><span class="p">:</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC5Statea">State</a></span><span class="p">,</span>
+                             <span class="nv">transformer</span><span class="p">:</span> <span class="p">(</span><span class="kt">String</span><span class="p">,</span> <span class="kt"><a href="../Classes/Presence.html#/s:18SwiftPhoenixClient8PresenceC3Mapa">Map</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">T</span><span class="p">]</span></code></pre>
 
                         </div>
                       </div>
@@ -893,7 +957,7 @@ disconnects and reconnects with the server.</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="https://github.com/davidstump/SwiftPhoenixClient" target="_blank" rel="external">David Stump</a>. All rights reserved. (Last updated: 2019-01-17)</p>
+          <p>&copy; 2019 <a class="link" href="https://github.com/davidstump/SwiftPhoenixClient" target="_blank" rel="external">David Stump</a>. All rights reserved. (Last updated: 2019-04-02)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>

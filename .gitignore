@@ -28,6 +28,11 @@ xcuserdata/
 *.moved-aside
 *.xcuserstate
 
+## Jazzy
+#
+# Uncomment if you are updating the docs
+# docs/
+
 ## Obj-C/Swift specific
 *.hmap
 *.ipa
