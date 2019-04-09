@@ -251,11 +251,14 @@ public class Socket {
     internal func teardown(code: CloseCode = CloseCode.normal, callback: (() -> Void)? = nil) {
         self.connection?.delegate = nil
         self.connection?.disconnect(forceTimeout: nil, closeCode: code.rawValue)
-        
         self.connection = nil
         
-        // TODO: This?
-        //        self.heartbeatTimer?.invalidate()
+        // The socket connection has been torndown, heartbeats are not needed
+        self.heartbeatTimer?.invalidate()
+        self.heartbeatTimer = nil
+        
+        // Since the connection's delegate was nil'd out, inform all state
+        // callbacks that the connection has closed
         self.stateChangeCallbacks.close.forEach({ $0.call() })
         callback?()
     }
