@@ -1,6 +1,6 @@
 # Swift Phoenix Client
 
-[![Swift](https://img.shields.io/badge/Swift-4.0-orange.svg?style=flat)](https://swift.org/)
+[![Swift](https://img.shields.io/badge/Swift-4.2-orange.svg?style=flat)](https://swift.org/)
 [![Version](https://img.shields.io/cocoapods/v/SwiftPhoenixClient.svg?style=flat)](http://cocoapods.org/pods/SwiftPhoenixClient)
 [![License](https://img.shields.io/cocoapods/l/SwiftPhoenixClient.svg?style=flat)](http://cocoapods.org/pods/SwiftPhoenixClient)
 [![Platform](https://img.shields.io/cocoapods/p/SwiftPhoenixClient.svg?style=flat)](http://cocoapods.org/pods/SwiftPhoenixClient)
@@ -10,7 +10,9 @@
 ## About
 Swift Phoenix Client is an extension of Starscream websocket client library
 that makes it easy to connect to Phoenix sockets in a similar manner to the
-Phoenix Socket Javascript library.
+phoenix.js client.
+
+The client is currently updated to mirror phoenix.js 1.4.
 
 
 ## Installation
@@ -25,10 +27,10 @@ target must be '9.0'
 platform :ios, '9.0'
 use_frameworks!
 
-pod "SwiftPhoenixClient"
+pod "SwiftPhoenixClient", '~> 1.0'
 ```
 
-and running `pod install`. From there you will need to add `import SwiftPhoenixClient` in any ViewController you want it to be used.
+and running `pod install`. From there you will need to add `import SwiftPhoenixClient` in any class you want it to be used.
 
 ### Carthage
 
@@ -36,14 +38,14 @@ If you use Carthage to manage your dependencies, simply add
 SwiftPhoenixClient to your `Cartfile`:
 
 ```
-github "davidstump/SwiftPhoenixClient" ~> 0.9
+github "davidstump/SwiftPhoenixClient" ~> 1.0
 ```
 
 Make sure you have added `SwiftPhoenixClient.framework`, and `Starscream.framework` to the "_Linked Frameworks and Libraries_" section of your target, and have included them in your Carthage framework copying build phase.
 
 ## Usage
 
-Using the Swift Phoenix Client is extremely easy (and familiar if have used the Phoenix JS client).
+Using the Swift Phoenix Client is extremely easy (and familiar if have used the phoenix.s client).
 
 See the [Usage Guide](https://github.com/davidstump/SwiftPhoenixClient/wiki/Usage-Guide) for details instructions
 
