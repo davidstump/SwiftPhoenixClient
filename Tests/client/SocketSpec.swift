@@ -581,7 +581,6 @@ class SocketSpec: QuickSpec {
         describe("resetHeartbeat") {
             // Mocks
             var mockWebSocket: WebSocketClientMock!
-            var mockTimeoutTimer: TimeoutTimerMock!
             let mockWebSocketTransport: ((URL) -> WebSocketClient) = { _ in return mockWebSocket }
             
             // UUT
@@ -589,7 +588,6 @@ class SocketSpec: QuickSpec {
             
             beforeEach {
                 mockWebSocket = WebSocketClientMock()
-                mockTimeoutTimer = TimeoutTimerMock()
                 socket = Socket(endPoint: "/socket", transport: mockWebSocketTransport)
                 
             }
