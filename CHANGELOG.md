@@ -5,6 +5,9 @@ This product uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.0]
+* Swift 5
+
 ## [1.0.1]
 * Fixed issue with Carthage installs
 
