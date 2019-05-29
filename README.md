@@ -1,6 +1,6 @@
 # Swift Phoenix Client
 
-[![Swift](https://img.shields.io/badge/Swift-4.2-orange.svg?style=flat)](https://swift.org/)
+[![Swift](https://img.shields.io/badge/Swift-5.0-orange.svg?style=flat)](https://swift.org/)
 [![Version](https://img.shields.io/cocoapods/v/SwiftPhoenixClient.svg?style=flat)](http://cocoapods.org/pods/SwiftPhoenixClient)
 [![License](https://img.shields.io/cocoapods/l/SwiftPhoenixClient.svg?style=flat)](http://cocoapods.org/pods/SwiftPhoenixClient)
 [![Platform](https://img.shields.io/cocoapods/p/SwiftPhoenixClient.svg?style=flat)](http://cocoapods.org/pods/SwiftPhoenixClient)
@@ -15,7 +15,7 @@ phoenix.js client.
 The client is currently updated to mirror phoenix.js 1.4.
 
 ### Swift Versions
-`master` currently supports Swift 5.0. You'll need to set your target to `= 1.0.1` if your project is using Swift 4.2 
+`master` currently supports Swift 5.0. You'll need to set your target to `= 1.0.1` if your project is using Swift 4.2
 
 | swift | client |
 |-------|--------|
