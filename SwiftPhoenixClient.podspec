@@ -8,9 +8,9 @@
 
 Pod::Spec.new do |s|
   s.name             = "SwiftPhoenixClient"
-  s.version          = "1.0.1"
+  s.version          = "1.1.0"
   s.summary          = "Connect your Phoenix and iOS applications through WebSockets!"
-  s.swift_version    = "4.2"
+  s.swift_version    = "5.0"
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -40,5 +40,5 @@ http://www.phoenixframework.org/docs/channels
 
   s.source_files = 'Sources/**/*.swift'
 
-  s.dependency 'Starscream', '~> 3.0.6'
+  s.dependency 'Starscream', '~> 3.1.0'
 end
