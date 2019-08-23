@@ -51,6 +51,7 @@ public class Socket {
   
   
   
+  
   //----------------------------------------------------------------------
   // MARK: - Public Attributes
   //----------------------------------------------------------------------
@@ -83,8 +84,11 @@ public class Socket {
   /// Interval between sending a heartbeat
   public var heartbeatInterval: TimeInterval = Defaults.heartbeatInterval
   
-  /// Internval between socket reconnect attempts
-  public var reconnectAfter: (Int) -> TimeInterval = Defaults.steppedBackOff
+  /// Interval between socket reconnect attempts, in seconds
+  public var reconnectAfter: (Int) -> TimeInterval = Defaults.reconnectSteppedBackOff
+  
+  /// Interval between channel rejoin attempts, in seconds
+  public var rejoinAfter: (Int) -> TimeInterval = Defaults.rejoinSteppedBackOff
   
   /// The optional function to receive logs
   public var logger: ((String) -> Void)?
@@ -132,6 +136,9 @@ public class Socket {
   
   /// Timer to use when attempting to reconnect
   var reconnectTimer: TimeoutTimer
+  
+  /// True if the Socket closed cleaned. False if not (connection timeout, heartbeat, etc)
+  var closeWasClean: Bool = false
   
   /// Websocket connection to the server
   var connection: WebSocketClient?
@@ -224,6 +231,9 @@ public class Socket {
     // Do not attempt to reconnect if the socket is currently connected
     guard !isConnected else { return }
     
+    // Reset the clean close flag when attempting to connect
+    self.closeWasClean = false
+    
     self.connection = self.transport(endPointUrl)
     self.connection?.delegate = self
     self.connection?.disableSSLCertValidation = disableSSLCertValidation
@@ -243,6 +253,10 @@ public class Socket {
   /// - paramter callback: Optional. Called when disconnected
   public func disconnect(code: CloseCode = CloseCode.normal,
                          callback: (() -> Void)? = nil) {
+      // The socket was closed cleanly by the User
+      self.closeWasClean = true
+    
+    // Reset any reconnects and teardown the socket connection
     self.reconnectTimer.reset()
     self.teardown(code: code, callback: callback)
   }
@@ -520,6 +534,9 @@ public class Socket {
   internal func onConnectionOpen() {
     self.logItems("transport", "Connected to \(endPoint)")
     
+    // Reset the closeWasClean flag now that the socket has been connected
+    self.closeWasClean = false
+    
     // Send any messages that were waiting for a connection
     self.flushSendBuffer()
     
@@ -541,13 +558,12 @@ public class Socket {
     self.heartbeatTimer?.invalidate()
     self.heartbeatTimer = nil
     
-    self.stateChangeCallbacks.close.forEach({ $0.call() })
+    // Only attempt to reconnect if the socket did not close normally
+    if (!self.closeWasClean) {
+      self.reconnectTimer.scheduleTimeout()
+    }
     
-    // If there was a non-normal event when the connection closed, attempt
-    // to schedule a reconnect attempt
-    let closeCode = CloseCode.init(rawValue: UInt16(code ?? 0))
-    guard closeCode != CloseCode.normal else { return }
-    self.reconnectTimer.scheduleTimeout()
+    self.stateChangeCallbacks.close.forEach({ $0.call() })
   }
   
   internal func onConnectionError(_ error: Error) {
@@ -585,7 +601,12 @@ public class Socket {
   
   /// Triggers an error event to all of the connected Channels
   internal func triggerChannelError() {
-    self.channels.forEach( { $0.trigger(event: ChannelEvent.error) } )
+    self.channels.forEach { (channel) in
+      // Only trigger a channel error if it is in an "opened" state
+      if !(channel.isErrored || channel.isLeaving || channel.isClosed) {
+        channel.trigger(event: ChannelEvent.error)
+      }
+    }
   }
   
   /// Send all messages that were buffered before the socket opened
@@ -637,6 +658,9 @@ public class Socket {
       self.logItems("transport",
                     "heartbeat timeout. Attempting to re-establish connection")
       
+      // Close the socket, flagging the closure as abnormal
+      self.abnormalClose("heartbeat timeout")
+      
       // Disconnect the socket manually. Do not use `teardown` or
       // `disconnect` as they will nil out the websocket delegate
       self.connection?.disconnect(forceTimeout: nil,
@@ -650,6 +674,19 @@ public class Socket {
               event: ChannelEvent.heartbeat,
               payload: [:],
               ref: self.pendingHeartbeatRef)
+  }
+  
+  internal func abnormalClose(_ reason: String) {
+    self.closeWasClean = false
+    
+    /*
+     We use NORMAL here since the client is the one determining to close the
+     connection. However, we keep a flag `closeWasClean` set to false so that
+     the client knows that it should attempt to reconnect.
+     */
+    self.connection?.disconnect(forceTimeout: nil,
+                                closeCode: CloseCode.normal.rawValue)
+    
   }
 }
 

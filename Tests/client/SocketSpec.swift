@@ -32,11 +32,17 @@ class SocketSpec: QuickSpec {
         expect(socket.timeout).to(equal(Defaults.timeoutInterval))
         expect(socket.heartbeatInterval).to(equal(Defaults.heartbeatInterval))
         expect(socket.logger).to(beNil())
-        expect(socket.reconnectAfter(1)).to(equal(1))
-        expect(socket.reconnectAfter(2)).to(equal(2))
-        expect(socket.reconnectAfter(3)).to(equal(5))
-        expect(socket.reconnectAfter(4)).to(equal(10))
-        expect(socket.reconnectAfter(5)).to(equal(10))
+        expect(socket.reconnectAfter(1)).to(equal(0.010)) // 10ms
+        expect(socket.reconnectAfter(2)).to(equal(0.050)) // 50ms
+        expect(socket.reconnectAfter(3)).to(equal(0.100)) // 100ms
+        expect(socket.reconnectAfter(4)).to(equal(0.150)) // 150ms
+        expect(socket.reconnectAfter(5)).to(equal(0.200)) // 200ms
+        expect(socket.reconnectAfter(6)).to(equal(0.250)) // 250ms
+        expect(socket.reconnectAfter(7)).to(equal(0.500)) // 500ms
+        expect(socket.reconnectAfter(8)).to(equal(1.000)) // 1_000ms (1s)
+        expect(socket.reconnectAfter(9)).to(equal(2.000)) // 2_000ms (2s)
+        expect(socket.reconnectAfter(10)).to(equal(5.00)) // 5_000ms (5s)
+        expect(socket.reconnectAfter(11)).to(equal(5.00)) // 5_000ms (5s)
       })
       
       it("overrides some defaults", closure: {
@@ -110,6 +116,7 @@ class SocketSpec: QuickSpec {
       })
     }
     
+
     describe("websocketProtocol") {
       it("returns wss when protocol is https", closure: {
         let socket = Socket("https://example.com/")
@@ -266,6 +273,13 @@ class SocketSpec: QuickSpec {
         expect(socket.connection).to(beNil())
         expect(mockWebSocket.disconnectForceTimeoutCloseCodeReceivedArguments?.closeCode)
           .to(equal(CloseCode.normal.rawValue))
+      })
+      
+      it("flags the socket as closed cleanly", closure: {
+        expect(socket.closeWasClean).to(beFalse())
+        
+        socket.disconnect()
+        expect(socket.closeWasClean).to(beTrue())
       })
       
       it("calls callback", closure: {
@@ -599,6 +613,13 @@ class SocketSpec: QuickSpec {
         expect(socket.pendingHeartbeatRef).to(beNil())
       })
       
+      it("does not schedule heartbeat if skipHeartbeat == true", closure: {
+        socket.skipHeartbeat = true
+        socket.resetHeartbeat()
+        
+        expect(socket.heartbeatTimer).to(beNil())
+      })
+      
       it("creates a timer and sends a heartbeat", closure: {
         mockWebSocket.isConnected = true
         socket.connect()
@@ -647,13 +668,19 @@ class SocketSpec: QuickSpec {
         mockWebSocket = WebSocketClientMock()
         mockTimeoutTimer = TimeoutTimerMock()
         socket = Socket(endPoint: "/socket", transport: mockWebSocketTransport)
-        socket.reconnectAfter = { _ in return 10 }
+//        socket.reconnectAfter = { _ in return 10 }
         socket.reconnectTimer = mockTimeoutTimer
-        socket.skipHeartbeat = true
+//        socket.skipHeartbeat = true
       }
       
-      it("does not schedule reconnectTimer timeout if normal close", closure: {
+      it("schedules reconnectTimer timeout if normal close", closure: {
         socket.onConnectionClosed(code: Int(CloseCode.normal.rawValue))
+        expect(mockTimeoutTimer.scheduleTimeoutCalled).to(beTrue())
+      })
+      
+      
+      it("does not schedule reconnectTimer timeout if normal close after explicit disconnect", closure: {
+        socket.disconnect()
         expect(mockTimeoutTimer.scheduleTimeoutCalled).to(beFalse())
       })
       
@@ -661,6 +688,58 @@ class SocketSpec: QuickSpec {
         socket.onConnectionClosed(code: 1001)
         expect(mockTimeoutTimer.scheduleTimeoutCalled).to(beTrue())
       })
+      
+      it("schedules reconnectTimer timeout if connection cannot be made after a previous clean disconnect", closure: {
+        socket.disconnect()
+        socket.connect()
+        
+        socket.onConnectionClosed(code: 1001)
+        expect(mockTimeoutTimer.scheduleTimeoutCalled).to(beTrue())
+      })
+      
+      it("triggers channel error if joining", closure: {
+        let channel = socket.channel("topic")
+        var errorCalled = false
+        channel.on(ChannelEvent.error, callback: { _ in
+          errorCalled = true
+        })
+        
+        channel.join()
+        expect(channel.state).to(equal(.joining))
+
+        socket.onConnectionClosed(code: 1001)
+        expect(errorCalled).to(beTrue())
+      })
+      
+      it("triggers channel error if joined", closure: {
+        let channel = socket.channel("topic")
+        var errorCalled = false
+        channel.on(ChannelEvent.error, callback: { _ in
+          errorCalled = true
+        })
+        
+        channel.join().trigger("ok", payload: [:])
+        expect(channel.state).to(equal(.joined))
+        
+        socket.onConnectionClosed(code: 1001)
+        expect(errorCalled).to(beTrue())
+      })
+      
+      it("does not trigger channel error after leave", closure: {
+        let channel = socket.channel("topic")
+        var errorCalled = false
+        channel.on(ChannelEvent.error, callback: { _ in
+          errorCalled = true
+        })
+        
+        channel.join().trigger("ok", payload: [:])
+        channel.leave()
+        expect(channel.state).to(equal(.closed))
+        
+        socket.onConnectionClosed(code: 1001)
+        expect(errorCalled).to(beFalse())
+      })
+      
       
       it("triggers onClose callbacks", closure: {
         var oneCalled = 0
@@ -674,24 +753,6 @@ class SocketSpec: QuickSpec {
         expect(oneCalled).to(equal(1))
         expect(twoCalled).to(equal(1))
         expect(threeCalled).to(equal(0))
-      })
-      
-      it("triggers channel error", closure: {
-        let channel = socket.channel("topic")
-        
-        var errorCalled = false
-        var errorEvent: String?
-        var closeCalled = false
-        channel.on(ChannelEvent.error, callback: { (msg) in
-          errorEvent = msg.event
-          errorCalled = true
-        })
-        channel.on(ChannelEvent.close, callback: { (_) in closeCalled = true })
-        
-        socket.onConnectionClosed(code: 1000)
-        expect(errorCalled).to(beTrue())
-        expect(errorEvent).to(equal(ChannelEvent.error))
-        expect(closeCalled).to(beFalse())
       })
     }
     
@@ -724,22 +785,48 @@ class SocketSpec: QuickSpec {
         expect(lastError).toNot(beNil())
       })
       
-      it("triggers channel error", closure: {
+      
+      it("triggers channel error if joining", closure: {
         let channel = socket.channel("topic")
-        
         var errorCalled = false
-        var errorEvent: String?
-        var closeCalled = false
-        channel.on(ChannelEvent.error, callback: { (msg) in
-          errorEvent = msg.event
+        channel.on(ChannelEvent.error, callback: { _ in
           errorCalled = true
         })
-        channel.on(ChannelEvent.close, callback: { (_) in closeCalled = true })
+        
+        channel.join()
+        expect(channel.state).to(equal(.joining))
         
         socket.onConnectionError(TestError.stub)
         expect(errorCalled).to(beTrue())
-        expect(errorEvent).to(equal(ChannelEvent.error))
-        expect(closeCalled).to(beFalse())
+      })
+      
+      it("triggers channel error if joined", closure: {
+        let channel = socket.channel("topic")
+        var errorCalled = false
+        channel.on(ChannelEvent.error, callback: { _ in
+          errorCalled = true
+        })
+        
+        channel.join().trigger("ok", payload: [:])
+        expect(channel.state).to(equal(.joined))
+        
+        socket.onConnectionError(TestError.stub)
+        expect(errorCalled).to(beTrue())
+      })
+      
+      it("does not trigger channel error after leave", closure: {
+        let channel = socket.channel("topic")
+        var errorCalled = false
+        channel.on(ChannelEvent.error, callback: { _ in
+          errorCalled = true
+        })
+        
+        channel.join().trigger("ok", payload: [:])
+        channel.leave()
+        expect(channel.state).to(equal(.closed))
+        
+        socket.onConnectionError(TestError.stub)
+        expect(errorCalled).to(beFalse())
       })
     }
     

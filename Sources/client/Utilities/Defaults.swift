@@ -28,10 +28,16 @@ public class Defaults {
   /// Default interval to send heartbeats on
   public static let heartbeatInterval: TimeInterval = 30.0
   
-  /// Default reconnect function
-  public static let steppedBackOff: (Int) -> TimeInterval = { tries in
-    return tries > 4 ? 10 : [1, 2, 5, 10][tries - 1]
+  /// Default reconnect algorithm for the socket
+  public static let reconnectSteppedBackOff: (Int) -> TimeInterval = { tries in
+    return tries > 9 ? 5.0 : [0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.5, 1.0, 2.0][tries - 1]
   }
+  
+  /** Default rejoin algorithm for individual channels */
+  public static let rejoinSteppedBackOff: (Int) -> TimeInterval = { tries in
+    return tries > 3 ? 10 : [1, 2, 5][tries - 1]
+  }
+  
   
   /// Default encode function, utilizing JSONSerialization.data
   public static let encode: ([String: Any]) -> Data = { json in
