@@ -134,7 +134,7 @@ public final class Presence {
   // Diff has keys "joins" and "leaves", pointing to a Presence.State each
   // containing the users that joined and left.
   public typealias Diff = [String: State]
-
+  
   /// Closure signature of OnJoin callbacks
   public typealias OnJoin = (_ key: String, _ current: Map?, _ new: Map) -> Void
   
@@ -240,7 +240,7 @@ public final class Presence {
       self.pendingDiffs = []
       self.caller.onSync()
     }
-
+    
     self.channel?.delegateOn(diffEvent, to: self) { (self, message) in
       guard let diff = message.payload as? Diff else { return }
       if self.isPendingSyncState {
@@ -269,7 +269,7 @@ public final class Presence {
   public func filter(by filter: ((String, Map) -> Bool)?) -> State {
     return Presence.filter(self.state, by: filter)
   }
-
+  
   
   //----------------------------------------------------------------------
   // MARK: - Static
@@ -289,13 +289,13 @@ public final class Presence {
     let state = currentState
     var leaves: Presence.State = [:]
     var joins: Presence.State = [:]
-
+    
     state.forEach { (key, presence) in
       if newState[key] == nil {
         leaves[key] = presence
       }
     }
-
+    
     newState.forEach { (key, newPresence) in
       if let currentPresence = state[key] {
         let newRefs = newPresence["metas"]!.map({ $0["phx_ref"] as! String })
@@ -307,7 +307,7 @@ public final class Presence {
         let leftMetas = currentPresence["metas"]!.filter({ (meta: Meta) -> Bool in
           !newRefs.contains { $0 == meta["phx_ref"] as! String }
         })
-    
+        
         
         if joinedMetas.count > 0 {
           joins[key] = newPresence
@@ -322,7 +322,7 @@ public final class Presence {
         joins[key] = newPresence
       }
     }
-
+    
     return Presence.syncDiff(state,
                              diff: ["joins": joins, "leaves": leaves],
                              onJoin: onJoin,
@@ -366,7 +366,7 @@ public final class Presence {
       
       curPresence["metas"] = keepMetas
       onLeave(key, curPresence, leftPresence)
-
+      
       if keepMetas.count > 0 {
         state[key]!["metas"] = keepMetas
       } else {

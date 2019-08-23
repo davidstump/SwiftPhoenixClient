@@ -21,56 +21,56 @@
 
 /// Data that is received from the Server.
 public class Message {
+  
+  /// Reference number. Empty if missing
+  public let ref: String
+  
+  /// Join Reference number
+  internal let joinRef: String?
+  
+  /// Message topic
+  public let topic: String
+  
+  /// Message event
+  public let event: String
+  
+  /// Message payload
+  public var payload: Payload
+  
+  /// Convenience accessor. Equivalent to getting the status as such:
+  /// ```swift
+  /// message.payload["status"]
+  /// ```
+  public var status: String? {
+    return payload["status"] as? String
+  }
+  
+  init(ref: String = "",
+       topic: String = "",
+       event: String = "",
+       payload: Payload = [:],
+       joinRef: String? = nil) {
+    self.ref = ref
+    self.topic = topic
+    self.event = event
+    self.payload = payload
+    self.joinRef = joinRef
+  }
+  
+  init?(json: [String: Any]) {
+    self.ref = json["ref"] as? String ?? ""
+    self.joinRef = json["join_ref"] as? String
     
-    /// Reference number. Empty if missing
-    public let ref: String
-    
-    /// Join Reference number
-    internal let joinRef: String?
-    
-    /// Message topic
-    public let topic: String
-    
-    /// Message event
-    public let event: String
-    
-    /// Message payload
-    public var payload: Payload
-    
-    /// Convenience accessor. Equivalent to getting the status as such:
-    /// ```swift
-    /// message.payload["status"]
-    /// ```
-    public var status: String? {
-        return payload["status"] as? String
+    if
+      let topic = json["topic"] as? String,
+      let event = json["event"] as? String,
+      let payload = json["payload"] as? Payload {
+      
+      self.topic = topic
+      self.event = event
+      self.payload = payload
+    } else {
+      return nil
     }
-
-    init(ref: String = "",
-         topic: String = "",
-         event: String = "",
-         payload: Payload = [:],
-         joinRef: String? = nil) {
-        self.ref = ref
-        self.topic = topic
-        self.event = event
-        self.payload = payload
-        self.joinRef = joinRef
-    }
-    
-    init?(json: [String: Any]) {
-        self.ref = json["ref"] as? String ?? ""
-        self.joinRef = json["join_ref"] as? String
-        
-        if
-            let topic = json["topic"] as? String,
-            let event = json["event"] as? String,
-            let payload = json["payload"] as? Payload {
-            
-            self.topic = topic
-            self.event = event
-            self.payload = payload
-        } else {
-            return nil
-        }
-    }
+  }
 }
