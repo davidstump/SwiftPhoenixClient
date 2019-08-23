@@ -32,11 +32,18 @@ class SocketSpec: QuickSpec {
                 expect(socket.timeout).to(equal(Defaults.timeoutInterval))
                 expect(socket.heartbeatInterval).to(equal(Defaults.heartbeatInterval))
                 expect(socket.logger).to(beNil())
-                expect(socket.reconnectAfter(1)).to(equal(1))
-                expect(socket.reconnectAfter(2)).to(equal(2))
-                expect(socket.reconnectAfter(3)).to(equal(5))
-                expect(socket.reconnectAfter(4)).to(equal(10))
-                expect(socket.reconnectAfter(5)).to(equal(10))
+                expect(socket.reconnectAfter(1)).to(equal(0.010)) // 10ms
+                expect(socket.reconnectAfter(2)).to(equal(0.050)) // 50ms
+                expect(socket.reconnectAfter(3)).to(equal(0.100)) // 100ms
+                expect(socket.reconnectAfter(4)).to(equal(0.150)) // 150ms
+                expect(socket.reconnectAfter(5)).to(equal(0.200)) // 200ms
+                expect(socket.reconnectAfter(6)).to(equal(0.250)) // 250ms
+                expect(socket.reconnectAfter(7)).to(equal(0.500)) // 500ms
+                expect(socket.reconnectAfter(8)).to(equal(1.000)) // 1_000ms (1s)
+                expect(socket.reconnectAfter(9)).to(equal(2.000)) // 2_000ms (2s)
+                expect(socket.reconnectAfter(10)).to(equal(5.00)) // 5_000ms (5s)
+                expect(socket.reconnectAfter(11)).to(equal(5.00)) // 5_000ms (5s)
+              
             })
             
             it("overrides some defaults", closure: {
