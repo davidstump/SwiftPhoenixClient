@@ -21,7 +21,6 @@
 		124A083521F14BF4003D1400 /* DefaultSerializerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 124A083321F14BB9003D1400 /* DefaultSerializerSpec.swift */; };
 		124A083721F1575B003D1400 /* TimeoutTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 124A083621F1575B003D1400 /* TimeoutTimer.swift */; };
 		12A0B0E622317752007ED590 /* FakeTimerQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A0B0E522317752007ED590 /* FakeTimerQueue.swift */; };
-		12A3983D20D00050003203DF /* PushSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 124B95C120AF41190012006C /* PushSpec.swift */; };
 		12BCCB452210CED9001A55E1 /* Delegated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12BCCB442210CED9001A55E1 /* Delegated.swift */; };
 		12BCCB482210D4D7001A55E1 /* TimeoutTimerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12BCCB472210D4D7001A55E1 /* TimeoutTimerSpec.swift */; };
 		12C140D920AF416600184725 /* ChannelSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C140D720AF415900184725 /* ChannelSpec.swift */; };
@@ -29,7 +28,6 @@
 		12F7830C2210D56D00291614 /* MockableWebSocketClient.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12F7830A2210D56D00291614 /* MockableWebSocketClient.generated.swift */; };
 		63CD642E1DB11E8400C406A6 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD642D1DB11E8400C406A6 /* Presence.swift */; };
 		63CD64321DB1272400C406A6 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD64311DB1272400C406A6 /* Message.swift */; };
-		B425205C2165203200700CBD /* PresenceStateSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B425205B2165203200700CBD /* PresenceStateSpec.swift */; };
 		B48458A82164E3D300466E32 /* PresenceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48458A62164E28500466E32 /* PresenceSpec.swift */; };
 /* End PBXBuildFile section */
 
@@ -61,7 +59,6 @@
 		12252F55202EA467000BA6A2 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
 		124A083321F14BB9003D1400 /* DefaultSerializerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSerializerSpec.swift; sourceTree = "<group>"; };
 		124A083621F1575B003D1400 /* TimeoutTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeoutTimer.swift; sourceTree = "<group>"; };
-		124B95C120AF41190012006C /* PushSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushSpec.swift; sourceTree = "<group>"; };
 		12A0B0E522317752007ED590 /* FakeTimerQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeTimerQueue.swift; sourceTree = "<group>"; };
 		12BCCB442210CED9001A55E1 /* Delegated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Delegated.swift; sourceTree = "<group>"; };
 		12BCCB472210D4D7001A55E1 /* TimeoutTimerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeoutTimerSpec.swift; sourceTree = "<group>"; };
@@ -70,7 +67,6 @@
 		12F7830A2210D56D00291614 /* MockableWebSocketClient.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockableWebSocketClient.generated.swift; sourceTree = "<group>"; };
 		63CD642D1DB11E8400C406A6 /* Presence.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = Presence.swift; sourceTree = "<group>"; tabWidth = 2; };
 		63CD64311DB1272400C406A6 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		B425205B2165203200700CBD /* PresenceStateSpec.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = PresenceStateSpec.swift; sourceTree = "<group>"; tabWidth = 2; };
 		B48458A62164E28500466E32 /* PresenceSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenceSpec.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -130,11 +126,7 @@
 				12A0B0E422317740007ED590 /* helpers */,
 				12F783092210D53200291614 /* mocks */,
 				12BCCB462210D4C9001A55E1 /* client */,
-				12C140D720AF415900184725 /* ChannelSpec.swift */,
 				0BFAE4F41DA84F59000B3CD3 /* Info.plist */,
-				B48458A62164E28500466E32 /* PresenceSpec.swift */,
-				B425205B2165203200700CBD /* PresenceStateSpec.swift */,
-				124B95C120AF41190012006C /* PushSpec.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -153,14 +145,14 @@
 		124A083821F174C2003D1400 /* client */ = {
 			isa = PBXGroup;
 			children = (
-				12B68BCC2253EF9300044750 /* Utilities */,
-				12B68BCB2253EF6900044750 /* Supporting Files */,
 				0B8517E41DAC12F40093A015 /* Channel.swift */,
 				63CD64311DB1272400C406A6 /* Message.swift */,
 				63CD642D1DB11E8400C406A6 /* Presence.swift */,
 				1220C3F8202FA808001664A2 /* Push.swift */,
 				0B8517E21DAC11C80093A015 /* Socket.swift */,
 				124A083621F1575B003D1400 /* TimeoutTimer.swift */,
+				12B68BCB2253EF6900044750 /* Supporting Files */,
+				12B68BCC2253EF9300044750 /* Utilities */,
 			);
 			path = client;
 			sourceTree = "<group>";
@@ -195,7 +187,9 @@
 		12BCCB462210D4C9001A55E1 /* client */ = {
 			isa = PBXGroup;
 			children = (
+				12C140D720AF415900184725 /* ChannelSpec.swift */,
 				124A083321F14BB9003D1400 /* DefaultSerializerSpec.swift */,
+				B48458A62164E28500466E32 /* PresenceSpec.swift */,
 				12EAFF27202F654300685575 /* SocketSpec.swift */,
 				12BCCB472210D4D7001A55E1 /* TimeoutTimerSpec.swift */,
 			);
@@ -339,10 +333,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				124A083521F14BF4003D1400 /* DefaultSerializerSpec.swift in Sources */,
-				12A3983D20D00050003203DF /* PushSpec.swift in Sources */,
 				12BCCB482210D4D7001A55E1 /* TimeoutTimerSpec.swift in Sources */,
 				12A0B0E622317752007ED590 /* FakeTimerQueue.swift in Sources */,
-				B425205C2165203200700CBD /* PresenceStateSpec.swift in Sources */,
 				12F7830C2210D56D00291614 /* MockableWebSocketClient.generated.swift in Sources */,
 				12C140D920AF416600184725 /* ChannelSpec.swift in Sources */,
 				120B42CB2223481600FE483D /* MockableClass.generated.swift in Sources */,
