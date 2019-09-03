@@ -54,6 +54,9 @@ struct Binding {
 ///         .receive("error") { payload in print("Failed ot join", payload) }
 ///         .receive("timeout") { payload in print("Networking issue...", payload) }
 ///
+
+import Foundation
+
 public class Channel {
   
   /// The topic of the Channel. e.g. "rooms:friends"

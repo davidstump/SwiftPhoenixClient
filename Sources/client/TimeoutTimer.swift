@@ -39,6 +39,9 @@
 ///     reconnectTimer.scheduleTimeout() // fires after 5000ms
 ///     reconnectTimer.reset()
 ///     reconnectTimer.scheduleTimeout() // fires after 1000ms
+
+import Foundation
+
 class TimeoutTimer {
   
   /// Callback to be informed when the underlying Timer fires
