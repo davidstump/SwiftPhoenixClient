@@ -111,13 +111,22 @@ public class Channel {
     // Setup Timer delgation
     self.rejoinTimer.callback
       .delegate(to: self) { (self) in
-        self.rejoinUntilConnected()
-    }
+        if self.socket?.isConnected == true { self.rejoin() }
+      }
     
     self.rejoinTimer.timerCalculation
       .delegate(to: self) { (self, tries) -> TimeInterval in
-        return self.socket?.reconnectAfter(tries) ?? 10.0
-    }
+        return self.socket?.rejoinAfter(tries) ?? 5.0
+      }
+    
+    // Respond to socket events
+    self.socket?.delegateOnError(to: self, callback: { (self, _) in
+      self.rejoinTimer.reset()
+    })
+    self.socket?.delegateOnOpen(to: self, callback: { (self) in
+      self.rejoinTimer.reset()
+      if (self.isErrored) { self.rejoin() }
+    })
     
     // Setup Push Event to be sent when joining
     self.joinPush = Push(channel: self,
@@ -138,11 +147,14 @@ public class Channel {
       self.pushBuffer = []
     }
     
+    // Perform if Channel errors while attempting to joi
+    self.joinPush.delegateReceive("error", to: self) { (self, _) in
+      self.state = .errored
+      if (self.socket?.isConnected == true) { self.rejoinTimer.scheduleTimeout() }
+    }
+    
     // Handle when the join push times out when sending after join()
     self.joinPush.delegateReceive("timeout", to: self) { (self, _) in
-      // Only handle a timeout if the Channel is in the 'joining' state
-      guard self.isJoining else { return }
-      
       // log that the channel timed out
       self.socket?.logItems("channel", "timeout \(self.topic) \(self.joinRef ?? "") after \(self.timeout)s")
       
@@ -152,10 +164,11 @@ public class Channel {
                            timeout: self.timeout)
       leavePush.send()
       
-      // Mark the Channel as in an error and attempt to rejoin
+      // Mark the Channel as in an error and attempt to rejoin if socket is connected
       self.state = ChannelState.errored
       self.joinPush.reset()
-      self.rejoinTimer.scheduleTimeout()
+      
+      if (self.socket?.isConnected == true) { self.rejoinTimer.scheduleTimeout() }
     }
     
     /// Perfom when the Channel has been closed
@@ -173,16 +186,15 @@ public class Channel {
     
     /// Perfom when the Channel errors
     self.delegateOnError(to: self) { (self, message) in
-      // Do not emit error if the channel is in the process of leaving
-      // or if it has already closed
-      guard !self.isLeaving, !self.isClosed else { return }
-      
       // Log that the channel received an error
       self.socket?.logItems("channel", "error topic: \(self.topic) joinRef: \(self.joinRef ?? "nil") mesage: \(message)")
       
-      // Mark the channel as errored and attempt to rejoin
+      // If error was received while joining, then reset the Push
+      if (self.isJoining) { self.joinPush.reset() }
+      
+      // Mark the channel as errored and attempt to rejoin if socket is currently connected
       self.state = ChannelState.errored
-      self.rejoinTimer.scheduleTimeout()
+      if (self.socket?.isConnected == true) { self.rejoinTimer.scheduleTimeout() }
     }
     
     // Perform when the join reply is received
@@ -220,8 +232,10 @@ public class Channel {
     }
     
     // Join the Channel
+    if let safeTimeout = timeout { self.timeout = safeTimeout }
+    
     self.joinedOnce = true
-    self.rejoin(timeout)
+    self.rejoin()
     return joinPush
   }
   
@@ -449,6 +463,10 @@ public class Channel {
   /// - return: Push that can add receive hooks
   @discardableResult
   public func leave(timeout: TimeInterval = Defaults.timeoutInterval) -> Push {
+    // If attempting a rejoin during a leave, then reset, cancelling the rejoin
+    self.rejoinTimer.reset()
+    
+    // Now set the state to leaving
     self.state = .leaving
     
     /// Delegated callback for a successful or a failed channel leave
@@ -494,14 +512,6 @@ public class Channel {
   //----------------------------------------------------------------------
   // MARK: - Internal
   //----------------------------------------------------------------------
-  /// Will continually attempt to rejoin the Channel on a timer.
-  private func rejoinUntilConnected() {
-    self.rejoinTimer.scheduleTimeout()
-    if self.socket?.isConnected == true {
-      self.rejoin()
-    }
-  }
-  
   /// Checks if an event received by the Socket belongs to this Channel
   func isMember(_ message: Message) -> Bool {
     guard message.topic == self.topic else { return false }
@@ -524,6 +534,10 @@ public class Channel {
   
   /// Rejoins the channel
   func rejoin(_ timeout: TimeInterval? = nil) {
+    // Do not attempt to rejoin if the channel is in the process of leaving
+    guard !self.isLeaving else { return }
+    
+    // Send the joinPush
     self.sendJoin(timeout ?? self.timeout)
   }
   
