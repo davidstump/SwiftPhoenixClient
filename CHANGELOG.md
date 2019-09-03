@@ -5,6 +5,11 @@ This product uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.1](https://github.com/davidstump/SwiftPhoenixClient/compare/1.1.0...1.1.1)
+* [#141](https://github.com/davidstump/SwiftPhoenixClient/pull/141): tvOS support
+* [#145](https://github.com/davidstump/SwiftPhoenixClient/pull/145): Refactored Socket reconnect strategy
+* [#146](https://github.com/davidstump/SwiftPhoenixClient/pull/146): Refactored Channel rejoin strategy
+
 ## [1.1.0]
 * Swift 5
 
