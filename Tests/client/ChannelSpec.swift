@@ -179,114 +179,105 @@ class ChannelSpec: QuickSpec {
     
     describe("timeout behavior") {
       
-      var ref: Int!
+      var spySocket: SocketSpy!
       var joinPush: Push!
       var timeout: TimeInterval!
       
-      beforeEach {
+      func receiveSocketOpen() {
         mockClient.isConnected = true
-        
-        ref = 0
-        mockSocket.makeRefClosure = {
-          ref += 1
-          return "\(ref!)"
-        }
+        spySocket.onConnectionOpen()
+      }
+      
+      beforeEach {
+        mockClient.isConnected = false
+        let transport: ((URL) -> WebSocketClient) = { _ in return mockClient }
+        spySocket = SocketSpy(endPoint: "/socket", transport: transport)
+        channel = Channel(topic: "topic", params: ["one": "two"], socket: spySocket)
         
         joinPush = channel.joinPush
         timeout = joinPush.timeout
       }
       
       it("succeeds before timeout", closure: {
+        spySocket.connect()
+        receiveSocketOpen()
+        
         channel.join()
-        expect(mockSocket.pushTopicEventPayloadRefJoinRefCallsCount)
-          .to(equal(1))
-        
-        fakeClock.tick(timeout / 2)
-        
+        expect(spySocket.pushCalled).to(beTrue())
+        expect(channel.timeout).to(equal(10.0))
+
+        fakeClock.tick(0.100)
         joinPush.trigger("ok", payload: [:])
         expect(channel.state).to(equal(.joined))
         
         fakeClock.tick(timeout)
-        expect(mockSocket.pushTopicEventPayloadRefJoinRefCallsCount)
-          .to(equal(1))
+        expect(spySocket.pushCallCount).to(equal(1))
       })
       
       it("retries with backoff after timeout", closure: {
-        var callsCount: Int {
-          return mockSocket.pushTopicEventPayloadRefJoinRefCallsCount
-        }
+        spySocket.connect()
+        receiveSocketOpen()
         
-        channel.join()
-        expect(callsCount).to(equal(1))
+        var timeoutCallCount = 0
+        channel.join().receive("timeout", callback: { (_) in
+          timeoutCallCount += 1
+        })
         
-        fakeClock.tick(timeout)
-        expect(callsCount).to(equal(2)) // leave pushed to server
+        expect(spySocket.pushCallCount).to(equal(1))
+        expect(spySocket.pushArgs[1]?.event).to(equal("phx_join"))
+        expect(timeoutCallCount).to(equal(0))
         
-        fakeClock.tick(1.0) // begin stepped back off
-        expect(callsCount).to(equal(3))
+        fakeClock.tick(timeout) // leave pushed to server
+        expect(spySocket.pushCallCount).to(equal(2))
+        expect(spySocket.pushArgs[2]?.event).to(equal("phx_leave"))
+        expect(timeoutCallCount).to(equal(1))
         
-        fakeClock.tick(2.0)
-        expect(callsCount).to(equal(4))
+        fakeClock.tick(timeout + 1) // rejoin
+        expect(spySocket.pushCallCount).to(equal(4))
+        expect(spySocket.pushArgs[3]?.event).to(equal("phx_join"))
+        expect(spySocket.pushArgs[4]?.event).to(equal("phx_leave"))
+        expect(timeoutCallCount).to(equal(2))
         
-        fakeClock.tick(5.0)
-        expect(callsCount).to(equal(5))
-        
-        fakeClock.tick(10.0)
-        expect(callsCount).to(equal(6))
-        
+        fakeClock.tick(10)
         joinPush.trigger("ok", payload: [:])
-        expect(channel.state).to(equal(.joined))
-        
-        fakeClock.tick(10.0)
-        expect(callsCount).to(equal(6))
+        expect(spySocket.pushCallCount).to(equal(5))
+        expect(spySocket.pushArgs[5]?.event).to(equal("phx_join"))
         expect(channel.state).to(equal(.joined))
       })
-      
-      
+
       it("with socket and join delay", closure: {
-        mockClient.isConnected = false
-        var callsCount: Int {
-          return mockSocket.pushTopicEventPayloadRefJoinRefCallsCount
-        }
-        
         channel.join()
-        expect(callsCount).to(equal(1))
-        
+        expect(spySocket.pushCallCount).to(equal(1))
+
         // Open the socket after a delay
         fakeClock.tick(9.0)
-        expect(callsCount).to(equal(1))
+        expect(spySocket.pushCallCount).to(equal(1))
         
         // join request returns between timeouts
         fakeClock.tick(1.0)
-        
-        mockClient.isConnected = true
-        joinPush.trigger("ok", payload: [:])
+        spySocket.connect()
         
         expect(channel.state).to(equal(.errored))
+        receiveSocketOpen()
+        joinPush.trigger("ok", payload: [:])
         
         fakeClock.tick(1.0)
-        expect(channel.state).to(equal(.joining))
-        
-        joinPush.trigger("ok", payload: [:])
         expect(channel.state).to(equal(.joined))
-        
-        expect(callsCount).to(equal(3))
+        expect(spySocket.pushCallCount).to(equal(3))
       })
-      
+
       it("with socket delay only", closure: {
         channel.join()
-        
+        expect(channel.state).to(equal(.joining))
         
         // connect socket after a delay
         fakeClock.tick(6.0)
-        mockClient.isConnected = true
+        spySocket.connect()
         
-        // open socket after delay
+        // open Socket after delay
         fakeClock.tick(5.0)
+        receiveSocketOpen()
         joinPush.trigger("ok", payload: [:])
-        
-        fakeClock.tick(2.0)
-        expect(channel.state).to(equal(.joining))
         
         joinPush.trigger("ok", payload: [:])
         expect(channel.state).to(equal(.joined))
@@ -294,34 +285,32 @@ class ChannelSpec: QuickSpec {
     }
     
     describe("joinPush") {
-      
-      var ref: Int!
+      var spySocket: SocketSpy!
       var joinPush: Push!
       
       beforeEach {
         mockClient.isConnected = true
+        spySocket = SocketSpy(endPoint: "/socket",
+                              transport: { _ in return mockClient })
+        spySocket.connect()
         
-        ref = 0
-        mockSocket.makeRefClosure = {
-          ref += 1
-          return "\(ref!)"
-        }
-        
+        channel = Channel(topic: "topic", params: ["one": "two"], socket: spySocket)
         joinPush = channel.joinPush
+        
         channel.join()
       }
       
       func receivesOk() {
-        fakeClock.tick(joinPush.timeout / 2) // before timeout
+        fakeClock.tick(joinPush.timeout / 2)
         joinPush.trigger("ok", payload: ["a": "b"])
       }
       
       func receivesTimeout() {
-        fakeClock.tick(joinPush.timeout * 2) // afte timeout
+        fakeClock.tick(joinPush.timeout * 2)
       }
       
       func receiveError() {
-        fakeClock.tick(joinPush.timeout / 2) // before timeout
+        fakeClock.tick(joinPush.timeout / 2)
         joinPush.trigger("error", payload: ["a": "b"])
       }
       
@@ -330,7 +319,7 @@ class ChannelSpec: QuickSpec {
         it("sets channel state to joined", closure: {
           expect(channel.state).toNot(equal(.joined))
           
-          joinPush.trigger("ok", payload: [:])
+          receivesOk()
           expect(channel.state).to(equal(.joined))
         })
         
@@ -358,7 +347,7 @@ class ChannelSpec: QuickSpec {
             .receive("timeout", callback: {_ in callbackCallCount += 1})
           
           receivesOk()
-          fakeClock.tick(channel.timeout * 2)
+          receivesTimeout()
           
           expect(callbackCallCount).to(equal(0))
           
@@ -414,8 +403,14 @@ class ChannelSpec: QuickSpec {
       
       describe("receives 'timeout'", {
         it("sets channel state to errored", closure: {
+          var timeoutReceived = false
+          joinPush.receive("timeout", callback: { (_) in
+            timeoutReceived = true
+            expect(channel.state).to(equal(.errored))
+          })
+        
           receivesTimeout()
-          expect(channel.state).to(equal(.errored))
+          expect(timeoutReceived).to(beTrue())
         })
         
         it("triggers receive('timeout') callback after ok response", closure: {
@@ -431,15 +426,21 @@ class ChannelSpec: QuickSpec {
         it("does not trigger other receive callbacks after timeout response", closure: {
           var receiveOkCallCount = 0
           var receiveErrorCallCount = 0
+          var timeoutReceived = false
+          
           joinPush
             .receive("ok") {_ in receiveOkCallCount += 1 }
             .receive("error") {_ in receiveErrorCallCount += 1 }
+            .receive("timeout", callback: { (_) in
+              expect(receiveOkCallCount).to(equal(0))
+              expect(receiveErrorCallCount).to(equal(0))
+              timeoutReceived = true
+            })
           
           receivesTimeout()
-          joinPush.trigger("ok", payload: [:])
+          receivesOk()
           
-          expect(receiveOkCallCount).to(equal(0))
-          expect(receiveErrorCallCount).to(equal(0))
+          expect(timeoutReceived).to(beTrue())
         })
         
         it("schedules rejoinTimer timeout", closure: {
@@ -453,10 +454,13 @@ class ChannelSpec: QuickSpec {
       
       describe("receives `error`", {
         it("triggers receive('error') callback after error response", closure: {
+          expect(channel.state).to(equal(.joining))
+
           var errorCallsCount = 0
           joinPush.receive("error") { (_) in errorCallsCount += 1 }
           
           receiveError()
+          joinPush.trigger("error", payload: [:])
           expect(errorCallsCount).to(equal(1))
         })
         
@@ -472,13 +476,19 @@ class ChannelSpec: QuickSpec {
         it("does not trigger other receive callbacks after ok response", closure: {
           var receiveOkCallCount = 0
           var receiveTimeoutCallCount = 0
+          var receiveErrorCallCount = 0
           joinPush
             .receive("ok") {_ in receiveOkCallCount += 1 }
+            .receive("error", callback: { (_) in
+              receiveErrorCallCount += 1
+              channel.leave()
+            })
             .receive("timeout") {_ in receiveTimeoutCallCount += 1 }
           
           receiveError()
-          fakeClock.tick(channel.timeout * 2)
+          receivesTimeout()
           
+          expect(receiveErrorCallCount).to(equal(1))
           expect(receiveOkCallCount).to(equal(0))
           expect(receiveTimeoutCallCount).to(equal(0))
         })
@@ -510,7 +520,7 @@ class ChannelSpec: QuickSpec {
         
         it("does not sets channel state to joined", closure: {
           receiveError()
-          expect(channel.state).to(equal(.joining))
+          expect(channel.state).toNot(equal(.joined))
         })
         
         it("does not trigger channel's buffered pushEvents", closure: {
@@ -525,10 +535,39 @@ class ChannelSpec: QuickSpec {
     }
     
     describe("onError") {
+      
+      var spySocket: SocketSpy!
+      var joinPush: Push!
+      
       beforeEach {
         mockClient.isConnected = true
+        spySocket = SocketSpy(endPoint: "/socket",
+                              transport: { _ in return mockClient })
+        spySocket.connect()
+        
+        channel = Channel(topic: "topic", params: ["one": "two"], socket: spySocket)
+        joinPush = channel.joinPush
+        
         channel.join()
+        joinPush.trigger("ok", payload: [:])
       }
+      
+      it("does not trigger redundant errors during backoff", closure: {
+        // Spy the channel's Join Push
+        let mockPush = PushMock(channel: channel, event: "event")
+        channel.joinPush = mockPush
+        
+        expect(mockPush.resendCalled).to(beFalse())
+        channel.trigger(event: ChannelEvent.error)
+        
+        fakeClock.tick(1.0)
+        expect(mockPush.resendCalled).to(beTrue())
+        expect(mockPush.resendCallsCount).to(equal(1))
+
+        channel.trigger(event: "error")
+        fakeClock.tick(1.0)
+        expect(mockPush.resendCallsCount).to(equal(1))
+      })
       
       it("sets channel state to .errored", closure: {
         expect(channel.state).toNot(equal(.errored))
@@ -551,7 +590,7 @@ class ChannelSpec: QuickSpec {
         let mockPush = PushMock(channel: channel, event: "event")
         channel.joinPush = mockPush
         
-        channel.trigger(event: ChannelEvent.error)
+        spySocket.onConnectionError(TestError.stub)
         
         fakeClock.tick(1.0)
         expect(mockPush.sendCallsCount).to(equal(0))
@@ -568,7 +607,7 @@ class ChannelSpec: QuickSpec {
         let mockPush = PushMock(channel: channel, event: "event")
         channel.joinPush = mockPush
         
-        channel.trigger(event: ChannelEvent.error)
+        spySocket.onConnectionError(TestError.stub)
         
         fakeClock.tick(1.0)
         expect(mockPush.sendCallsCount).to(equal(0))
@@ -581,16 +620,19 @@ class ChannelSpec: QuickSpec {
       
       it("triggers additional callbacks", closure: {
         var onErrorCallCount = 0
-        channel.onError({ (_) in
-          onErrorCallCount += 1
-        })
+        channel.onError({ (_) in onErrorCallCount += 1 })
+        joinPush.trigger("ok", payload: [:])
         
+        expect(channel.state).to(equal(.joined))
+        expect(onErrorCallCount).to(equal(0))
+
         channel.trigger(event: ChannelEvent.error)
         expect(onErrorCallCount).to(equal(1))
       })
     }
     
     describe("onClose") {
+      
       beforeEach {
         mockClient.isConnected = true
         channel.join()
@@ -607,6 +649,11 @@ class ChannelSpec: QuickSpec {
         channel.joinPush = mockJoinPush
         
         channel.trigger(event: ChannelEvent.close)
+        
+        fakeClock.tick(1.0)
+        expect(mockJoinPush.sendCalled).to(beFalse())
+        
+        fakeClock.tick(2.0)
         expect(mockJoinPush.sendCalled).to(beFalse())
       })
       

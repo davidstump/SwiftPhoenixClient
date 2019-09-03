@@ -25,6 +25,8 @@
 		12C140D920AF416600184725 /* ChannelSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C140D720AF415900184725 /* ChannelSpec.swift */; };
 		12EAFF29202F656300685575 /* SocketSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EAFF27202F654300685575 /* SocketSpec.swift */; };
 		12F7830C2210D56D00291614 /* MockableWebSocketClient.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12F7830A2210D56D00291614 /* MockableWebSocketClient.generated.swift */; };
+		12FAEE47231EB222003EC62B /* SocketSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FAEE46231EB222003EC62B /* SocketSpy.swift */; };
+		12FAEE49231EB4B0003EC62B /* FakeTimerQueueSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FAEE48231EB4B0003EC62B /* FakeTimerQueueSpec.swift */; };
 		63CD642E1DB11E8400C406A6 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD642D1DB11E8400C406A6 /* Presence.swift */; };
 		63CD64321DB1272400C406A6 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CD64311DB1272400C406A6 /* Message.swift */; };
 		B48458A82164E3D300466E32 /* PresenceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48458A62164E28500466E32 /* PresenceSpec.swift */; };
@@ -73,6 +75,8 @@
 		12C140D720AF415900184725 /* ChannelSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelSpec.swift; sourceTree = "<group>"; };
 		12EAFF27202F654300685575 /* SocketSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketSpec.swift; sourceTree = "<group>"; };
 		12F7830A2210D56D00291614 /* MockableWebSocketClient.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockableWebSocketClient.generated.swift; sourceTree = "<group>"; };
+		12FAEE46231EB222003EC62B /* SocketSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketSpy.swift; sourceTree = "<group>"; };
+		12FAEE48231EB4B0003EC62B /* FakeTimerQueueSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeTimerQueueSpec.swift; sourceTree = "<group>"; };
 		63CD642D1DB11E8400C406A6 /* Presence.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = Presence.swift; sourceTree = "<group>"; tabWidth = 2; };
 		63CD64311DB1272400C406A6 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		B48458A62164E28500466E32 /* PresenceSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenceSpec.swift; sourceTree = "<group>"; };
@@ -145,6 +149,7 @@
 		0BFAE4F11DA84F59000B3CD3 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				12FAEE45231EB215003EC62B /* spy */,
 				12A0B0E422317740007ED590 /* helpers */,
 				12F783092210D53200291614 /* mocks */,
 				12BCCB462210D4C9001A55E1 /* client */,
@@ -186,6 +191,7 @@
 			children = (
 				120B42C8222341CF00FE483D /* TestHelpers.swift */,
 				12A0B0E522317752007ED590 /* FakeTimerQueue.swift */,
+				12FAEE48231EB4B0003EC62B /* FakeTimerQueueSpec.swift */,
 			);
 			path = helpers;
 			sourceTree = "<group>";
@@ -227,6 +233,14 @@
 				12F7830A2210D56D00291614 /* MockableWebSocketClient.generated.swift */,
 			);
 			path = mocks;
+			sourceTree = "<group>";
+		};
+		12FAEE45231EB215003EC62B /* spy */ = {
+			isa = PBXGroup;
+			children = (
+				12FAEE46231EB222003EC62B /* SocketSpy.swift */,
+			);
+			path = spy;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -390,6 +404,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12FAEE49231EB4B0003EC62B /* FakeTimerQueueSpec.swift in Sources */,
 				124A083521F14BF4003D1400 /* DefaultSerializerSpec.swift in Sources */,
 				12BCCB482210D4D7001A55E1 /* TimeoutTimerSpec.swift in Sources */,
 				12A0B0E622317752007ED590 /* FakeTimerQueue.swift in Sources */,
@@ -397,6 +412,7 @@
 				12C140D920AF416600184725 /* ChannelSpec.swift in Sources */,
 				120B42CB2223481600FE483D /* MockableClass.generated.swift in Sources */,
 				12EAFF29202F656300685575 /* SocketSpec.swift in Sources */,
+				12FAEE47231EB222003EC62B /* SocketSpy.swift in Sources */,
 				B48458A82164E3D300466E32 /* PresenceSpec.swift in Sources */,
 				120B42C9222341CF00FE483D /* TestHelpers.swift in Sources */,
 			);
