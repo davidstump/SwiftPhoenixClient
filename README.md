@@ -7,6 +7,8 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![Open Source Helpers](https://www.codetriage.com/davidstump/swiftphoenixclient/badges/users.svg)](https://www.codetriage.com/davidstump/swiftphoenixclient)
 
+This is a branch to contain work in progress changes for RxSwift support.
+
 ## About
 Swift Phoenix Client is an extension of Starscream websocket client library
 that makes it easy to connect to Phoenix sockets in a similar manner to the
