@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		123223C62357E50200BCA87A /* SwiftPhoenix.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 123223BC2357E50200BCA87A /* SwiftPhoenix.framework */; };
 		123223D92357E5EC00BCA87A /* SwiftPhoenix.h in Headers */ = {isa = PBXBuildFile; fileRef = 123223D72357E5EC00BCA87A /* SwiftPhoenix.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		123223E02357EE4A00BCA87A /* QuickClassSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123223DF2357EE4A00BCA87A /* QuickClassSpec.swift */; };
 		123223E32357F0E600BCA87A /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123223E22357F0E600BCA87A /* Defaults.swift */; };
 		123223E52357F11100BCA87A /* DefaultsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123223E42357F11100BCA87A /* DefaultsSpec.swift */; };
 		123224162357F3F500BCA87A /* RxSwiftPhoenix.h in Headers */ = {isa = PBXBuildFile; fileRef = 123224152357F3F500BCA87A /* RxSwiftPhoenix.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -26,6 +25,12 @@
 		1288EDFF235805CA00338679 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1288EDF8235805CA00338679 /* Message.swift */; };
 		1288EE00235805CA00338679 /* Delegated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1288EDF9235805CA00338679 /* Delegated.swift */; };
 		1288EE01235805CA00338679 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1288EDFA235805CA00338679 /* Push.swift */; };
+		1288EE062358061700338679 /* FakeTimerQueueSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1288EE032358061700338679 /* FakeTimerQueueSpec.swift */; };
+		1288EE072358061700338679 /* FakeTimerQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1288EE042358061700338679 /* FakeTimerQueue.swift */; };
+		1288EE082358061700338679 /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1288EE052358061700338679 /* TestHelpers.swift */; };
+		1288EE0D2358072500338679 /* MockableClass.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1288EE0B2358072500338679 /* MockableClass.generated.swift */; };
+		1288EE0E2358072500338679 /* MockableWebSocketClient.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1288EE0C2358072500338679 /* MockableWebSocketClient.generated.swift */; };
+		1288EE102358073800338679 /* SocketSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1288EE0F2358073800338679 /* SocketSpy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,7 +56,6 @@
 		123223D72357E5EC00BCA87A /* SwiftPhoenix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftPhoenix.h; sourceTree = "<group>"; };
 		123223D82357E5EC00BCA87A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		123223DD2357ED7100BCA87A /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
-		123223DF2357EE4A00BCA87A /* QuickClassSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickClassSpec.swift; sourceTree = "<group>"; };
 		123223E22357F0E600BCA87A /* Defaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		123223E42357F11100BCA87A /* DefaultsSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsSpec.swift; sourceTree = "<group>"; };
 		123223FD2357F37200BCA87A /* RxSwiftPhoenix.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RxSwiftPhoenix.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,6 +71,12 @@
 		1288EDF8235805CA00338679 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		1288EDF9235805CA00338679 /* Delegated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Delegated.swift; sourceTree = "<group>"; };
 		1288EDFA235805CA00338679 /* Push.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; };
+		1288EE032358061700338679 /* FakeTimerQueueSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeTimerQueueSpec.swift; sourceTree = "<group>"; };
+		1288EE042358061700338679 /* FakeTimerQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FakeTimerQueue.swift; sourceTree = "<group>"; };
+		1288EE052358061700338679 /* TestHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
+		1288EE0B2358072500338679 /* MockableClass.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockableClass.generated.swift; sourceTree = "<group>"; };
+		1288EE0C2358072500338679 /* MockableWebSocketClient.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockableWebSocketClient.generated.swift; sourceTree = "<group>"; };
+		1288EE0F2358073800338679 /* SocketSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketSpy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,9 +140,11 @@
 		123223C92357E50200BCA87A /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				123224222357FBF600BCA87A /* RxSwiftPhoenix */,
 				123224212357FBEE00BCA87A /* SwiftPhoenix */,
-				123223DF2357EE4A00BCA87A /* QuickClassSpec.swift */,
+				123224222357FBF600BCA87A /* RxSwiftPhoenix */,
+				1288EE02235805F600338679 /* Helper */,
+				1288EE0A2358070400338679 /* Mock */,
+				1288EE09235806FD00338679 /* Spy */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -194,6 +206,33 @@
 				123224262357FC8E00BCA87A /* Phoenix+RxSpec.swift */,
 			);
 			path = RxSwiftPhoenix;
+			sourceTree = "<group>";
+		};
+		1288EE02235805F600338679 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				1288EE042358061700338679 /* FakeTimerQueue.swift */,
+				1288EE032358061700338679 /* FakeTimerQueueSpec.swift */,
+				1288EE052358061700338679 /* TestHelpers.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		1288EE09235806FD00338679 /* Spy */ = {
+			isa = PBXGroup;
+			children = (
+				1288EE0F2358073800338679 /* SocketSpy.swift */,
+			);
+			path = Spy;
+			sourceTree = "<group>";
+		};
+		1288EE0A2358070400338679 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				1288EE0B2358072500338679 /* MockableClass.generated.swift */,
+				1288EE0C2358072500338679 /* MockableWebSocketClient.generated.swift */,
+			);
+			path = Mock;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -353,7 +392,7 @@
 				Quick.framework,
 				RxSwift.framework,
 				RxTest.framework,
-				RxTest.framework,
+				Starscream.framework,
 			);
 			name = "Copy Carthage Frameworks";
 			outputFileListPaths = (
@@ -388,9 +427,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				123224252357FC5B00BCA87A /* PhoenixSpec.swift in Sources */,
+				1288EE0D2358072500338679 /* MockableClass.generated.swift in Sources */,
 				123223E52357F11100BCA87A /* DefaultsSpec.swift in Sources */,
+				1288EE082358061700338679 /* TestHelpers.swift in Sources */,
+				1288EE062358061700338679 /* FakeTimerQueueSpec.swift in Sources */,
 				123224272357FC8E00BCA87A /* Phoenix+RxSpec.swift in Sources */,
-				123223E02357EE4A00BCA87A /* QuickClassSpec.swift in Sources */,
+				1288EE0E2358072500338679 /* MockableWebSocketClient.generated.swift in Sources */,
+				1288EE102358073800338679 /* SocketSpy.swift in Sources */,
+				1288EE072358061700338679 /* FakeTimerQueue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
