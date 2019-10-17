@@ -12,6 +12,10 @@
 		123223E02357EE4A00BCA87A /* QuickClassSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123223DF2357EE4A00BCA87A /* QuickClassSpec.swift */; };
 		123223E32357F0E600BCA87A /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123223E22357F0E600BCA87A /* Defaults.swift */; };
 		123223E52357F11100BCA87A /* DefaultsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123223E42357F11100BCA87A /* DefaultsSpec.swift */; };
+		123224162357F3F500BCA87A /* RxSwiftPhoenix.h in Headers */ = {isa = PBXBuildFile; fileRef = 123224152357F3F500BCA87A /* RxSwiftPhoenix.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		123224172357F41E00BCA87A /* RxSwiftPhoenix.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 123223FD2357F37200BCA87A /* RxSwiftPhoenix.framework */; };
+		123224192357F43900BCA87A /* Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123224182357F43900BCA87A /* Phoenix.swift */; };
+		1232241B2357F49C00BCA87A /* Phoenix+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1232241A2357F49C00BCA87A /* Phoenix+Rx.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +37,10 @@
 		123223DF2357EE4A00BCA87A /* QuickClassSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickClassSpec.swift; sourceTree = "<group>"; };
 		123223E22357F0E600BCA87A /* Defaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		123223E42357F11100BCA87A /* DefaultsSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsSpec.swift; sourceTree = "<group>"; };
+		123223FD2357F37200BCA87A /* RxSwiftPhoenix.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RxSwiftPhoenix.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		123224152357F3F500BCA87A /* RxSwiftPhoenix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RxSwiftPhoenix.h; sourceTree = "<group>"; };
+		123224182357F43900BCA87A /* Phoenix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phoenix.swift; sourceTree = "<group>"; };
+		1232241A2357F49C00BCA87A /* Phoenix+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Phoenix+Rx.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,7 +55,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				123224172357F41E00BCA87A /* RxSwiftPhoenix.framework in Frameworks */,
 				123223C62357E50200BCA87A /* SwiftPhoenix.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		123223FA2357F37200BCA87A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,6 +85,7 @@
 			children = (
 				123223BC2357E50200BCA87A /* SwiftPhoenix.framework */,
 				123223C52357E50200BCA87A /* SwiftPhoenixTests.xctest */,
+				123223FD2357F37200BCA87A /* RxSwiftPhoenix.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -76,8 +93,9 @@
 		123223BE2357E50200BCA87A /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				123223E12357F0B600BCA87A /* SwiftPhoenix */,
 				123223D62357E5EC00BCA87A /* Supporting Files */,
+				123223E12357F0B600BCA87A /* SwiftPhoenix */,
+				123224142357F3E600BCA87A /* RxSwiftPhoenix */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -94,6 +112,7 @@
 		123223D62357E5EC00BCA87A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				123224152357F3F500BCA87A /* RxSwiftPhoenix.h */,
 				123223D72357E5EC00BCA87A /* SwiftPhoenix.h */,
 				123223D82357E5EC00BCA87A /* Info.plist */,
 			);
@@ -112,8 +131,17 @@
 			isa = PBXGroup;
 			children = (
 				123223E22357F0E600BCA87A /* Defaults.swift */,
+				123224182357F43900BCA87A /* Phoenix.swift */,
 			);
 			path = SwiftPhoenix;
+			sourceTree = "<group>";
+		};
+		123224142357F3E600BCA87A /* RxSwiftPhoenix */ = {
+			isa = PBXGroup;
+			children = (
+				1232241A2357F49C00BCA87A /* Phoenix+Rx.swift */,
+			);
+			path = RxSwiftPhoenix;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -124,6 +152,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				123223D92357E5EC00BCA87A /* SwiftPhoenix.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		123223F82357F37200BCA87A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				123224162357F3F500BCA87A /* RxSwiftPhoenix.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,6 +203,24 @@
 			productReference = 123223C52357E50200BCA87A /* SwiftPhoenixTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		123223FC2357F37200BCA87A /* RxSwiftPhoenix */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 123224122357F37300BCA87A /* Build configuration list for PBXNativeTarget "RxSwiftPhoenix" */;
+			buildPhases = (
+				123223F82357F37200BCA87A /* Headers */,
+				123223F92357F37200BCA87A /* Sources */,
+				123223FA2357F37200BCA87A /* Frameworks */,
+				123223FB2357F37200BCA87A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RxSwiftPhoenix;
+			productName = RxSwiftPhoenix;
+			productReference = 123223FD2357F37200BCA87A /* RxSwiftPhoenix.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -182,6 +236,10 @@
 					};
 					123223C42357E50200BCA87A = {
 						CreatedOnToolsVersion = 11.1;
+					};
+					123223FC2357F37200BCA87A = {
+						CreatedOnToolsVersion = 11.1;
+						LastSwiftMigration = 1110;
 					};
 				};
 			};
@@ -199,6 +257,7 @@
 			projectRoot = "";
 			targets = (
 				123223BB2357E50200BCA87A /* SwiftPhoenix */,
+				123223FC2357F37200BCA87A /* RxSwiftPhoenix */,
 				123223C42357E50200BCA87A /* SwiftPhoenixTests */,
 			);
 		};
@@ -213,6 +272,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		123223C32357E50200BCA87A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		123223FB2357F37200BCA87A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -250,6 +316,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				123223E32357F0E600BCA87A /* Defaults.swift in Sources */,
+				123224192357F43900BCA87A /* Phoenix.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,6 +326,14 @@
 			files = (
 				123223E52357F11100BCA87A /* DefaultsSpec.swift in Sources */,
 				123223E02357EE4A00BCA87A /* QuickClassSpec.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		123223F92357F37200BCA87A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1232241B2357F49C00BCA87A /* Phoenix+Rx.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -549,6 +624,91 @@
 			};
 			name = Release;
 		};
+		1232240E2357F37300BCA87A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				"FRAMEWORK_SEARCH_PATHS[sdk=appletv*]" = (
+					"$(SRCROOT)/Carthage/Build/tvOS/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphone*]" = (
+					"$(SRCROOT)/Carthage/Build/iOS/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(SRCROOT)/Carthage/Build/Mac/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=watch*]" = (
+					"$(SRCROOT)/Carthage/Build/watchOS/",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Sources/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = org.phoenixframework.RxSwiftPhoenix;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchsimulator macosx watchos appletvsimulator appletvos iphonesimulator iphoneos";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		1232240F2357F37300BCA87A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				"FRAMEWORK_SEARCH_PATHS[sdk=appletv*]" = (
+					"$(SRCROOT)/Carthage/Build/tvOS/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphone*]" = (
+					"$(SRCROOT)/Carthage/Build/iOS/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(SRCROOT)/Carthage/Build/Mac/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=watch*]" = (
+					"$(SRCROOT)/Carthage/Build/watchOS/",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Sources/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = org.phoenixframework.RxSwiftPhoenix;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchsimulator macosx watchos appletvsimulator appletvos iphonesimulator iphoneos";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -575,6 +735,15 @@
 			buildConfigurations = (
 				123223D42357E50200BCA87A /* Debug */,
 				123223D52357E50200BCA87A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		123224122357F37300BCA87A /* Build configuration list for PBXNativeTarget "RxSwiftPhoenix" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1232240E2357F37300BCA87A /* Debug */,
+				1232240F2357F37300BCA87A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
