@@ -24,13 +24,12 @@
 
 /* Begin PBXFileReference section */
 		123223BC2357E50200BCA87A /* SwiftPhoenix.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftPhoenix.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		123223BF2357E50200BCA87A /* SwiftPhoenix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwiftPhoenix.h; sourceTree = "<group>"; };
-		123223C02357E50200BCA87A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		123223C52357E50200BCA87A /* SwiftPhoenixTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftPhoenixTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		123223CA2357E50200BCA87A /* SwiftPhoenixTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftPhoenixTests.swift; sourceTree = "<group>"; };
 		123223CC2357E50200BCA87A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		123223D72357E5EC00BCA87A /* SwiftPhoenix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftPhoenix.h; sourceTree = "<group>"; };
 		123223D82357E5EC00BCA87A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		123223DD2357ED7100BCA87A /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +57,7 @@
 				123223BE2357E50200BCA87A /* Sources */,
 				123223C92357E50200BCA87A /* Tests */,
 				123223BD2357E50200BCA87A /* Products */,
+				123223DC2357ED7100BCA87A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -74,8 +74,6 @@
 			isa = PBXGroup;
 			children = (
 				123223D62357E5EC00BCA87A /* Supporting Files */,
-				123223BF2357E50200BCA87A /* SwiftPhoenix.h */,
-				123223C02357E50200BCA87A /* Info.plist */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -96,6 +94,14 @@
 				123223D82357E5EC00BCA87A /* Info.plist */,
 			);
 			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		123223DC2357ED7100BCA87A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				123223DD2357ED7100BCA87A /* Nimble.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,6 +143,7 @@
 				123223C12357E50200BCA87A /* Sources */,
 				123223C22357E50200BCA87A /* Frameworks */,
 				123223C32357E50200BCA87A /* Resources */,
+				123223DB2357EBE800BCA87A /* Copy Carthage Frameworks */,
 			);
 			buildRules = (
 			);
@@ -200,6 +207,29 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		123223DB2357EBE800BCA87A /* Copy Carthage Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				Nimble.framework,
+				Quick.framework,
+			);
+			name = "Copy Carthage Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "exec \"${SRCROOT}/scripts/copy-carthage-frameworks.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		123223B82357E50200BCA87A /* Sources */ = {
@@ -438,7 +468,11 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = SwiftPhoenixTests/Info.plist;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -455,7 +489,11 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = SwiftPhoenixTests/Info.plist;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
+				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
