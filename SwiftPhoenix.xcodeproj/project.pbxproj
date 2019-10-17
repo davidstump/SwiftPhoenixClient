@@ -10,6 +10,8 @@
 		123223C62357E50200BCA87A /* SwiftPhoenix.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 123223BC2357E50200BCA87A /* SwiftPhoenix.framework */; };
 		123223D92357E5EC00BCA87A /* SwiftPhoenix.h in Headers */ = {isa = PBXBuildFile; fileRef = 123223D72357E5EC00BCA87A /* SwiftPhoenix.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		123223E02357EE4A00BCA87A /* QuickClassSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123223DF2357EE4A00BCA87A /* QuickClassSpec.swift */; };
+		123223E32357F0E600BCA87A /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123223E22357F0E600BCA87A /* Defaults.swift */; };
+		123223E52357F11100BCA87A /* DefaultsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123223E42357F11100BCA87A /* DefaultsSpec.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +31,8 @@
 		123223D82357E5EC00BCA87A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		123223DD2357ED7100BCA87A /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
 		123223DF2357EE4A00BCA87A /* QuickClassSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickClassSpec.swift; sourceTree = "<group>"; };
+		123223E22357F0E600BCA87A /* Defaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
+		123223E42357F11100BCA87A /* DefaultsSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsSpec.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +76,7 @@
 		123223BE2357E50200BCA87A /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				123223E12357F0B600BCA87A /* SwiftPhoenix */,
 				123223D62357E5EC00BCA87A /* Supporting Files */,
 			);
 			path = Sources;
@@ -81,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				123223DF2357EE4A00BCA87A /* QuickClassSpec.swift */,
+				123223E42357F11100BCA87A /* DefaultsSpec.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -100,6 +106,14 @@
 				123223DD2357ED7100BCA87A /* Nimble.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		123223E12357F0B600BCA87A /* SwiftPhoenix */ = {
+			isa = PBXGroup;
+			children = (
+				123223E22357F0E600BCA87A /* Defaults.swift */,
+			);
+			path = SwiftPhoenix;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -164,6 +178,7 @@
 				TargetAttributes = {
 					123223BB2357E50200BCA87A = {
 						CreatedOnToolsVersion = 11.1;
+						LastSwiftMigration = 1110;
 					};
 					123223C42357E50200BCA87A = {
 						CreatedOnToolsVersion = 11.1;
@@ -234,6 +249,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				123223E32357F0E600BCA87A /* Defaults.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,6 +257,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				123223E52357F11100BCA87A /* DefaultsSpec.swift in Sources */,
 				123223E02357EE4A00BCA87A /* QuickClassSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -378,6 +395,7 @@
 		123223D12357E50200BCA87A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -412,6 +430,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator macosx watchos appletvsimulator appletvos iphonesimulator iphoneos";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 				WATCHOS_DEPLOYMENT_TARGET = 3.0;
@@ -421,6 +440,7 @@
 		123223D22357E50200BCA87A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -464,6 +484,7 @@
 		123223D42357E50200BCA87A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				"FRAMEWORK_SEARCH_PATHS[sdk=appletv*]" = (
@@ -497,6 +518,7 @@
 		123223D52357E50200BCA87A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				"FRAMEWORK_SEARCH_PATHS[sdk=appletv*]" = (
