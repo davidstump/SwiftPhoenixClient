@@ -16,6 +16,9 @@
 		123224172357F41E00BCA87A /* RxSwiftPhoenix.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 123223FD2357F37200BCA87A /* RxSwiftPhoenix.framework */; };
 		123224192357F43900BCA87A /* Phoenix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123224182357F43900BCA87A /* Phoenix.swift */; };
 		1232241B2357F49C00BCA87A /* Phoenix+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1232241A2357F49C00BCA87A /* Phoenix+Rx.swift */; };
+		1232241C2357FA1300BCA87A /* SwiftPhoenix.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 123223BC2357E50200BCA87A /* SwiftPhoenix.framework */; };
+		123224252357FC5B00BCA87A /* PhoenixSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123224232357FC5800BCA87A /* PhoenixSpec.swift */; };
+		123224272357FC8E00BCA87A /* Phoenix+RxSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123224262357FC8E00BCA87A /* Phoenix+RxSpec.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,6 +28,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 123223BB2357E50200BCA87A;
 			remoteInfo = SwiftPhoenix;
+		};
+		123224282357FF6100BCA87A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 123223B32357E50200BCA87A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 123223FC2357F37200BCA87A;
+			remoteInfo = RxSwiftPhoenix;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -41,6 +51,8 @@
 		123224152357F3F500BCA87A /* RxSwiftPhoenix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RxSwiftPhoenix.h; sourceTree = "<group>"; };
 		123224182357F43900BCA87A /* Phoenix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Phoenix.swift; sourceTree = "<group>"; };
 		1232241A2357F49C00BCA87A /* Phoenix+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Phoenix+Rx.swift"; sourceTree = "<group>"; };
+		123224232357FC5800BCA87A /* PhoenixSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoenixSpec.swift; sourceTree = "<group>"; };
+		123224262357FC8E00BCA87A /* Phoenix+RxSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Phoenix+RxSpec.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,8 +67,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				123224172357F41E00BCA87A /* RxSwiftPhoenix.framework in Frameworks */,
 				123223C62357E50200BCA87A /* SwiftPhoenix.framework in Frameworks */,
+				123224172357F41E00BCA87A /* RxSwiftPhoenix.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1232241C2357FA1300BCA87A /* SwiftPhoenix.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -103,8 +116,9 @@
 		123223C92357E50200BCA87A /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				123224222357FBF600BCA87A /* RxSwiftPhoenix */,
+				123224212357FBEE00BCA87A /* SwiftPhoenix */,
 				123223DF2357EE4A00BCA87A /* QuickClassSpec.swift */,
-				123223E42357F11100BCA87A /* DefaultsSpec.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -144,6 +158,23 @@
 			path = RxSwiftPhoenix;
 			sourceTree = "<group>";
 		};
+		123224212357FBEE00BCA87A /* SwiftPhoenix */ = {
+			isa = PBXGroup;
+			children = (
+				123223E42357F11100BCA87A /* DefaultsSpec.swift */,
+				123224232357FC5800BCA87A /* PhoenixSpec.swift */,
+			);
+			path = SwiftPhoenix;
+			sourceTree = "<group>";
+		};
+		123224222357FBF600BCA87A /* RxSwiftPhoenix */ = {
+			isa = PBXGroup;
+			children = (
+				123224262357FC8E00BCA87A /* Phoenix+RxSpec.swift */,
+			);
+			path = RxSwiftPhoenix;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -172,8 +203,8 @@
 			buildPhases = (
 				123223B72357E50200BCA87A /* Headers */,
 				123223B82357E50200BCA87A /* Sources */,
-				123223B92357E50200BCA87A /* Frameworks */,
 				123223BA2357E50200BCA87A /* Resources */,
+				123223B92357E50200BCA87A /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -197,6 +228,7 @@
 			);
 			dependencies = (
 				123223C82357E50200BCA87A /* PBXTargetDependency */,
+				123224292357FF6100BCA87A /* PBXTargetDependency */,
 			);
 			name = SwiftPhoenixTests;
 			productName = SwiftPhoenixTests;
@@ -209,8 +241,8 @@
 			buildPhases = (
 				123223F82357F37200BCA87A /* Headers */,
 				123223F92357F37200BCA87A /* Sources */,
-				123223FA2357F37200BCA87A /* Frameworks */,
 				123223FB2357F37200BCA87A /* Resources */,
+				123223FA2357F37200BCA87A /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -298,6 +330,9 @@
 			inputPaths = (
 				Nimble.framework,
 				Quick.framework,
+				RxSwift.framework,
+				RxTest.framework,
+				RxTest.framework,
 			);
 			name = "Copy Carthage Frameworks";
 			outputFileListPaths = (
@@ -324,7 +359,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				123224252357FC5B00BCA87A /* PhoenixSpec.swift in Sources */,
 				123223E52357F11100BCA87A /* DefaultsSpec.swift in Sources */,
+				123224272357FC8E00BCA87A /* Phoenix+RxSpec.swift in Sources */,
 				123223E02357EE4A00BCA87A /* QuickClassSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -344,6 +381,11 @@
 			isa = PBXTargetDependency;
 			target = 123223BB2357E50200BCA87A /* SwiftPhoenix */;
 			targetProxy = 123223C72357E50200BCA87A /* PBXContainerItemProxy */;
+		};
+		123224292357FF6100BCA87A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 123223FC2357F37200BCA87A /* RxSwiftPhoenix */;
+			targetProxy = 123224282357FF6100BCA87A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -501,6 +543,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.phoenixframework.SwiftPhoenix;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -546,6 +589,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.phoenixframework.SwiftPhoenix;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -581,11 +625,17 @@
 				INFOPLIST_FILE = "Sources/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.phoenixframework.SwiftPhoenixTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "watchsimulator macosx watchos appletvsimulator appletvos iphonesimulator iphoneos";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -615,11 +665,17 @@
 				INFOPLIST_FILE = "Sources/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.phoenixframework.SwiftPhoenixTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "watchsimulator macosx watchos appletvsimulator appletvos iphonesimulator iphoneos";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -657,7 +713,8 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.phoenixframework.RxSwiftPhoenix;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -700,7 +757,8 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = org.phoenixframework.RxSwiftPhoenix;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;

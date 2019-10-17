@@ -8,10 +8,14 @@
 import Foundation
 
 
-class Phoenix {
+public class Phoenix {
   
-  func channel() {
-    print("This is a Phoenix Channel")
+  public init() {
+    
+  }
+  
+  public func channel() -> String {
+    return "SwiftPhoenix"
   }
   
 }
