@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		123223C62357E50200BCA87A /* SwiftPhoenix.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 123223BC2357E50200BCA87A /* SwiftPhoenix.framework */; };
-		123223CB2357E50200BCA87A /* SwiftPhoenixTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123223CA2357E50200BCA87A /* SwiftPhoenixTests.swift */; };
 		123223D92357E5EC00BCA87A /* SwiftPhoenix.h in Headers */ = {isa = PBXBuildFile; fileRef = 123223D72357E5EC00BCA87A /* SwiftPhoenix.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		123223E02357EE4A00BCA87A /* QuickClassSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123223DF2357EE4A00BCA87A /* QuickClassSpec.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,11 +25,10 @@
 /* Begin PBXFileReference section */
 		123223BC2357E50200BCA87A /* SwiftPhoenix.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftPhoenix.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		123223C52357E50200BCA87A /* SwiftPhoenixTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftPhoenixTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		123223CA2357E50200BCA87A /* SwiftPhoenixTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftPhoenixTests.swift; sourceTree = "<group>"; };
-		123223CC2357E50200BCA87A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		123223D72357E5EC00BCA87A /* SwiftPhoenix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftPhoenix.h; sourceTree = "<group>"; };
 		123223D82357E5EC00BCA87A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		123223DD2357ED7100BCA87A /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
+		123223DF2357EE4A00BCA87A /* QuickClassSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickClassSpec.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,8 +80,7 @@
 		123223C92357E50200BCA87A /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				123223CA2357E50200BCA87A /* SwiftPhoenixTests.swift */,
-				123223CC2357E50200BCA87A /* Info.plist */,
+				123223DF2357EE4A00BCA87A /* QuickClassSpec.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -141,8 +139,8 @@
 			buildConfigurationList = 123223D32357E50200BCA87A /* Build configuration list for PBXNativeTarget "SwiftPhoenixTests" */;
 			buildPhases = (
 				123223C12357E50200BCA87A /* Sources */,
-				123223C22357E50200BCA87A /* Frameworks */,
 				123223C32357E50200BCA87A /* Resources */,
+				123223C22357E50200BCA87A /* Frameworks */,
 				123223DB2357EBE800BCA87A /* Copy Carthage Frameworks */,
 			);
 			buildRules = (
@@ -243,7 +241,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				123223CB2357E50200BCA87A /* SwiftPhoenixTests.swift in Sources */,
+				123223E02357EE4A00BCA87A /* QuickClassSpec.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -468,11 +466,23 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
+				"FRAMEWORK_SEARCH_PATHS[sdk=appletv*]" = (
+					"$(SRCROOT)/Carthage/Build/tvOS/",
 					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = Tests/Info.plist;
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphone*]" = (
+					"$(SRCROOT)/Carthage/Build/iOS/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(SRCROOT)/Carthage/Build/Mac/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=watch*]" = (
+					"$(SRCROOT)/Carthage/Build/watchOS/",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Sources/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -489,11 +499,23 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
+				"FRAMEWORK_SEARCH_PATHS[sdk=appletv*]" = (
+					"$(SRCROOT)/Carthage/Build/tvOS/",
 					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
-				INFOPLIST_FILE = Tests/Info.plist;
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphone*]" = (
+					"$(SRCROOT)/Carthage/Build/iOS/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(SRCROOT)/Carthage/Build/Mac/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=watch*]" = (
+					"$(SRCROOT)/Carthage/Build/watchOS/",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Sources/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
