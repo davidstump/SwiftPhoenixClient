@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		123223C62357E50200BCA87A /* SwiftPhoenix.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 123223BC2357E50200BCA87A /* SwiftPhoenix.framework */; };
 		123223CB2357E50200BCA87A /* SwiftPhoenixTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 123223CA2357E50200BCA87A /* SwiftPhoenixTests.swift */; };
-		123223CD2357E50200BCA87A /* SwiftPhoenix.h in Headers */ = {isa = PBXBuildFile; fileRef = 123223BF2357E50200BCA87A /* SwiftPhoenix.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		123223D92357E5EC00BCA87A /* SwiftPhoenix.h in Headers */ = {isa = PBXBuildFile; fileRef = 123223D72357E5EC00BCA87A /* SwiftPhoenix.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +29,8 @@
 		123223C52357E50200BCA87A /* SwiftPhoenixTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftPhoenixTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		123223CA2357E50200BCA87A /* SwiftPhoenixTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftPhoenixTests.swift; sourceTree = "<group>"; };
 		123223CC2357E50200BCA87A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		123223D72357E5EC00BCA87A /* SwiftPhoenix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftPhoenix.h; sourceTree = "<group>"; };
+		123223D82357E5EC00BCA87A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,8 +55,8 @@
 		123223B22357E50200BCA87A = {
 			isa = PBXGroup;
 			children = (
-				123223BE2357E50200BCA87A /* SwiftPhoenix */,
-				123223C92357E50200BCA87A /* SwiftPhoenixTests */,
+				123223BE2357E50200BCA87A /* Sources */,
+				123223C92357E50200BCA87A /* Tests */,
 				123223BD2357E50200BCA87A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -68,22 +70,32 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		123223BE2357E50200BCA87A /* SwiftPhoenix */ = {
+		123223BE2357E50200BCA87A /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				123223D62357E5EC00BCA87A /* Supporting Files */,
 				123223BF2357E50200BCA87A /* SwiftPhoenix.h */,
 				123223C02357E50200BCA87A /* Info.plist */,
 			);
-			path = SwiftPhoenix;
+			path = Sources;
 			sourceTree = "<group>";
 		};
-		123223C92357E50200BCA87A /* SwiftPhoenixTests */ = {
+		123223C92357E50200BCA87A /* Tests */ = {
 			isa = PBXGroup;
 			children = (
 				123223CA2357E50200BCA87A /* SwiftPhoenixTests.swift */,
 				123223CC2357E50200BCA87A /* Info.plist */,
 			);
-			path = SwiftPhoenixTests;
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		123223D62357E5EC00BCA87A /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				123223D72357E5EC00BCA87A /* SwiftPhoenix.h */,
+				123223D82357E5EC00BCA87A /* Info.plist */,
+			);
+			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -93,7 +105,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				123223CD2357E50200BCA87A /* SwiftPhoenix.h in Headers */,
+				123223D92357E5EC00BCA87A /* SwiftPhoenix.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,7 +279,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -324,7 +336,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
@@ -344,8 +356,9 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = SwiftPhoenix/Info.plist;
+				INFOPLIST_FILE = "Sources/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -354,7 +367,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.phoenixframework.SwiftPhoenix;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchsimulator macosx watchos appletvsimulator appletvos iphonesimulator iphoneos";
 				SWIFT_VERSION = 5.0;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
 			};
 			name = Debug;
 		};
@@ -367,8 +383,9 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = SwiftPhoenix/Info.plist;
+				INFOPLIST_FILE = "Sources/Supporting Files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -377,7 +394,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.phoenixframework.SwiftPhoenix;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchsimulator macosx watchos appletvsimulator appletvos iphonesimulator iphoneos";
 				SWIFT_VERSION = 5.0;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
 			};
 			name = Release;
 		};
