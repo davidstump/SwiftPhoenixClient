@@ -5,6 +5,9 @@ This product uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.2](https://github.com/davidstump/SwiftPhoenixClient/compare/1.1.1...1.1.2)
+* [#151](https://github.com/davidstump/SwiftPhoenixClient/pull/151): Made isJoined, isJoining, etc methods on Channel public
+
 ## [1.1.1](https://github.com/davidstump/SwiftPhoenixClient/compare/1.1.0...1.1.1)
 * [#141](https://github.com/davidstump/SwiftPhoenixClient/pull/141): tvOS support
 * [#145](https://github.com/davidstump/SwiftPhoenixClient/pull/145): Refactored Socket reconnect strategy
