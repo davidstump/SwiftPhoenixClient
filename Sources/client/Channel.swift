@@ -591,29 +591,37 @@ public class Channel {
   var canPush: Bool {
     return self.socket?.isConnected == true && self.isJoined
   }
+}
+
+
+//----------------------------------------------------------------------
+// MARK: - Public API
+//----------------------------------------------------------------------
+extension Channel {
   
   /// - return: True if the Channel has been closed
-  var isClosed: Bool {
+  public var isClosed: Bool {
     return state == .closed
   }
   
   /// - return: True if the Channel experienced an error
-  var isErrored: Bool {
+  public var isErrored: Bool {
     return state == .errored
   }
   
   /// - return: True if the channel has joined
-  var isJoined: Bool {
+  public var isJoined: Bool {
     return state == .joined
   }
   
   /// - return: True if the channel has requested to join
-  var isJoining: Bool {
+  public var isJoining: Bool {
     return state == .joining
   }
   
   /// - return: True if the channel has requested to leave
-  var isLeaving: Bool {
+  public var isLeaving: Bool {
     return state == .leaving
   }
+  
 }
