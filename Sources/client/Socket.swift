@@ -25,6 +25,9 @@ import Starscream
 /// Alias for a JSON dictionary [String: Any]
 public typealias Payload = [String: Any]
 
+/// Alias for a function returning an optional JSON dictionary (Payload?)
+public typealias PayloadGetterFunction = () -> Payload?
+
 /// Struct that gathers callbacks assigned to the Socket
 struct StateChangeCallbacks {
   var open: [Delegated<Void, Void>] = []
@@ -59,14 +62,14 @@ public class Socket {
   /// `"wss://example.com"`, etc.) That was passed to the Socket during
   /// initialization. The URL endpoint will be modified by the Socket to
   /// include `"/websocket"` if missing.
-  public let endPoint: String
+  public private(set) var endPoint: String
   
   /// The fully qualified socket URL
-  public let endPointUrl: URL
+  public private(set) var endPointUrl: URL
   
   /// The optional params to pass when connecting. Must be set when
   /// initializing the Socket. These will be appended to the URL
-  public let params: (() -> [String: Any])?
+  public let params: PayloadGetterFunction?
   
   /// The WebSocket transport. Default behavior is to provide a Starscream
   /// WebSocket instance. Potentially allows changing WebSockets in future
@@ -148,7 +151,7 @@ public class Socket {
   // MARK: - Initialization
   //----------------------------------------------------------------------
   public convenience init(_ endPoint: String,
-                          params: [String: Any]? = nil) {
+                          params: PayloadGetterFunction? = nil) {
     self.init(endPoint: endPoint,
               transport: { url in return WebSocket(url: url) },
               params: params)
@@ -157,13 +160,13 @@ public class Socket {
   
   init(endPoint: String,
        transport: @escaping ((URL) -> WebSocketClient),
-       params: @escaping (() -> [String: Any]?)?) {
+       params: PayloadGetterFunction?) {
     self.transport = transport
-    self.params = params ?? { nil }
+    self.params = params
     
-//    let qualifiedUrl = buildUrl(endPoint: endPoint, params)
-//    self.endPoint = qualifiedUrl.absoluteString
-//    self.endPointUrl = qualifiedUrl
+    let qualifiedUrl = Socket.buildUrl(endPoint: endPoint, params: params)
+    self.endPoint = endPoint
+    self.endPointUrl = qualifiedUrl
 
     self.reconnectTimer = TimeoutTimer()
     self.reconnectTimer.callback.delegate(to: self) { (self) in
@@ -209,11 +212,10 @@ public class Socket {
 
     // We need to build this right before attempting to connect as the
     // parameters could be built upon demand and change over time
-    let qualifiedUrl = buildUrl(endPoint: endPoint, params)
-    self.endPoint = qualifiedUrl.absoluteString
+    let qualifiedUrl = Socket.buildUrl(endPoint: self.endPoint, params: self.params)
     self.endPointUrl = qualifiedUrl
     
-    self.connection = self.transport(endPointUrl)
+    self.connection = self.transport(self.endPointUrl)
     self.connection?.delegate = self
     self.connection?.disableSSLCertValidation = disableSSLCertValidation
     
@@ -508,7 +510,7 @@ public class Socket {
   /// - parameter endPoint: a base URL in string form
   /// - parameter params: an optional function that returns an optional parameter dictionary for the connection stage
   /// - return: a fully qualified URL built fron endPoint and params
-  internal func buildUrl(endPoint: String, params: @escaping (() -> [String: Any]?)?) -> URL {
+  internal static func buildUrl(endPoint: String, params: PayloadGetterFunction?) -> URL {
     guard
       let url = URL(string: endPoint),
       var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
