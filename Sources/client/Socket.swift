@@ -66,11 +66,11 @@ public class Socket {
   
   /// The optional params to pass when connecting. Must be set when
   /// initializing the Socket. These will be appended to the URL
-  public let params: [String: Any]?
+  public let params: (() -> [String: Any])?
   
   /// The WebSocket transport. Default behavior is to provide a Starscream
   /// WebSocket instance. Potentially allows changing WebSockets in future
-  private let transport:((URL) -> WebSocketClient)
+  private let transport: ((URL) -> WebSocketClient)
   
   /// Override to provide custom encoding of data before writing to the socket
   public var encode: ([String: Any]) -> Data = Defaults.encode
@@ -157,41 +157,14 @@ public class Socket {
   
   init(endPoint: String,
        transport: @escaping ((URL) -> WebSocketClient),
-       params: [String: Any]? = nil) {
+       params: @escaping (() -> [String: Any]?)?) {
     self.transport = transport
-    self.params = params
+    self.params = params ?? { nil }
     
-    guard
-      let url = URL(string: endPoint),
-      var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
-      else { fatalError("Malformed URL: \(endPoint)") }
-    
-    // Ensure that the URL ends with "/websocket
-    if !urlComponents.path.contains("/websocket") {
-      // Do not duplicate '/' in the path
-      if urlComponents.path.last != "/" {
-        urlComponents.path.append("/")
-      }
-      
-      // append 'websocket' to the path
-      urlComponents.path.append("websocket")
-      
-    }
-    
-    // Store the endpoint before potentially adding params to them
-    let modifiedEndpoint = urlComponents.url?.absoluteString
-    
-    // If there are parameters, append them to the URL
-    urlComponents.queryItems
-      = params?.map({ return URLQueryItem(name: $0.key,
-                                          value: String(describing: $0.value)) })
-    
-    guard let qualifiedUrl = urlComponents.url
-      else { fatalError("Malformed URL while adding paramters") }
-    
-    self.endPoint = modifiedEndpoint ?? qualifiedUrl.absoluteString
-    self.endPointUrl = qualifiedUrl
-    
+//    let qualifiedUrl = buildUrl(endPoint: endPoint, params)
+//    self.endPoint = qualifiedUrl.absoluteString
+//    self.endPointUrl = qualifiedUrl
+
     self.reconnectTimer = TimeoutTimer()
     self.reconnectTimer.callback.delegate(to: self) { (self) in
       self.logItems("Socket attempting to reconnect")
@@ -233,6 +206,12 @@ public class Socket {
     
     // Reset the clean close flag when attempting to connect
     self.closeWasClean = false
+
+    // We need to build this right before attempting to connect as the
+    // parameters could be built upon demand and change over time
+    let qualifiedUrl = buildUrl(endPoint: endPoint, params)
+    self.endPoint = qualifiedUrl.absoluteString
+    self.endPointUrl = qualifiedUrl
     
     self.connection = self.transport(endPointUrl)
     self.connection?.delegate = self
@@ -524,6 +503,39 @@ public class Socket {
   func logItems(_ items: Any...) {
     let msg = items.map( { return String(describing: $0) } ).joined(separator: ", ")
     self.logger?("SwiftPhoenixClient: \(msg)")
+  }
+
+  /// - parameter endPoint: a base URL in string form
+  /// - parameter params: an optional function that returns an optional parameter dictionary for the connection stage
+  /// - return: a fully qualified URL built fron endPoint and params
+  internal func buildUrl(endPoint: String, params: @escaping (() -> [String: Any]?)?) -> URL {
+    guard
+      let url = URL(string: endPoint),
+      var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
+      else { fatalError("Malformed URL: \(endPoint)") }
+
+    // Ensure that the URL ends with "/websocket
+    if !urlComponents.path.contains("/websocket") {
+      // Do not duplicate '/' in the path
+      if urlComponents.path.last != "/" {
+        urlComponents.path.append("/")
+      }
+
+      // append 'websocket' to the path
+      urlComponents.path.append("websocket")
+
+    }
+
+    // If there are parameters, append them to the URL
+    if let params = params?() {
+      urlComponents.queryItems = params.map {
+        URLQueryItem(name: $0.key, value: String(describing: $0.value))
+      }
+    }
+
+    guard let qualifiedUrl = urlComponents.url
+      else { fatalError("Malformed URL while adding parameters") }
+    return qualifiedUrl
   }
   
   
