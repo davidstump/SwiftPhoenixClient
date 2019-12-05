@@ -150,17 +150,30 @@ public class Socket {
   //----------------------------------------------------------------------
   // MARK: - Initialization
   //----------------------------------------------------------------------
-  public convenience init(_ endPoint: String,
-                          params: PayloadGetterFunction? = nil) {
+  public convenience init(_ endPoint: String) {
     self.init(endPoint: endPoint,
               transport: { url in return WebSocket(url: url) },
-              params: params)
+              params: { nil })
+  }
+
+  public convenience init(_ endPoint: String,
+                          params: Payload?) {
+    self.init(endPoint: endPoint,
+              transport: { url in return WebSocket(url: url) },
+              params: { params })
+  }
+
+  public convenience init(_ endPoint: String,
+                          paramsGetter: PayloadGetterFunction? = nil) {
+    self.init(endPoint: endPoint,
+              transport: { url in return WebSocket(url: url) },
+              params: paramsGetter)
   }
   
   
   init(endPoint: String,
        transport: @escaping ((URL) -> WebSocketClient),
-       params: PayloadGetterFunction?) {
+       params: PayloadGetterFunction? = nil) {
     self.transport = transport
     self.params = params
     

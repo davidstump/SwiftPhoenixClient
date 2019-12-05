@@ -24,7 +24,7 @@ class SocketSpec: QuickSpec {
         expect(socket.channels).to(haveCount(0))
         expect(socket.sendBuffer).to(haveCount(0))
         expect(socket.ref).to(equal(0))
-        expect(socket.endPoint).to(equal("wss://localhost:4000/socket/websocket"))
+        expect(socket.endPoint).to(equal("wss://localhost:4000/socket"))
         expect(socket.stateChangeCallbacks.open).to(beEmpty())
         expect(socket.stateChangeCallbacks.close).to(beEmpty())
         expect(socket.stateChangeCallbacks.error).to(beEmpty())
