@@ -153,6 +153,7 @@ public class Socket {
               params: { nil })
   }
 
+  @available(*, deprecated, message: "Deprecated in favour of Socket(_: String, paramsClosure: PayloadClosure?) instead")
   public convenience init(_ endPoint: String,
                           params: Payload? = nil) {
     self.init(endPoint: endPoint,
