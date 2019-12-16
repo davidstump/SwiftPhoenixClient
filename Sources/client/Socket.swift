@@ -150,12 +150,6 @@ public class Socket {
   //----------------------------------------------------------------------
   // MARK: - Initialization
   //----------------------------------------------------------------------
-  public convenience init(_ endPoint: String) {
-    self.init(endPoint: endPoint,
-              transport: { url in return WebSocket(url: url) },
-              params: { nil })
-  }
-
   @available(*, deprecated, message: "Deprecated in favour of Socket(_: String, paramsClosure: PayloadClosure?) instead")
   public convenience init(_ endPoint: String,
                           params: Payload? = nil) {
@@ -165,7 +159,7 @@ public class Socket {
   }
 
   public convenience init(_ endPoint: String,
-                          paramsClosure: PayloadClosure? = nil) {
+                          paramsClosure: PayloadClosure?) {
     self.init(endPoint: endPoint,
               transport: { url in return WebSocket(url: url) },
               params: paramsClosure)
@@ -225,7 +219,7 @@ public class Socket {
     // We need to build this right before attempting to connect as the
     // parameters could be built upon demand and change over time
     self.endPointUrl = Socket.buildEndpointUrl(endpoint: self.endPoint, paramsClosure: self.params)
-    
+
     self.connection = self.transport(self.endPointUrl)
     self.connection?.delegate = self
     self.connection?.disableSSLCertValidation = disableSSLCertValidation
