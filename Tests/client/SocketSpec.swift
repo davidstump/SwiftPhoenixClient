@@ -46,7 +46,7 @@ class SocketSpec: QuickSpec {
       })
       
       it("overrides some defaults", closure: {
-        let socket = Socket("wss://localhost:4000/socket", params: ["one": 2])
+        let socket = Socket("wss://localhost:4000/socket", paramsClosure: { ["one": 2] })
         socket.timeout = 40000
         socket.heartbeatInterval = 60000
         socket.logger = { _ in }
@@ -62,27 +62,29 @@ class SocketSpec: QuickSpec {
       it("should construct a valid URL", closure: {
         
         // Test different schemes
-        expect(Socket.buildUrl(endPoint: "http://localhost:4000/socket/websocket", params: nil).absoluteString)
+        expect(Socket("http://localhost:4000/socket/websocket", paramsClosure: nil).endPointUrl.absoluteString)
           .to(equal("http://localhost:4000/socket/websocket"))
         
-        expect(Socket.buildUrl(endPoint: "https://localhost:4000/socket/websocket", params: nil).absoluteString)
+        expect(Socket("https://localhost:4000/socket/websocket", paramsClosure: nil).endPointUrl.absoluteString)
           .to(equal("https://localhost:4000/socket/websocket"))
         
-        expect(Socket.buildUrl(endPoint: "ws://localhost:4000/socket/websocket", params: nil).absoluteString)
+        expect(Socket("ws://localhost:4000/socket/websocket", paramsClosure: nil).endPointUrl.absoluteString)
           .to(equal("ws://localhost:4000/socket/websocket"))
         
-        expect(Socket.buildUrl(endPoint: "wss://localhost:4000/socket/websocket", params: nil).absoluteString)
+        expect(Socket("wss://localhost:4000/socket/websocket", paramsClosure: nil).endPointUrl.absoluteString)
           .to(equal("wss://localhost:4000/socket/websocket"))
         
         
         // test params
-        expect(Socket.buildUrl(endPoint: "ws://localhost:4000/socket/websocket",
-                               params: { ["token": "abc123"] })
+        expect(Socket("ws://localhost:4000/socket/websocket",
+                      paramsClosure: { ["token": "abc123"] })
+          .endPointUrl
           .absoluteString)
           .to(equal("ws://localhost:4000/socket/websocket?token=abc123"))
         
-        expect(Socket.buildUrl(endPoint: "ws://localhost:4000/socket/websocket",
-                               params: { ["token": "abc123", "user_id": 1] })
+        expect(Socket("ws://localhost:4000/socket/websocket",
+                      paramsClosure: { ["token": "abc123", "user_id": 1] })
+          .endPointUrl
           .absoluteString)
           .to(satisfyAnyOf(
             // absoluteString does not seem to return a string with the params in a deterministic order
@@ -93,8 +95,9 @@ class SocketSpec: QuickSpec {
         
         
         // test params with spaces
-        expect(Socket.buildUrl(endPoint: "ws://localhost:4000/socket/websocket",
-                               params: { ["token": "abc 123", "user_id": 1] })
+        expect(Socket("ws://localhost:4000/socket/websocket",
+                      paramsClosure: { ["token": "abc 123", "user_id": 1] })
+          .endPointUrl
           .absoluteString)
           .to(satisfyAnyOf(
             // absoluteString does not seem to return a string with the params in a deterministic order
