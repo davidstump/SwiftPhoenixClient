@@ -228,7 +228,6 @@ public class Socket {
   //----------------------------------------------------------------------
   /// - return: The socket protocol, wss or ws
   public var websocketProtocol: String {
-//    let endPointUrl = Socket.buildUrl(endPoint: self.endPoint, params: self.params)
     switch endPointUrl.scheme {
     case "https": return "wss"
     case "http": return "ws"
@@ -253,7 +252,6 @@ public class Socket {
 
     // We need to build this right before attempting to connect as the
     // parameters could be built upon demand and change over time
-//    let qualifiedUrl = Socket.buildUrl(endPoint: self.endPoint, params: self.params)
 
     self.connection = self.transport(endPointUrl)
     self.connection?.delegate = self
@@ -298,7 +296,7 @@ public class Socket {
     callback?()
   }
   
-  
+
   
   //----------------------------------------------------------------------
   // MARK: - Register Socket State Callbacks
