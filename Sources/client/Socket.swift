@@ -64,36 +64,8 @@ public class Socket {
   /// include `"/websocket"` if missing.
   public let endPoint: String
 
-  /// The fully qualified URL built from `endPoint` and `params`
-  public var endPointUrl: URL {
-    guard
-      let url = URL(string: endPoint),
-      var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
-      else { fatalError("Malformed URL: \(endPoint)") }
-
-    // Ensure that the URL ends with "/websocket
-    if !urlComponents.path.contains("/websocket") {
-      // Do not duplicate '/' in the path
-      if urlComponents.path.last != "/" {
-        urlComponents.path.append("/")
-      }
-
-      // append 'websocket' to the path
-      urlComponents.path.append("websocket")
-
-    }
-
-    // If there are parameters, append them to the URL
-    if let params = params?() {
-      urlComponents.queryItems = params.map {
-        URLQueryItem(name: $0.key, value: String(describing: $0.value))
-      }
-    }
-
-    guard let qualifiedUrl = urlComponents.url
-      else { fatalError("Malformed URL while adding parameters") }
-    return qualifiedUrl
-  }
+  /// The fully qualified socket URL
+  public private(set) var endPointUrl: URL
   
   /// The optional params to pass when connecting. Must be set when
   /// initializing the Socket. These will be appended to the URL
@@ -205,8 +177,8 @@ public class Socket {
        params: PayloadClosure? = nil) {
     self.transport = transport
     self.params = params
-
     self.endPoint = endPoint
+    self.endPointUrl = Socket.buildEndpointUrl(endpoint: endPoint, paramsClosure: params)
 
     self.reconnectTimer = TimeoutTimer()
     self.reconnectTimer.callback.delegate(to: self) { (self) in
@@ -252,8 +224,9 @@ public class Socket {
 
     // We need to build this right before attempting to connect as the
     // parameters could be built upon demand and change over time
-
-    self.connection = self.transport(endPointUrl)
+    self.endPointUrl = Socket.buildEndpointUrl(endpoint: self.endPoint, paramsClosure: self.params)
+    
+    self.connection = self.transport(self.endPointUrl)
     self.connection?.delegate = self
     self.connection?.disableSSLCertValidation = disableSSLCertValidation
     
@@ -633,7 +606,37 @@ public class Socket {
     self.sendBuffer.forEach( { try? $0() } )
     self.sendBuffer = []
   }
-  
+
+  /// Builds a fully qualified socket `URL` from `endPoint` and `params`.
+  internal static func buildEndpointUrl(endpoint: String, paramsClosure params: PayloadClosure?) -> URL {
+    guard
+      let url = URL(string: endpoint),
+      var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
+      else { fatalError("Malformed URL: \(endpoint)") }
+
+    // Ensure that the URL ends with "/websocket
+    if !urlComponents.path.contains("/websocket") {
+      // Do not duplicate '/' in the path
+      if urlComponents.path.last != "/" {
+        urlComponents.path.append("/")
+      }
+
+      // append 'websocket' to the path
+      urlComponents.path.append("websocket")
+
+    }
+
+    // If there are parameters, append them to the URL
+    if let params = params?() {
+      urlComponents.queryItems = params.map {
+        URLQueryItem(name: $0.key, value: String(describing: $0.value))
+      }
+    }
+
+    guard let qualifiedUrl = urlComponents.url
+      else { fatalError("Malformed URL while adding parameters") }
+    return qualifiedUrl
+  }
   
   //----------------------------------------------------------------------
   // MARK: - Heartbeat
@@ -666,7 +669,7 @@ public class Socket {
   @objc func sendHeartbeat() {
     // Do not send if the connection is closed
     guard isConnected else { return }
-    
+
     
     // If there is a pending heartbeat ref, then the last heartbeat was
     // never acknowledged by the server. Close the connection and attempt
