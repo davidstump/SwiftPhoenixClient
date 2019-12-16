@@ -24,7 +24,7 @@ class SocketSpec: QuickSpec {
         expect(socket.channels).to(haveCount(0))
         expect(socket.sendBuffer).to(haveCount(0))
         expect(socket.ref).to(equal(0))
-        expect(socket.endPoint).to(equal("wss://localhost:4000/socket/websocket"))
+        expect(socket.endPoint).to(equal("wss://localhost:4000/socket"))
         expect(socket.stateChangeCallbacks.open).to(beEmpty())
         expect(socket.stateChangeCallbacks.close).to(beEmpty())
         expect(socket.stateChangeCallbacks.error).to(beEmpty())
@@ -46,7 +46,7 @@ class SocketSpec: QuickSpec {
       })
       
       it("overrides some defaults", closure: {
-        let socket = Socket("wss://localhost:4000/socket", params: ["one": 2])
+        let socket = Socket("wss://localhost:4000/socket", paramsClosure: { ["one": 2] })
         socket.timeout = 40000
         socket.heartbeatInterval = 60000
         socket.logger = { _ in }
@@ -62,32 +62,30 @@ class SocketSpec: QuickSpec {
       it("should construct a valid URL", closure: {
         
         // Test different schemes
-        expect(Socket("http://localhost:4000/socket/websocket")
-          .endPointUrl.absoluteString)
+        expect(Socket("http://localhost:4000/socket/websocket", paramsClosure: nil).endPointUrl.absoluteString)
           .to(equal("http://localhost:4000/socket/websocket"))
         
-        expect(Socket("https://localhost:4000/socket/websocket")
-          .endPointUrl.absoluteString)
+        expect(Socket("https://localhost:4000/socket/websocket", paramsClosure: nil).endPointUrl.absoluteString)
           .to(equal("https://localhost:4000/socket/websocket"))
         
-        expect(Socket("ws://localhost:4000/socket/websocket")
-          .endPointUrl.absoluteString)
+        expect(Socket("ws://localhost:4000/socket/websocket", paramsClosure: nil).endPointUrl.absoluteString)
           .to(equal("ws://localhost:4000/socket/websocket"))
         
-        expect(Socket("wss://localhost:4000/socket/websocket")
-          .endPointUrl.absoluteString)
+        expect(Socket("wss://localhost:4000/socket/websocket", paramsClosure: nil).endPointUrl.absoluteString)
           .to(equal("wss://localhost:4000/socket/websocket"))
         
         
         // test params
         expect(Socket("ws://localhost:4000/socket/websocket",
-                      params: ["token": "abc123"])
-          .endPointUrl.absoluteString)
+                      paramsClosure: { ["token": "abc123"] })
+          .endPointUrl
+          .absoluteString)
           .to(equal("ws://localhost:4000/socket/websocket?token=abc123"))
         
         expect(Socket("ws://localhost:4000/socket/websocket",
-                      params: ["token": "abc123", "user_id": 1])
-          .endPointUrl.absoluteString)
+                      paramsClosure: { ["token": "abc123", "user_id": 1] })
+          .endPointUrl
+          .absoluteString)
           .to(satisfyAnyOf(
             // absoluteString does not seem to return a string with the params in a deterministic order
             equal("ws://localhost:4000/socket/websocket?token=abc123&user_id=1"),
@@ -98,8 +96,9 @@ class SocketSpec: QuickSpec {
         
         // test params with spaces
         expect(Socket("ws://localhost:4000/socket/websocket",
-                      params: ["token": "abc 123", "user_id": 1])
-          .endPointUrl.absoluteString)
+                      paramsClosure: { ["token": "abc 123", "user_id": 1] })
+          .endPointUrl
+          .absoluteString)
           .to(satisfyAnyOf(
             // absoluteString does not seem to return a string with the params in a deterministic order
             equal("ws://localhost:4000/socket/websocket?token=abc%20123&user_id=1"),
@@ -144,20 +143,20 @@ class SocketSpec: QuickSpec {
       })
     }
     
-    describe("endPointUrl") {
-      it("does nothing with the url", closure: {
-        let socket = Socket("http://example.com/websocket")
-        expect(socket.endPointUrl.absoluteString).to(equal("http://example.com/websocket"))
-      })
-      
-      it("appends /websocket correctly", closure: {
-        let socketA = Socket("wss://example.org/chat/")
-        expect(socketA.endPointUrl.absoluteString).to(equal("wss://example.org/chat/websocket"))
-        
-        let socketB = Socket("ws://example.org/chat")
-        expect(socketB.endPointUrl.absoluteString).to(equal("ws://example.org/chat/websocket"))
-      })
-    }
+//    describe("endPointUrl") {
+//      it("does nothing with the url", closure: {
+//        let socket = Socket("http://example.com/websocket")
+//        expect(socket.endPointUrl.absoluteString).to(equal("http://example.com/websocket"))
+//      })
+//      
+//      it("appends /websocket correctly", closure: {
+//        let socketA = Socket("wss://example.org/chat/")
+//        expect(socketA.endPointUrl.absoluteString).to(equal("wss://example.org/chat/websocket"))
+//        
+//        let socketB = Socket("ws://example.org/chat")
+//        expect(socketB.endPointUrl.absoluteString).to(equal("ws://example.org/chat/websocket"))
+//      })
+//    }
     
     describe("connect with Websocket") {
       // Mocks
