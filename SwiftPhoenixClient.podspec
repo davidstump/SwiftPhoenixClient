@@ -38,7 +38,7 @@ http://www.phoenixframework.org/docs/channels
   s.platform     = :ios, '9.0'
   s.requires_arc = true
 
-  s.source_files = 'Sources/**/*.swift'
+  s.source_files = 'Sources/SwiftPhoenixClient/'
 
   s.dependency 'Starscream', '~> 3.1.0'
 end
