@@ -68,9 +68,16 @@ public class Socket {
   /// The fully qualified socket URL
   public private(set) var endPointUrl: URL
   
-  /// The optional params to pass when connecting. Must be set when
-  /// initializing the Socket. These will be appended to the URL
-  public let params: PayloadClosure?
+  /// Resolves to return the `paramsClosure` result at the time of calling.
+  /// If the `Socket` was created with static params, then those will be
+  /// returned every time.
+  public var params: Payload? {
+    return self.paramsClosure?()
+  }
+  
+  /// The optional params closure used to get params whhen connecting. Must
+  /// be set when initializaing the Socket.
+  public let paramsClosure: PayloadClosure?
   
   /// The WebSocket transport. Default behavior is to provide a Starscream
   /// WebSocket instance. Potentially allows changing WebSockets in future
@@ -155,24 +162,25 @@ public class Socket {
                           params: Payload? = nil) {
     self.init(endPoint: endPoint,
               transport: { url in return WebSocket(url: url) },
-              params: { params })
+              paramsClosure: { params })
   }
 
   public convenience init(_ endPoint: String,
                           paramsClosure: PayloadClosure?) {
     self.init(endPoint: endPoint,
               transport: { url in return WebSocket(url: url) },
-              params: paramsClosure)
+              paramsClosure: paramsClosure)
   }
   
   
   init(endPoint: String,
        transport: @escaping ((URL) -> WebSocketClient),
-       params: PayloadClosure? = nil) {
+       paramsClosure: PayloadClosure? = nil) {
     self.transport = transport
-    self.params = params
+    self.paramsClosure = paramsClosure
     self.endPoint = endPoint
-    self.endPointUrl = Socket.buildEndpointUrl(endpoint: endPoint, paramsClosure: params)
+    self.endPointUrl = Socket.buildEndpointUrl(endpoint: endPoint,
+                                               paramsClosure: paramsClosure)
 
     self.reconnectTimer = TimeoutTimer()
     self.reconnectTimer.callback.delegate(to: self) { (self) in
@@ -218,7 +226,8 @@ public class Socket {
 
     // We need to build this right before attempting to connect as the
     // parameters could be built upon demand and change over time
-    self.endPointUrl = Socket.buildEndpointUrl(endpoint: self.endPoint, paramsClosure: self.params)
+    self.endPointUrl = Socket.buildEndpointUrl(endpoint: self.endPoint,
+                                               paramsClosure: self.paramsClosure)
 
     self.connection = self.transport(self.endPointUrl)
     self.connection?.delegate = self

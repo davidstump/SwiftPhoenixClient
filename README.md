@@ -50,6 +50,15 @@ SwiftPhoenixClient to your `Cartfile`:
 github "davidstump/SwiftPhoenixClient" ~> 1.0
 ```
 
+### SwiftPackageManager
+
+SwiftPackageManager is properly supported starting in SwiftPhoenixClient v1.2.0. You can add the following to your `Package.swift`
+
+```
+.package(url: "https://github.com/davidstump/SwiftPhoenixClient.git", .upToNextMajor(from: "1.2.0"))
+```
+
+
 Make sure you have added `SwiftPhoenixClient.framework`, and `Starscream.framework` to the "_Linked Frameworks and Libraries_" section of your target, and have included them in your Carthage framework copying build phase.
 
 ## Usage

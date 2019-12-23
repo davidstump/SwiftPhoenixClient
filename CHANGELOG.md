@@ -5,6 +5,10 @@ This product uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.0](https://github.com/davidstump/SwiftPhoenixClient/compare/1.1.2...1.2.0)
+* [#153](https://github.com/davidstump/SwiftPhoenixClient/pull/153): Added ability to pass a closure when initializing a `Socket` to dynamically change `params` when reconnecting
+* Fixed Package.swift and updated it to use latest Starscream
+
 ## [1.1.2](https://github.com/davidstump/SwiftPhoenixClient/compare/1.1.1...1.1.2)
 * [#151](https://github.com/davidstump/SwiftPhoenixClient/pull/151): Made isJoined, isJoining, etc methods on Channel public
 
