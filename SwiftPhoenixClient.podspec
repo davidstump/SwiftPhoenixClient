@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "SwiftPhoenixClient"
-  s.version          = "1.1.2"
+  s.version          = "1.2.0"
   s.summary          = "Connect your Phoenix and iOS applications through WebSockets!"
   s.swift_version    = "5.0"
 
@@ -38,7 +38,7 @@ http://www.phoenixframework.org/docs/channels
   s.platform     = :ios, '9.0'
   s.requires_arc = true
 
-  s.source_files = 'Sources/SwiftPhoenixClient/'
+  s.source_files = 'Sources/**/*.swift'
 
   s.dependency 'Starscream', '~> 3.1.0'
 end
