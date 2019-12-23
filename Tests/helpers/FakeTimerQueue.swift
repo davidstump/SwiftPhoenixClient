@@ -5,6 +5,7 @@
 //  Created by Daniel Rees on 3/7/19.
 //
 
+import Foundation
 @testable import SwiftPhoenixClient
 
 

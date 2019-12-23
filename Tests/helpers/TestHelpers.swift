@@ -5,6 +5,7 @@
 //  Created by Daniel Rees on 2/24/19.
 //
 
+import Foundation
 @testable import SwiftPhoenixClient
 
 class Helpers {
