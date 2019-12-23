@@ -20,6 +20,7 @@
 
 
 import Starscream
+import Foundation
 
 
 /// Alias for a JSON dictionary [String: Any]

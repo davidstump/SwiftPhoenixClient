@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 import Swift
+import Foundation
 
 /// Container class of bindings to the channel
 struct Binding {
