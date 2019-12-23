@@ -80,6 +80,9 @@
               <li class="nav-group-task">
                 <a href="Typealiases.html#/s:18SwiftPhoenixClient7Payloada">Payload</a>
               </li>
+              <li class="nav-group-task">
+                <a href="Typealiases.html#/s:18SwiftPhoenixClient14PayloadClosurea">PayloadClosure</a>
+              </li>
             </ul>
           </li>
         </ul>
@@ -90,7 +93,7 @@
             
             <h1 id='swift-phoenix-client' class='heading'>Swift Phoenix Client</h1>
 
-<p><a href="https://swift.org/"><img src="https://img.shields.io/badge/Swift-4.0-orange.svg?style=flat" alt="Swift"></a>
+<p><a href="https://swift.org/"><img src="https://img.shields.io/badge/Swift-5.0-orange.svg?style=flat" alt="Swift"></a>
 <a href="http://cocoapods.org/pods/SwiftPhoenixClient"><img src="https://img.shields.io/cocoapods/v/SwiftPhoenixClient.svg?style=flat" alt="Version"></a>
 <a href="http://cocoapods.org/pods/SwiftPhoenixClient"><img src="https://img.shields.io/cocoapods/l/SwiftPhoenixClient.svg?style=flat" alt="License"></a>
 <a href="http://cocoapods.org/pods/SwiftPhoenixClient"><img src="https://img.shields.io/cocoapods/p/SwiftPhoenixClient.svg?style=flat" alt="Platform"></a>
@@ -100,7 +103,28 @@
 
 <p>Swift Phoenix Client is an extension of Starscream websocket client library
 that makes it easy to connect to Phoenix sockets in a similar manner to the
-Phoenix Socket Javascript library.</p>
+phoenix.js client.</p>
+
+<p>The client is currently updated to mirror phoenix.js 1.4.</p>
+<h3 id='swift-versions' class='heading'>Swift Versions</h3>
+
+<p><code>master</code> currently supports Swift 5.0. You&rsquo;ll need to set your target to <code>= 1.0.1</code> if your project is using Swift 4.2</p>
+
+<table><thead>
+<tr>
+<th>swift</th>
+<th>client</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>4.2</td>
+<td>1.0.1</td>
+</tr>
+<tr>
+<td>5.0</td>
+<td>1.1.0</td>
+</tr>
+</tbody></table>
 <h2 id='installation' class='heading'>Installation</h2>
 <h3 id='cocoapods' class='heading'>CocoaPods</h3>
 
@@ -110,23 +134,28 @@ target must be &lsquo;9.0&rsquo;</p>
 <pre class="highlight plaintext"><code>platform :ios, '9.0'
 use_frameworks!
 
-pod "SwiftPhoenixClient"
+pod "SwiftPhoenixClient", '~&gt; 1.0'
 </code></pre>
 
-<p>and running <code>pod install</code>. From there you will need to add <code>import SwiftPhoenixClient</code> in any ViewController you want it to be used.</p>
+<p>and running <code>pod install</code>. From there you will need to add <code>import SwiftPhoenixClient</code> in any class you want it to be used.</p>
 <h3 id='carthage' class='heading'>Carthage</h3>
 
 <p>If you use Carthage to manage your dependencies, simply add
 SwiftPhoenixClient to your <code>Cartfile</code>:</p>
-<pre class="highlight plaintext"><code>github "davidstump/SwiftPhoenixClient" ~&gt; 0.9
+<pre class="highlight plaintext"><code>github "davidstump/SwiftPhoenixClient" ~&gt; 1.0
+</code></pre>
+<h3 id='swiftpackagemanager' class='heading'>SwiftPackageManager</h3>
+
+<p>SwiftPackageManager is properly supported starting in SwiftPhoenixClient v1.2.0. You can add the following to your <code>Package.swift</code></p>
+<pre class="highlight plaintext"><code>.package(url: "https://github.com/davidstump/SwiftPhoenixClient.git", .upToNextMajor(from: "1.2.0"))
 </code></pre>
 
-<p>Make sure you have added <code>SwiftPhoenixClient.framework</code>, and <code>Starscream.framework</code> to the <q>_Linked Frameworks and Libraries_</q> section of your target, and have included them in your Carthage framework copying build phase.</p>
+<p>Make sure you have added <code>SwiftPhoenixClient.framework</code>, and <code>Starscream.framework</code> to the &ldquo;<em>Linked Frameworks and Libraries</em>&rdquo; section of your target, and have included them in your Carthage framework copying build phase.</p>
 <h2 id='usage' class='heading'>Usage</h2>
 
-<p>Using the Swift Phoenix Client is extremely easy (and familiar if have used the Phoenix JS client).</p>
+<p>Using the Swift Phoenix Client is extremely easy (and familiar if have used the phoenix.s client).</p>
 
-<p>See the <a href="https://github.com/davidstump/SwiftPhoenixClient/wiki/Usage-Guide">Usage Guide</a> for details instructions</p>
+<p>See the <a href="https://github.com/davidstump/SwiftPhoenixClient/wiki/Usage-Guide">Usage Guide</a> for details instructions. You can also check out the <a href="http://davidstump.github.io/SwiftPhoenixClient/">documentation</a></p>
 <h2 id='example' class='heading'>Example</h2>
 
 <p>Check out the <a href="https://github.com/davidstump/SwiftPhoenixClient/blob/master/Example/ChatExample/ViewController.swift">ViewController</a> in this repo for a brief example of a simple iOS chat application using the <a href="https://github.com/chrismccord/phoenix_chat_example">Phoenix Chat Example</a></p>
@@ -137,6 +166,9 @@ SwiftPhoenixClient to your <code>Cartfile</code>:</p>
 <p>Check out the wiki page for <a href="https://github.com/davidstump/SwiftPhoenixClient/wiki/Contributing">getting started</a></p>
 
 <p>Tested with the <a href="https://github.com/chrismccord/phoenix_chat_example">Phoenix Chat Server example</a>, upgraded to Phoenix 1.2.</p>
+<h2 id='thanks' class='heading'>Thanks</h2>
+
+<p>Many many thanks to <a href="https://github.com/dsrees">Daniel Rees</a> for his many contributions and continued maintenance of this project!</p>
 <h2 id='license' class='heading'>License</h2>
 
 <p>SwiftPhoenixClient is available under the MIT license. See the LICENSE file for more info.</p>
@@ -144,8 +176,8 @@ SwiftPhoenixClient to your <code>Cartfile</code>:</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="https://github.com/davidstump/SwiftPhoenixClient" target="_blank" rel="external">David Stump</a>. All rights reserved. (Last updated: 2019-04-02)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+          <p>&copy; 2019 <a class="link" href="https://github.com/davidstump/SwiftPhoenixClient" target="_blank" rel="external">David Stump</a>. All rights reserved. (Last updated: 2019-12-23)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
     </div>

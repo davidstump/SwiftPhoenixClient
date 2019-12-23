@@ -81,6 +81,9 @@
               <li class="nav-group-task">
                 <a href="../Typealiases.html#/s:18SwiftPhoenixClient7Payloada">Payload</a>
               </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:18SwiftPhoenixClient14PayloadClosurea">PayloadClosure</a>
+              </li>
             </ul>
           </li>
         </ul>
@@ -95,23 +98,7 @@
 
                 </div>
               </div>
-            <p>Represents a Channel which is bound to a topic</p>
-
-<p>A Channel can bind to multiple events on a given topic and
-be informed when those events occur within a topic.</p>
-<h3 id='example' class='heading'>Example:</h3>
-<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">channel</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="nf">channel</span><span class="p">(</span><span class="s">"room:123"</span><span class="p">,</span> <span class="nv">params</span><span class="p">:</span> <span class="p">[</span><span class="s">"token"</span><span class="p">:</span> <span class="s">"Room Token"</span><span class="p">])</span>
-<span class="n">channel</span><span class="o">.</span><span class="nf">on</span><span class="p">(</span><span class="s">"new_msg"</span><span class="p">)</span> <span class="p">{</span> <span class="n">payload</span> <span class="k">in</span> <span class="nf">print</span><span class="p">(</span><span class="s">"Got message"</span><span class="p">,</span> <span class="n">payload</span><span class="s">") }
-channel.push("</span><span class="n">new_msg</span><span class="p">,</span> <span class="nv">payload</span><span class="p">:</span> <span class="p">[</span><span class="s">"body"</span><span class="p">:</span> <span class="s">"This is a message"</span><span class="p">])</span>
-    <span class="o">.</span><span class="nf">receive</span><span class="p">(</span><span class="s">"ok"</span><span class="p">)</span> <span class="p">{</span> <span class="n">payload</span> <span class="k">in</span> <span class="nf">print</span><span class="p">(</span><span class="s">"Sent message"</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span> <span class="p">}</span>
-    <span class="o">.</span><span class="nf">receive</span><span class="p">(</span><span class="s">"error"</span><span class="p">)</span> <span class="p">{</span> <span class="n">payload</span> <span class="k">in</span> <span class="nf">print</span><span class="p">(</span><span class="s">"Send failed"</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span> <span class="p">}</span>
-    <span class="o">.</span><span class="nf">receive</span><span class="p">(</span><span class="s">"timeout"</span><span class="p">)</span> <span class="p">{</span> <span class="n">payload</span> <span class="k">in</span> <span class="nf">print</span><span class="p">(</span><span class="s">"Networking issue..."</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span> <span class="p">}</span>
-
-<span class="n">channel</span><span class="o">.</span><span class="nf">join</span><span class="p">()</span>
-    <span class="o">.</span><span class="nf">receive</span><span class="p">(</span><span class="s">"ok"</span><span class="p">)</span> <span class="p">{</span> <span class="n">payload</span> <span class="k">in</span> <span class="nf">print</span><span class="p">(</span><span class="s">"Channel Joined"</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span> <span class="p">}</span>
-    <span class="o">.</span><span class="nf">receive</span><span class="p">(</span><span class="s">"error"</span><span class="p">)</span> <span class="p">{</span> <span class="n">payload</span> <span class="k">in</span> <span class="nf">print</span><span class="p">(</span><span class="s">"Failed ot join"</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span> <span class="p">}</span>
-    <span class="o">.</span><span class="nf">receive</span><span class="p">(</span><span class="s">"timeout"</span><span class="p">)</span> <span class="p">{</span> <span class="n">payload</span> <span class="k">in</span> <span class="nf">print</span><span class="p">(</span><span class="s">"Networking issue..."</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span> <span class="p">}</span>
-</code></pre>
+            <p>Undocumented</p>
 
           </section>
           <section class="section task-group-section">
@@ -130,7 +117,7 @@ channel.push("</span><span class="n">new_msg</span><span class="p">,</span> <spa
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The topic of the Channel. e.g. <q>rooms:friends</q></p>
+                        <p>The topic of the Channel. e.g. &ldquo;rooms:friends&rdquo;</p>
 
                       </div>
                       <div class="declaration">
@@ -566,8 +553,8 @@ unsubscribe the exact event listener</p>
 <span class="n">channel</span><span class="o">.</span><span class="nf">off</span><span class="p">(</span><span class="s">"event"</span><span class="p">,</span> <span class="n">ref1</span><span class="p">)</span>
 </code></pre>
 
-<p>Since unsubscription of ref1, <q>do stuff</q> won&rsquo;t print, but <q>do other
-stuff</q> will keep on printing on the <q>event</q></p>
+<p>Since unsubscription of ref1, &ldquo;do stuff&rdquo; won&rsquo;t print, but &ldquo;do other
+stuff&rdquo; will keep on printing on the &ldquo;event&rdquo;</p>
 
 <ul>
 <li>return: Ref counter of the subscription. See <code>func off()</code></li>
@@ -647,8 +634,8 @@ unsubscribe the exact event listener</p>
 <span class="n">channel</span><span class="o">.</span><span class="nf">off</span><span class="p">(</span><span class="s">"event"</span><span class="p">,</span> <span class="n">ref1</span><span class="p">)</span>
 </code></pre>
 
-<p>Since unsubscription of ref1, <q>do stuff</q> won&rsquo;t print, but <q>do other
-stuff</q> will keep on printing on the <q>event</q></p>
+<p>Since unsubscription of ref1, &ldquo;do stuff&rdquo; won&rsquo;t print, but &ldquo;do other
+stuff&rdquo; will keep on printing on the &ldquo;event&rdquo;</p>
 
 <ul>
 <li>return: Ref counter of the subscription. See <code>func off()</code></li>
@@ -739,8 +726,8 @@ removed.</p>
 <span class="n">channel</span><span class="o">.</span><span class="nf">off</span><span class="p">(</span><span class="s">"other_event"</span><span class="p">)</span>
 </code></pre>
 
-<p>After this, only <q>ref2 event</q> will be printed if the channel receives
-<q>event</q> and nothing is printed if the channel receives <q>other_event</q>.</p>
+<p>After this, only &ldquo;ref2 event&rdquo; will be printed if the channel receives
+&ldquo;event&rdquo; and nothing is printed if the channel receives &ldquo;other_event&rdquo;.</p>
 
 <ul>
 <li>paramter ref: Ref counter returned when subscribing. Can be omitted</li>
@@ -881,7 +868,7 @@ removed.</p>
 
 <p>Example:
 /
-     channel.leave().receive(<q>ok</q>) { _ in { print(<q>left</q>) }</p>
+     channel.leave().receive(&ldquo;ok&rdquo;) { _ in { print(&ldquo;left&rdquo;) }</p>
 
 <ul>
 <li>return: Push that can add receive hooks</li>
@@ -996,11 +983,174 @@ handling before dispatching to the channel callbacks.</p>
                 </li>
               </ul>
             </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Public%20API"></a>
+                <a name="//apple_ref/swift/Section/Public API" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Public%20API"></a>
+                  <h3 class="section-name"><p>Public API</p>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient7ChannelC8isClosedSbvp"></a>
+                    <a name="//apple_ref/swift/Property/isClosed" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient7ChannelC8isClosedSbvp">isClosed</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+<ul>
+<li>return: True if the Channel has been closed</li>
+</ul>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">isClosed</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient7ChannelC9isErroredSbvp"></a>
+                    <a name="//apple_ref/swift/Property/isErrored" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient7ChannelC9isErroredSbvp">isErrored</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+<ul>
+<li>return: True if the Channel experienced an error</li>
+</ul>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">isErrored</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient7ChannelC8isJoinedSbvp"></a>
+                    <a name="//apple_ref/swift/Property/isJoined" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient7ChannelC8isJoinedSbvp">isJoined</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+<ul>
+<li>return: True if the channel has joined</li>
+</ul>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">isJoined</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient7ChannelC9isJoiningSbvp"></a>
+                    <a name="//apple_ref/swift/Property/isJoining" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient7ChannelC9isJoiningSbvp">isJoining</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+<ul>
+<li>return: True if the channel has requested to join</li>
+</ul>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">isJoining</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient7ChannelC9isLeavingSbvp"></a>
+                    <a name="//apple_ref/swift/Property/isLeaving" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient7ChannelC9isLeavingSbvp">isLeaving</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+<ul>
+<li>return: True if the channel has requested to leave</li>
+</ul>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">isLeaving</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="https://github.com/davidstump/SwiftPhoenixClient" target="_blank" rel="external">David Stump</a>. All rights reserved. (Last updated: 2019-04-02)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+          <p>&copy; 2019 <a class="link" href="https://github.com/davidstump/SwiftPhoenixClient" target="_blank" rel="external">David Stump</a>. All rights reserved. (Last updated: 2019-12-23)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
     </div>

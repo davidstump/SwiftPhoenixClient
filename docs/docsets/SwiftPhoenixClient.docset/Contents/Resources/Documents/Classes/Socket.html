@@ -81,6 +81,9 @@
               <li class="nav-group-task">
                 <a href="../Typealiases.html#/s:18SwiftPhoenixClient7Payloada">Payload</a>
               </li>
+              <li class="nav-group-task">
+                <a href="../Typealiases.html#/s:18SwiftPhoenixClient14PayloadClosurea">PayloadClosure</a>
+              </li>
             </ul>
           </li>
         </ul>
@@ -92,6 +95,7 @@
               <div class="declaration">
                 <div class="language">
                   <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Socket</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Socket</span><span class="p">:</span> <span class="kt">WebSocketDelegate</span></code></pre>
 
                 </div>
               </div>
@@ -100,7 +104,7 @@
 <p>A single connection is established to the server and
 channels are multiplexed over the connection.
 Connect to the server using the <code>Socket</code> class:</p>
-<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">Socket</span><span class="p">(</span><span class="s">"/socket"</span><span class="p">,</span> <span class="p">{</span><span class="nv">params</span><span class="p">:</span> <span class="p">{</span><span class="nv">userToken</span><span class="p">:</span> <span class="s">"123"</span><span class="p">}})</span>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">Socket</span><span class="p">(</span><span class="s">"/socket"</span><span class="p">,</span> <span class="nv">paramsClosure</span><span class="p">:</span> <span class="p">{</span> <span class="p">[</span><span class="s">"userToken"</span><span class="p">:</span> <span class="s">"123"</span> <span class="p">]</span> <span class="p">})</span>
 <span class="n">socket</span><span class="o">.</span><span class="nf">connect</span><span class="p">()</span>
 </code></pre>
 
@@ -114,9 +118,11 @@ the Socket docs, such as configuring the heartbeat.</p>
               <div class="task-name-container">
                 <a name="/Public%20Attributes"></a>
                 <a name="//apple_ref/swift/Section/Public Attributes" class="dashAnchor"></a>
-                <a href="#/Public%20Attributes">
-                  <h3 class="section-name">Public Attributes</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Public%20Attributes"></a>
+                  <h3 class="section-name"><p>Public Attributes</p>
+</h3>
+                </div>
               </div>
               <ul>
                 <li class="item">
@@ -169,7 +175,7 @@ include <code>&quot;/websocket&quot;</code> if missing.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">endPointUrl</span><span class="p">:</span> <span class="kt">URL</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">private(set)</span> <span class="k">var</span> <span class="nv">endPointUrl</span><span class="p">:</span> <span class="kt">URL</span></code></pre>
 
                         </div>
                       </div>
@@ -189,15 +195,44 @@ include <code>&quot;/websocket&quot;</code> if missing.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>The optional params to pass when connecting. Must be set when
-initializing the Socket. These will be appended to the URL</p>
+                        <p>Resolves to return the <code><a href="../Classes/Socket.html#/s:18SwiftPhoenixClient6SocketC13paramsClosureSDySSypGSgycSgvp">paramsClosure</a></code> result at the time of calling.
+If the <code>Socket</code> was created with static params, then those will be
+returned every time.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">params</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">params</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:18SwiftPhoenixClient7Payloada">Payload</a></span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient6SocketC13paramsClosureSDySSypGSgycSgvp"></a>
+                    <a name="//apple_ref/swift/Property/paramsClosure" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient6SocketC13paramsClosureSDySSypGSgycSgvp">paramsClosure</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The optional params closure used to get params whhen connecting. Must
+be set when initializaing the Socket.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">paramsClosure</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:18SwiftPhoenixClient14PayloadClosurea">PayloadClosure</a></span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -325,7 +360,7 @@ initializing the Socket. These will be appended to the URL</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Internval between socket reconnect attempts</p>
+                        <p>Interval between socket reconnect attempts, in seconds</p>
 
                       </div>
                       <div class="declaration">
@@ -333,6 +368,33 @@ initializing the Socket. These will be appended to the URL</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">reconnectAfter</span><span class="p">:</span> <span class="p">(</span><span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">TimeInterval</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient6SocketC11rejoinAfterySdSicvp"></a>
+                    <a name="//apple_ref/swift/Property/rejoinAfter" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient6SocketC11rejoinAfterySdSicvp">rejoinAfter</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Interval between channel rejoin attempts, in seconds</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">rejoinAfter</span><span class="p">:</span> <span class="p">(</span><span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">TimeInterval</span></code></pre>
 
                         </div>
                       </div>
@@ -484,9 +546,11 @@ set before calling <code>socket.connect()</code> in order to apply.</p>
               <div class="task-name-container">
                 <a name="/Initialization"></a>
                 <a name="//apple_ref/swift/Section/Initialization" class="dashAnchor"></a>
-                <a href="#/Initialization">
-                  <h3 class="section-name">Initialization</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Initialization"></a>
+                  <h3 class="section-name"><p>Initialization</p>
+</h3>
+                </div>
               </div>
               <ul>
                 <li class="item">
@@ -510,7 +574,35 @@ set before calling <code>socket.connect()</code> in order to apply.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="n">_</span> <span class="nv">endPoint</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-                        <span class="nv">params</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+                        <span class="nv">params</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:18SwiftPhoenixClient7Payloada">Payload</a></span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:18SwiftPhoenixClient6SocketC_13paramsClosureACSS_SDySSypGSgycSgtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(_:paramsClosure:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient6SocketC_13paramsClosureACSS_SDySSypGSgycSgtcfc">init(_:paramsClosure:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="n">_</span> <span class="nv">endPoint</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+                        <span class="nv">paramsClosure</span><span class="p">:</span> <span class="kt"><a href="../Typealiases.html#/s:18SwiftPhoenixClient14PayloadClosurea">PayloadClosure</a></span><span class="p">?)</span></code></pre>
 
                         </div>
                       </div>
@@ -523,9 +615,11 @@ set before calling <code>socket.connect()</code> in order to apply.</p>
               <div class="task-name-container">
                 <a name="/Public"></a>
                 <a name="//apple_ref/swift/Section/Public" class="dashAnchor"></a>
-                <a href="#/Public">
-                  <h3 class="section-name">Public</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Public"></a>
+                  <h3 class="section-name"><p>Public</p>
+</h3>
+                </div>
               </div>
               <ul>
                 <li class="item">
@@ -620,9 +714,9 @@ then this call will be ignored.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:18SwiftPhoenixClient6SocketC10disconnect4code8callbacky10Starscream9CloseCodeOSg_yycSgtF"></a>
+                    <a name="/s:18SwiftPhoenixClient6SocketC10disconnect4code8callbacky10Starscream9CloseCodeO_yycSgtF"></a>
                     <a name="//apple_ref/swift/Method/disconnect(code:callback:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:18SwiftPhoenixClient6SocketC10disconnect4code8callbacky10Starscream9CloseCodeOSg_yycSgtF">disconnect(code:callback:)</a>
+                    <a class="token" href="#/s:18SwiftPhoenixClient6SocketC10disconnect4code8callbacky10Starscream9CloseCodeO_yycSgtF">disconnect(code:callback:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -641,7 +735,7 @@ then this call will be ignored.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">disconnect</span><span class="p">(</span><span class="nv">code</span><span class="p">:</span> <span class="kt">CloseCode</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">disconnect</span><span class="p">(</span><span class="nv">code</span><span class="p">:</span> <span class="kt">CloseCode</span> <span class="o">=</span> <span class="kt">CloseCode</span><span class="o">.</span><span class="n">normal</span><span class="p">,</span>
                        <span class="nv">callback</span><span class="p">:</span> <span class="p">(()</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
@@ -674,9 +768,11 @@ then this call will be ignored.</p>
               <div class="task-name-container">
                 <a name="/Register%20Socket%20State%20Callbacks"></a>
                 <a name="//apple_ref/swift/Section/Register Socket State Callbacks" class="dashAnchor"></a>
-                <a href="#/Register%20Socket%20State%20Callbacks">
-                  <h3 class="section-name">Register Socket State Callbacks</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Register%20Socket%20State%20Callbacks"></a>
+                  <h3 class="section-name"><p>Register Socket State Callbacks</p>
+</h3>
+                </div>
               </div>
               <ul>
                 <li class="item">
@@ -1191,9 +1287,11 @@ any references held by the socket.</p>
               <div class="task-name-container">
                 <a name="/Channel%20Initialization"></a>
                 <a name="//apple_ref/swift/Section/Channel Initialization" class="dashAnchor"></a>
-                <a href="#/Channel%20Initialization">
-                  <h3 class="section-name">Channel Initialization</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Channel%20Initialization"></a>
+                  <h3 class="section-name"><p>Channel Initialization</p>
+</h3>
+                </div>
               </div>
               <ul>
                 <li class="item">
@@ -1322,9 +1420,11 @@ prior to removing the Channel.</p>
               <div class="task-name-container">
                 <a name="/Sending%20Data"></a>
                 <a name="//apple_ref/swift/Section/Sending Data" class="dashAnchor"></a>
-                <a href="#/Sending%20Data">
-                  <h3 class="section-name">Sending Data</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Sending%20Data"></a>
+                  <h3 class="section-name"><p>Sending Data</p>
+</h3>
+                </div>
               </div>
               <ul>
                 <li class="item">
@@ -1363,9 +1463,11 @@ prior to removing the Channel.</p>
               <div class="task-name-container">
                 <a name="/WebSocketDelegate"></a>
                 <a name="//apple_ref/swift/Section/WebSocketDelegate" class="dashAnchor"></a>
-                <a href="#/WebSocketDelegate">
-                  <h3 class="section-name">WebSocketDelegate</h3>
-                </a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/WebSocketDelegate"></a>
+                  <h3 class="section-name"><p>WebSocketDelegate</p>
+</h3>
+                </div>
               </div>
               <ul>
                 <li class="item">
@@ -1481,8 +1583,8 @@ prior to removing the Channel.</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="https://github.com/davidstump/SwiftPhoenixClient" target="_blank" rel="external">David Stump</a>. All rights reserved. (Last updated: 2019-04-02)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+          <p>&copy; 2019 <a class="link" href="https://github.com/davidstump/SwiftPhoenixClient" target="_blank" rel="external">David Stump</a>. All rights reserved. (Last updated: 2019-12-23)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
     </div>

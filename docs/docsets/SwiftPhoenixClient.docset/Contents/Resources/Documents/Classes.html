@@ -81,6 +81,9 @@
               <li class="nav-group-task">
                 <a href="Typealiases.html#/s:18SwiftPhoenixClient7Payloada">Payload</a>
               </li>
+              <li class="nav-group-task">
+                <a href="Typealiases.html#/s:18SwiftPhoenixClient14PayloadClosurea">PayloadClosure</a>
+              </li>
             </ul>
           </li>
         </ul>
@@ -108,23 +111,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Represents a Channel which is bound to a topic</p>
-
-<p>A Channel can bind to multiple events on a given topic and
-be informed when those events occur within a topic.</p>
-<h3 id='example' class='heading'>Example:</h3>
-<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">channel</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="nf">channel</span><span class="p">(</span><span class="s">"room:123"</span><span class="p">,</span> <span class="nv">params</span><span class="p">:</span> <span class="p">[</span><span class="s">"token"</span><span class="p">:</span> <span class="s">"Room Token"</span><span class="p">])</span>
-<span class="n">channel</span><span class="o">.</span><span class="nf">on</span><span class="p">(</span><span class="s">"new_msg"</span><span class="p">)</span> <span class="p">{</span> <span class="n">payload</span> <span class="k">in</span> <span class="nf">print</span><span class="p">(</span><span class="s">"Got message"</span><span class="p">,</span> <span class="n">payload</span><span class="s">") }
-channel.push("</span><span class="n">new_msg</span><span class="p">,</span> <span class="nv">payload</span><span class="p">:</span> <span class="p">[</span><span class="s">"body"</span><span class="p">:</span> <span class="s">"This is a message"</span><span class="p">])</span>
-    <span class="o">.</span><span class="nf">receive</span><span class="p">(</span><span class="s">"ok"</span><span class="p">)</span> <span class="p">{</span> <span class="n">payload</span> <span class="k">in</span> <span class="nf">print</span><span class="p">(</span><span class="s">"Sent message"</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span> <span class="p">}</span>
-    <span class="o">.</span><span class="nf">receive</span><span class="p">(</span><span class="s">"error"</span><span class="p">)</span> <span class="p">{</span> <span class="n">payload</span> <span class="k">in</span> <span class="nf">print</span><span class="p">(</span><span class="s">"Send failed"</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span> <span class="p">}</span>
-    <span class="o">.</span><span class="nf">receive</span><span class="p">(</span><span class="s">"timeout"</span><span class="p">)</span> <span class="p">{</span> <span class="n">payload</span> <span class="k">in</span> <span class="nf">print</span><span class="p">(</span><span class="s">"Networking issue..."</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span> <span class="p">}</span>
-
-<span class="n">channel</span><span class="o">.</span><span class="nf">join</span><span class="p">()</span>
-    <span class="o">.</span><span class="nf">receive</span><span class="p">(</span><span class="s">"ok"</span><span class="p">)</span> <span class="p">{</span> <span class="n">payload</span> <span class="k">in</span> <span class="nf">print</span><span class="p">(</span><span class="s">"Channel Joined"</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span> <span class="p">}</span>
-    <span class="o">.</span><span class="nf">receive</span><span class="p">(</span><span class="s">"error"</span><span class="p">)</span> <span class="p">{</span> <span class="n">payload</span> <span class="k">in</span> <span class="nf">print</span><span class="p">(</span><span class="s">"Failed ot join"</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span> <span class="p">}</span>
-    <span class="o">.</span><span class="nf">receive</span><span class="p">(</span><span class="s">"timeout"</span><span class="p">)</span> <span class="p">{</span> <span class="n">payload</span> <span class="k">in</span> <span class="nf">print</span><span class="p">(</span><span class="s">"Networking issue..."</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span> <span class="p">}</span>
-</code></pre>
+                        <p>Undocumented</p>
 
                         <a href="Classes/Channel.html" class="slightly-smaller">See more</a>
                       </div>
@@ -139,10 +126,6 @@ channel.push("</span><span class="n">new_msg</span><span class="p">,</span> <spa
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -171,10 +154,6 @@ channel.push("</span><span class="n">new_msg</span><span class="p">,</span> <spa
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -215,9 +194,9 @@ changes, you could write:</p>
 local state of metadata. By default, all presence metadata is returned, but
 a listBy function can be supplied to allow the client to select which
 metadata to use for a given presence. For example, you may have a user
-online from different devices with a metadata status of <q>online</q>, but they
-have set themselves to <q>away</q> on another device. In this case, the app may
-choose to use the <q>away</q> status for what appears on the UI. The example
+online from different devices with a metadata status of &ldquo;online&rdquo;, but they
+have set themselves to &ldquo;away&rdquo; on another device. In this case, the app may
+choose to use the &ldquo;away&rdquo; status for what appears on the UI. The example
 below defines a listBy function which prioritizes the first metadata which
 was registered for each user. This could be the first tab they opened, or
 the first device they came online from:</p>
@@ -269,10 +248,6 @@ individual presences joining and leaving the app. For example:</p>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -301,10 +276,6 @@ individual presences joining and leaving the app. For example:</p>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -323,7 +294,7 @@ individual presences joining and leaving the app. For example:</p>
 <p>A single connection is established to the server and
 channels are multiplexed over the connection.
 Connect to the server using the <code>Socket</code> class:</p>
-<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">Socket</span><span class="p">(</span><span class="s">"/socket"</span><span class="p">,</span> <span class="p">{</span><span class="nv">params</span><span class="p">:</span> <span class="p">{</span><span class="nv">userToken</span><span class="p">:</span> <span class="s">"123"</span><span class="p">}})</span>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">Socket</span><span class="p">(</span><span class="s">"/socket"</span><span class="p">,</span> <span class="nv">paramsClosure</span><span class="p">:</span> <span class="p">{</span> <span class="p">[</span><span class="s">"userToken"</span><span class="p">:</span> <span class="s">"123"</span> <span class="p">]</span> <span class="p">})</span>
 <span class="n">socket</span><span class="o">.</span><span class="nf">connect</span><span class="p">()</span>
 </code></pre>
 
@@ -338,16 +309,13 @@ the Socket docs, such as configuring the heartbeat.</p>
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Socket</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">Socket</span><span class="p">:</span> <span class="kt">WebSocketDelegate</span></code></pre>
 
                         </div>
                       </div>
                     </section>
                   </div>
                 </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <ul>
                 <li class="item">
                   <div>
                     <code>
@@ -381,8 +349,8 @@ the Socket docs, such as configuring the heartbeat.</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2019 <a class="link" href="https://github.com/davidstump/SwiftPhoenixClient" target="_blank" rel="external">David Stump</a>. All rights reserved. (Last updated: 2019-04-02)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.4</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+          <p>&copy; 2019 <a class="link" href="https://github.com/davidstump/SwiftPhoenixClient" target="_blank" rel="external">David Stump</a>. All rights reserved. (Last updated: 2019-12-23)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.0</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
         </section>
       </article>
     </div>

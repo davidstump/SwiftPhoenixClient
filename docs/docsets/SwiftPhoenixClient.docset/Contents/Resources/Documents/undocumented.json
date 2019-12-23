@@ -2,63 +2,63 @@
   "warnings": [
     {
       "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Presence.swift",
-      "line": 78,
+      "line": 118,
       "symbol": "Presence.Events.state",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Presence.swift",
-      "line": 79,
+      "line": 119,
       "symbol": "Presence.Events.diff",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
     },
     {
       "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Presence.swift",
-      "line": 93,
+      "line": 136,
       "symbol": "Presence.Diff",
       "symbol_kind": "source.lang.swift.decl.typealias",
       "warning": "undocumented"
     },
     {
       "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Presence.swift",
-      "line": 145,
+      "line": 173,
       "symbol": "Presence.isPendingSyncState",
       "symbol_kind": "source.lang.swift.decl.var.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Presence.swift",
-      "line": 184,
+      "line": 212,
       "symbol": "Presence.init(channel:opts:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
       "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Presence.swift",
-      "line": 257,
+      "line": 285,
       "symbol": "Presence.syncState(_:newState:onJoin:onLeave:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Presence.swift",
-      "line": 312,
+      "line": 340,
       "symbol": "Presence.syncDiff(_:diff:onJoin:onLeave:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Presence.swift",
-      "line": 352,
+      "line": 380,
       "symbol": "Presence.filter(_:by:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
     },
     {
       "file": "/Users/drees/src/github/phoenix/SwiftPhoenixClient/Sources/client/Presence.swift",
-      "line": 358,
+      "line": 386,
       "symbol": "Presence.listBy(_:transformer:)",
       "symbol_kind": "source.lang.swift.decl.function.method.static",
       "warning": "undocumented"
