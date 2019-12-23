@@ -114,7 +114,17 @@ class SocketSpec: QuickSpec {
         expect(socket).to(beNil())
       })
     }
-    
+
+    describe("params") {
+      it("changes dynamically with a closure") {
+        var authToken = "abc123"
+        let socket = Socket("ws://localhost:4000/socket/websocket", paramsClosure: { ["token": authToken] })
+        
+        expect(socket.params?["token"] as? String).to(equal("abc123"))
+        authToken = "xyz987"
+        expect(socket.params?["token"] as? String).to(equal("xyz987"))
+      }
+    }
 
     describe("websocketProtocol") {
       it("returns wss when protocol is https", closure: {
