@@ -59,6 +59,21 @@ class SocketSpec: QuickSpec {
         expect(socket.reconnectAfter(2)).to(equal(10))
       })
       
+      it("sets queue for underlying transport", closure: {
+        let socket = Socket(endPoint: "wss://localhost:4000/socket", transport: { (url) -> WebSocketClient in
+            let webSocket = WebSocket(url: url)
+            webSocket.callbackQueue = DispatchQueue(label: "test_queue")
+            return webSocket
+        })
+        socket.timeout = 40000
+        socket.heartbeatInterval = 60000
+        socket.logger = { _ in }
+        socket.reconnectAfter = { _ in return 10 }
+        socket.connect()
+        expect(socket.connection).to(beAKindOf(WebSocket.self))
+        expect((socket.connection as! WebSocket).callbackQueue.label).to(equal("test_queue"))
+      })
+      
       it("should construct a valid URL", closure: {
         
         // Test different schemes

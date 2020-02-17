@@ -173,7 +173,7 @@ public class Socket {
   }
   
   
-  init(endPoint: String,
+  public init(endPoint: String,
        transport: @escaping ((URL) -> WebSocketClient),
        paramsClosure: PayloadClosure? = nil) {
     self.transport = transport
