@@ -20,9 +20,10 @@
 
 import Foundation
 
-class HeartbeatTimer {
+class HeartbeatTimer: Equatable {
     let timeInterval: TimeInterval
     let dispatchQueue: DispatchQueue
+    let id: String = UUID().uuidString
     init(timeInterval: TimeInterval, dispatchQueue: DispatchQueue) {
         self.timeInterval = timeInterval
         self.dispatchQueue = dispatchQueue
@@ -36,6 +37,10 @@ class HeartbeatTimer {
         })
         return t
     }()
+    
+    var isValid: Bool {
+        return state == .resumed
+    }
     
     private var eventHandler: (() -> Void)?
     
@@ -52,6 +57,8 @@ class HeartbeatTimer {
     }
     
     func stopTimer() {
+        timer.setEventHandler {}
+        eventHandler = nil
         suspend()
     }
     
@@ -71,6 +78,10 @@ class HeartbeatTimer {
         timer.suspend()
     }
     
+    func fire() {
+        eventHandler?()
+    }
+    
     deinit {
         timer.setEventHandler {}
         timer.cancel()
@@ -80,5 +91,9 @@ class HeartbeatTimer {
          */
         resume()
         eventHandler = nil
+    }
+    
+    static func == (lhs: HeartbeatTimer, rhs: HeartbeatTimer) -> Bool {
+        return lhs.id == rhs.id
     }
 }

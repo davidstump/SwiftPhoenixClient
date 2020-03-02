@@ -631,7 +631,7 @@ class SocketMock: Socket {
     var underlyingRef: (UInt64)!
     var heartbeatTimerSetCount: Int = 0
     var heartbeatTimerDidGetSet: Bool { return heartbeatTimerSetCount > 0 }
-    override var heartbeatTimer: Timer? {
+    override var heartbeatTimer: HeartbeatTimer? {
         didSet { heartbeatTimerSetCount += 1 }
     }
     var pendingHeartbeatRefSetCount: Int = 0
