@@ -36,6 +36,7 @@
 		12F7830C2210D56D00291614 /* MockableWebSocketClient.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12F7830A2210D56D00291614 /* MockableWebSocketClient.generated.swift */; };
 		12FAEE47231EB222003EC62B /* SocketSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FAEE46231EB222003EC62B /* SocketSpy.swift */; };
 		12FAEE49231EB4B0003EC62B /* FakeTimerQueueSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12FAEE48231EB4B0003EC62B /* FakeTimerQueueSpec.swift */; };
+		4886F286240D2E36006B8376 /* HeartbeatTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4886F285240D2E36006B8376 /* HeartbeatTimer.swift */; };
 		B48458A82164E3D300466E32 /* PresenceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = B48458A62164E28500466E32 /* PresenceSpec.swift */; };
 		E38FACD222B9EA4500D80A7D /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E38FACD022B9EA4500D80A7D /* Starscream.framework */; };
 		E38FACD422B9EA4A00D80A7D /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E38FACD122B9EA4500D80A7D /* Starscream.framework */; };
@@ -75,6 +76,7 @@
 		12F7830A2210D56D00291614 /* MockableWebSocketClient.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockableWebSocketClient.generated.swift; sourceTree = "<group>"; };
 		12FAEE46231EB222003EC62B /* SocketSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketSpy.swift; sourceTree = "<group>"; };
 		12FAEE48231EB4B0003EC62B /* FakeTimerQueueSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeTimerQueueSpec.swift; sourceTree = "<group>"; };
+		4886F285240D2E36006B8376 /* HeartbeatTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatTimer.swift; sourceTree = "<group>"; };
 		B48458A62164E28500466E32 /* PresenceSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenceSpec.swift; sourceTree = "<group>"; };
 		E330972322B9E6A300BCF98A /* SwiftPhoenixClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftPhoenixClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E38FACD022B9EA4500D80A7D /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				1203046E23B112050012FF2D /* Push.swift */,
 				1203046F23B112050012FF2D /* Utilities */,
 				1203047223B112050012FF2D /* TimeoutTimer.swift */,
+				4886F285240D2E36006B8376 /* HeartbeatTimer.swift */,
 				1203047323B112050012FF2D /* Supporting Files */,
 				1203047423B112050012FF2D /* Socket.swift */,
 			);
@@ -373,6 +376,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1203048323B112060012FF2D /* Socket.swift in Sources */,
+				4886F286240D2E36006B8376 /* HeartbeatTimer.swift in Sources */,
 				1203048123B112060012FF2D /* TimeoutTimer.swift in Sources */,
 				1203047523B112050012FF2D /* Presence.swift in Sources */,
 				1203047B23B112060012FF2D /* Push.swift in Sources */,
