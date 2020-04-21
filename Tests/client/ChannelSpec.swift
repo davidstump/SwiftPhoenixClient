@@ -44,7 +44,7 @@ class ChannelSpec: QuickSpec {
       
       mockClient = WebSocketClientMock()
       
-      mockSocket = SocketMock("/socket")
+      mockSocket = SocketMock(endPoint: "/socket", transport: { _ in mockClient })
       mockSocket.connection = mockClient
       mockSocket.timeout = kDefaultTimeout
       mockSocket.makeRefReturnValue = kDefaultRef
