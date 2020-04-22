@@ -36,7 +36,7 @@ class PresenceSpec: QuickSpec {
     
     beforeEach {
       let mockClient = WebSocketClientMock()
-      mockSocket = SocketMock("/socket")
+      mockSocket = SocketMock(endPoint: "/socket", transport: { _ in mockClient })
       mockSocket.connection = mockClient
       mockSocket.timeout = 10.0
       mockSocket.makeRefReturnValue = "1"
