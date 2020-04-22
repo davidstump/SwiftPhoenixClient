@@ -63,7 +63,7 @@ Make sure you have added `SwiftPhoenixClient.framework`, and `Starscream.framewo
 
 ## Usage
 
-Using the Swift Phoenix Client is extremely easy (and familiar if have used the phoenix.s client).
+Using the Swift Phoenix Client is extremely easy (and familiar if you have used the phoenix.js client).
 
 See the [Usage Guide](https://github.com/davidstump/SwiftPhoenixClient/wiki/Usage-Guide) for details instructions. You can also check out the [documentation](http://davidstump.github.io/SwiftPhoenixClient/)
 
