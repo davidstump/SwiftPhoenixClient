@@ -5,6 +5,9 @@ This product uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.1]
+* Pinned back Starscream version to fix Carthage build issue
+
 ## [1.2.0](https://github.com/davidstump/SwiftPhoenixClient/compare/1.1.2...1.2.0)
 * [#153](https://github.com/davidstump/SwiftPhoenixClient/pull/153): Added ability to pass a closure when initializing a `Socket` to dynamically change `params` when reconnecting
 * Fixed Package.swift and updated it to use latest Starscream
@@ -89,7 +92,8 @@ Thanks to @murphb52 and @ALucasVanDongen for helping with some of the developmen
 * Mirror [Phoenix.js](https://hexdocs.pm/phoenix/js/) more closely
 
 
-[Unreleased]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.9.3...HEAD
+[Unreleased]: https://github.com/davidstump/SwiftPhoenixClient/compare/1.2.1...HEAD
+[1.2.1]: https://github.com/davidstump/SwiftPhoenixClient/compare/1.2.0...1.2.1
 [0.9.3]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.9.2...0.9.3
 [0.9.2]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.9.1...0.9.2
 [0.9.1]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.9.0...0.9.1
