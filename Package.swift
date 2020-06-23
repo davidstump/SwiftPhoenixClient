@@ -24,6 +24,7 @@ import PackageDescription
 
 let package = Package(
   name: "SwiftPhoenixClient",
+  platforms: [.iOS(.v10), .macOS(.v10_12), .tvOS(.v10), .watchOS(.v2)],
   products: [
     .library(name: "SwiftPhoenixClient", targets: ["SwiftPhoenixClient"])
   ],
