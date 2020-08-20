@@ -5,6 +5,11 @@ This product uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.3.0]
+* Fixed Cartfile declaration of Starscream
+* Added `HeartbeatTimer` class which allows running Timers to run on their own thread
+* Made `Socket` init public to allow customization of the transport methhod
+
 ## [1.2.1]
 * Pinned back Starscream version to fix Carthage build issue
 
@@ -92,7 +97,8 @@ Thanks to @murphb52 and @ALucasVanDongen for helping with some of the developmen
 * Mirror [Phoenix.js](https://hexdocs.pm/phoenix/js/) more closely
 
 
-[Unreleased]: https://github.com/davidstump/SwiftPhoenixClient/compare/1.2.1...HEAD
+[Unreleased]: https://github.com/davidstump/SwiftPhoenixClient/compare/1.3.0...HEAD
+[1.3.0]: https://github.com/davidstump/SwiftPhoenixClient/compare/1.2.1...1.3.0
 [1.2.1]: https://github.com/davidstump/SwiftPhoenixClient/compare/1.2.0...1.2.1
 [0.9.3]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.9.2...0.9.3
 [0.9.2]: https://github.com/davidstump/SwiftPhoenixClient/compare/0.9.1...0.9.2
