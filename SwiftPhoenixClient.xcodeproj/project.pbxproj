@@ -8,10 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		1281439C25410D52008615A7 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1281439225410D52008615A7 /* SwiftPhoenixClient.framework */; };
-		128143B225410DF3008615A7 /* SwiftPhoenixClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 128143B025410DF3008615A7 /* SwiftPhoenixClient.h */; };
-		128143B325410DF3008615A7 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 128143B125410DF3008615A7 /* Info.plist */; };
-		128143B725410E01008615A7 /* SwiftPhoenixClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128143B525410E01008615A7 /* SwiftPhoenixClientTests.swift */; };
+		128143B225410DF3008615A7 /* SwiftPhoenixClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 128143B025410DF3008615A7 /* SwiftPhoenixClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		128143B825410E01008615A7 /* SwiftPhoenixClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128143B525410E01008615A7 /* SwiftPhoenixClientTests.swift */; };
+		128143BD2541115E008615A7 /* MyClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128143BC2541115E008615A7 /* MyClass.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,6 +29,7 @@
 		128143B025410DF3008615A7 /* SwiftPhoenixClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftPhoenixClient.h; sourceTree = "<group>"; };
 		128143B125410DF3008615A7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		128143B525410E01008615A7 /* SwiftPhoenixClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftPhoenixClientTests.swift; sourceTree = "<group>"; };
+		128143BC2541115E008615A7 /* MyClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyClass.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +90,7 @@
 		128143AE25410DF3008615A7 /* Phoenix */ = {
 			isa = PBXGroup;
 			children = (
+				128143BC2541115E008615A7 /* MyClass.swift */,
 			);
 			path = Phoenix;
 			sourceTree = "<group>";
@@ -210,7 +211,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				128143B325410DF3008615A7 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -228,7 +228,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				128143B725410E01008615A7 /* SwiftPhoenixClientTests.swift in Sources */,
+				128143BD2541115E008615A7 /* MyClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
