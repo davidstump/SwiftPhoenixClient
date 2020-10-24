@@ -1,0 +1,6 @@
+sources:
+  - Sources/
+templates:
+  - sourcery/
+output:
+  Tests/Mocks/

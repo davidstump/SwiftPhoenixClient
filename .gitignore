@@ -28,5 +28,6 @@ Demo/Pods
 .ruby-gemset
 # Swift Package Manager
 .build
+.swiftpm
 Packages
 Package.pins

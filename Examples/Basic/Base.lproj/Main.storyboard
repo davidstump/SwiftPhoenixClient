@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Zsx-Hf-BVQ">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="hbi-sE-0YT">
+            <objects>
+                <navigationController navigationBarHidden="YES" id="Zsx-Hf-BVQ" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="T9Y-2W-aAw">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="lvb-Xw-qkE"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QOY-EI-0Lu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-658" y="139"/>
+        </scene>
+        <!--Basic Intro View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController storyboardIdentifier="vc.intro.basic" id="BYZ-38-t0r" customClass="BasicIntroViewController" customModule="Basic" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Basic" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BEe-vt-MEe">
+                                <rect key="frame" x="20" y="64" width="102.5" height="53"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="44"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Basic serves as a playground for testing various use cases of the Client. For a more robust usage, see the Chat Example app." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="h5t-Lj-irh">
+                                <rect key="frame" x="20" y="133" width="374" height="61"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UIR-BI-BRU">
+                                <rect key="frame" x="147.5" y="801" width="119" height="41"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <state key="normal" title="Get Started"/>
+                                <connections>
+                                    <action selector="onGetStartedPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ohQ-BJ-YGq"/>
+                                    <segue destination="kvj-CR-pCE" kind="show" id="E54-7t-Dj4"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="h5t-Lj-irh" secondAttribute="trailing" constant="20" id="6RQ-YM-Fyw"/>
+                            <constraint firstItem="h5t-Lj-irh" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Fjb-7q-bZP"/>
+                            <constraint firstItem="UIR-BI-BRU" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="H2Q-7g-Vi4"/>
+                            <constraint firstItem="h5t-Lj-irh" firstAttribute="top" secondItem="BEe-vt-MEe" secondAttribute="bottom" constant="16" id="OgN-X9-efj"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="UIR-BI-BRU" secondAttribute="bottom" constant="20" id="ofc-Sb-Jvj"/>
+                            <constraint firstItem="BEe-vt-MEe" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="xZp-Ju-TpI"/>
+                            <constraint firstItem="BEe-vt-MEe" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="yRM-vL-Fnf"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="vrV-LP-NAa"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="131.8840579710145" y="138.61607142857142"/>
+        </scene>
+        <!--Basic Chat View Controller-->
+        <scene sceneID="fHJ-wR-6Fv">
+            <objects>
+                <viewController storyboardIdentifier="vc.chatroom" id="kvj-CR-pCE" customClass="BasicChatViewController" customModule="Basic" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="r7Y-Xw-V91">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Chatroom" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bzZ-eQ-71I">
+                                <rect key="frame" x="20" y="64" width="187" height="53"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="44"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Message..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8vj-8R-JAk">
+                                <rect key="frame" x="20" y="814" width="306" height="40"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aCb-6h-kVE">
+                                <rect key="frame" x="334" y="814" width="60" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="5Hw-T3-ZT0"/>
+                                    <constraint firstAttribute="width" constant="60" id="b7Q-yS-ZZE"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Send"/>
+                                <connections>
+                                    <action selector="sendMessage:" destination="kvj-CR-pCE" eventType="touchUpInside" id="mVm-qe-579"/>
+                                </connections>
+                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="KF5-Gt-2Qg">
+                                <rect key="frame" x="20" y="125" width="374" height="681"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="slt-ax-j8X">
+                                <rect key="frame" x="319" y="72.5" width="75" height="36"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <state key="normal" title="Connect"/>
+                                <connections>
+                                    <action selector="onConnectButtonPressed:" destination="kvj-CR-pCE" eventType="touchUpInside" id="01e-UK-Kon"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="aCb-6h-kVE" firstAttribute="top" secondItem="8vj-8R-JAk" secondAttribute="top" id="0jQ-EO-UqX"/>
+                            <constraint firstItem="8vj-8R-JAk" firstAttribute="top" secondItem="KF5-Gt-2Qg" secondAttribute="bottom" constant="8" id="1L9-aq-gIU"/>
+                            <constraint firstItem="slt-ax-j8X" firstAttribute="centerY" secondItem="bzZ-eQ-71I" secondAttribute="centerY" id="FJQ-4m-Tbw"/>
+                            <constraint firstItem="bzZ-eQ-71I" firstAttribute="top" secondItem="aNG-mQ-eOn" secondAttribute="top" constant="20" id="IUb-ZL-Q3S"/>
+                            <constraint firstItem="aNG-mQ-eOn" firstAttribute="trailing" secondItem="aCb-6h-kVE" secondAttribute="trailing" constant="20" id="JxZ-Gw-Sf5"/>
+                            <constraint firstItem="8vj-8R-JAk" firstAttribute="leading" secondItem="aNG-mQ-eOn" secondAttribute="leading" constant="20" id="Kcw-3w-5CD"/>
+                            <constraint firstItem="aNG-mQ-eOn" firstAttribute="bottom" secondItem="aCb-6h-kVE" secondAttribute="bottom" constant="8" id="LoR-eB-PPJ"/>
+                            <constraint firstItem="bzZ-eQ-71I" firstAttribute="leading" secondItem="aNG-mQ-eOn" secondAttribute="leading" constant="20" id="UC4-bp-6Uz"/>
+                            <constraint firstItem="aNG-mQ-eOn" firstAttribute="trailing" secondItem="slt-ax-j8X" secondAttribute="trailing" constant="20" id="XVS-iI-8CF"/>
+                            <constraint firstItem="aCb-6h-kVE" firstAttribute="bottom" secondItem="8vj-8R-JAk" secondAttribute="bottom" id="jsR-RR-Ngx"/>
+                            <constraint firstItem="aCb-6h-kVE" firstAttribute="leading" secondItem="8vj-8R-JAk" secondAttribute="trailing" constant="8" id="nBm-Zz-oW2"/>
+                            <constraint firstItem="KF5-Gt-2Qg" firstAttribute="leading" secondItem="aNG-mQ-eOn" secondAttribute="leading" constant="20" id="oxs-ll-OVi"/>
+                            <constraint firstItem="aNG-mQ-eOn" firstAttribute="trailing" secondItem="KF5-Gt-2Qg" secondAttribute="trailing" constant="20" id="rBf-m4-fTZ"/>
+                            <constraint firstItem="KF5-Gt-2Qg" firstAttribute="top" secondItem="bzZ-eQ-71I" secondAttribute="bottom" constant="8" id="yiO-mz-wj6"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="aNG-mQ-eOn"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="nZS-Fg-Mad"/>
+                    <connections>
+                        <outlet property="chatWindow" destination="KF5-Gt-2Qg" id="t4M-l4-Mww"/>
+                        <outlet property="connectButton" destination="slt-ax-j8X" id="z5A-IX-s74"/>
+                        <outlet property="messageField" destination="8vj-8R-JAk" id="QU5-Ub-eek"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="l8U-lP-vWR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="854" y="139"/>
+        </scene>
+    </scenes>
+</document>

@@ -7,13 +7,52 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		125A9EF82543C84700292017 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1281439225410D52008615A7 /* SwiftPhoenixClient.framework */; };
+		125A9F072543C8D000292017 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125A9EFE2543C8D000292017 /* ViewController.swift */; };
+		125A9F082543C8D000292017 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 125A9EFF2543C8D000292017 /* Assets.xcassets */; };
+		125A9F092543C8D000292017 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 125A9F002543C8D000292017 /* LaunchScreen.storyboard */; };
+		125A9F0A2543C8D000292017 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 125A9F022543C8D000292017 /* Main.storyboard */; };
+		125A9F0B2543C8D000292017 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125A9F042543C8D000292017 /* AppDelegate.swift */; };
+		125A9F0D2543C8D000292017 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125A9F062543C8D000292017 /* SceneDelegate.swift */; };
+		125A9F0F2543CDDE00292017 /* BasicChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125A9F0E2543CDDE00292017 /* BasicChatViewController.swift */; };
 		1281439C25410D52008615A7 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1281439225410D52008615A7 /* SwiftPhoenixClient.framework */; };
 		128143B225410DF3008615A7 /* SwiftPhoenixClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 128143B025410DF3008615A7 /* SwiftPhoenixClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		128143B825410E01008615A7 /* SwiftPhoenixClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128143B525410E01008615A7 /* SwiftPhoenixClientTests.swift */; };
-		128143BD2541115E008615A7 /* MyClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128143BC2541115E008615A7 /* MyClass.swift */; };
+		128143D7254113BD008615A7 /* RxSwiftPhoenixClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 128143D6254113BD008615A7 /* RxSwiftPhoenixClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		128143D92541142F008615A7 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1281439225410D52008615A7 /* SwiftPhoenixClient.framework */; };
+		128143DA2541142F008615A7 /* SwiftPhoenixClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1281439225410D52008615A7 /* SwiftPhoenixClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		12922E202543B10B0034B257 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12922E1F2543B10B0034B257 /* Socket.swift */; };
+		12922E222543B37B0034B257 /* Transport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12922E212543B37B0034B257 /* Transport.swift */; };
+		12991DFB254C3EB800BB8650 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991DFA254C3EB800BB8650 /* Defaults.swift */; };
+		12991DFD254C3ED300BB8650 /* Delegated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991DFC254C3ED300BB8650 /* Delegated.swift */; };
+		12991DFF254C3EF900BB8650 /* HeartbeatTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991DFE254C3EF900BB8650 /* HeartbeatTimer.swift */; };
+		12991E01254C3F1300BB8650 /* TimeoutTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E00254C3F1300BB8650 /* TimeoutTimer.swift */; };
+		12991E03254C3F2300BB8650 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E02254C3F2300BB8650 /* Push.swift */; };
+		12991E05254C3F3300BB8650 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E04254C3F3300BB8650 /* Channel.swift */; };
+		12991E07254C3F4B00BB8650 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E06254C3F4B00BB8650 /* Message.swift */; };
+		12991E09254C3F5B00BB8650 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E08254C3F5B00BB8650 /* Presence.swift */; };
+		12991E0B254C44B900BB8650 /* Channel+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E0A254C44B900BB8650 /* Channel+Rx.swift */; };
+		12991E0F254C454C00BB8650 /* SocketSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E0E254C454C00BB8650 /* SocketSpy.swift */; };
+		12991E11254C456F00BB8650 /* FakeTimerQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E10254C456F00BB8650 /* FakeTimerQueue.swift */; };
+		12991E13254C458100BB8650 /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E12254C458100BB8650 /* TestHelpers.swift */; };
+		12991E15254C45FC00BB8650 /* FakeTimerQueueSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E14254C45FC00BB8650 /* FakeTimerQueueSpec.swift */; };
+		12991E1D254C4BE100BB8650 /* ChannelRxSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E1C254C4BE100BB8650 /* ChannelRxSpec.swift */; };
+		12EF620425524B6800A6EE9B /* SocketSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF61FF25524B6800A6EE9B /* SocketSpec.swift */; };
+		12EF620525524B6800A6EE9B /* ChannelSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620025524B6800A6EE9B /* ChannelSpec.swift */; };
+		12EF620625524B6800A6EE9B /* PresenceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620125524B6800A6EE9B /* PresenceSpec.swift */; };
+		12EF620725524B6800A6EE9B /* TimeoutTimerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620225524B6800A6EE9B /* TimeoutTimerSpec.swift */; };
+		12EF620825524B6800A6EE9B /* DefaultSerializerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620325524B6800A6EE9B /* DefaultSerializerSpec.swift */; };
+		12EF620E25524EEF00A6EE9B /* MockableClass.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620C25524EEF00A6EE9B /* MockableClass.generated.swift */; };
+		12EF620F25524EEF00A6EE9B /* MockableProtocol.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620D25524EEF00A6EE9B /* MockableProtocol.generated.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		125A9EFA2543C84700292017 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1281438925410D52008615A7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1281439125410D52008615A7;
+			remoteInfo = SwiftPhoenixClient;
+		};
 		1281439D25410D52008615A7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1281438925410D52008615A7 /* Project object */;
@@ -21,18 +60,86 @@
 			remoteGlobalIDString = 1281439125410D52008615A7;
 			remoteInfo = SwiftPhoenixClient;
 		};
+		128143DB2541142F008615A7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1281438925410D52008615A7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1281439125410D52008615A7;
+			remoteInfo = SwiftPhoenixClient;
+		};
+		12991E16254C494100BB8650 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1281438925410D52008615A7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 128143CA25411361008615A7;
+			remoteInfo = RxSwiftPhoenixClient;
+		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		128143DD2541142F008615A7 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				128143DA2541142F008615A7 /* SwiftPhoenixClient.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		125A9EE42543C82800292017 /* Basic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Basic.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		125A9EFE2543C8D000292017 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		125A9EFF2543C8D000292017 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		125A9F012543C8D000292017 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		125A9F032543C8D000292017 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		125A9F042543C8D000292017 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		125A9F052543C8D000292017 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		125A9F062543C8D000292017 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		125A9F0E2543CDDE00292017 /* BasicChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicChatViewController.swift; sourceTree = "<group>"; };
 		1281439225410D52008615A7 /* SwiftPhoenixClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftPhoenixClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1281439B25410D52008615A7 /* SwiftPhoenixClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftPhoenixClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		128143B025410DF3008615A7 /* SwiftPhoenixClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftPhoenixClient.h; sourceTree = "<group>"; };
 		128143B125410DF3008615A7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		128143B525410E01008615A7 /* SwiftPhoenixClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftPhoenixClientTests.swift; sourceTree = "<group>"; };
-		128143BC2541115E008615A7 /* MyClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyClass.swift; sourceTree = "<group>"; };
+		128143D425411361008615A7 /* RxSwiftPhoenixClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RxSwiftPhoenixClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		128143D6254113BD008615A7 /* RxSwiftPhoenixClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RxSwiftPhoenixClient.h; sourceTree = "<group>"; };
+		12922E1F2543B10B0034B257 /* Socket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
+		12922E212543B37B0034B257 /* Transport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transport.swift; sourceTree = "<group>"; };
+		12991DFA254C3EB800BB8650 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
+		12991DFC254C3ED300BB8650 /* Delegated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Delegated.swift; sourceTree = "<group>"; };
+		12991DFE254C3EF900BB8650 /* HeartbeatTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatTimer.swift; sourceTree = "<group>"; };
+		12991E00254C3F1300BB8650 /* TimeoutTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeoutTimer.swift; sourceTree = "<group>"; };
+		12991E02254C3F2300BB8650 /* Push.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; };
+		12991E04254C3F3300BB8650 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
+		12991E06254C3F4B00BB8650 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		12991E08254C3F5B00BB8650 /* Presence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presence.swift; sourceTree = "<group>"; };
+		12991E0A254C44B900BB8650 /* Channel+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Channel+Rx.swift"; sourceTree = "<group>"; };
+		12991E0E254C454C00BB8650 /* SocketSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketSpy.swift; sourceTree = "<group>"; };
+		12991E10254C456F00BB8650 /* FakeTimerQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeTimerQueue.swift; sourceTree = "<group>"; };
+		12991E12254C458100BB8650 /* TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
+		12991E14254C45FC00BB8650 /* FakeTimerQueueSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeTimerQueueSpec.swift; sourceTree = "<group>"; };
+		12991E1C254C4BE100BB8650 /* ChannelRxSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelRxSpec.swift; sourceTree = "<group>"; };
+		12EF61FF25524B6800A6EE9B /* SocketSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketSpec.swift; sourceTree = "<group>"; };
+		12EF620025524B6800A6EE9B /* ChannelSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelSpec.swift; sourceTree = "<group>"; };
+		12EF620125524B6800A6EE9B /* PresenceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresenceSpec.swift; sourceTree = "<group>"; };
+		12EF620225524B6800A6EE9B /* TimeoutTimerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeoutTimerSpec.swift; sourceTree = "<group>"; };
+		12EF620325524B6800A6EE9B /* DefaultSerializerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultSerializerSpec.swift; sourceTree = "<group>"; };
+		12EF620C25524EEF00A6EE9B /* MockableClass.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockableClass.generated.swift; sourceTree = "<group>"; };
+		12EF620D25524EEF00A6EE9B /* MockableProtocol.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockableProtocol.generated.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		125A9EE12543C82800292017 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				125A9EF82543C84700292017 /* SwiftPhoenixClient.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1281438F25410D52008615A7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -48,9 +155,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		128143CF25411361008615A7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				128143D92541142F008615A7 /* SwiftPhoenixClient.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		125A9EFD2543C8D000292017 /* Basic */ = {
+			isa = PBXGroup;
+			children = (
+				125A9EFE2543C8D000292017 /* ViewController.swift */,
+				125A9EFF2543C8D000292017 /* Assets.xcassets */,
+				125A9F002543C8D000292017 /* LaunchScreen.storyboard */,
+				125A9F022543C8D000292017 /* Main.storyboard */,
+				125A9F042543C8D000292017 /* AppDelegate.swift */,
+				125A9F052543C8D000292017 /* Info.plist */,
+				125A9F062543C8D000292017 /* SceneDelegate.swift */,
+				125A9F0E2543CDDE00292017 /* BasicChatViewController.swift */,
+			);
+			path = Basic;
+			sourceTree = "<group>";
+		};
 		1281438825410D52008615A7 = {
 			isa = PBXGroup;
 			children = (
@@ -58,6 +188,7 @@
 				1281439325410D52008615A7 /* Products */,
 				128143AC25410DF3008615A7 /* Sources */,
 				128143B425410E01008615A7 /* Tests */,
+				128143D82541142F008615A7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -66,6 +197,8 @@
 			children = (
 				1281439225410D52008615A7 /* SwiftPhoenixClient.framework */,
 				1281439B25410D52008615A7 /* SwiftPhoenixClientTests.xctest */,
+				128143D425411361008615A7 /* RxSwiftPhoenixClient.framework */,
+				125A9EE42543C82800292017 /* Basic.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -73,32 +206,43 @@
 		128143AC25410DF3008615A7 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				128143AD25410DF3008615A7 /* RxPhoenix */,
-				128143AE25410DF3008615A7 /* Phoenix */,
+				128143AD25410DF3008615A7 /* RxSwiftPhoenixClient */,
+				128143AE25410DF3008615A7 /* SwiftPhoenixClient */,
 				128143AF25410DF3008615A7 /* Supporting Files */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
 		};
-		128143AD25410DF3008615A7 /* RxPhoenix */ = {
+		128143AD25410DF3008615A7 /* RxSwiftPhoenixClient */ = {
 			isa = PBXGroup;
 			children = (
+				12991E0A254C44B900BB8650 /* Channel+Rx.swift */,
 			);
-			path = RxPhoenix;
+			path = RxSwiftPhoenixClient;
 			sourceTree = "<group>";
 		};
-		128143AE25410DF3008615A7 /* Phoenix */ = {
+		128143AE25410DF3008615A7 /* SwiftPhoenixClient */ = {
 			isa = PBXGroup;
 			children = (
-				128143BC2541115E008615A7 /* MyClass.swift */,
+				12991E04254C3F3300BB8650 /* Channel.swift */,
+				12991DFA254C3EB800BB8650 /* Defaults.swift */,
+				12991DFC254C3ED300BB8650 /* Delegated.swift */,
+				12991DFE254C3EF900BB8650 /* HeartbeatTimer.swift */,
+				12991E06254C3F4B00BB8650 /* Message.swift */,
+				12991E08254C3F5B00BB8650 /* Presence.swift */,
+				12991E02254C3F2300BB8650 /* Push.swift */,
+				12922E1F2543B10B0034B257 /* Socket.swift */,
+				12991E00254C3F1300BB8650 /* TimeoutTimer.swift */,
+				12922E212543B37B0034B257 /* Transport.swift */,
 			);
-			path = Phoenix;
+			path = SwiftPhoenixClient;
 			sourceTree = "<group>";
 		};
 		128143AF25410DF3008615A7 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
 				128143B025410DF3008615A7 /* SwiftPhoenixClient.h */,
+				128143D6254113BD008615A7 /* RxSwiftPhoenixClient.h */,
 				128143B125410DF3008615A7 /* Info.plist */,
 			);
 			path = "Supporting Files";
@@ -107,7 +251,10 @@
 		128143B425410E01008615A7 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				128143B525410E01008615A7 /* SwiftPhoenixClientTests.swift */,
+				12991E0C254C450A00BB8650 /* Fakes */,
+				12991E0D254C451700BB8650 /* Helpers */,
+				12EF620925524DBF00A6EE9B /* Mocks */,
+				12EF61FE25524B6800A6EE9B /* SwiftPhoenixClientTests */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -115,8 +262,56 @@
 		128143BB25410E13008615A7 /* Examples */ = {
 			isa = PBXGroup;
 			children = (
+				125A9EFD2543C8D000292017 /* Basic */,
 			);
 			path = Examples;
+			sourceTree = "<group>";
+		};
+		128143D82541142F008615A7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		12991E0C254C450A00BB8650 /* Fakes */ = {
+			isa = PBXGroup;
+			children = (
+				12991E0E254C454C00BB8650 /* SocketSpy.swift */,
+				12991E10254C456F00BB8650 /* FakeTimerQueue.swift */,
+				12991E14254C45FC00BB8650 /* FakeTimerQueueSpec.swift */,
+			);
+			path = Fakes;
+			sourceTree = "<group>";
+		};
+		12991E0D254C451700BB8650 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				12991E12254C458100BB8650 /* TestHelpers.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		12EF61FE25524B6800A6EE9B /* SwiftPhoenixClientTests */ = {
+			isa = PBXGroup;
+			children = (
+				12991E1C254C4BE100BB8650 /* ChannelRxSpec.swift */,
+				12EF61FF25524B6800A6EE9B /* SocketSpec.swift */,
+				12EF620025524B6800A6EE9B /* ChannelSpec.swift */,
+				12EF620125524B6800A6EE9B /* PresenceSpec.swift */,
+				12EF620225524B6800A6EE9B /* TimeoutTimerSpec.swift */,
+				12EF620325524B6800A6EE9B /* DefaultSerializerSpec.swift */,
+			);
+			path = SwiftPhoenixClientTests;
+			sourceTree = "<group>";
+		};
+		12EF620925524DBF00A6EE9B /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				12EF620C25524EEF00A6EE9B /* MockableClass.generated.swift */,
+				12EF620D25524EEF00A6EE9B /* MockableProtocol.generated.swift */,
+			);
+			path = Mocks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -130,9 +325,35 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		128143CB25411361008615A7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				128143D7254113BD008615A7 /* RxSwiftPhoenixClient.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		125A9EE32543C82800292017 /* Basic */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 125A9EF52543C82900292017 /* Build configuration list for PBXNativeTarget "Basic" */;
+			buildPhases = (
+				125A9EE02543C82800292017 /* Sources */,
+				125A9EE12543C82800292017 /* Frameworks */,
+				125A9EE22543C82800292017 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				125A9EFB2543C84700292017 /* PBXTargetDependency */,
+			);
+			name = Basic;
+			productName = Basic;
+			productReference = 125A9EE42543C82800292017 /* Basic.app */;
+			productType = "com.apple.product-type.application";
+		};
 		1281439125410D52008615A7 /* SwiftPhoenixClient */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 128143A625410D52008615A7 /* Build configuration list for PBXNativeTarget "SwiftPhoenixClient" */;
@@ -158,16 +379,38 @@
 				1281439725410D52008615A7 /* Sources */,
 				1281439825410D52008615A7 /* Frameworks */,
 				1281439925410D52008615A7 /* Resources */,
+				12991E19254C4B1D00BB8650 /* Copy Carthage Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				12991E17254C494100BB8650 /* PBXTargetDependency */,
 				1281439E25410D52008615A7 /* PBXTargetDependency */,
 			);
 			name = SwiftPhoenixClientTests;
 			productName = SwiftPhoenixClientTests;
 			productReference = 1281439B25410D52008615A7 /* SwiftPhoenixClientTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		128143CA25411361008615A7 /* RxSwiftPhoenixClient */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 128143D125411361008615A7 /* Build configuration list for PBXNativeTarget "RxSwiftPhoenixClient" */;
+			buildPhases = (
+				128143CB25411361008615A7 /* Headers */,
+				128143CD25411361008615A7 /* Sources */,
+				128143CF25411361008615A7 /* Frameworks */,
+				128143D025411361008615A7 /* Resources */,
+				128143DD2541142F008615A7 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				128143DC2541142F008615A7 /* PBXTargetDependency */,
+			);
+			name = RxSwiftPhoenixClient;
+			productName = SwiftPhoenixClient;
+			productReference = 128143D425411361008615A7 /* RxSwiftPhoenixClient.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -179,11 +422,17 @@
 				LastUpgradeCheck = 1170;
 				ORGANIZATIONNAME = SwiftPhoenixClient;
 				TargetAttributes = {
+					125A9EE32543C82800292017 = {
+						CreatedOnToolsVersion = 11.7;
+					};
 					1281439125410D52008615A7 = {
 						CreatedOnToolsVersion = 11.7;
 					};
 					1281439A25410D52008615A7 = {
 						CreatedOnToolsVersion = 11.7;
+					};
+					128143CA25411361008615A7 = {
+						LastSwiftMigration = 1170;
 					};
 				};
 			};
@@ -201,12 +450,24 @@
 			projectRoot = "";
 			targets = (
 				1281439125410D52008615A7 /* SwiftPhoenixClient */,
+				128143CA25411361008615A7 /* RxSwiftPhoenixClient */,
 				1281439A25410D52008615A7 /* SwiftPhoenixClientTests */,
+				125A9EE32543C82800292017 /* Basic */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		125A9EE22543C82800292017 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				125A9F082543C8D000292017 /* Assets.xcassets in Resources */,
+				125A9F0A2543C8D000292017 /* Main.storyboard in Resources */,
+				125A9F092543C8D000292017 /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1281439025410D52008615A7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -221,14 +482,65 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		128143D025411361008615A7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		12991E19254C4B1D00BB8650 /* Copy Carthage Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				Nimble.framework,
+				Quick.framework,
+				RxSwift.framework,
+			);
+			name = "Copy Carthage Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Copy frameworks for each platform\nexec \"${SRCROOT}/scripts/copy-carthage-frameworks.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		125A9EE02543C82800292017 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				125A9F0B2543C8D000292017 /* AppDelegate.swift in Sources */,
+				125A9F0F2543CDDE00292017 /* BasicChatViewController.swift in Sources */,
+				125A9F072543C8D000292017 /* ViewController.swift in Sources */,
+				125A9F0D2543C8D000292017 /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1281438E25410D52008615A7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				128143BD2541115E008615A7 /* MyClass.swift in Sources */,
+				12991DFB254C3EB800BB8650 /* Defaults.swift in Sources */,
+				12991E05254C3F3300BB8650 /* Channel.swift in Sources */,
+				12991E09254C3F5B00BB8650 /* Presence.swift in Sources */,
+				12991E01254C3F1300BB8650 /* TimeoutTimer.swift in Sources */,
+				12991E07254C3F4B00BB8650 /* Message.swift in Sources */,
+				12991DFD254C3ED300BB8650 /* Delegated.swift in Sources */,
+				12991DFF254C3EF900BB8650 /* HeartbeatTimer.swift in Sources */,
+				12991E03254C3F2300BB8650 /* Push.swift in Sources */,
+				12922E202543B10B0034B257 /* Socket.swift in Sources */,
+				12922E222543B37B0034B257 /* Transport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,21 +548,113 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				128143B825410E01008615A7 /* SwiftPhoenixClientTests.swift in Sources */,
+				12EF620825524B6800A6EE9B /* DefaultSerializerSpec.swift in Sources */,
+				12991E11254C456F00BB8650 /* FakeTimerQueue.swift in Sources */,
+				12991E15254C45FC00BB8650 /* FakeTimerQueueSpec.swift in Sources */,
+				12EF620725524B6800A6EE9B /* TimeoutTimerSpec.swift in Sources */,
+				12EF620F25524EEF00A6EE9B /* MockableProtocol.generated.swift in Sources */,
+				12991E0F254C454C00BB8650 /* SocketSpy.swift in Sources */,
+				12991E13254C458100BB8650 /* TestHelpers.swift in Sources */,
+				12EF620525524B6800A6EE9B /* ChannelSpec.swift in Sources */,
+				12EF620E25524EEF00A6EE9B /* MockableClass.generated.swift in Sources */,
+				12EF620625524B6800A6EE9B /* PresenceSpec.swift in Sources */,
+				12991E1D254C4BE100BB8650 /* ChannelRxSpec.swift in Sources */,
+				12EF620425524B6800A6EE9B /* SocketSpec.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		128143CD25411361008615A7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				12991E0B254C44B900BB8650 /* Channel+Rx.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		125A9EFB2543C84700292017 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1281439125410D52008615A7 /* SwiftPhoenixClient */;
+			targetProxy = 125A9EFA2543C84700292017 /* PBXContainerItemProxy */;
+		};
 		1281439E25410D52008615A7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1281439125410D52008615A7 /* SwiftPhoenixClient */;
 			targetProxy = 1281439D25410D52008615A7 /* PBXContainerItemProxy */;
 		};
+		128143DC2541142F008615A7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1281439125410D52008615A7 /* SwiftPhoenixClient */;
+			targetProxy = 128143DB2541142F008615A7 /* PBXContainerItemProxy */;
+		};
+		12991E17254C494100BB8650 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 128143CA25411361008615A7 /* RxSwiftPhoenixClient */;
+			targetProxy = 12991E16254C494100BB8650 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		125A9F002543C8D000292017 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				125A9F012543C8D000292017 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		125A9F022543C8D000292017 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				125A9F032543C8D000292017 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		125A9EF62543C82900292017 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Examples/Basic/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.SwiftPhoenixClient.Basic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		125A9EF72543C82900292017 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Examples/Basic/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.SwiftPhoenixClient.Basic;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		128143A425410D52008615A7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -466,6 +870,22 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				"FRAMEWORK_SEARCH_PATHS[sdk=appletv*]" = (
+					"$(SRCROOT)/Carthage/Build/tvOS/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphone*]" = (
+					"$(SRCROOT)/Carthage/Build/iOS/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(SRCROOT)/Carthage/Build/Mac/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=watch*]" = (
+					"$(SRCROOT)/Carthage/Build/watchOS/",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/Sources/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -494,6 +914,22 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				"FRAMEWORK_SEARCH_PATHS[sdk=appletv*]" = (
+					"$(SRCROOT)/Carthage/Build/tvOS/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphone*]" = (
+					"$(SRCROOT)/Carthage/Build/iOS/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(SRCROOT)/Carthage/Build/Mac/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=watch*]" = (
+					"$(SRCROOT)/Carthage/Build/watchOS/",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/Sources/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -516,9 +952,111 @@
 			};
 			name = Release;
 		};
+		128143D225411361008615A7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				"FRAMEWORK_SEARCH_PATHS[sdk=appletv*]" = (
+					"$(SRCROOT)/Carthage/Build/tvOS/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphone*]" = (
+					"$(SRCROOT)/Carthage/Build/iOS/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(SRCROOT)/Carthage/Build/Mac/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=watch*]" = (
+					"$(SRCROOT)/Carthage/Build/watchOS/",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.SwiftPhoenixClient;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TVOS_DEPLOYMENT_TARGET = 10.0;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Debug;
+		};
+		128143D325411361008615A7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				"FRAMEWORK_SEARCH_PATHS[sdk=appletv*]" = (
+					"$(SRCROOT)/Carthage/Build/tvOS/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphone*]" = (
+					"$(SRCROOT)/Carthage/Build/iOS/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=macosx*]" = (
+					"$(SRCROOT)/Carthage/Build/Mac/",
+					"$(inherited)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=watch*]" = (
+					"$(SRCROOT)/Carthage/Build/watchOS/",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/Supporting Files/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = com.github.SwiftPhoenixClient;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
+				SWIFT_VERSION = 5.0;
+				TVOS_DEPLOYMENT_TARGET = 10.0;
+				WATCHOS_DEPLOYMENT_TARGET = 3.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		125A9EF52543C82900292017 /* Build configuration list for PBXNativeTarget "Basic" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				125A9EF62543C82900292017 /* Debug */,
+				125A9EF72543C82900292017 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		1281438C25410D52008615A7 /* Build configuration list for PBXProject "SwiftPhoenixClient" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -542,6 +1080,15 @@
 			buildConfigurations = (
 				128143AA25410D52008615A7 /* Debug */,
 				128143AB25410D52008615A7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		128143D125411361008615A7 /* Build configuration list for PBXNativeTarget "RxSwiftPhoenixClient" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				128143D225411361008615A7 /* Debug */,
+				128143D325411361008615A7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
