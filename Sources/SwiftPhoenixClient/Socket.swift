@@ -618,8 +618,14 @@ public class Socket {
 
   /// Builds a fully qualified socket `URL` from `endPoint` and `params`.
   internal static func buildEndpointUrl(endpoint: String, paramsClosure params: PayloadClosure?) -> URL {
+    
+    // Replace 'http' and 'https' with 'ws' or 'wss'
+    let wsEndpoint = endpoint
+      .replacingOccurrences(of: "http://", with: "ws://")
+      .replacingOccurrences(of: "https://", with: "wss://")
+    
     guard
-      let url = URL(string: endpoint),
+      let url = URL(string: wsEndpoint),
       var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
       else { fatalError("Malformed URL: \(endpoint)") }
 

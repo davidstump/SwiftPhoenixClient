@@ -8,12 +8,8 @@
 
 import UIKit
 
-class BasicIntroViewController: UIViewController {
+class IntroViewController: UIViewController {
 
-  
-  @IBAction func onGetStartedPressed(_ sender: Any) {
-    
-  }
   
 }
 
