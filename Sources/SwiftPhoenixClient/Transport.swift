@@ -181,8 +181,8 @@ public class URLSessionTansport: NSObject, Transport, URLSessionWebSocketDelegat
   public func disconnect(code: Int, reason: String?) {
     /*
      TODO:
-     1. Provide a "strict" mode that fails if an invalid error is given
-     2. If strict mode is disabled, default to .invalid
+     1. Provide a "strict" mode that fails if an invalid close code is given
+     2. If strict mode is disabled, default to CloseCode.invalid
      3. Provide default .normalClosure function
      */
     guard let closeCode = URLSessionWebSocketTask.CloseCode.init(rawValue: code) else {
@@ -195,9 +195,7 @@ public class URLSessionTansport: NSObject, Transport, URLSessionWebSocketDelegat
   
   public func send(data: Data) {
     self.task?.send(.data(data)) { (error) in
-      /*
-       TODO: What is the behavior when an error occurs?
-       */
+      // TODO: What is the behavior when an error occurs?
     }
   }
   
@@ -206,11 +204,10 @@ public class URLSessionTansport: NSObject, Transport, URLSessionWebSocketDelegat
   public func urlSession(_ session: URLSession,
                          webSocketTask: URLSessionWebSocketTask,
                          didOpenWithProtocol protocol: String?) {
-    print("Web Socket did connect")
+    // The Websocket is connected. Set Transport state to open and inform delegate
     self.readyState = .open
     self.delegate?.onOpen()
     
-    self.ping()
     // Start receiving messages
     self.receive()
   }
@@ -219,9 +216,18 @@ public class URLSessionTansport: NSObject, Transport, URLSessionWebSocketDelegat
                          webSocketTask: URLSessionWebSocketTask,
                          didCloseWith closeCode: URLSessionWebSocketTask.CloseCode,
                          reason: Data?) {
-    print("Web Socket did disconnect")
+    // A close frame was received from the server.
     self.readyState = .closed
     self.delegate?.onClose(code: closeCode.rawValue)
+  }
+  
+  public func urlSession(_ session: URLSession,
+                         task: URLSessionTask,
+                         didCompleteWithError error: Error?) {
+    // The task has terminated. Inform the delegate that the transport has closed abnormally
+    // if this was caused by an error.
+    guard let err = error else { return }
+    self.abnormalErrorReceived(err)
   }
   
   
@@ -231,40 +237,38 @@ public class URLSessionTansport: NSObject, Transport, URLSessionWebSocketDelegat
       switch result {
       case .success(let message):
         switch message {
-        case .data(let data):
-          print("Data received \(data)")
+        case .data:
+          print("Data received. This method is unsupported by the Client")
         case .string(let text):
-          print("Text received \(text)")
           self.delegate?.onMessage(message: text)
         default:
           fatalError("Unknown result was received. [\(result)]")
         }
+        
+        // Since `.receive()` is only good for a single message, it must
+        // be called again after a message is received in order to
+        // received the next message.
+        self.receive()
       case .failure(let error):
         print("Error when receiving \(error)")
-        self.delegate?.onError(error: error)
-      }
-      
-      // Since `.receive()` is only good for a single message, it must
-      // be called again after a message is received in order to
-      // received the next message.
-      self.receive()
-    }
-  }
-  
-  
-  private func ping() {
-    self.task?.sendPing { error in
-      if let error = error {
-        print("Error when sending PING \(error)")
-      } else {
-        print("Web Socket connection is alive")
-        DispatchQueue.global().asyncAfter(deadline: .now() + 5) {
-          self.ping()
-        }
+        self.abnormalErrorReceived(error)
       }
     }
   }
   
-  
-  
+  private func abnormalErrorReceived(_ error: Error) {
+    // Set the state of the Transport to closed
+    self.readyState = .closed
+    
+    // Inform the Transport's delegate that an error occurred.
+    self.delegate?.onError(error: error)
+    
+    // An abnormal error is results in an abnormal closure, such as internet getting dropped
+    // so inform the delegate that the Transport has closed abnormally. This will kick off
+    // the reconnect logic.
+    self.delegate?.onClose(code: Socket.CloseCode.abnormal.rawValue)
+  }
 }
+
+
+

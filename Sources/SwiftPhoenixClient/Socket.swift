@@ -193,7 +193,9 @@ public class Socket {
     }
     self.reconnectTimer.timerCalculation
       .delegate(to: self) { (self, tries) -> TimeInterval in
-        return self.reconnectAfter(tries)
+        let interval = self.reconnectAfter(tries)
+        self.logItems("Socket reconnecting in \(interval)s")
+        return interval
     }
   }
   
@@ -710,6 +712,8 @@ public class Socket {
 //----------------------------------------------------------------------
 extension Socket {
   public enum CloseCode : Int {
+    case abnormal = 999
+    
     case normal = 1000
 
     case goingAway = 1001
@@ -734,6 +738,7 @@ extension Socket: TransportDelegate {
   }
   
   public func onClose(code: Int) {
+    self.closeWasClean = code != CloseCode.abnormal.rawValue
     self.onConnectionClosed(code: code)
   }
 }

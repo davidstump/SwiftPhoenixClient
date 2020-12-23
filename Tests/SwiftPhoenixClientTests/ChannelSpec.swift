@@ -821,7 +821,7 @@ class ChannelSpec: QuickSpec {
         
         fakeClock.tick(channel.timeout / 2)
         joinPush.trigger("ok", payload: [:])
-        
+         
         expect(mockSocket.pushTopicEventPayloadRefJoinRefCalled).to(beTrue())
         let args2 = mockSocket.pushTopicEventPayloadRefJoinRefReceivedArguments
         expect(args2?.payload["foo"] as? String).to(equal("bar"))
