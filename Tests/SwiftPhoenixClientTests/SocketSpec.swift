@@ -78,10 +78,10 @@ class SocketSpec: QuickSpec {
         
         // Test different schemes
         expect(Socket("http://localhost:4000/socket/websocket", paramsClosure: nil).endPointUrl.absoluteString)
-          .to(equal("http://localhost:4000/socket/websocket"))
+          .to(equal("ws://localhost:4000/socket/websocket"))
         
         expect(Socket("https://localhost:4000/socket/websocket", paramsClosure: nil).endPointUrl.absoluteString)
-          .to(equal("https://localhost:4000/socket/websocket"))
+          .to(equal("wss://localhost:4000/socket/websocket"))
         
         expect(Socket("ws://localhost:4000/socket/websocket", paramsClosure: nil).endPointUrl.absoluteString)
           .to(equal("ws://localhost:4000/socket/websocket"))
