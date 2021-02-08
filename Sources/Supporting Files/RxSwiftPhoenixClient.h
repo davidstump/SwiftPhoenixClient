@@ -3,7 +3,7 @@
 //  RxSwiftPhoenixClient
 //
 //  Created by Daniel Rees on 10/21/20.
-//  Copyright © 2020 SwiftPhoenixClient. All rights reserved.
+//  Copyright © 2021 SwiftPhoenixClient. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
