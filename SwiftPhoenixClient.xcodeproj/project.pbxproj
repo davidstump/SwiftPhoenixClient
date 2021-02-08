@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		125A9EF82543C84700292017 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1281439225410D52008615A7 /* SwiftPhoenixClient.framework */; };
-		125A9F072543C8D000292017 /* IntroViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125A9EFE2543C8D000292017 /* IntroViewController.swift */; };
 		125A9F082543C8D000292017 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 125A9EFF2543C8D000292017 /* Assets.xcassets */; };
 		125A9F092543C8D000292017 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 125A9F002543C8D000292017 /* LaunchScreen.storyboard */; };
 		125A9F0A2543C8D000292017 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 125A9F022543C8D000292017 /* Main.storyboard */; };
@@ -49,7 +48,6 @@
 		631D187F259CE1D7005FAC0E /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1281439225410D52008615A7 /* SwiftPhoenixClient.framework */; };
 		631D1882259CE1D7005FAC0E /* SwiftPhoenixClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1281439225410D52008615A7 /* SwiftPhoenixClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		631D1893259CE2A8005FAC0E /* StarscreamTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631D1892259CE2A8005FAC0E /* StarscreamTransport.swift */; };
-		631D18A1259D2585005FAC0E /* Socket+Starscream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631D18A0259D2585005FAC0E /* Socket+Starscream.swift */; };
 		631D18A6259D26EC005FAC0E /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 631D18A5259D26EC005FAC0E /* Starscream.framework */; };
 		6397FE8A259967E9005E66C3 /* RxSwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 128143D425411361008615A7 /* RxSwiftPhoenixClient.framework */; };
 		63F0F58D2592E44800C904FB /* ChatRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F0F58C2592E44800C904FB /* ChatRoomViewController.swift */; };
@@ -127,7 +125,6 @@
 
 /* Begin PBXFileReference section */
 		125A9EE42543C82800292017 /* Basic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Basic.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		125A9EFE2543C8D000292017 /* IntroViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntroViewController.swift; sourceTree = "<group>"; };
 		125A9EFF2543C8D000292017 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		125A9F012543C8D000292017 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		125A9F032543C8D000292017 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -167,7 +164,6 @@
 		631D184B259CC548005FAC0E /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = Carthage/Build/iOS/RxCocoa.framework; sourceTree = "<group>"; };
 		631D1886259CE1D7005FAC0E /* StarscreamSwiftPhoenixClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StarscreamSwiftPhoenixClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		631D1892259CE2A8005FAC0E /* StarscreamTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarscreamTransport.swift; sourceTree = "<group>"; };
-		631D18A0259D2585005FAC0E /* Socket+Starscream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Socket+Starscream.swift"; sourceTree = "<group>"; };
 		631D18A5259D26EC005FAC0E /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
 		639D200B2592E81E00A5EEDC /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		63F0F58C2592E44800C904FB /* ChatRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewController.swift; sourceTree = "<group>"; };
@@ -224,7 +220,6 @@
 			children = (
 				63F0F5922592E59800C904FB /* chatroom */,
 				63F0F5912592E58800C904FB /* basic */,
-				125A9EFE2543C8D000292017 /* IntroViewController.swift */,
 				125A9EFF2543C8D000292017 /* Assets.xcassets */,
 				125A9F002543C8D000292017 /* LaunchScreen.storyboard */,
 				125A9F022543C8D000292017 /* Main.storyboard */,
@@ -377,7 +372,6 @@
 			isa = PBXGroup;
 			children = (
 				631D1892259CE2A8005FAC0E /* StarscreamTransport.swift */,
-				631D18A0259D2585005FAC0E /* Socket+Starscream.swift */,
 			);
 			path = StarscreamSwiftPhoenixClient;
 			sourceTree = "<group>";
@@ -666,7 +660,6 @@
 				125A9F0B2543C8D000292017 /* AppDelegate.swift in Sources */,
 				125A9F0F2543CDDE00292017 /* BasicChatViewController.swift in Sources */,
 				63F0F58D2592E44800C904FB /* ChatRoomViewController.swift in Sources */,
-				125A9F072543C8D000292017 /* IntroViewController.swift in Sources */,
 				125A9F0D2543C8D000292017 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -720,7 +713,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				631D1893259CE2A8005FAC0E /* StarscreamTransport.swift in Sources */,
-				631D18A1259D2585005FAC0E /* Socket+Starscream.swift in Sources */,
 				631D187D259CE1D7005FAC0E /* Channel+Rx.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

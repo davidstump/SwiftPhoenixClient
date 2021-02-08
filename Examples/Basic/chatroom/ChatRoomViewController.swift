@@ -25,7 +25,8 @@ class ChatRoomViewController: UIViewController {
   
   // MARK: - Attributes
   private let username: String = "ChatRoom"
-  private let socket = Socket("https://phxchat.herokuapp.com/socket/websocket")
+//  private let socket = Socket("https://phxchat.herokuapp.com/socket/websocket")
+  private let socket = Socket("http://localhost:4000/socket/websocket")
   private let topic: String = "room:lobby"
   
   private var lobbyChannel: Channel?

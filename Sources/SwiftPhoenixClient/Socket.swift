@@ -596,6 +596,10 @@ public class Socket {
     // Clear heartbeat ref, preventing a heartbeat timeout disconnect
     if message.ref == pendingHeartbeatRef { pendingHeartbeatRef = nil }
     
+    if message.event == "phx_close" {
+      print("Close Event Received")
+    }
+    
     // Dispatch the message to all channels that belong to the topic
     self.channels
       .filter( { $0.isMember(message) } )
@@ -754,27 +758,3 @@ extension Socket: PhoenixTransportDelegate {
     self.onConnectionClosed(code: code)
   }
 }
-
-////----------------------------------------------------------------------
-//// MARK: - WebSocketDelegate
-////----------------------------------------------------------------------
-//extension Socket: WebSocketDelegate {
-//
-//  public func websocketDidConnect(socket: WebSocketClient) {
-//    self.onConnectionOpen()
-//  }
-//
-//  public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-//    self.onConnectionClosed(code: (error as? WSError)?.code)
-//    if let safeError = error { self.onConnectionError(safeError) }
-//  }
-//
-//  public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-//    self.onConnectionMessage(text)
-//  }
-//
-//  public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-//    /* no-op */
-//  }
-//}
-

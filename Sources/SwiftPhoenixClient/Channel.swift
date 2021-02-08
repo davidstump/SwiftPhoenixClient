@@ -518,14 +518,15 @@ public class Channel {
   //----------------------------------------------------------------------
   /// Checks if an event received by the Socket belongs to this Channel
   func isMember(_ message: Message) -> Bool {
+    // Return false if the message's topic does not match the Channel's topic
     guard message.topic == self.topic else { return false }
-    
+
     guard
       let safeJoinRef = message.joinRef,
       safeJoinRef != self.joinRef,
       ChannelEvent.isLifecyleEvent(message.event)
       else { return true }
-    
+
     self.socket?.logItems("channel", "dropping outdated message", message.topic, message.event, message.payload, safeJoinRef)
     return false
   }

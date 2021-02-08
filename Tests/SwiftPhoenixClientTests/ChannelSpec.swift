@@ -937,6 +937,37 @@ class ChannelSpec: QuickSpec {
       })
     }
     
+    
+    describe("isMemeber") {
+      it("returns false if the message topic does not match the channel") {
+        let message = Message(topic: "other")
+        expect(channel.isMember(message)).to(beFalse())
+      }
+
+      it("returns true if topics match but the message doesn't have a join ref") {
+        let message = Message(topic: "topic", event: ChannelEvent.close, joinRef: nil)
+        expect(channel.isMember(message)).to(beTrue())
+      }
+      
+      it("returns true if topics and join refs match") {
+        channel.joinPush.ref = "2"
+        let message = Message(topic: "topic", event: ChannelEvent.close, joinRef: "2")
+        expect(channel.isMember(message)).to(beTrue())
+      }
+      
+      it("returns true if topics and join refs match but event is not lifecycle") {
+        channel.joinPush.ref = "2"
+        let message = Message(topic: "topic", event: "event", joinRef: "2")
+        expect(channel.isMember(message)).to(beTrue())
+      }
+      
+      it("returns false topics match and is a lifecycle event but join refs do not match ") {
+        channel.joinPush.ref = "2"
+        let message = Message(topic: "topic", event: ChannelEvent.close, joinRef: "1")
+        expect(channel.isMember(message)).to(beFalse())
+      }
+    }
+    
     describe("isClosed") {
       it("returns true if state is .closed", closure: {
         channel.state = .joined

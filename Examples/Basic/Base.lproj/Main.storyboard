@@ -24,10 +24,10 @@
             </objects>
             <point key="canvasLocation" x="-658" y="139"/>
         </scene>
-        <!--Intro View Controller-->
+        <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="vc.intro.basic" id="BYZ-38-t0r" customClass="IntroViewController" customModule="Basic" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="vc.intro.basic" id="BYZ-38-t0r" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
