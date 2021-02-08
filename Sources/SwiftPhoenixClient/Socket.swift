@@ -21,6 +21,12 @@
 
 import Foundation
 
+public enum SocketError: Error {
+  
+  case abnormalClosureError
+  
+}
+
 
 /// Alias for a JSON dictionary [String: Any]
 public typealias Payload = [String: Any]
@@ -80,7 +86,7 @@ public class Socket {
   
   /// The WebSocket transport. Default behavior is to provide a Starscream
   /// WebSocket instance. Potentially allows changing WebSockets in future
-  private let transport: ((URL) -> Transport)
+  private let transport: ((URL) -> PhoenixTransport)
   
   /// Override to provide custom encoding of data before writing to the socket
   public var encode: ([String: Any]) -> Data = Defaults.encode
@@ -154,7 +160,7 @@ public class Socket {
   var closeWasClean: Bool = false
   
   /// The connection to the server
-  var connection: Transport? = nil
+  var connection: PhoenixTransport? = nil
   
   
   //----------------------------------------------------------------------
@@ -178,7 +184,7 @@ public class Socket {
   
   
   public init(endPoint: String,
-       transport: @escaping ((URL) -> Transport),
+       transport: @escaping ((URL) -> PhoenixTransport),
        paramsClosure: PayloadClosure? = nil) {
     self.transport = transport
     self.paramsClosure = paramsClosure
@@ -730,7 +736,7 @@ extension Socket {
 //----------------------------------------------------------------------
 // MARK: - TransportDelegate
 //----------------------------------------------------------------------
-extension Socket: TransportDelegate {
+extension Socket: PhoenixTransportDelegate {
   public func onOpen() {
     self.onConnectionOpen()
   }

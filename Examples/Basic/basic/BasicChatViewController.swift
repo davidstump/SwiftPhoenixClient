@@ -8,6 +8,7 @@
 
 import UIKit
 import SwiftPhoenixClient
+import StarscreamSwiftPhoenixClient
 
 class BasicChatViewController: UIViewController {
     
@@ -20,10 +21,9 @@ class BasicChatViewController: UIViewController {
     
     // MARK: - Variables
     let username: String =  "Basic"
-    let socket = Socket("ws://localhost:4000/socket/websocket")
+    let socket = Socket(endPoint: "ws://localhost:4000/socket/websocket") { url in return StarscreamTransport(url: url) }
     var topic: String = "rooms:lobby"
     var lobbyChannel: Channel!
-    
     
     // MARK: - Lifecycle
     override func viewDidLoad() {

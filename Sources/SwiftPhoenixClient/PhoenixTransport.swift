@@ -28,13 +28,13 @@ import Foundation
  Defines a `Socket`'s Transport layer.
  */
 // sourcery: AutoMockable
-public protocol Transport {
+public protocol PhoenixTransport {
   
   /// The current `ReadyState` of the `Transport` layer
-  var readyState: TransportReadyState { get }
+  var readyState: PhoenixTransportReadyState { get }
   
   /// Delegate for the `Transport` layer
-  var delegate: TransportDelegate? { get set }
+  var delegate: PhoenixTransportDelegate? { get set }
   
   /**
    Connect to the server
@@ -65,7 +65,7 @@ public protocol Transport {
 /**
  Delegate to receive notifications of events that occur in the `Transport` layer
  */
-public protocol TransportDelegate {
+public protocol PhoenixTransportDelegate {
   
   /**
    Notified when the `Transport` opens.
@@ -100,7 +100,7 @@ public protocol TransportDelegate {
 /**
  Available `ReadyState`s of a `Transport` layer.
  */
-public enum TransportReadyState {
+public enum PhoenixTransportReadyState {
   
   /// The `Transport` is opening a connection to the server.
   case connecting
@@ -129,7 +129,7 @@ public enum TransportReadyState {
  your own WebSocket library or implementation.
  */
 @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
-public class URLSessionTansport: NSObject, Transport, URLSessionWebSocketDelegate {
+public class URLSessionTansport: NSObject, PhoenixTransport, URLSessionWebSocketDelegate {
   
   
   /// The URL to connect to
@@ -163,8 +163,8 @@ public class URLSessionTansport: NSObject, Transport, URLSessionWebSocketDelegat
   
   
   // MARK: - Transport
-  public var readyState: TransportReadyState = .closed
-  public var delegate: TransportDelegate? = nil
+  public var readyState: PhoenixTransportReadyState = .closed
+  public var delegate: PhoenixTransportDelegate? = nil
   
   public func connect() {
     // Set the trasport state as connecting

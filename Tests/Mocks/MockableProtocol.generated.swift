@@ -26,13 +26,13 @@ import AppKit
 
 
 
-class TransportMock: Transport {
-    var readyState: TransportReadyState {
+class TransportMock: PhoenixTransport {
+    var readyState: PhoenixTransportReadyState {
         get { return underlyingReadyState }
         set(value) { underlyingReadyState = value }
     }
-    var underlyingReadyState: TransportReadyState!
-    var delegate: TransportDelegate?
+    var underlyingReadyState: PhoenixTransportReadyState!
+    var delegate: PhoenixTransportDelegate?
 
     //MARK: - connect
 

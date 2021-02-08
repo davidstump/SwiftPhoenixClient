@@ -192,7 +192,7 @@ class ChannelSpec: QuickSpec {
       
       beforeEach {
         mockClient.readyState = .closed
-        let transport: ((URL) -> Transport) = { _ in return mockClient }
+        let transport: ((URL) -> PhoenixTransport) = { _ in return mockClient }
         spySocket = SocketSpy(endPoint: "/socket", transport: transport)
         channel = Channel(topic: "topic", params: ["one": "two"], socket: spySocket)
         

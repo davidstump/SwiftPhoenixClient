@@ -660,7 +660,7 @@ class SocketMock: Socket {
     var underlyingCloseWasClean: (Bool)!
     var connectionSetCount: Int = 0
     var connectionDidGetSet: Bool { return connectionSetCount > 0 }
-    override var connection: Transport? {
+    override var connection: PhoenixTransport? {
         didSet { connectionSetCount += 1 }
     }
 
@@ -679,8 +679,8 @@ class SocketMock: Socket {
 
     //MARK: - init
 
-    var initEndPointTransportParamsClosureReceivedArguments: (endPoint: String, transport: (URL) -> Transport, paramsClosure: PayloadClosure?)?
-    var initEndPointTransportParamsClosureClosure: ((String, @escaping ((URL) -> Transport), PayloadClosure?) -> Void)?
+    var initEndPointTransportParamsClosureReceivedArguments: (endPoint: String, transport: (URL) -> PhoenixTransport, paramsClosure: PayloadClosure?)?
+    var initEndPointTransportParamsClosureClosure: ((String, @escaping ((URL) -> PhoenixTransport), PayloadClosure?) -> Void)?
 
 
     //MARK: - deinit
