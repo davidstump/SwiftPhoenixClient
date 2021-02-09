@@ -36,13 +36,13 @@ of 13.0.
 
 ### SwiftPhoenixClient/Starscream
 
-If you are targeting iOS < 13.0, if you you prefer to use [Starscream](https://github.com/daltoniam/Starscream), then
+If you are targeting iOS < 13.0, or if you you prefer to use [Starscream](https://github.com/daltoniam/Starscream), then
 you will need to also use the Starscream module to connect to your server.
 Installation details can be found below.
 
 ```swift
 import SwiftPhoenixClient
-# If using Carthage then you will also need to import the Starscream module
+// If using Carthage then you will also need to import the Starscream module
 import StarscreamSwiftPhoenixClient
 
 let socket = Socket(endPoint: "https://example.com") { StarscreamTransport(url: $0) }
@@ -58,7 +58,7 @@ can be found below.
 import RxSwift
 import SwiftPhoenixClient
 
-# If using Carthage then you will also need to import the Starscream module
+// If using Carthage then you will also need to import the Rx module
 import RxSwiftPhoenixClient
 
 // Setup the Channel to receive and send messages
