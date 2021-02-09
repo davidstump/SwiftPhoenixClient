@@ -7,6 +7,9 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![Open Source Helpers](https://www.codetriage.com/davidstump/swiftphoenixclient/badges/users.svg)](https://www.codetriage.com/davidstump/swiftphoenixclient)
 
+
+# NOTE: 2.x is not yet released. If you want to use it, you'll need to target the `"2.x"` branch in your package manager
+
 ## About
 SwiftPhoenixClient is a Swift port of phoenix.js, allowing your swift projects
 to connect to a Phoenix Websocket backend.
