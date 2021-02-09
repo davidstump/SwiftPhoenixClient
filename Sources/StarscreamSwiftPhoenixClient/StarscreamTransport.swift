@@ -9,7 +9,7 @@
 import Foundation
 import SwiftPhoenixClient
 import Starscream
-
+ 
 
 /**
  A `Transport` implemenetation that relies on a WebSocket provided by the `Starscream` library.
@@ -98,7 +98,6 @@ public class StarscreamTransport: NSObject, PhoenixTransport, WebSocketDelegate 
   
   // MARK: - WebSocketDelegate
   public func websocketDidConnect(socket: WebSocketClient) {
-    print("STARSCREAM DID CONNECT")
     self.readyState = .open
     self.delegate?.onOpen()
   }
@@ -106,8 +105,6 @@ public class StarscreamTransport: NSObject, PhoenixTransport, WebSocketDelegate 
   public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
     
     let closeCode = (error as? WSError)?.code ?? Socket.CloseCode.abnormal.rawValue
-    print("STARSCREAM DID DISCONNECT: \(error). CLOSE CODE: \(closeCode)")
-  
     // Set the state of the Transport to closed
     self.readyState = .closed
     
