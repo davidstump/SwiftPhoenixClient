@@ -15,7 +15,7 @@ class ChannelSpec: QuickSpec {
   override func spec() {
     
     // Mocks
-    var mockClient: TransportMock!
+    var mockClient: PhoenixTransportMock!
     var mockSocket: SocketMock!
     
     // Constants
@@ -41,7 +41,7 @@ class ChannelSpec: QuickSpec {
       fakeClock = FakeTimerQueue()
       TimerQueue.main = fakeClock
       
-      mockClient = TransportMock()
+      mockClient = PhoenixTransportMock()
       
       mockSocket = SocketMock(endPoint: "/socket", transport: { _ in mockClient })
       mockSocket.connection = mockClient
@@ -392,11 +392,11 @@ class ChannelSpec: QuickSpec {
         })
         
         it("removes channel binding", closure: {
-          var bindings = getBindings("chan_reply_1")
+          var bindings = getBindings("chan_reply_3")
           expect(bindings).to(haveCount(1))
           
           receivesOk()
-          bindings = getBindings("chan_reply_1")
+          bindings = getBindings("chan_reply_3")
           expect(bindings).to(haveCount(0))
         })
         
@@ -532,11 +532,11 @@ class ChannelSpec: QuickSpec {
         })
         
         it("removes channel binding", closure: {
-          var bindings = getBindings("chan_reply_1")
+          var bindings = getBindings("chan_reply_3")
           expect(bindings).to(haveCount(1))
           
           receiveError()
-          bindings = getBindings("chan_reply_1")
+          bindings = getBindings("chan_reply_3")
           expect(bindings).to(haveCount(0))
         })
         

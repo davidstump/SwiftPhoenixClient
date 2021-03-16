@@ -185,14 +185,14 @@ class SocketSpec: QuickSpec {
     
     describe("connect with Websocket") {
       // Mocks
-      var mockWebSocket: TransportMock!
-      let mockWebSocketTransport: ((URL) -> TransportMock) = { _ in return mockWebSocket }
+      var mockWebSocket: PhoenixTransportMock!
+      let mockWebSocketTransport: ((URL) -> PhoenixTransportMock) = { _ in return mockWebSocket }
       
       // UUT
       var socket: Socket!
       
       beforeEach {
-        mockWebSocket = TransportMock()
+        mockWebSocket = PhoenixTransportMock()
         socket = Socket(endPoint: "/socket", transport: mockWebSocketTransport)
         socket.skipHeartbeat = true
       }
@@ -279,14 +279,14 @@ class SocketSpec: QuickSpec {
     
     describe("disconnect") {
       // Mocks
-      var mockWebSocket: TransportMock!
-      let mockWebSocketTransport: ((URL) -> TransportMock) = { _ in return mockWebSocket }
+      var mockWebSocket: PhoenixTransportMock!
+      let mockWebSocketTransport: ((URL) -> PhoenixTransportMock) = { _ in return mockWebSocket }
       
       // UUT
       var socket: Socket!
       
       beforeEach {
-        mockWebSocket = TransportMock()
+        mockWebSocket = PhoenixTransportMock()
         socket = Socket(endPoint: "/socket", transport: mockWebSocketTransport)
       }
       
@@ -405,14 +405,14 @@ class SocketSpec: QuickSpec {
     
     describe("push") {
       // Mocks
-      var mockWebSocket: TransportMock!
-      let mockWebSocketTransport: ((URL) -> TransportMock) = { _ in return mockWebSocket }
+      var mockWebSocket: PhoenixTransportMock!
+      let mockWebSocketTransport: ((URL) -> PhoenixTransportMock) = { _ in return mockWebSocket }
       
       // UUT
       var socket: Socket!
       
       beforeEach {
-        mockWebSocket = TransportMock()
+        mockWebSocket = PhoenixTransportMock()
         socket = Socket(endPoint: "/socket", transport: mockWebSocketTransport)
       }
       
@@ -485,13 +485,13 @@ class SocketSpec: QuickSpec {
     
     describe("sendHeartbeat") {
       // Mocks
-      var mockWebSocket: TransportMock!
+      var mockWebSocket: PhoenixTransportMock!
       
       // UUT
       var socket: Socket!
       
       beforeEach {
-        mockWebSocket = TransportMock()
+        mockWebSocket = PhoenixTransportMock()
         socket = Socket("/socket")
         socket.connection = mockWebSocket
       }
@@ -534,13 +534,13 @@ class SocketSpec: QuickSpec {
     
     describe("flushSendBuffer") {
       // Mocks
-      var mockWebSocket: TransportMock!
+      var mockWebSocket: PhoenixTransportMock!
       
       // UUT
       var socket: Socket!
       
       beforeEach {
-        mockWebSocket = TransportMock()
+        mockWebSocket = PhoenixTransportMock()
         socket = Socket("/socket")
         socket.connection = mockWebSocket
       }
@@ -570,15 +570,15 @@ class SocketSpec: QuickSpec {
     
     describe("onConnectionOpen") {
       // Mocks
-      var mockWebSocket: TransportMock!
+      var mockWebSocket: PhoenixTransportMock!
       var mockTimeoutTimer: TimeoutTimerMock!
-      let mockWebSocketTransport: ((URL) -> TransportMock) = { _ in return mockWebSocket }
+      let mockWebSocketTransport: ((URL) -> PhoenixTransportMock) = { _ in return mockWebSocket }
       
       // UUT
       var socket: Socket!
       
       beforeEach {
-        mockWebSocket = TransportMock()
+        mockWebSocket = PhoenixTransportMock()
         mockTimeoutTimer = TimeoutTimerMock()
         socket = Socket(endPoint: "/socket", transport: mockWebSocketTransport)
         socket.reconnectAfter = { _ in return 10 }
@@ -620,14 +620,14 @@ class SocketSpec: QuickSpec {
     
     describe("resetHeartbeat") {
       // Mocks
-      var mockWebSocket: TransportMock!
-      let mockWebSocketTransport: ((URL) -> TransportMock) = { _ in return mockWebSocket }
+      var mockWebSocket: PhoenixTransportMock!
+      let mockWebSocketTransport: ((URL) -> PhoenixTransportMock) = { _ in return mockWebSocket }
       
       // UUT
       var socket: Socket!
       
       beforeEach {
-        mockWebSocket = TransportMock()
+        mockWebSocket = PhoenixTransportMock()
         socket = Socket(endPoint: "/socket", transport: mockWebSocketTransport)
         
       }
@@ -684,15 +684,15 @@ class SocketSpec: QuickSpec {
     
     describe("onConnectionClosed") {
       // Mocks
-      var mockWebSocket: TransportMock!
+      var mockWebSocket: PhoenixTransportMock!
       var mockTimeoutTimer: TimeoutTimerMock!
-      let mockWebSocketTransport: ((URL) -> TransportMock) = { _ in return mockWebSocket }
+      let mockWebSocketTransport: ((URL) -> PhoenixTransportMock) = { _ in return mockWebSocket }
       
       // UUT
       var socket: Socket!
       
       beforeEach {
-        mockWebSocket = TransportMock()
+        mockWebSocket = PhoenixTransportMock()
         mockTimeoutTimer = TimeoutTimerMock()
         socket = Socket(endPoint: "/socket", transport: mockWebSocketTransport)
 //        socket.reconnectAfter = { _ in return 10 }
@@ -785,15 +785,15 @@ class SocketSpec: QuickSpec {
     
     describe("onConnectionError") {
       // Mocks
-      var mockWebSocket: TransportMock!
+      var mockWebSocket: PhoenixTransportMock!
       var mockTimeoutTimer: TimeoutTimerMock!
-      let mockWebSocketTransport: ((URL) -> TransportMock) = { _ in return mockWebSocket }
+      let mockWebSocketTransport: ((URL) -> PhoenixTransportMock) = { _ in return mockWebSocket }
       
       // UUT
       var socket: Socket!
       
       beforeEach {
-        mockWebSocket = TransportMock()
+        mockWebSocket = PhoenixTransportMock()
         mockTimeoutTimer = TimeoutTimerMock()
         socket = Socket(endPoint: "/socket", transport: mockWebSocketTransport)
         socket.reconnectAfter = { _ in return 10 }
@@ -859,15 +859,15 @@ class SocketSpec: QuickSpec {
     
     describe("onConnectionMessage") {
       // Mocks
-      var mockWebSocket: TransportMock!
+      var mockWebSocket: PhoenixTransportMock!
       var mockTimeoutTimer: TimeoutTimerMock!
-      let mockWebSocketTransport: ((URL) -> TransportMock) = { _ in return mockWebSocket }
+      let mockWebSocketTransport: ((URL) -> PhoenixTransportMock) = { _ in return mockWebSocket }
       
       // UUT
       var socket: Socket!
       
       beforeEach {
-        mockWebSocket = TransportMock()
+        mockWebSocket = PhoenixTransportMock()
         mockTimeoutTimer = TimeoutTimerMock()
         socket = Socket(endPoint: "/socket", transport: mockWebSocketTransport)
         socket.reconnectAfter = { _ in return 10 }
