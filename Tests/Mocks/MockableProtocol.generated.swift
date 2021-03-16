@@ -1,4 +1,4 @@
-// Generated using Sourcery 0.17.0 — https://github.com/krzysztofzablocki/Sourcery
+// Generated using Sourcery 1.0.2 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
 
 // swiftlint:disable line_length
@@ -26,7 +26,7 @@ import AppKit
 
 
 
-class TransportMock: PhoenixTransport {
+class PhoenixTransportMock: PhoenixTransport {
     var readyState: PhoenixTransportReadyState {
         get { return underlyingReadyState }
         set(value) { underlyingReadyState = value }

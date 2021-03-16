@@ -56,9 +56,7 @@ struct StateChangeCallbacks {
 /// The `Socket` constructor takes the mount point of the socket,
 /// the authentication params, as well as options that can be found in
 /// the Socket docs, such as configuring the heartbeat.
-public class Socket {
-  
-  
+public class Socket: PhoenixTransportDelegate {
   
   
   //----------------------------------------------------------------------
@@ -300,10 +298,15 @@ public class Socket {
   ///     }
   ///
   /// - parameter callback: Called when the Socket is opened
-  public func onOpen(ref: String? = nil, callback: @escaping () -> Void) {
+  @discardableResult
+  public func onOpen(callback: @escaping () -> Void) -> String {
     var delegated = Delegated<Void, Void>()
     delegated.manuallyDelegate(with: callback)
-    self.stateChangeCallbacks.open.append((ref ?? "\(self.ref)", delegated))
+    
+    
+    let ref = makeRef()
+    self.stateChangeCallbacks.open.append((ref, delegated))
+    return ref
   }
   
   /// Registers callbacks for connection open events. Automatically handles
@@ -317,12 +320,15 @@ public class Socket {
   ///
   /// - parameter owner: Class registering the callback. Usually `self`
   /// - parameter callback: Called when the Socket is opened
+  @discardableResult
   public func delegateOnOpen<T: AnyObject>(to owner: T,
-                                           ref: String? = nil,
-                                           callback: @escaping ((T) -> Void)) {
+                                           callback: @escaping ((T) -> Void)) -> String {
     var delegated = Delegated<Void, Void>()
     delegated.delegate(to: owner, with: callback)
-    self.stateChangeCallbacks.open.append((ref ?? "\(self.ref)", delegated))
+    
+    let ref = makeRef()
+    self.stateChangeCallbacks.open.append((ref, delegated))
+    return ref
   }
   
   /// Registers callbacks for connection close events. Does not handle retain
@@ -335,10 +341,14 @@ public class Socket {
   ///     }
   ///
   /// - parameter callback: Called when the Socket is closed
-  public func onClose(ref: String? = nil, callback: @escaping () -> Void) {
+  @discardableResult
+  public func onClose(callback: @escaping () -> Void) -> String {
     var delegated = Delegated<Void, Void>()
     delegated.manuallyDelegate(with: callback)
-    self.stateChangeCallbacks.close.append((ref ?? "\(self.ref)", delegated))
+    
+    let ref = makeRef()
+    self.stateChangeCallbacks.close.append((ref, delegated))
+    return ref
   }
   
   /// Registers callbacks for connection close events. Automatically handles
@@ -352,12 +362,15 @@ public class Socket {
   ///
   /// - parameter owner: Class registering the callback. Usually `self`
   /// - parameter callback: Called when the Socket is closed
+  @discardableResult
   public func delegateOnClose<T: AnyObject>(to owner: T,
-                                            ref: String? = nil,
-                                            callback: @escaping ((T) -> Void)) {
+                                            callback: @escaping ((T) -> Void)) -> String {
     var delegated = Delegated<Void, Void>()
     delegated.delegate(to: owner, with: callback)
-    self.stateChangeCallbacks.close.append((ref ?? "\(self.ref)", delegated))
+    
+    let ref = makeRef()
+    self.stateChangeCallbacks.close.append((ref, delegated))
+    return ref
   }
   
   
@@ -371,10 +384,14 @@ public class Socket {
   ///     }
   ///
   /// - parameter callback: Called when the Socket errors
-  public func onError(ref: String? = nil, callback: @escaping (Error) -> Void) {
+  @discardableResult
+  public func onError(callback: @escaping (Error) -> Void) -> String {
     var delegated = Delegated<Error, Void>()
     delegated.manuallyDelegate(with: callback)
-    self.stateChangeCallbacks.error.append((ref ?? "\(self.ref)", delegated))
+    
+    let ref = makeRef()
+    self.stateChangeCallbacks.error.append((ref, delegated))
+    return ref
   }
   
   /// Registers callbacks for connection error events. Automatically handles
@@ -388,12 +405,15 @@ public class Socket {
   ///
   /// - parameter owner: Class registering the callback. Usually `self`
   /// - parameter callback: Called when the Socket errors
+  @discardableResult
   public func delegateOnError<T: AnyObject>(to owner: T,
-                                            ref: String? = nil,
-                                            callback: @escaping ((T, Error) -> Void)) {
+                                            callback: @escaping ((T, Error) -> Void)) -> String {
     var delegated = Delegated<Error, Void>()
     delegated.delegate(to: owner, with: callback)
-    self.stateChangeCallbacks.error.append((ref ?? "\(self.ref)", delegated))
+    
+    let ref = makeRef()
+    self.stateChangeCallbacks.error.append((ref, delegated))
+    return ref
   }
   
   /// Registers callbacks for connection message events. Does not handle
@@ -407,10 +427,14 @@ public class Socket {
   ///     }
   ///
   /// - parameter callback: Called when the Socket receives a message event
-  public func onMessage(ref: String? = nil, callback: @escaping (Message) -> Void) {
+  @discardableResult
+  public func onMessage(callback: @escaping (Message) -> Void) -> String {
     var delegated = Delegated<Message, Void>()
     delegated.manuallyDelegate(with: callback)
-    self.stateChangeCallbacks.message.append((ref ?? "\(self.ref)", delegated))
+    
+    let ref = makeRef()
+    self.stateChangeCallbacks.message.append((ref, delegated))
+    return ref
   }
   
   /// Registers callbacks for connection message events. Automatically handles
@@ -424,12 +448,15 @@ public class Socket {
   ///
   /// - parameter owner: Class registering the callback. Usually `self`
   /// - parameter callback: Called when the Socket receives a message event
+  @discardableResult
   public func delegateOnMessage<T: AnyObject>(to owner: T,
-                                              ref: String? = nil,
-                                              callback: @escaping ((T, Message) -> Void)) {
+                                              callback: @escaping ((T, Message) -> Void)) -> String {
     var delegated = Delegated<Message, Void>()
     delegated.delegate(to: owner, with: callback)
-    self.stateChangeCallbacks.message.append((ref ?? "\(self.ref)", delegated))
+    
+    let ref = makeRef()
+    self.stateChangeCallbacks.message.append((ref, delegated))
+    return ref
   }
   
   /// Releases all stored callback hooks (onError, onOpen, onClose, etc.) You should
@@ -475,11 +502,19 @@ public class Socket {
   ///
   /// - parameter channel: Channel to remove
   public func remove(_ channel: Channel) {
+    self.off(channel.stateChangeRefs)
     self.channels.removeAll(where: { $0.joinRef == channel.joinRef })
-    
-    self.stateChangeCallbacks.open = self.stateChangeCallbacks.open.filter({ (entry) -> Bool in
-      return entry.ref != channel.topic
-    })
+  }
+  
+  /// Removes `onOpen`, `onClose`, `onError,` and `onMessage` registrations.
+  ///
+  ///
+  /// - Parameter refs: List of refs returned by calls to `onOpen`, `onClose`, etc
+  public func off(_ refs: [String]) {
+    self.stateChangeCallbacks.open = self.stateChangeCallbacks.open.filter({ !refs.contains($0.ref) })
+    self.stateChangeCallbacks.close = self.stateChangeCallbacks.close.filter({ !refs.contains($0.ref) })
+    self.stateChangeCallbacks.error = self.stateChangeCallbacks.error.filter({ !refs.contains($0.ref) })
+    self.stateChangeCallbacks.message = self.stateChangeCallbacks.message.filter({ !refs.contains($0.ref) })
   }
   
   
@@ -738,27 +773,11 @@ public class Socket {
      */
     self.connection?.disconnect(code: CloseCode.normal.rawValue, reason: reason)
   }
-}
-
-
-//----------------------------------------------------------------------
-// MARK: - Close Codes
-//----------------------------------------------------------------------
-extension Socket {
-  public enum CloseCode : Int {
-    case abnormal = 999
-    
-    case normal = 1000
-
-    case goingAway = 1001
-  }
-}
-
-
-//----------------------------------------------------------------------
-// MARK: - TransportDelegate
-//----------------------------------------------------------------------
-extension Socket: PhoenixTransportDelegate {
+  
+  
+  //----------------------------------------------------------------------
+  // MARK: - TransportDelegate
+  //----------------------------------------------------------------------
   public func onOpen() {
     self.onConnectionOpen()
   }
@@ -774,5 +793,19 @@ extension Socket: PhoenixTransportDelegate {
   public func onClose(code: Int) {
     self.closeWasClean = code != CloseCode.abnormal.rawValue
     self.onConnectionClosed(code: code)
+  }
+}
+
+
+//----------------------------------------------------------------------
+// MARK: - Close Codes
+//----------------------------------------------------------------------
+extension Socket {
+  public enum CloseCode : Int {
+    case abnormal = 999
+    
+    case normal = 1000
+
+    case goingAway = 1001
   }
 }

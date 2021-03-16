@@ -95,6 +95,9 @@ public class Channel {
   /// Timer to attempt to rejoin
   var rejoinTimer: TimeoutTimer
   
+  /// Refs of stateChange hooks
+  var stateChangeRefs: [String]
+  
   /// Initialize a Channel
   ///
   /// - parameter topic: Topic of the Channel
@@ -110,6 +113,7 @@ public class Channel {
     self.timeout = socket.timeout
     self.joinedOnce = false
     self.pushBuffer = []
+    self.stateChangeRefs = []
     self.rejoinTimer = TimeoutTimer()
     
     // Setup Timer delgation
@@ -124,14 +128,16 @@ public class Channel {
       }
     
     // Respond to socket events
-    self.socket?.delegateOnError(to: self, ref: topic, callback: { (self, _) in
+    let onErrorRef = self.socket?.delegateOnError(to: self, callback: { (self, _) in
       self.rejoinTimer.reset()
     })
-    
-    self.socket?.delegateOnOpen(to: self, ref: topic, callback: { (self) in
+    if let ref = onErrorRef { self.stateChangeRefs.append(ref) }
+  
+    let onOpenRef = self.socket?.delegateOnOpen(to: self, callback: { (self) in
       self.rejoinTimer.reset()
       if (self.isErrored) { self.rejoin() }
     })
+    if let ref = onOpenRef { self.stateChangeRefs.append(ref) }
     
     // Setup Push Event to be sent when joining
     self.joinPush = Push(channel: self,
