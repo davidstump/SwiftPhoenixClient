@@ -124,10 +124,11 @@ public class Channel {
       }
     
     // Respond to socket events
-    self.socket?.delegateOnError(to: self, callback: { (self, _) in
+    self.socket?.delegateOnError(to: self, ref: topic, callback: { (self, _) in
       self.rejoinTimer.reset()
     })
-    self.socket?.delegateOnOpen(to: self, callback: { (self) in
+    
+    self.socket?.delegateOnOpen(to: self, ref: topic, callback: { (self) in
       self.rejoinTimer.reset()
       if (self.isErrored) { self.rejoin() }
     })
@@ -541,6 +542,9 @@ public class Channel {
   func rejoin(_ timeout: TimeInterval? = nil) {
     // Do not attempt to rejoin if the channel is in the process of leaving
     guard !self.isLeaving else { return }
+    
+    // Leave potentially duplicate channels
+    self.socket?.leaveOpenTopic(topic: self.topic)
     
     // Send the joinPush
     self.sendJoin(timeout ?? self.timeout)

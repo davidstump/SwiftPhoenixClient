@@ -176,6 +176,26 @@ class ChannelSpec: QuickSpec {
         let _ = channel.join(timeout: newTimeout)
         expect(joinPush?.timeout).to(equal(newTimeout))
       })
+      
+      it("leaves existing duplicate topic on new join") {
+        let transport: ((URL) -> PhoenixTransport) = { _ in return mockClient }
+        let spySocket = SocketSpy(endPoint: "/socket", transport: transport)
+        let channel = spySocket.channel("topic", params: ["one": "two"])
+        
+        mockClient.readyState = .open
+        spySocket.onConnectionOpen()
+        
+        channel.join()
+          .receive("ok") { (message) in
+            let newChannel = spySocket.channel("topic")
+            expect(channel.isJoined).to(beTrue())
+            newChannel.join()
+            
+            expect(channel.isJoined).to(beFalse())
+          }
+        
+        channel.joinPush.trigger("ok", payload: [:])
+      }
     }
     
     

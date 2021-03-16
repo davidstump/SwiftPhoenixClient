@@ -36,10 +36,10 @@ public typealias PayloadClosure = () -> Payload?
 
 /// Struct that gathers callbacks assigned to the Socket
 struct StateChangeCallbacks {
-  var open: [Delegated<Void, Void>] = []
-  var close: [Delegated<Void, Void>] = []
-  var error: [Delegated<Error, Void>] = []
-  var message: [Delegated<Message, Void>] = []
+  var open: [(ref: String, callback: Delegated<Void, Void>)] = []
+  var close: [(ref: String, callback: Delegated<Void, Void>)] = []
+  var error: [(ref: String, callback: Delegated<Error, Void>)] = []
+  var message: [(ref: String, callback: Delegated<Message, Void>)] = []
 }
 
 
@@ -280,7 +280,7 @@ public class Socket {
     
     // Since the connection's delegate was nil'd out, inform all state
     // callbacks that the connection has closed
-    self.stateChangeCallbacks.close.forEach({ $0.call() })
+    self.stateChangeCallbacks.close.forEach({ $0.callback.call() })
     callback?()
   }
   
@@ -300,10 +300,10 @@ public class Socket {
   ///     }
   ///
   /// - parameter callback: Called when the Socket is opened
-  public func onOpen(callback: @escaping () -> Void) {
+  public func onOpen(ref: String? = nil, callback: @escaping () -> Void) {
     var delegated = Delegated<Void, Void>()
     delegated.manuallyDelegate(with: callback)
-    self.stateChangeCallbacks.open.append(delegated)
+    self.stateChangeCallbacks.open.append((ref ?? "\(self.ref)", delegated))
   }
   
   /// Registers callbacks for connection open events. Automatically handles
@@ -318,10 +318,11 @@ public class Socket {
   /// - parameter owner: Class registering the callback. Usually `self`
   /// - parameter callback: Called when the Socket is opened
   public func delegateOnOpen<T: AnyObject>(to owner: T,
+                                           ref: String? = nil,
                                            callback: @escaping ((T) -> Void)) {
     var delegated = Delegated<Void, Void>()
     delegated.delegate(to: owner, with: callback)
-    self.stateChangeCallbacks.open.append(delegated)
+    self.stateChangeCallbacks.open.append((ref ?? "\(self.ref)", delegated))
   }
   
   /// Registers callbacks for connection close events. Does not handle retain
@@ -334,10 +335,10 @@ public class Socket {
   ///     }
   ///
   /// - parameter callback: Called when the Socket is closed
-  public func onClose(callback: @escaping () -> Void) {
+  public func onClose(ref: String? = nil, callback: @escaping () -> Void) {
     var delegated = Delegated<Void, Void>()
     delegated.manuallyDelegate(with: callback)
-    self.stateChangeCallbacks.close.append(delegated)
+    self.stateChangeCallbacks.close.append((ref ?? "\(self.ref)", delegated))
   }
   
   /// Registers callbacks for connection close events. Automatically handles
@@ -352,10 +353,11 @@ public class Socket {
   /// - parameter owner: Class registering the callback. Usually `self`
   /// - parameter callback: Called when the Socket is closed
   public func delegateOnClose<T: AnyObject>(to owner: T,
+                                            ref: String? = nil,
                                             callback: @escaping ((T) -> Void)) {
     var delegated = Delegated<Void, Void>()
     delegated.delegate(to: owner, with: callback)
-    self.stateChangeCallbacks.close.append(delegated)
+    self.stateChangeCallbacks.close.append((ref ?? "\(self.ref)", delegated))
   }
   
   
@@ -369,10 +371,10 @@ public class Socket {
   ///     }
   ///
   /// - parameter callback: Called when the Socket errors
-  public func onError(callback: @escaping (Error) -> Void) {
+  public func onError(ref: String? = nil, callback: @escaping (Error) -> Void) {
     var delegated = Delegated<Error, Void>()
     delegated.manuallyDelegate(with: callback)
-    self.stateChangeCallbacks.error.append(delegated)
+    self.stateChangeCallbacks.error.append((ref ?? "\(self.ref)", delegated))
   }
   
   /// Registers callbacks for connection error events. Automatically handles
@@ -387,10 +389,11 @@ public class Socket {
   /// - parameter owner: Class registering the callback. Usually `self`
   /// - parameter callback: Called when the Socket errors
   public func delegateOnError<T: AnyObject>(to owner: T,
+                                            ref: String? = nil,
                                             callback: @escaping ((T, Error) -> Void)) {
     var delegated = Delegated<Error, Void>()
     delegated.delegate(to: owner, with: callback)
-    self.stateChangeCallbacks.error.append(delegated)
+    self.stateChangeCallbacks.error.append((ref ?? "\(self.ref)", delegated))
   }
   
   /// Registers callbacks for connection message events. Does not handle
@@ -404,10 +407,10 @@ public class Socket {
   ///     }
   ///
   /// - parameter callback: Called when the Socket receives a message event
-  public func onMessage(callback: @escaping (Message) -> Void) {
+  public func onMessage(ref: String? = nil, callback: @escaping (Message) -> Void) {
     var delegated = Delegated<Message, Void>()
     delegated.manuallyDelegate(with: callback)
-    self.stateChangeCallbacks.message.append(delegated)
+    self.stateChangeCallbacks.message.append((ref ?? "\(self.ref)", delegated))
   }
   
   /// Registers callbacks for connection message events. Automatically handles
@@ -422,10 +425,11 @@ public class Socket {
   /// - parameter owner: Class registering the callback. Usually `self`
   /// - parameter callback: Called when the Socket receives a message event
   public func delegateOnMessage<T: AnyObject>(to owner: T,
+                                              ref: String? = nil,
                                               callback: @escaping ((T, Message) -> Void)) {
     var delegated = Delegated<Message, Void>()
     delegated.delegate(to: owner, with: callback)
-    self.stateChangeCallbacks.message.append(delegated)
+    self.stateChangeCallbacks.message.append((ref ?? "\(self.ref)", delegated))
   }
   
   /// Releases all stored callback hooks (onError, onOpen, onClose, etc.) You should
@@ -472,6 +476,10 @@ public class Socket {
   /// - parameter channel: Channel to remove
   public func remove(_ channel: Channel) {
     self.channels.removeAll(where: { $0.joinRef == channel.joinRef })
+    
+    self.stateChangeCallbacks.open = self.stateChangeCallbacks.open.filter({ (entry) -> Bool in
+      return entry.ref != channel.topic
+    })
   }
   
   
@@ -553,7 +561,7 @@ public class Socket {
     self.resetHeartbeat()
     
     // Inform all onOpen callbacks that the Socket has opened
-    self.stateChangeCallbacks.open.forEach({ $0.call() })
+    self.stateChangeCallbacks.open.forEach({ $0.callback.call() })
   }
   
   internal func onConnectionClosed(code: Int?) {
@@ -569,7 +577,7 @@ public class Socket {
       self.reconnectTimer.scheduleTimeout()
     }
     
-    self.stateChangeCallbacks.close.forEach({ $0.call() })
+    self.stateChangeCallbacks.close.forEach({ $0.callback.call() })
   }
   
   internal func onConnectionError(_ error: Error) {
@@ -579,7 +587,7 @@ public class Socket {
     self.triggerChannelError()
     
     // Inform any state callabcks of the error
-    self.stateChangeCallbacks.error.forEach({ $0.call(error) })
+    self.stateChangeCallbacks.error.forEach({ $0.callback.call(error) })
   }
   
   internal func onConnectionMessage(_ rawMessage: String) {
@@ -606,7 +614,7 @@ public class Socket {
       .forEach( { $0.trigger(message) } )
     
     // Inform all onMessage callbacks of the message
-    self.stateChangeCallbacks.message.forEach({ $0.call(message) })
+    self.stateChangeCallbacks.message.forEach({ $0.callback.call(message) })
   }
   
   /// Triggers an error event to all of the connected Channels
@@ -661,6 +669,16 @@ public class Socket {
     guard let qualifiedUrl = urlComponents.url
       else { fatalError("Malformed URL while adding parameters") }
     return qualifiedUrl
+  }
+  
+  
+  // Leaves any channel that is open that has a duplicate topic
+  internal func leaveOpenTopic(topic: String) {
+    let dupChannel = self.channels.first(where: { $0.topic == topic && ($0.isJoined || $0.isJoining) })
+    
+    guard let dupe = dupChannel else { return }
+    self.logItems("transport", "leaving duplicate topic: [\(topic)]" )
+    dupe.leave()
   }
   
   //----------------------------------------------------------------------
