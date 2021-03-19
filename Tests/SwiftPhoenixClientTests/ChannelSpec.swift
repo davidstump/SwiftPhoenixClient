@@ -574,6 +574,8 @@ class ChannelSpec: QuickSpec {
         joinPush.trigger("ok", payload: [:])
       }
       
+      
+      
       it("does not trigger redundant errors during backoff", closure: {
         // Spy the channel's Join Push
         let mockPush = PushMock(channel: channel, event: "event")
@@ -590,6 +592,32 @@ class ChannelSpec: QuickSpec {
         fakeClock.tick(1.0)
         expect(mockPush.resendCallsCount).to(equal(1))
       })
+      
+      describe("while joining") {
+        
+        var mockPush: PushMock!
+        
+        beforeEach {
+          channel = Channel(topic: "topic", params: ["one": "two"], socket: mockSocket)
+          
+          // Spy the channel's Join Push
+          mockPush = PushMock(channel: channel, event: "event")
+          mockPush.ref = "10"
+          channel.joinPush = mockPush
+          channel.state = .joining
+        }
+        
+        it("removes the joinPush message from send buffer") {
+          channel.trigger(event: ChannelEvent.error)
+          expect(mockSocket.removeFromSendBufferRefCalled).to(beTrue())
+          expect(mockSocket.removeFromSendBufferRefReceivedRef).to(equal("10"))
+        }
+        
+        it("resets the joinPush") {
+          channel.trigger(event: ChannelEvent.error)
+          expect(mockPush.resetCalled).to(beTrue())
+        }
+      }
       
       it("sets channel state to .errored", closure: {
         expect(channel.state).toNot(equal(.errored))

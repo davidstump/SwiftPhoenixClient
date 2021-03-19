@@ -927,6 +927,22 @@ class SocketMock: Socket {
     }
 
 
+    //MARK: - off
+
+    var offCallsCount = 0
+    var offCalled: Bool {
+        return offCallsCount > 0
+    }
+    var offReceivedRefs: [String]?
+    var offClosure: (([String]) -> Void)?
+
+    override func off(_ refs: [String]) {
+        offCallsCount += 1
+        offReceivedRefs = refs
+        offClosure?(refs)
+    }
+
+
     //MARK: - push
 
     var pushTopicEventPayloadRefJoinRefCallsCount = 0
@@ -1068,6 +1084,20 @@ class SocketMock: Socket {
     }
 
 
+    //MARK: - removeFromSendBuffer
+
+    var removeFromSendBufferRefCallsCount = 0
+    var removeFromSendBufferRefCalled: Bool {
+        return removeFromSendBufferRefCallsCount > 0
+    }
+    var removeFromSendBufferRefReceivedRef: String?
+    var removeFromSendBufferRefClosure: ((String) -> Void)?
+
+    override func removeFromSendBuffer(ref: String) {
+        removeFromSendBufferRefCallsCount += 1
+        removeFromSendBufferRefReceivedRef = ref
+        removeFromSendBufferRefClosure?(ref)
+    }
 
 
     //MARK: - leaveOpenTopic
@@ -1190,7 +1220,6 @@ class SocketMock: Socket {
         onCloseCodeReceivedCode = code
         onCloseCodeClosure?(code)
     }
-
 
 
 }

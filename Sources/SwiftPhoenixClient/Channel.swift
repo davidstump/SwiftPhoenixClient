@@ -201,7 +201,16 @@ public class Channel {
       self.socket?.logItems("channel", "error topic: \(self.topic) joinRef: \(self.joinRef ?? "nil") mesage: \(message)")
       
       // If error was received while joining, then reset the Push
-      if (self.isJoining) { self.joinPush.reset() }
+      if (self.isJoining) {
+        // Make sure that the "phx_join" isn't buffered to send once the socket
+        // reconnects. The channel will send a new join event when the socket connects.
+        if let safeJoinRef = self.joinRef {
+          self.socket?.removeFromSendBuffer(ref: safeJoinRef)
+        }
+        
+        // Reset the push to be used again later
+        self.joinPush.reset()
+      }
       
       // Mark the channel as errored and attempt to rejoin if socket is currently connected
       self.state = ChannelState.errored
