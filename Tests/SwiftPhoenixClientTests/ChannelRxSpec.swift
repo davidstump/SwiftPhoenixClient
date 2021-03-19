@@ -31,7 +31,7 @@ final class ChannelRxSpec: QuickSpec {
   override func spec() {
     
     // Mocks
-    var mockClient: TransportMock!
+    var mockClient: PhoenixTransportMock!
     var mockSocket: SocketMock!
     
     // Constants
@@ -42,7 +42,7 @@ final class ChannelRxSpec: QuickSpec {
     var channel: Channel!
     
     beforeEach {
-      mockClient = TransportMock()
+      mockClient = PhoenixTransportMock()
       
       mockSocket = SocketMock("/socket")
       mockSocket.connection = mockClient

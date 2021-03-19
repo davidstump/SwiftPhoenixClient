@@ -35,7 +35,7 @@ class PresenceSpec: QuickSpec {
     var presence: Presence!
     
     beforeEach {
-      let mockTransport = TransportMock()
+      let mockTransport = PhoenixTransportMock()
       mockSocket = SocketMock(endPoint: "/socket", transport: { _ in mockTransport })
       mockSocket.timeout = 10.0
       mockSocket.makeRefReturnValue = "1"

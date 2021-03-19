@@ -15,7 +15,7 @@ class ChannelSpec: QuickSpec {
   override func spec() {
     
     // Mocks
-    var mockClient: TransportMock!
+    var mockClient: PhoenixTransportMock!
     var mockSocket: SocketMock!
     
     // Constants
@@ -41,7 +41,7 @@ class ChannelSpec: QuickSpec {
       fakeClock = FakeTimerQueue()
       TimerQueue.main = fakeClock
       
-      mockClient = TransportMock()
+      mockClient = PhoenixTransportMock()
       
       mockSocket = SocketMock(endPoint: "/socket", transport: { _ in mockClient })
       mockSocket.connection = mockClient
@@ -176,6 +176,26 @@ class ChannelSpec: QuickSpec {
         let _ = channel.join(timeout: newTimeout)
         expect(joinPush?.timeout).to(equal(newTimeout))
       })
+      
+      it("leaves existing duplicate topic on new join") {
+        let transport: ((URL) -> PhoenixTransport) = { _ in return mockClient }
+        let spySocket = SocketSpy(endPoint: "/socket", transport: transport)
+        let channel = spySocket.channel("topic", params: ["one": "two"])
+        
+        mockClient.readyState = .open
+        spySocket.onConnectionOpen()
+        
+        channel.join()
+          .receive("ok") { (message) in
+            let newChannel = spySocket.channel("topic")
+            expect(channel.isJoined).to(beTrue())
+            newChannel.join()
+            
+            expect(channel.isJoined).to(beFalse())
+          }
+        
+        channel.joinPush.trigger("ok", payload: [:])
+      }
     }
     
     
@@ -372,11 +392,11 @@ class ChannelSpec: QuickSpec {
         })
         
         it("removes channel binding", closure: {
-          var bindings = getBindings("chan_reply_1")
+          var bindings = getBindings("chan_reply_3")
           expect(bindings).to(haveCount(1))
           
           receivesOk()
-          bindings = getBindings("chan_reply_1")
+          bindings = getBindings("chan_reply_3")
           expect(bindings).to(haveCount(0))
         })
         
@@ -512,11 +532,11 @@ class ChannelSpec: QuickSpec {
         })
         
         it("removes channel binding", closure: {
-          var bindings = getBindings("chan_reply_1")
+          var bindings = getBindings("chan_reply_3")
           expect(bindings).to(haveCount(1))
           
           receiveError()
-          bindings = getBindings("chan_reply_1")
+          bindings = getBindings("chan_reply_3")
           expect(bindings).to(haveCount(0))
         })
         
@@ -554,6 +574,8 @@ class ChannelSpec: QuickSpec {
         joinPush.trigger("ok", payload: [:])
       }
       
+      
+      
       it("does not trigger redundant errors during backoff", closure: {
         // Spy the channel's Join Push
         let mockPush = PushMock(channel: channel, event: "event")
@@ -570,6 +592,32 @@ class ChannelSpec: QuickSpec {
         fakeClock.tick(1.0)
         expect(mockPush.resendCallsCount).to(equal(1))
       })
+      
+      describe("while joining") {
+        
+        var mockPush: PushMock!
+        
+        beforeEach {
+          channel = Channel(topic: "topic", params: ["one": "two"], socket: mockSocket)
+          
+          // Spy the channel's Join Push
+          mockPush = PushMock(channel: channel, event: "event")
+          mockPush.ref = "10"
+          channel.joinPush = mockPush
+          channel.state = .joining
+        }
+        
+        it("removes the joinPush message from send buffer") {
+          channel.trigger(event: ChannelEvent.error)
+          expect(mockSocket.removeFromSendBufferRefCalled).to(beTrue())
+          expect(mockSocket.removeFromSendBufferRefReceivedRef).to(equal("10"))
+        }
+        
+        it("resets the joinPush") {
+          channel.trigger(event: ChannelEvent.error)
+          expect(mockPush.resetCalled).to(beTrue())
+        }
+      }
       
       it("sets channel state to .errored", closure: {
         expect(channel.state).toNot(equal(.errored))

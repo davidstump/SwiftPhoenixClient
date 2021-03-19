@@ -95,6 +95,9 @@ public class Channel {
   /// Timer to attempt to rejoin
   var rejoinTimer: TimeoutTimer
   
+  /// Refs of stateChange hooks
+  var stateChangeRefs: [String]
+  
   /// Initialize a Channel
   ///
   /// - parameter topic: Topic of the Channel
@@ -110,6 +113,7 @@ public class Channel {
     self.timeout = socket.timeout
     self.joinedOnce = false
     self.pushBuffer = []
+    self.stateChangeRefs = []
     self.rejoinTimer = TimeoutTimer()
     
     // Setup Timer delgation
@@ -124,13 +128,16 @@ public class Channel {
       }
     
     // Respond to socket events
-    self.socket?.delegateOnError(to: self, callback: { (self, _) in
+    let onErrorRef = self.socket?.delegateOnError(to: self, callback: { (self, _) in
       self.rejoinTimer.reset()
     })
-    self.socket?.delegateOnOpen(to: self, callback: { (self) in
+    if let ref = onErrorRef { self.stateChangeRefs.append(ref) }
+  
+    let onOpenRef = self.socket?.delegateOnOpen(to: self, callback: { (self) in
       self.rejoinTimer.reset()
       if (self.isErrored) { self.rejoin() }
     })
+    if let ref = onOpenRef { self.stateChangeRefs.append(ref) }
     
     // Setup Push Event to be sent when joining
     self.joinPush = Push(channel: self,
@@ -194,7 +201,16 @@ public class Channel {
       self.socket?.logItems("channel", "error topic: \(self.topic) joinRef: \(self.joinRef ?? "nil") mesage: \(message)")
       
       // If error was received while joining, then reset the Push
-      if (self.isJoining) { self.joinPush.reset() }
+      if (self.isJoining) {
+        // Make sure that the "phx_join" isn't buffered to send once the socket
+        // reconnects. The channel will send a new join event when the socket connects.
+        if let safeJoinRef = self.joinRef {
+          self.socket?.removeFromSendBuffer(ref: safeJoinRef)
+        }
+        
+        // Reset the push to be used again later
+        self.joinPush.reset()
+      }
       
       // Mark the channel as errored and attempt to rejoin if socket is currently connected
       self.state = ChannelState.errored
@@ -541,6 +557,9 @@ public class Channel {
   func rejoin(_ timeout: TimeInterval? = nil) {
     // Do not attempt to rejoin if the channel is in the process of leaving
     guard !self.isLeaving else { return }
+    
+    // Leave potentially duplicate channels
+    self.socket?.leaveOpenTopic(topic: self.topic)
     
     // Send the joinPush
     self.sendJoin(timeout ?? self.timeout)
