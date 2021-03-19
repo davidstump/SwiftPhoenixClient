@@ -136,8 +136,9 @@ public class Socket: PhoenixTransportDelegate {
   /// Collection on channels created for the Socket
   var channels: [Channel] = []
   
-  /// Buffers messages that need to be sent once the socket has connected
-  var sendBuffer: [() throws -> ()] = []
+  /// Buffers messages that need to be sent once the socket has connected. It is an array
+  /// of tuples, with the ref of the message to send and the callback that will send the message.
+  var sendBuffer: [(ref: String?, callback: () throws -> ())] = []
   
   /// Ref counter for messages
   var ref: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
@@ -303,10 +304,7 @@ public class Socket: PhoenixTransportDelegate {
     var delegated = Delegated<Void, Void>()
     delegated.manuallyDelegate(with: callback)
     
-    
-    let ref = makeRef()
-    self.stateChangeCallbacks.open.append((ref, delegated))
-    return ref
+    return self.append(callback: delegated, to: &self.stateChangeCallbacks.open)
   }
   
   /// Registers callbacks for connection open events. Automatically handles
@@ -326,9 +324,7 @@ public class Socket: PhoenixTransportDelegate {
     var delegated = Delegated<Void, Void>()
     delegated.delegate(to: owner, with: callback)
     
-    let ref = makeRef()
-    self.stateChangeCallbacks.open.append((ref, delegated))
-    return ref
+    return self.append(callback: delegated, to: &self.stateChangeCallbacks.open)
   }
   
   /// Registers callbacks for connection close events. Does not handle retain
@@ -346,9 +342,7 @@ public class Socket: PhoenixTransportDelegate {
     var delegated = Delegated<Void, Void>()
     delegated.manuallyDelegate(with: callback)
     
-    let ref = makeRef()
-    self.stateChangeCallbacks.close.append((ref, delegated))
-    return ref
+    return self.append(callback: delegated, to: &self.stateChangeCallbacks.close)
   }
   
   /// Registers callbacks for connection close events. Automatically handles
@@ -367,10 +361,8 @@ public class Socket: PhoenixTransportDelegate {
                                             callback: @escaping ((T) -> Void)) -> String {
     var delegated = Delegated<Void, Void>()
     delegated.delegate(to: owner, with: callback)
-    
-    let ref = makeRef()
-    self.stateChangeCallbacks.close.append((ref, delegated))
-    return ref
+   
+    return self.append(callback: delegated, to: &self.stateChangeCallbacks.close)
   }
   
   
@@ -389,9 +381,7 @@ public class Socket: PhoenixTransportDelegate {
     var delegated = Delegated<Error, Void>()
     delegated.manuallyDelegate(with: callback)
     
-    let ref = makeRef()
-    self.stateChangeCallbacks.error.append((ref, delegated))
-    return ref
+    return self.append(callback: delegated, to: &self.stateChangeCallbacks.error)
   }
   
   /// Registers callbacks for connection error events. Automatically handles
@@ -410,10 +400,8 @@ public class Socket: PhoenixTransportDelegate {
                                             callback: @escaping ((T, Error) -> Void)) -> String {
     var delegated = Delegated<Error, Void>()
     delegated.delegate(to: owner, with: callback)
-    
-    let ref = makeRef()
-    self.stateChangeCallbacks.error.append((ref, delegated))
-    return ref
+
+    return self.append(callback: delegated, to: &self.stateChangeCallbacks.error)
   }
   
   /// Registers callbacks for connection message events. Does not handle
@@ -432,9 +420,7 @@ public class Socket: PhoenixTransportDelegate {
     var delegated = Delegated<Message, Void>()
     delegated.manuallyDelegate(with: callback)
     
-    let ref = makeRef()
-    self.stateChangeCallbacks.message.append((ref, delegated))
-    return ref
+    return self.append(callback: delegated, to: &self.stateChangeCallbacks.message)
   }
   
   /// Registers callbacks for connection message events. Automatically handles
@@ -454,8 +440,12 @@ public class Socket: PhoenixTransportDelegate {
     var delegated = Delegated<Message, Void>()
     delegated.delegate(to: owner, with: callback)
     
+    return self.append(callback: delegated, to: &self.stateChangeCallbacks.message)
+  }
+  
+  private func append<T>(callback: T, to array: inout [(ref: String, callback: T)]) -> String {
     let ref = makeRef()
-    self.stateChangeCallbacks.message.append((ref, delegated))
+    array.append((ref, callback))
     return ref
   }
   
@@ -558,7 +548,7 @@ public class Socket: PhoenixTransportDelegate {
     } else {
       /// If the socket is not connected, add the push to a buffer which will
       /// be sent immediately upon connection.
-      self.sendBuffer.append(callback)
+      self.sendBuffer.append((ref: ref, callback: callback))
     }
   }
   
@@ -665,8 +655,13 @@ public class Socket: PhoenixTransportDelegate {
   /// Send all messages that were buffered before the socket opened
   internal func flushSendBuffer() {
     guard isConnected && sendBuffer.count > 0 else { return }
-    self.sendBuffer.forEach( { try? $0() } )
+    self.sendBuffer.forEach( { try? $0.callback() } )
     self.sendBuffer = []
+  }
+  
+  /// Removes an item from the sendBuffer with the matching ref
+  internal func removeFromSendBuffer(ref: String) {
+    self.sendBuffer = self.sendBuffer.filter({ $0.ref != ref })
   }
 
   /// Builds a fully qualified socket `URL` from `endPoint` and `params`.
@@ -709,9 +704,10 @@ public class Socket: PhoenixTransportDelegate {
   
   // Leaves any channel that is open that has a duplicate topic
   internal func leaveOpenTopic(topic: String) {
-    let dupChannel = self.channels.first(where: { $0.topic == topic && ($0.isJoined || $0.isJoining) })
+    guard
+      let dupe = self.channels.first(where: { $0.topic == topic && ($0.isJoined || $0.isJoining) })
+    else { return }
     
-    guard let dupe = dupChannel else { return }
     self.logItems("transport", "leaving duplicate topic: [\(topic)]" )
     dupe.leave()
   }
