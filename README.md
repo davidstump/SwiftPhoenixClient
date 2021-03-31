@@ -45,10 +45,9 @@ Installation details can be found below.
 
 ```swift
 import SwiftPhoenixClient
-// If using Carthage then you will also need to import the Starscream module
 import StarscreamSwiftPhoenixClient
 
-let socket = Socket(endPoint: "https://example.com") { StarscreamTransport(url: $0) }
+let socket = Socket(endPoint: "https://example.com/", transport: { StarscreamTransport(url: $0) })
 ```
 
 ### RxSwift
@@ -60,8 +59,6 @@ can be found below.
 ```swift
 import RxSwift
 import SwiftPhoenixClient
-
-// If using Carthage then you will also need to import the Rx module
 import RxSwiftPhoenixClient
 
 // Setup the Channel to receive and send messages
