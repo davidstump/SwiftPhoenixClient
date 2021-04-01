@@ -49,6 +49,7 @@
 		631D1882259CE1D7005FAC0E /* SwiftPhoenixClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1281439225410D52008615A7 /* SwiftPhoenixClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		631D18A6259D26EC005FAC0E /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 631D18A5259D26EC005FAC0E /* Starscream.framework */; };
 		6338892125D1E72000A05817 /* StarscreamTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631D1892259CE2A8005FAC0E /* StarscreamTransport.swift */; };
+		635669C4261631DC0068B665 /* URLSessionTransportSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635669C3261631DC0068B665 /* URLSessionTransportSpec.swift */; };
 		6397FE8A259967E9005E66C3 /* RxSwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 128143D425411361008615A7 /* RxSwiftPhoenixClient.framework */; };
 		63F0F58D2592E44800C904FB /* ChatRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F0F58C2592E44800C904FB /* ChatRoomViewController.swift */; };
 /* End PBXBuildFile section */
@@ -165,6 +166,7 @@
 		631D1886259CE1D7005FAC0E /* StarscreamSwiftPhoenixClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StarscreamSwiftPhoenixClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		631D1892259CE2A8005FAC0E /* StarscreamTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarscreamTransport.swift; sourceTree = "<group>"; };
 		631D18A5259D26EC005FAC0E /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
+		635669C3261631DC0068B665 /* URLSessionTransportSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionTransportSpec.swift; sourceTree = "<group>"; };
 		639D200B2592E81E00A5EEDC /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		63F0F58C2592E44800C904FB /* ChatRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -355,6 +357,7 @@
 				12EF620125524B6800A6EE9B /* PresenceSpec.swift */,
 				12EF620225524B6800A6EE9B /* TimeoutTimerSpec.swift */,
 				12EF620325524B6800A6EE9B /* DefaultSerializerSpec.swift */,
+				635669C3261631DC0068B665 /* URLSessionTransportSpec.swift */,
 			);
 			path = SwiftPhoenixClientTests;
 			sourceTree = "<group>";
@@ -688,6 +691,7 @@
 				12EF620825524B6800A6EE9B /* DefaultSerializerSpec.swift in Sources */,
 				12991E11254C456F00BB8650 /* FakeTimerQueue.swift in Sources */,
 				12991E15254C45FC00BB8650 /* FakeTimerQueueSpec.swift in Sources */,
+				635669C4261631DC0068B665 /* URLSessionTransportSpec.swift in Sources */,
 				12EF620725524B6800A6EE9B /* TimeoutTimerSpec.swift in Sources */,
 				12EF620F25524EEF00A6EE9B /* MockableProtocol.generated.swift in Sources */,
 				12991E0F254C454C00BB8650 /* SocketSpy.swift in Sources */,

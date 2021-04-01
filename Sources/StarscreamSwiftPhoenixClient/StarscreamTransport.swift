@@ -67,8 +67,7 @@ public class StarscreamTransport: NSObject, PhoenixTransport, WebSocketDelegate 
     // Set the trasport state as connecting
     self.readyState = .connecting
     
-    let request = URLRequest(url: url)
-    let socket = WebSocket(request: request)
+    let socket = WebSocket(url: url)
     socket.delegate = self
     socket.connect()
     

@@ -129,11 +129,11 @@ public enum PhoenixTransportReadyState {
  your own WebSocket library or implementation.
  */
 @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
-public class URLSessionTansport: NSObject, PhoenixTransport, URLSessionWebSocketDelegate {
+public class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketDelegate {
   
   
   /// The URL to connect to
-  private let url: URL
+  internal let url: URL
   
   /// The underling URLsession. Assigned during `connect()`
   private var session: URLSession? = nil
@@ -149,13 +149,22 @@ public class URLSessionTansport: NSObject, PhoenixTransport, URLSessionWebSocket
    
    ```swift
    let url = URL("wss://example.com/socket")
-   let transport: Transport = URLSessionTansport(url: url)
+   let transport: Transport = URLSessionTransport(url: url)
    ```
    
    - parameter url: URL to connect to
    */
   init(url: URL) {
-    self.url = url
+  
+    // URLSession requires that the endpoint be "wss" instead of "https".
+    let endpoint = url.absoluteString
+    let wsEndpoint = endpoint
+      .replacingOccurrences(of: "http://", with: "ws://")
+      .replacingOccurrences(of: "https://", with: "wss://")
+    
+    // Force unwrapping should be safe here since a valid URL came in and we just
+    // replaced the protocol.
+    self.url = URL(string: wsEndpoint)!
     
     super.init()
   }

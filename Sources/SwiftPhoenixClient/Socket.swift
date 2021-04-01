@@ -169,7 +169,7 @@ public class Socket: PhoenixTransportDelegate {
   public convenience init(_ endPoint: String,
                           params: Payload? = nil) {
     self.init(endPoint: endPoint,
-              transport: { url in return URLSessionTansport(url: url) },
+              transport: { url in return URLSessionTransport(url: url) },
               paramsClosure: { params })
   }
 
@@ -177,7 +177,7 @@ public class Socket: PhoenixTransportDelegate {
   public convenience init(_ endPoint: String,
                           paramsClosure: PayloadClosure?) {
     self.init(endPoint: endPoint,
-              transport: { url in return URLSessionTansport(url: url) },
+              transport: { url in return URLSessionTransport(url: url) },
               paramsClosure: paramsClosure)
   }
   
@@ -666,14 +666,8 @@ public class Socket: PhoenixTransportDelegate {
 
   /// Builds a fully qualified socket `URL` from `endPoint` and `params`.
   internal static func buildEndpointUrl(endpoint: String, paramsClosure params: PayloadClosure?) -> URL {
-    
-    // Replace 'http' and 'https' with 'ws' or 'wss'
-    let wsEndpoint = endpoint
-      .replacingOccurrences(of: "http://", with: "ws://")
-      .replacingOccurrences(of: "https://", with: "wss://")
-    
     guard
-      let url = URL(string: wsEndpoint),
+      let url = URL(string: endpoint),
       var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
       else { fatalError("Malformed URL: \(endpoint)") }
 
