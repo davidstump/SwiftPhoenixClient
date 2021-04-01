@@ -76,26 +76,12 @@ class SocketSpec: QuickSpec {
       
       it("should construct a valid URL", closure: {
         
-        // Test different schemes
-        expect(Socket("http://localhost:4000/socket/websocket", paramsClosure: nil).endPointUrl.absoluteString)
-          .to(equal("ws://localhost:4000/socket/websocket"))
-        
-        expect(Socket("https://localhost:4000/socket/websocket", paramsClosure: nil).endPointUrl.absoluteString)
-          .to(equal("wss://localhost:4000/socket/websocket"))
-        
-        expect(Socket("ws://localhost:4000/socket/websocket", paramsClosure: nil).endPointUrl.absoluteString)
-          .to(equal("ws://localhost:4000/socket/websocket"))
-        
-        expect(Socket("wss://localhost:4000/socket/websocket", paramsClosure: nil).endPointUrl.absoluteString)
-          .to(equal("wss://localhost:4000/socket/websocket"))
-        
-        
         // test params
-        expect(Socket("ws://localhost:4000/socket/websocket",
+        expect(Socket("http://localhost:4000/socket/websocket",
                       paramsClosure: { ["token": "abc123"] })
           .endPointUrl
           .absoluteString)
-          .to(equal("ws://localhost:4000/socket/websocket?token=abc123"))
+          .to(equal("http://localhost:4000/socket/websocket?token=abc123"))
         
         expect(Socket("ws://localhost:4000/socket/websocket",
                       paramsClosure: { ["token": "abc123", "user_id": 1] })

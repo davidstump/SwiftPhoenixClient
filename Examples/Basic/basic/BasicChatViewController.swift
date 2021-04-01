@@ -38,6 +38,8 @@ import StarscreamSwiftPhoenixClient
  
  */
 
+let endpoint = "http://localhost:4000/socket/websocket"
+
 class BasicChatViewController: UIViewController {
   
   // MARK: - Child Views
@@ -51,11 +53,13 @@ class BasicChatViewController: UIViewController {
   let username: String = "Basic"
   var topic: String = "rooms:lobby"
   
+  
+  
   // Test the URLSessionTransport
-  let socket = Socket("http://localhost:4000/socket/websocket")
+  let socket = Socket(endpoint)
   
   // Test the StarscreamTransport
-//  let socket = Socket(endPoint: "http://localhost:4000/socket/websocket", transport: { url in return StarscreamTransport(url: url) })
+//  let socket = Socket(endPoint: endpoint, transport: { url in return StarscreamTransport(url: url) })
     
   var lobbyChannel: Channel!
   
