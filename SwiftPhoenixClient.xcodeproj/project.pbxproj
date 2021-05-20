@@ -186,12 +186,9 @@
 		12EF620325524B6800A6EE9B /* DefaultSerializerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultSerializerSpec.swift; sourceTree = "<group>"; };
 		12EF620C25524EEF00A6EE9B /* MockableClass.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockableClass.generated.swift; sourceTree = "<group>"; };
 		12EF620D25524EEF00A6EE9B /* MockableProtocol.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockableProtocol.generated.swift; sourceTree = "<group>"; };
-		631D184B259CC548005FAC0E /* RxCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxCocoa.framework; path = Carthage/Build/iOS/RxCocoa.framework; sourceTree = "<group>"; };
 		631D1886259CE1D7005FAC0E /* StarscreamSwiftPhoenixClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StarscreamSwiftPhoenixClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		631D1892259CE2A8005FAC0E /* StarscreamTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarscreamTransport.swift; sourceTree = "<group>"; };
-		631D18A5259D26EC005FAC0E /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/iOS/Starscream.framework; sourceTree = "<group>"; };
 		635669C3261631DC0068B665 /* URLSessionTransportSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionTransportSpec.swift; sourceTree = "<group>"; };
-		639D200B2592E81E00A5EEDC /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Carthage/Build/iOS/RxSwift.framework; sourceTree = "<group>"; };
 		63B526842656CF9600289719 /* Starscream.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Starscream.xcframework; path = Carthage/Build/Starscream.xcframework; sourceTree = "<group>"; };
 		63B5268D2656CFFE00289719 /* RxSwift.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxSwift.xcframework; path = Carthage/Build/RxSwift.xcframework; sourceTree = "<group>"; };
 		63B526DC2656D53700289719 /* Nimble.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Nimble.xcframework; path = Carthage/Build/Nimble.xcframework; sourceTree = "<group>"; };
@@ -251,24 +248,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-<<<<<<< HEAD
-		0BFAE4DA1DA84F59000B3CD3 = {
-			isa = PBXGroup;
-			children = (
-				1203046A23B112050012FF2D /* Sources */,
-				0BFAE4F11DA84F59000B3CD3 /* Tests */,
-				0BFAE4E51DA84F59000B3CD3 /* Products */,
-				0BFAE5071DA853B5000B3CD3 /* Frameworks */,
-			);
-			sourceTree = "<group>";
-		};
-		0BFAE4E51DA84F59000B3CD3 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0BFAE4E41DA84F59000B3CD3 /* SwiftPhoenixClient.framework */,
-				0BFAE4ED1DA84F59000B3CD3 /* SwiftPhoenixClientTests.xctest */,
-				E330972322B9E6A300BCF98A /* SwiftPhoenixClient.framework */,
-=======
 		125A9EFD2543C8D000292017 /* Basic */ = {
 			isa = PBXGroup;
 			children = (
@@ -303,7 +282,6 @@
 				128143D425411361008615A7 /* RxSwiftPhoenixClient.framework */,
 				125A9EE42543C82800292017 /* Basic.app */,
 				631D1886259CE1D7005FAC0E /* StarscreamSwiftPhoenixClient.framework */,
->>>>>>> 2.x
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -380,9 +358,6 @@
 				63B526DD2656D53700289719 /* Quick.xcframework */,
 				63B5268D2656CFFE00289719 /* RxSwift.xcframework */,
 				63B526842656CF9600289719 /* Starscream.xcframework */,
-				631D18A5259D26EC005FAC0E /* Starscream.framework */,
-				631D184B259CC548005FAC0E /* RxCocoa.framework */,
-				639D200B2592E81E00A5EEDC /* RxSwift.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -455,19 +430,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-<<<<<<< HEAD
-		0BFAE4E11DA84F59000B3CD3 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E330971D22B9E6A300BCF98A /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-=======
 		1281438D25410D52008615A7 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -489,7 +451,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				631D187B259CE1D7005FAC0E /* RxSwiftPhoenixClient.h in Headers */,
->>>>>>> 2.x
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
