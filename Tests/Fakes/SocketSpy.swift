@@ -18,29 +18,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 @testable import SwiftPhoenixClient
 
-enum TestError: Error {
-  case stub
-}
-
-func toWebSocketText(data: [String: Any]) -> String {
-  let encoded = Defaults.encode(data)
-  return String(decoding: encoded, as: UTF8.self)
-}
-
-
-/// Transforms two Dictionaries into NSDictionaries so they can be conpared
-func transform(_ lhs: [AnyHashable: Any],
-               and rhs: [AnyHashable: Any]) -> (lhs: NSDictionary, rhs: NSDictionary) {
-  return (NSDictionary(dictionary: lhs), NSDictionary(dictionary: rhs))
-}
-
-
-extension Channel {
-  /// Utility method to easily filter the bindings for a channel by their event
-  func getBindings(_ event: String) -> [Binding]? {
-    return self.bindingsDel.filter({ $0.event == event })
+class SocketSpy: Socket {
+  
+  private(set) var pushCalled: Bool?
+  private(set) var pushCallCount: Int = 0
+  private(set) var pushArgs: [Int: (topic: String, event: String, payload: Payload, ref: String?, joinRef: String?)] = [:]
+  
+  override func push(topic: String,
+                     event: String,
+                     payload: Payload,
+                     ref: String? = nil,
+                     joinRef: String? = nil) {
+    self.pushCalled = true
+    self.pushCallCount += 1
+    self.pushArgs[pushCallCount] = (topic: topic, event: event, payload: payload, ref: ref, joinRef: joinRef)
+    super.push(topic: topic,
+               event: event,
+               payload: payload,
+               ref: ref,
+               joinRef: joinRef)
   }
+
+  
 }

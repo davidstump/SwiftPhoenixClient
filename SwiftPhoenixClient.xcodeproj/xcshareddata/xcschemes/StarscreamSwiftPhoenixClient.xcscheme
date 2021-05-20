@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1281439125410D52008615A7"
-               BuildableName = "SwiftPhoenixClient.framework"
-               BlueprintName = "SwiftPhoenixClient"
+               BlueprintIdentifier = "631D1877259CE1D7005FAC0E"
+               BuildableName = "StarscreamSwiftPhoenixClient.framework"
+               BlueprintName = "StarscreamSwiftPhoenixClient"
                ReferencedContainer = "container:SwiftPhoenixClient.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,16 +28,6 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1281439A25410D52008615A7"
-               BuildableName = "SwiftPhoenixClientTests.xctest"
-               BlueprintName = "SwiftPhoenixClientTests"
-               ReferencedContainer = "container:SwiftPhoenixClient.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
@@ -60,9 +50,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1281439125410D52008615A7"
-            BuildableName = "SwiftPhoenixClient.framework"
-            BlueprintName = "SwiftPhoenixClient"
+            BlueprintIdentifier = "631D1877259CE1D7005FAC0E"
+            BuildableName = "StarscreamSwiftPhoenixClient.framework"
+            BlueprintName = "StarscreamSwiftPhoenixClient"
             ReferencedContainer = "container:SwiftPhoenixClient.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

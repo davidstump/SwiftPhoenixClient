@@ -1,7 +1,6 @@
 // swiftlint:disable line_length
 // swiftlint:disable variable_name
 
-import Starscream
 @testable import SwiftPhoenixClient
 
 {% macro swiftifyMethodName name %}{{ name | replace:"(","_" | replace:")","" | replace:":","_" | replace:"`","" | snakeToCamelCase | lowerFirstWord }}{% endmacro %}

@@ -5,6 +5,11 @@ This product uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 2.0.0
+* Restructured project
+* Added support for URLSession's Websocket Task
+* Split Starscream and RxSwift into optional modules
+
 ## [1.3.0]
 * Fixed Cartfile declaration of Starscream
 * Added `HeartbeatTimer` class which allows running Timers to run on their own thread

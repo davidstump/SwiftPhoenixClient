@@ -2,10 +2,11 @@
 //  SwiftPhoenixClient.h
 //  SwiftPhoenixClient
 //
-//  Created by Tyler Stromberg on 10/7/16.
+//  Created by Daniel Rees on 10/21/20.
+//  Copyright © 2021 SwiftPhoenixClient. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 //! Project version number for SwiftPhoenixClient.
 FOUNDATION_EXPORT double SwiftPhoenixClientVersionNumber;
@@ -14,5 +15,3 @@ FOUNDATION_EXPORT double SwiftPhoenixClientVersionNumber;
 FOUNDATION_EXPORT const unsigned char SwiftPhoenixClientVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <SwiftPhoenixClient/PublicHeader.h>
-
-

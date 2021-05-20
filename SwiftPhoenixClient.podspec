@@ -8,37 +8,45 @@
 
 Pod::Spec.new do |s|
   s.name             = "SwiftPhoenixClient"
-  s.version          = "1.3.0"
+  s.version          = "2.0.0"
   s.summary          = "Connect your Phoenix and iOS applications through WebSockets!"
   s.swift_version    = "5.0"
+  s.description  = <<-EOS
+  SwiftPhoenixClient is a Swift port of phoenix.js, abstracting away the details
+  of the Phoenix Channels library and providing a near identical experience
+  to connect to your Phoenix WebSockets on iOS.
 
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!
-  s.description      = <<-DESC
-This is the SwiftPhoenixClient, an iOS libaray that works with the
-Phoenix Framework's channels. The Phoenix Framework only ships with a
-Javascript client. Use this library to talk to your Phoenix app from
-your iOS project. Check out the included chat client example, which
-works with the Phoenix chat server example:
-https://github.com/chrismccord/phoenix_chat_example
+  RxSwift extensions exist as well when subscribing to channel events.
 
-This library implements Phoenix Channels on iOS. For more information
-on Phoenix Channels check out the guide:
-http://www.phoenixframework.org/docs/channels
-                       DESC
-
+  A default Transport layer is implmenented for iOS 13 or later. If targeting
+  an earlier iOS version, please see the StarscreamSwiftPhoenixClient extention.
+  EOS
   s.homepage         = "https://github.com/davidstump/SwiftPhoenixClient"
-  s.license          = 'MIT'
+  s.license          = { :type => "MIT", :file => "License.md" }
   s.author           = { "David Stump" => "david@davidstump.net" }
   s.source           = { :git => "https://github.com/davidstump/SwiftPhoenixClient.git", :tag => s.version.to_s }
+  s.ios.deployment_target     = '10.0'
+  s.osx.deployment_target     = '10.12'
+  s.tvos.deployment_target    = '10.0'
+  s.watchos.deployment_target = '3.0'
 
-  s.platform     = :ios, '9.0'
-  s.requires_arc = true
+  s.default_subspec = "Core"
+  s.swift_version = '5.0'
 
-  s.source_files = 'Sources/**/*.swift'
+  s.subspec "Core" do |ss|
+    ss.source_files  = "Sources/SwiftPhoenixClient/"
+    ss.framework  = "Foundation"
+  end
 
-  s.dependency 'Starscream', '~> 3.1.0'
+  s.subspec "RxSwift" do |ss|
+    ss.source_files = "Sources/RxSwiftPhoenixClient/"
+    ss.dependency "SwiftPhoenixClient/Core"
+    ss.dependency "RxSwift", "~> 5.0"
+  end
+
+  s.subspec "Starscream" do |ss|
+    ss.source_files = "Sources/StarscreamSwiftPhoenixClient/"
+    ss.dependency "SwiftPhoenixClient/Core"
+    ss.dependency "Starscream", "~> 3.1"
+  end
 end
