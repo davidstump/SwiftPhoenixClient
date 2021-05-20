@@ -8,9 +8,9 @@
 
 import UIKit
 import RxSwift
-import RxCocoa
 import SwiftPhoenixClient
 import RxSwiftPhoenixClient
+import StarscreamSwiftPhoenixClient
 
 struct Shout {
   let name: String
@@ -25,7 +25,8 @@ class ChatRoomViewController: UIViewController {
   
   // MARK: - Attributes
   private let username: String = "ChatRoom"
-  private let socket = Socket("https://phxchat.herokuapp.com/socket/websocket")
+//  private let socket = Socket("https://phxchat.herokuapp.com/socket/websocket")
+  private let socket = Socket(endPoint: "https://phxchat.herokuapp.com/socket/websocket", transport: { url in return StarscreamTransport(url: url) })
   private let topic: String = "room:lobby"
   
   private var lobbyChannel: Channel?
