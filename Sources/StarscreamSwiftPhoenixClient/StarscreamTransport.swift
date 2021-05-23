@@ -28,6 +28,7 @@ import Starscream
  */
 @available(macOS 10.12, iOS 10, watchOS 3, tvOS 10, *)
 public class StarscreamTransport: NSObject, PhoenixTransport, WebSocketDelegate {
+	
   
   /// The URL to connect to
   private let url: URL
@@ -67,7 +68,9 @@ public class StarscreamTransport: NSObject, PhoenixTransport, WebSocketDelegate 
     // Set the trasport state as connecting
     self.readyState = .connecting
     
-    let socket = WebSocket(url: url)
+    var req = URLRequest(url: url)
+    req.timeoutInterval = 5
+    let socket = WebSocket(request: req)
     socket.delegate = self
     socket.connect()
     
@@ -96,29 +99,56 @@ public class StarscreamTransport: NSObject, PhoenixTransport, WebSocketDelegate 
   
   
   // MARK: - WebSocketDelegate
-  public func websocketDidConnect(socket: WebSocketClient) {
-    self.readyState = .open
-    self.delegate?.onOpen()
-  }
+//  public func websocketDidConnect(socket: WebSocketClient) {
+//    self.readyState = .open
+//    self.delegate?.onOpen()
+//  }
 
-  public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
-    
-    let closeCode = (error as? WSError)?.code ?? Socket.CloseCode.abnormal.rawValue
-    // Set the state of the Transport to closed
-    self.readyState = .closed
-    
-    // Inform the Transport's delegate that an error occurred.
-    if let safeError = error { self.delegate?.onError(error: safeError) }
-    
-    // An abnormal error is results in an abnormal closure, such as internet getting dropped
-    // so inform the delegate that the Transport has closed abnormally. This will kick off
-    // the reconnect logic.
-    self.delegate?.onClose(code: closeCode)
-  }
+//  public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
+//
+//    let closeCode = (error as? WSError)?.code ?? Socket.CloseCode.abnormal.rawValue
+//    // Set the state of the Transport to closed
+//    self.readyState = .closed
+//
+//    // Inform the Transport's delegate that an error occurred.
+//    if let safeError = error { self.delegate?.onError(error: safeError) }
+//
+//    // An abnormal error is results in an abnormal closure, such as internet getting dropped
+//    // so inform the delegate that the Transport has closed abnormally. This will kick off
+//    // the reconnect logic.
+//    self.delegate?.onClose(code: closeCode)
+//  }
 
-  public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-    self.delegate?.onMessage(message: text)
+  public func didReceive(event: WebSocketEvent, client: WebSocket) {
+    switch (event) {
+      case .connected:
+	    self.readyState = .open
+        self.delegate?.onOpen()
+	  
+	  case .disconnected(let _, let code):
+		// Set the state of the Transport to closed
+		self.readyState = .closed
+		
+		// An abnormal error is results in an abnormal closure, such as internet getting dropped
+		// so inform the delegate that the Transport has closed abnormally. This will kick off
+		// the reconnect logic.
+		self.delegate?.onClose(code: Int(code))
+	  
+      case .text(let string):
+        self.delegate?.onMessage(message: string)
+	  
+      case .error(let error):
+        if let e = error { self.delegate?.onError(error: e) }
+		self.delegate?.onClose(code: Int(CloseCode.goingAway.rawValue))
+        
+	  default:
+	    break
+    }
   }
-
-  public func websocketDidReceiveData(socket: WebSocketClient, data: Data) { /* no-op */ }
+  
+//  public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
+//    self.delegate?.onMessage(message: text)
+//  }
+//
+//  public func websocketDidReceiveData(socket: WebSocketClient, data: Data) { /* no-op */ }
 }
