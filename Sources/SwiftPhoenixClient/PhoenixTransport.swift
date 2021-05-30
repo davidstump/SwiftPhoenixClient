@@ -135,6 +135,9 @@ public class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocke
   /// The URL to connect to
   internal let url: URL
   
+  /// The URLSession configuratio
+  internal let configuration: URLSessionConfiguration
+    
   /// The underling URLsession. Assigned during `connect()`
   private var session: URLSession? = nil
   
@@ -151,10 +154,18 @@ public class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocke
    let url = URL("wss://example.com/socket")
    let transport: Transport = URLSessionTransport(url: url)
    ```
+     
+   Using a custom `URLSessionConfiguration`
+
+   ```swift
+   let url = URL("wss://example.com/socket")
+   let configuration = URLSessionConfiguration.default
+   let transport: Transport = URLSessionTransport(url: url)
+   ```
    
    - parameter url: URL to connect to
    */
-  init(url: URL) {
+  public init(url: URL, configuration: URLSessionConfiguration = .default) {
   
     // URLSession requires that the endpoint be "wss" instead of "https".
     let endpoint = url.absoluteString
@@ -165,6 +176,7 @@ public class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocke
     // Force unwrapping should be safe here since a valid URL came in and we just
     // replaced the protocol.
     self.url = URL(string: wsEndpoint)!
+    self.configuration = configuration
     
     super.init()
   }
@@ -180,7 +192,7 @@ public class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocke
     self.readyState = .connecting
     
     // Create the session and websocket task
-    self.session = URLSession(configuration: .default, delegate: self, delegateQueue: OperationQueue())
+    self.session = URLSession(configuration: self.configuration, delegate: self, delegateQueue: OperationQueue())
     self.task = self.session?.webSocketTask(with: url)
     
     // Start the task
