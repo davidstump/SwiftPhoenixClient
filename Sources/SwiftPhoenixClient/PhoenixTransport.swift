@@ -160,10 +160,11 @@ public class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocke
    ```swift
    let url = URL("wss://example.com/socket")
    let configuration = URLSessionConfiguration.default
-   let transport: Transport = URLSessionTransport(url: url)
+   let transport: Transport = URLSessionTransport(url: url, configuration: configuration)
    ```
    
    - parameter url: URL to connect to
+   - parameter configuration: Provide your own URLSessionConfiguration. Uses `.default` if none provided
    */
   public init(url: URL, configuration: URLSessionConfiguration = .default) {
   
