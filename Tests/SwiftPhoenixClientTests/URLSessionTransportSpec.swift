@@ -42,6 +42,19 @@ class URLSessionTransportSpec: QuickSpec {
           expect("wrong iOS version").to(equal("You must run this test on an iOS 13 device"))
         }
       }
+        
+      it("accepts an override for the configuration") {
+        if #available(iOS 13, *) {
+          let configuration = URLSessionConfiguration.default
+          expect(
+            URLSessionTransport(url: URL(string:"wss://localhost:4000")!, configuration: configuration)
+                .configuration
+          ).to(equal(configuration))
+        } else {
+          // Fallback on earlier versions
+          expect("wrong iOS version").to(equal("You must run this test on an iOS 13 device"))
+        }
+      }
     }
   }
 }
