@@ -111,6 +111,10 @@ public final class Presence {
     static public let defaults
       = Options(events: [.state: "presence_state",
                          .diff: "presence_diff"])
+    
+    public init(events: [Events: String]) {
+      self.events = events
+    }
   }
   
   /// Presense Events
