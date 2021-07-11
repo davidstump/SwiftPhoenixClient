@@ -5,6 +5,10 @@ This product uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 2.1.0
+* Updated Presence.Options init method to be public
+* Updated URLSessionWebsocketTask init method to accept a custom configuration
+
 ## 2.0.0
 * Restructured project
 * Added support for URLSession's Websocket Task

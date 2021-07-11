@@ -10,7 +10,7 @@ cache:
 before_install:
   - brew update
   - brew outdated carthage || brew upgrade carthage
-  - carthage bootstrap --no-use-binaries --platform iOS --cache-builds
+  - carthage bootstrap --use-xcframeworks --platform iOS --no-use-binaries --cache-builds
 
 script:
   - bundle exec fastlane test
