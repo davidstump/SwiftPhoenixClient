@@ -57,6 +57,9 @@ public class Defaults {
       else { return nil }
     return json
   }
+  
+  public static let heartbeatQueue: DispatchQueue
+    = DispatchQueue(label: "com.phoenix.socket.heartbeat")
 }
 
 

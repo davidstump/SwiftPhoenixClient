@@ -318,18 +318,17 @@ class SocketSpec: QuickSpec {
         
       })
       
-      it("invalidates and releases the heartbeat timer", closure: {
+      it("invalidates and invalidates the heartbeat timer", closure: {
         var timerCalled = 0
-        let timer = HeartbeatTimer(timeInterval: 10, dispatchQueue: .main)
-          
-        timer.startTimerWithEvent {
-          timerCalled += 1
-        }
-        
+        let queue = DispatchQueue(label: "test.heartbeat")
+        let timer = HeartbeatTimer(timeInterval: 10, queue: queue)
+      
+        timer.start { timerCalled += 1 }
+
         socket.heartbeatTimer = timer
         
         socket.disconnect()
-        expect(socket.heartbeatTimer).to(beNil())
+        expect(socket.heartbeatTimer?.isValid).to(beFalse())
         timer.fire()
         expect(timerCalled).to(equal(0))
       })
@@ -686,9 +685,11 @@ class SocketSpec: QuickSpec {
       
       it("should invalidate an old timer and create a new one", closure: {
         mockWebSocket.readyState = .open
+        let queue = DispatchQueue(label: "test.heartbeat")
+        let timer = HeartbeatTimer(timeInterval: 1000, queue: queue)
         
-        let timer = HeartbeatTimer(timeInterval: 1000, dispatchQueue: .main)
-        timer.startTimerWithEvent { }
+        var timerCalled = 0
+        timer.start { timerCalled += 1 }
         socket.heartbeatTimer = timer
         
         expect(timer.isValid).to(beTrue())

@@ -142,9 +142,6 @@ public class Socket: PhoenixTransportDelegate {
   
   /// Ref counter for messages
   var ref: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
-  
-  ///Queue to run heartbeat timer on
-  var heartbeatQueue: DispatchQueue = DispatchQueue(label: "com.phoenix.socket.heartbeat")
     
   /// Timer that triggers sending new Heartbeat messages
   var heartbeatTimer: HeartbeatTimer?
@@ -274,8 +271,7 @@ public class Socket: PhoenixTransportDelegate {
     self.connection = nil
     
     // The socket connection has been torndown, heartbeats are not needed
-    self.heartbeatTimer?.stopTimer()
-    self.heartbeatTimer = nil
+    self.heartbeatTimer?.stop()
     
     // Since the connection's delegate was nil'd out, inform all state
     // callbacks that the connection has closed
@@ -594,8 +590,7 @@ public class Socket: PhoenixTransportDelegate {
     self.triggerChannelError()
     
     // Prevent the heartbeat from triggering if the
-    self.heartbeatTimer?.stopTimer()
-    self.heartbeatTimer = nil
+    self.heartbeatTimer?.stop()
     
     // Only attempt to reconnect if the socket did not close normally
     if (!self.closeWasClean) {
@@ -712,15 +707,14 @@ public class Socket: PhoenixTransportDelegate {
   internal func resetHeartbeat() {
     // Clear anything related to the heartbeat
     self.pendingHeartbeatRef = nil
-    self.heartbeatTimer?.stopTimer()
-    self.heartbeatTimer = nil
-    
+    self.heartbeatTimer?.stop()
+
     // Do not start up the heartbeat timer if skipHeartbeat is true
     guard !skipHeartbeat else { return }
 
-    self.heartbeatTimer = HeartbeatTimer(timeInterval: heartbeatInterval, dispatchQueue: heartbeatQueue)
-    self.heartbeatTimer?.startTimerWithEvent(eventHandler: { [weak self] in
-        self?.sendHeartbeat()
+    self.heartbeatTimer = HeartbeatTimer(timeInterval: heartbeatInterval)
+    self.heartbeatTimer?.start(eventHandler: { [weak self] in
+      self?.sendHeartbeat()
     })
   }
   
