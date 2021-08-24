@@ -5,6 +5,9 @@ This product uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## 2.1.1
+* Fixed HeartbeatTimer to add thread safety and fix crash reported in #188
+
 ## 2.1.0
 * Updated Presence.Options init method to be public
 * Updated URLSessionWebsocketTask init method to accept a custom configuration
