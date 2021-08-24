@@ -645,11 +645,6 @@ class SocketMock: Socket {
         set(value) { underlyingRef = value }
     }
     var underlyingRef: (UInt64)!
-    override var heartbeatQueue: DispatchQueue {
-        get { return underlyingHeartbeatQueue }
-        set(value) { underlyingHeartbeatQueue = value }
-    }
-    var underlyingHeartbeatQueue: (DispatchQueue)!
     var heartbeatTimerSetCount: Int = 0
     var heartbeatTimerDidGetSet: Bool { return heartbeatTimerSetCount > 0 }
     override var heartbeatTimer: HeartbeatTimer? {

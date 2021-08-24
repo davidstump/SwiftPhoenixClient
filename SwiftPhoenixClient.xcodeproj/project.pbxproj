@@ -48,6 +48,7 @@
 		6338892125D1E72000A05817 /* StarscreamTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631D1892259CE2A8005FAC0E /* StarscreamTransport.swift */; };
 		635669C4261631DC0068B665 /* URLSessionTransportSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635669C3261631DC0068B665 /* URLSessionTransportSpec.swift */; };
 		6397FE8A259967E9005E66C3 /* RxSwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 128143D425411361008615A7 /* RxSwiftPhoenixClient.framework */; };
+		63ACBE9426D53DF500171582 /* HeartbeatTimerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ACBE9326D53DF500171582 /* HeartbeatTimerSpec.swift */; };
 		63B526852656CF9600289719 /* Starscream.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B526842656CF9600289719 /* Starscream.xcframework */; };
 		63B5268E2656CFFE00289719 /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B5268D2656CFFE00289719 /* RxSwift.xcframework */; };
 		63B526992656D05300289719 /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B5268D2656CFFE00289719 /* RxSwift.xcframework */; };
@@ -189,6 +190,7 @@
 		631D1886259CE1D7005FAC0E /* StarscreamSwiftPhoenixClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StarscreamSwiftPhoenixClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		631D1892259CE2A8005FAC0E /* StarscreamTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarscreamTransport.swift; sourceTree = "<group>"; };
 		635669C3261631DC0068B665 /* URLSessionTransportSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionTransportSpec.swift; sourceTree = "<group>"; };
+		63ACBE9326D53DF500171582 /* HeartbeatTimerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatTimerSpec.swift; sourceTree = "<group>"; };
 		63B526842656CF9600289719 /* Starscream.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Starscream.xcframework; path = Carthage/Build/Starscream.xcframework; sourceTree = "<group>"; };
 		63B5268D2656CFFE00289719 /* RxSwift.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxSwift.xcframework; path = Carthage/Build/RxSwift.xcframework; sourceTree = "<group>"; };
 		63B526DC2656D53700289719 /* Nimble.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Nimble.xcframework; path = Carthage/Build/Nimble.xcframework; sourceTree = "<group>"; };
@@ -390,6 +392,7 @@
 				12EF620225524B6800A6EE9B /* TimeoutTimerSpec.swift */,
 				12EF620325524B6800A6EE9B /* DefaultSerializerSpec.swift */,
 				635669C3261631DC0068B665 /* URLSessionTransportSpec.swift */,
+				63ACBE9326D53DF500171582 /* HeartbeatTimerSpec.swift */,
 			);
 			path = SwiftPhoenixClientTests;
 			sourceTree = "<group>";
@@ -677,6 +680,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				12EF620825524B6800A6EE9B /* DefaultSerializerSpec.swift in Sources */,
+				63ACBE9426D53DF500171582 /* HeartbeatTimerSpec.swift in Sources */,
 				12991E11254C456F00BB8650 /* FakeTimerQueue.swift in Sources */,
 				12991E15254C45FC00BB8650 /* FakeTimerQueueSpec.swift in Sources */,
 				635669C4261631DC0068B665 /* URLSessionTransportSpec.swift in Sources */,
