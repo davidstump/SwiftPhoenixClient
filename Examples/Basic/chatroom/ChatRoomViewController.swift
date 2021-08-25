@@ -17,6 +17,23 @@ struct Shout {
   let message: String
 }
 
+/*
+ ChatRoom provides a "real" example of using SwiftPhoenixClient, including how
+ to use the Rx extensions for it. It also utilizes logic to disconnect/reconnect
+ the socket when the app enters and exits the foreground.
+ 
+ NOTE: iOS can, at will, kill your connection if the app enters the background without
+ notiftying your process that it has been killed. Thus resulting in a disconnected
+ socket when the app comes back to the foreground. The best way around this is to
+ listen to Enter Foreground events and manually check if the socket is still connected
+ and attempt to reconnect and rejoin any channels.
+ 
+ In this example, the channel is left and socket is disconnected when the app enters
+ the background and then a new channel is created and joined and the socket is connected
+ when the app enters the foreground.
+ 
+ This example utilizes the PhxChat example at https://github.com/dwyl/phoenix-chat-example
+ */
 class ChatRoomViewController: UIViewController {
   
   // MARK: - Child Views
@@ -32,6 +49,10 @@ class ChatRoomViewController: UIViewController {
   private var lobbyChannel: Channel?
   private var shouts: [Shout] = []
   
+  // Notifcation Subscriptions
+  private var willEnterForegroundObservervation: NSObjectProtocol?
+  private var willResignActiveObservervation: NSObjectProtocol?
+  
   private let disposeBag = DisposeBag()
   
   
@@ -40,8 +61,73 @@ class ChatRoomViewController: UIViewController {
     super.viewDidLoad()
     
     self.tableView.dataSource = self
-
     
+    // When app enters foreground, be sure that the socket is connected
+    self.observeAppEnteredForeground()
+    
+    // Connect to the chat for the first time
+    self.connectToChat()
+  }
+  
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(animated)
+    
+    // When the Controller is removed from the view hierarchy, then stop
+    // observing app lifecycle and disconnect from the chat
+    self.removeAppEnteredForegroundObservation()
+    self.disconnectFromChat()
+  }
+  
+  // MARK: - IB Actions
+  @IBAction func onExitButtonPressed(_ sender: Any) {
+    self.navigationController?.popViewController(animated: true)
+  }
+  
+  
+  @IBAction func onSendButtonPressed(_ sender: Any) {
+    // Create and send the payload
+    let payload = ["name": username, "message": messageInput.text!]
+    self.lobbyChannel?.push("shout", payload: payload)
+    
+    // Clear the text intput
+    self.messageInput.text = ""
+  }
+  
+  
+  //----------------------------------------------------------------------
+  // MARK: - Background/Foreground reconnect strategy
+  //----------------------------------------------------------------------
+  private func observeAppEnteredForeground() {
+    // Make sure that there is no existing observation
+    self.removeAppEnteredForegroundObservation()
+    
+    // When the app resigns being active, the leave any existing channels
+    // and disconnect from the websocket.
+    self.willResignActiveObservervation = NotificationCenter.default
+      .addObserver(forName: UIApplication.willResignActiveNotification,
+                   object: nil,
+                   queue: .main) { _ in self.disconnectFromChat() }
+    
+    // Whenever the app enters the foreground, make sure sockets are reconnected
+    self.willEnterForegroundObservervation = NotificationCenter.default
+      .addObserver(forName: UIApplication.willEnterForegroundNotification,
+                   object: nil,
+                   queue: .main) { _ in self.connectToChat() }
+  }
+  
+  private func removeAppEnteredForegroundObservation() {
+    if let observer = self.willEnterForegroundObservervation {
+      NotificationCenter.default.removeObserver(observer)
+      self.willEnterForegroundObservervation = nil
+    }
+    
+    if let observer = self.willResignActiveObservervation {
+      NotificationCenter.default.removeObserver(observer)
+      self.willResignActiveObservervation = nil
+    }
+  }
+  
+  private func connectToChat() {
     // Setup the socket to receive open/close events
     socket.delegateOnOpen(to: self) { (self) in
       print("CHAT ROOM: Socket Opened")
@@ -90,22 +176,15 @@ class ChatRoomViewController: UIViewController {
     
     self.socket.connect()
   }
-    
   
-  // MARK: - IB Actions
-  @IBAction func onExitButtonPressed(_ sender: Any) {
+  private func disconnectFromChat() {
+    if let channel = self.lobbyChannel {
+      channel.leave()
+      self.socket.remove(channel)
+    }
+    
     self.socket.disconnect()
-    self.navigationController?.popViewController(animated: true)
-  }
-  
-  
-  @IBAction func onSendButtonPressed(_ sender: Any) {
-    // Create and send the payload
-    let payload = ["name": username, "message": messageInput.text!]
-    self.lobbyChannel?.push("shout", payload: payload)
-    
-    // Clear the text intput
-    self.messageInput.text = ""
+    self.shouts = []
   }
 }
 
@@ -125,6 +204,4 @@ extension ChatRoomViewController: UITableViewDataSource {
     
     return cell
   }
-  
-  
 }
