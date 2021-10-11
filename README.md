@@ -154,7 +154,7 @@ See the [Usage Guide](https://github.com/davidstump/SwiftPhoenixClient/wiki/Usag
 
 ## Example
 
-Check out the [ViewController](https://github.com/davidstump/SwiftPhoenixClient/blob/master/Example/ChatExample/ViewController.swift) in this repo for a brief example of a simple iOS chat application using the [Phoenix Chat Example](https://github.com/chrismccord/phoenix_chat_example)
+Check out the [ViewController](https://github.com/davidstump/SwiftPhoenixClient/blob/master/Examples/Basic/chatroom/ChatRoomViewController.swift) in this repo for a brief example of a simple iOS chat application using the [Phoenix Chat Example](https://github.com/dwyl/phoenix-chat-example)
 
 Also check out both the Swift and Elixir channels on IRC.
 
