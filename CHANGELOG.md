@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file. The format 
 
 This product uses [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## 2.2.0
+* **BREAKING**: Properly handle a `phx_reply` response by hiding the nested payload from the client and only returning the `response` for `Message.payload`. For convenince, `Message.rawPayload` has been provided which will behave the same as `Message.payload` in earlier versions.
 
 ## 2.1.1
 * Fixed HeartbeatTimer to add thread safety and fix crash reported in #188
