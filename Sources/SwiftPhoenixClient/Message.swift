@@ -35,17 +35,26 @@ public class Message {
   /// Message event
   public let event: String
   
+  /// The raw payload from the Message, including a nested response from
+  /// phx_reply events. It is recommended to use `payload` instead.
+  public let rawPayload: Payload
+  
   /// Message payload
-  public var payload: Payload
+  public var payload: Payload {
+    guard let response = rawPayload["response"] as? Payload
+    else { return rawPayload }
+    return response
+  }
   
   /// Convenience accessor. Equivalent to getting the status as such:
   /// ```swift
   /// message.payload["status"]
   /// ```
   public var status: String? {
-    return payload["status"] as? String
+    return rawPayload["status"] as? String
   }
   
+
   init(ref: String = "",
        topic: String = "",
        event: String = "",
@@ -54,7 +63,7 @@ public class Message {
     self.ref = ref
     self.topic = topic
     self.event = event
-    self.payload = payload
+    self.rawPayload = payload
     self.joinRef = joinRef
   }
   
@@ -69,7 +78,7 @@ public class Message {
       
       self.topic = topic
       self.event = event
-      self.payload = payload
+      self.rawPayload = payload
     } else {
       return nil
     }
