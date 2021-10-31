@@ -38,22 +38,22 @@ public class Defaults {
   public static let rejoinSteppedBackOff: (Int) -> TimeInterval = { tries in
     return tries > 3 ? 10 : [1, 2, 5][tries - 1]
   }
-  
+
+  public static let vsn = "2.0.0"
   
   /// Default encode function, utilizing JSONSerialization.data
-  public static let encode: ([String: Any]) -> Data = { json in
+  public static let encode: (Any) -> Data = { json in
     return try! JSONSerialization
       .data(withJSONObject: json,
             options: JSONSerialization.WritingOptions())
   }
   
   /// Default decode function, utilizing JSONSerialization.jsonObject
-  public static let decode: (Data) -> [String: Any]? = { data in
+  public static let decode: (Data) -> Any? = { data in
     guard
       let json = try? JSONSerialization
         .jsonObject(with: data,
                     options: JSONSerialization.ReadingOptions())
-        as? [String: Any]
       else { return nil }
     return json
   }

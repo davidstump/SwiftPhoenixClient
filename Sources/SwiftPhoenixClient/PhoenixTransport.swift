@@ -216,7 +216,7 @@ public class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocke
   }
   
   public func send(data: Data) {
-    self.task?.send(.data(data)) { (error) in
+    self.task?.send(.string(String(data: data, encoding: .utf8)!)) { (error) in
       // TODO: What is the behavior when an error occurs?
     }
   }

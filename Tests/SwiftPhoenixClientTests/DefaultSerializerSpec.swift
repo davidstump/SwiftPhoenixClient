@@ -12,23 +12,13 @@ import Nimble
 class DefaultSerializerSpec: QuickSpec {
   
   override func spec() {
-    
-    
-    describe("encode and decode") {
+    describe("encode and decode message") {
       it("converts dictionary to Data and back to Message", closure: {
-        let body: [String: Any] = [
-          "ref": "ref",
-          "join_ref": "join_ref",
-          "topic": "topic",
-          "event": "event",
-          "payload": ["user_id": "abc123"]
-        ]
-        
-        
+        let body: [Any] = ["join_ref", "ref", "topic", "event", ["user_id": "abc123"]]
         let data = Defaults.encode(body)
-        expect(data).toNot(beNil())
+        expect(String(data: data, encoding: .utf8)).to(equal("[\"join_ref\",\"ref\",\"topic\",\"event\",{\"user_id\":\"abc123\"}]"))
         
-        let json = Defaults.decode(data)
+        let json = Defaults.decode(data) as? [Any]
         
         let message = Message(json: json!)
         expect(message?.ref).to(equal("ref"))

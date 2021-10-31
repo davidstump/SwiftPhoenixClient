@@ -85,12 +85,15 @@ public class Socket: PhoenixTransportDelegate {
   /// The WebSocket transport. Default behavior is to provide a Starscream
   /// WebSocket instance. Potentially allows changing WebSockets in future
   private let transport: ((URL) -> PhoenixTransport)
+
+  /// Phoenix serializer version, defaults to "2.0.0"
+  public let vsn: String
   
   /// Override to provide custom encoding of data before writing to the socket
-  public var encode: ([String: Any]) -> Data = Defaults.encode
+  public var encode: (Any) -> Data = Defaults.encode
   
   /// Override to provide customd decoding of data read from the socket
-  public var decode: (Data) -> [String: Any]? = Defaults.decode
+  public var decode: (Data) -> Any? = Defaults.decode
   
   /// Timeout to use when opening connections
   public var timeout: TimeInterval = Defaults.timeoutInterval
@@ -164,29 +167,36 @@ public class Socket: PhoenixTransportDelegate {
   //----------------------------------------------------------------------
   @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
   public convenience init(_ endPoint: String,
-                          params: Payload? = nil) {
+                          params: Payload? = nil,
+                          vsn: String = Defaults.vsn) {
     self.init(endPoint: endPoint,
               transport: { url in return URLSessionTransport(url: url) },
-              paramsClosure: { params })
+              paramsClosure: { params },
+              vsn: vsn)
   }
 
   @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
   public convenience init(_ endPoint: String,
-                          paramsClosure: PayloadClosure?) {
+                          paramsClosure: PayloadClosure?,
+                          vsn: String = Defaults.vsn) {
     self.init(endPoint: endPoint,
               transport: { url in return URLSessionTransport(url: url) },
-              paramsClosure: paramsClosure)
+              paramsClosure: paramsClosure,
+              vsn: vsn)
   }
   
   
   public init(endPoint: String,
        transport: @escaping ((URL) -> PhoenixTransport),
-       paramsClosure: PayloadClosure? = nil) {
+       paramsClosure: PayloadClosure? = nil,
+       vsn: String = Defaults.vsn) {
     self.transport = transport
     self.paramsClosure = paramsClosure
     self.endPoint = endPoint
+    self.vsn = vsn
     self.endPointUrl = Socket.buildEndpointUrl(endpoint: endPoint,
-                                               paramsClosure: paramsClosure)
+                                               paramsClosure: paramsClosure,
+                                               vsn: vsn)
 
     self.reconnectTimer = TimeoutTimer()
     self.reconnectTimer.callback.delegate(to: self) { (self) in
@@ -235,7 +245,8 @@ public class Socket: PhoenixTransportDelegate {
     // We need to build this right before attempting to connect as the
     // parameters could be built upon demand and change over time
     self.endPointUrl = Socket.buildEndpointUrl(endpoint: self.endPoint,
-                                               paramsClosure: self.paramsClosure)
+                                               paramsClosure: self.paramsClosure,
+                                               vsn: vsn)
 
     self.connection = self.transport(self.endPointUrl)
     self.connection?.delegate = self
@@ -523,15 +534,7 @@ public class Socket: PhoenixTransportDelegate {
                      joinRef: String? = nil) {
     
     let callback: (() throws -> ()) = {
-      var body: [String: Any] = [
-        "topic": topic,
-        "event": event,
-        "payload": payload
-      ]
-      
-      if let safeRef = ref { body["ref"] = safeRef }
-      if let safeJoinRef = joinRef { body["join_ref"] = safeJoinRef}
-      
+      let body: [Any?] = [joinRef, ref, topic, event, payload]
       let data = self.encode(body)
       
       self.logItems("push", "Sending \(String(data: data, encoding: String.Encoding.utf8) ?? "")" )
@@ -615,7 +618,7 @@ public class Socket: PhoenixTransportDelegate {
     
     guard
       let data = rawMessage.data(using: String.Encoding.utf8),
-      let json = self.decode(data),
+      let json = decode(data) as? [Any?],
       let message = Message(json: json)
       else {
         self.logItems("receive: Unable to parse JSON: \(rawMessage)")
@@ -660,7 +663,7 @@ public class Socket: PhoenixTransportDelegate {
   }
 
   /// Builds a fully qualified socket `URL` from `endPoint` and `params`.
-  internal static func buildEndpointUrl(endpoint: String, paramsClosure params: PayloadClosure?) -> URL {
+  internal static func buildEndpointUrl(endpoint: String, paramsClosure params: PayloadClosure?, vsn: String) -> URL {
     guard
       let url = URL(string: endpoint),
       var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
@@ -678,11 +681,13 @@ public class Socket: PhoenixTransportDelegate {
 
     }
 
+    urlComponents.queryItems = [URLQueryItem(name: "vsn", value: vsn)]
+
     // If there are parameters, append them to the URL
     if let params = params?() {
-      urlComponents.queryItems = params.map {
+      urlComponents.queryItems?.append(contentsOf: params.map {
         URLQueryItem(name: $0.key, value: String(describing: $0.value))
-      }
+      })
     }
 
     guard let qualifiedUrl = urlComponents.url
