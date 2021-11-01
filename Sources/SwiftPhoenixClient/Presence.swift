@@ -226,7 +226,7 @@ public final class Presence {
     
     
     self.channel?.delegateOn(stateEvent, to: self) { (self, message) in
-      guard let newState = message.payload as? State else { return }
+      guard let newState = message.rawPayload as? State else { return }
       
       self.joinRef = self.channel?.joinRef
       self.state = Presence.syncState(self.state,
@@ -246,7 +246,7 @@ public final class Presence {
     }
     
     self.channel?.delegateOn(diffEvent, to: self) { (self, message) in
-      guard let diff = message.payload as? Diff else { return }
+      guard let diff = message.rawPayload as? Diff else { return }
       if self.isPendingSyncState {
         self.pendingDiffs.append(diff)
       } else {

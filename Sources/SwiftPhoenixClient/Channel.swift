@@ -221,7 +221,7 @@ public class Channel {
     self.delegateOn(ChannelEvent.reply, to: self) { (self, message) in
       // Trigger bindings
       self.trigger(event: self.replyEventName(message.ref),
-                   payload: message.payload,
+                   payload: message.rawPayload,
                    ref: message.ref,
                    joinRef: message.joinRef)
     }
@@ -543,7 +543,7 @@ public class Channel {
       ChannelEvent.isLifecyleEvent(message.event)
       else { return true }
 
-    self.socket?.logItems("channel", "dropping outdated message", message.topic, message.event, message.payload, safeJoinRef)
+    self.socket?.logItems("channel", "dropping outdated message", message.topic, message.event, message.rawPayload, safeJoinRef)
     return false
   }
   
