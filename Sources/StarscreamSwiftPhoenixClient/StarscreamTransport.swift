@@ -91,7 +91,7 @@ public class StarscreamTransport: NSObject, PhoenixTransport, WebSocketDelegate 
   }
   
   public func send(data: Data) {
-    self.socket?.write(data: data)
+    self.socket?.write(string: String(data: data, encoding: .utf8)!)
   }
   
   

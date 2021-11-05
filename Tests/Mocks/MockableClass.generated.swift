@@ -585,16 +585,16 @@ class SocketMock: Socket {
         set(value) { underlyingEndPointUrl = value }
     }
     var underlyingEndPointUrl: (URL)!
-    override var encode: ([String: Any]) -> Data {
+    override var encode: (Any) -> Data {
         get { return underlyingEncode }
         set(value) { underlyingEncode = value }
     }
-    var underlyingEncode: (([String: Any]) -> Data)!
-    override var decode: (Data) -> [String: Any]? {
+    var underlyingEncode: ((Any) -> Data)!
+    override var decode: (Data) -> Any? {
         get { return underlyingDecode }
         set(value) { underlyingDecode = value }
     }
-    var underlyingDecode: ((Data) -> [String: Any]?)!
+    var underlyingDecode: ((Data) -> Any?)!
     override var timeout: TimeInterval {
         get { return underlyingTimeout }
         set(value) { underlyingTimeout = value }
