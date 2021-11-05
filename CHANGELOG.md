@@ -3,8 +3,13 @@ All notable changes to this project will be documented in this file. The format 
 
 This product uses [Semantic Versioning](https://semver.org/).
 
-## 2.2.0
-* **BREAKING**: Properly handle a `phx_reply` response by hiding the nested payload from the client and only returning the `response` for `Message.payload`. For convenince, `Message.rawPayload` has been provided which will behave the same as `Message.payload` in earlier versions.
+
+
+## 3.0.0
+This ia a **BREAKING** release. The following has changed to properly matched the phoenix.js library
+* `message.payload.response` is now automatically unwrapped and returned as `message.payload` for `phx_reply` events.
+* The client now, be default, uses the JSON V2 Serializer which was added in phoenix 1.3. If you are still running 1.2 or earlier, then you will need to 
+continue using SwiftPhoenixClient 2.1.0, or provide your own custom `vsn`, `encoder` and `decoder` to the `Socket` class.
 
 ## 2.1.1
 * Fixed HeartbeatTimer to add thread safety and fix crash reported in #188

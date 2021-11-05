@@ -37,7 +37,7 @@ public class Message {
   
   /// The raw payload from the Message, including a nested response from
   /// phx_reply events. It is recommended to use `payload` instead.
-  public let rawPayload: Payload
+  internal let rawPayload: Payload
   
   /// Message payload
   public var payload: Payload {
