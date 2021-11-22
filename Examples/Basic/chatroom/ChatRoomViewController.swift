@@ -25,7 +25,7 @@ struct Shout {
  NOTE: iOS can, at will, kill your connection if the app enters the background without
  notiftying your process that it has been killed. Thus resulting in a disconnected
  socket when the app comes back to the foreground. The best way around this is to
- listen to Enter Foreground events and manually check if the socket is still connected
+ listen to UIApplication.didBecomeActiveNotification events and manually check if the socket is still connected
  and attempt to reconnect and rejoin any channels.
  
  In this example, the channel is left and socket is disconnected when the app enters
@@ -50,7 +50,7 @@ class ChatRoomViewController: UIViewController {
   private var shouts: [Shout] = []
   
   // Notifcation Subscriptions
-  private var willEnterForegroundObservervation: NSObjectProtocol?
+  private var didbecomeActiveObservervation: NSObjectProtocol?
   private var willResignActiveObservervation: NSObjectProtocol?
   
   private let disposeBag = DisposeBag()
@@ -97,34 +97,33 @@ class ChatRoomViewController: UIViewController {
   //----------------------------------------------------------------------
   // MARK: - Background/Foreground reconnect strategy
   //----------------------------------------------------------------------
-  private func observeAppEnteredForeground() {
-    // Make sure that there is no existing observation
-    self.removeAppEnteredForegroundObservation()
-    
-    // When the app resigns being active, the leave any existing channels
-    // and disconnect from the websocket.
-    self.willResignActiveObservervation = NotificationCenter.default
-      .addObserver(forName: UIApplication.willResignActiveNotification,
-                   object: nil,
-                   queue: .main) { _ in self.disconnectFromChat() }
-    
-    // Whenever the app enters the foreground, make sure sockets are reconnected
-    self.willEnterForegroundObservervation = NotificationCenter.default
-      .addObserver(forName: UIApplication.willEnterForegroundNotification,
-                   object: nil,
-                   queue: .main) { _ in self.connectToChat() }
+  private func observeDidBecomeActive() {
+      //Make sure there's no other observations
+      self.removeAppActiveObservation()
+      
+      self.didbecomeActiveObservervation = NotificationCenter.default
+        .addObserver(forName: UIApplication.didBecomeActiveNotification,
+                     object: nil,
+                     queue: .main) { [weak self] _ in self?.connectToConversation() }
+      
+      // When the app resigns being active, the leave any existing channels
+      // and disconnect from the websocket.
+      self.willResignActiveObservervation = NotificationCenter.default
+        .addObserver(forName: UIApplication.willResignActiveNotification,
+                     object: nil,
+                     queue: .main) { [weak self] _ in self?.disconnectFromChannel() }
   }
   
-  private func removeAppEnteredForegroundObservation() {
-    if let observer = self.willEnterForegroundObservervation {
-      NotificationCenter.default.removeObserver(observer)
-      self.willEnterForegroundObservervation = nil
-    }
-    
-    if let observer = self.willResignActiveObservervation {
-      NotificationCenter.default.removeObserver(observer)
-      self.willResignActiveObservervation = nil
-    }
+  private func removeAppActiveObservation() {
+      if let observer = self.didbecomeActiveObservervation {
+        NotificationCenter.default.removeObserver(observer)
+        self.didbecomeActiveObservervation = nil
+      }
+      
+      if let observer = self.willResignActiveObservervation {
+        NotificationCenter.default.removeObserver(observer)
+        self.willResignActiveObservervation = nil
+      }
   }
   
   private func connectToChat() {
