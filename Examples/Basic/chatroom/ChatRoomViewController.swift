@@ -42,7 +42,7 @@ class ChatRoomViewController: UIViewController {
   
   // MARK: - Attributes
   private let username: String = "ChatRoom"
-//  private let socket = Socket("https://phxchat.herokuapp.com/socket/websocket")
+  //  private let socket = Socket("https://phxchat.herokuapp.com/socket/websocket")
   private let socket = Socket(endPoint: "https://phxchat.herokuapp.com/socket/websocket", transport: { url in return StarscreamTransport(url: url) })
   private let topic: String = "room:lobby"
   
@@ -63,7 +63,7 @@ class ChatRoomViewController: UIViewController {
     self.tableView.dataSource = self
     
     // When app enters foreground, be sure that the socket is connected
-    self.observeAppEnteredForeground()
+    self.observeDidBecomeActive()
     
     // Connect to the chat for the first time
     self.connectToChat()
@@ -74,7 +74,7 @@ class ChatRoomViewController: UIViewController {
     
     // When the Controller is removed from the view hierarchy, then stop
     // observing app lifecycle and disconnect from the chat
-    self.removeAppEnteredForegroundObservation()
+    self.removeAppActiveObservation()
     self.disconnectFromChat()
   }
   
@@ -98,32 +98,32 @@ class ChatRoomViewController: UIViewController {
   // MARK: - Background/Foreground reconnect strategy
   //----------------------------------------------------------------------
   private func observeDidBecomeActive() {
-      //Make sure there's no other observations
-      self.removeAppActiveObservation()
-      
-      self.didbecomeActiveObservervation = NotificationCenter.default
-        .addObserver(forName: UIApplication.didBecomeActiveNotification,
-                     object: nil,
-                     queue: .main) { [weak self] _ in self?.connectToConversation() }
-      
-      // When the app resigns being active, the leave any existing channels
-      // and disconnect from the websocket.
-      self.willResignActiveObservervation = NotificationCenter.default
-        .addObserver(forName: UIApplication.willResignActiveNotification,
-                     object: nil,
-                     queue: .main) { [weak self] _ in self?.disconnectFromChannel() }
+    //Make sure there's no other observations
+    self.removeAppActiveObservation()
+    
+    self.didbecomeActiveObservervation = NotificationCenter.default
+      .addObserver(forName: UIApplication.didBecomeActiveNotification,
+                   object: nil,
+                   queue: .main) { [weak self] _ in self?.connectToChat() }
+    
+    // When the app resigns being active, the leave any existing channels
+    // and disconnect from the websocket.
+    self.willResignActiveObservervation = NotificationCenter.default
+      .addObserver(forName: UIApplication.willResignActiveNotification,
+                   object: nil,
+                   queue: .main) { [weak self] _ in self?.disconnectFromChat() }
   }
   
   private func removeAppActiveObservation() {
-      if let observer = self.didbecomeActiveObservervation {
-        NotificationCenter.default.removeObserver(observer)
-        self.didbecomeActiveObservervation = nil
-      }
-      
-      if let observer = self.willResignActiveObservervation {
-        NotificationCenter.default.removeObserver(observer)
-        self.willResignActiveObservervation = nil
-      }
+    if let observer = self.didbecomeActiveObservervation {
+      NotificationCenter.default.removeObserver(observer)
+      self.didbecomeActiveObservervation = nil
+    }
+    
+    if let observer = self.willResignActiveObservervation {
+      NotificationCenter.default.removeObserver(observer)
+      self.willResignActiveObservervation = nil
+    }
   }
   
   private func connectToChat() {
@@ -151,8 +151,8 @@ class ChatRoomViewController: UIViewController {
       .subscribe( onNext: { (message) in
         let payload = message.payload
         guard
-            let name = payload["name"] as? String,
-            let message = payload["message"] as? String else { return }
+          let name = payload["name"] as? String,
+          let message = payload["message"] as? String else { return }
         
         let shout = Shout(name: name, message: message)
         self.shouts.append(shout)
