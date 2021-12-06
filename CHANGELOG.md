@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file. The format 
 This product uses [Semantic Versioning](https://semver.org/).
 
 
+## 4.0.0
+* Updates RxSwift version to 6.x
 
 ## 3.0.0
 This ia a **BREAKING** release. The following has changed to properly matched the phoenix.js library

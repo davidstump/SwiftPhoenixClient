@@ -81,13 +81,13 @@ Podfile. Keep in mind that in order to use Swift Phoenix Client, the minimum iOS
 target must be '9.0'
 
 ```RUBY
-pod "SwiftPhoenixClient", '~> 3.0'
+pod "SwiftPhoenixClient", '~> 4.0'
 
 # If using RxSwift extensions
-pod "SwiftPhoenixClient/RxSwift", '~> 3.0'
+pod "SwiftPhoenixClient/RxSwift", '~> 4.0'
 
 # If targeting iOS < 13
-pod "SwiftPhoenixClient/Starscream", '~> 3.0'
+pod "SwiftPhoenixClient/Starscream", '~> 4.0'
 ```
 
 and running `pod install`. From there you will need to add `import SwiftPhoenixClient` in any class you want it to be used.
@@ -98,7 +98,7 @@ If you use Carthage to manage your dependencies, simply add
 SwiftPhoenixClient to your `Cartfile`:
 
 ```
-github "davidstump/SwiftPhoenixClient" ~> 3.0
+github "davidstump/SwiftPhoenixClient" ~> 4.0
 ```
 
 Then run `carthage update`.
@@ -115,7 +115,7 @@ _Note: Instructions below are for using **SwiftPM** without the Xcode UI. It's t
 To integrate using Apple's Swift package manager, without Xcode integration, add the following as a dependency to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/davidstump/SwiftPhoenixClient.git", .upToNextMajor(from: "3.0.0"))
+.package(url: "https://github.com/davidstump/SwiftPhoenixClient.git", .upToNextMajor(from: "4.0.0"))
 ```
 
 and then specify `"SwiftPhoenixClient"` as a dependency of the Target in which you wish to use SwiftPhoenixClient.
@@ -134,7 +134,7 @@ let package = Package(
             targets: ["MyPackage"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/davidstump/SwiftPhoenixClient.git", .upToNextMajor(from: "3.0.0"))
+        .package(url: "https://github.com/davidstump/SwiftPhoenixClient.git", .upToNextMajor(from: "4.0.0"))
     ],
     targets: [
         .target(
