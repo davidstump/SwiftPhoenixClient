@@ -41,7 +41,7 @@ Pod::Spec.new do |s|
   s.subspec "RxSwift" do |ss|
     ss.source_files = "Sources/RxSwiftPhoenixClient/"
     ss.dependency "SwiftPhoenixClient/Core"
-    ss.dependency "RxSwift", "~> 5.0"
+    ss.dependency "RxSwift", "~> 6.0"
   end
 
   s.subspec "Starscream" do |ss|
