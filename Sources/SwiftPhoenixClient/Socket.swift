@@ -82,8 +82,8 @@ public class Socket: PhoenixTransportDelegate {
   /// be set when initializaing the Socket.
   public let paramsClosure: PayloadClosure?
   
-  /// The WebSocket transport. Default behavior is to provide a Starscream
-  /// WebSocket instance. Potentially allows changing WebSockets in future
+  /// The WebSocket transport. Default behavior is to provide a
+  /// URLSessionWebsocketTask. See README for alternatives.
   private let transport: ((URL) -> PhoenixTransport)
 
   /// Phoenix serializer version, defaults to "2.0.0"

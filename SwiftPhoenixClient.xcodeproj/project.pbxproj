@@ -16,9 +16,6 @@
 		125A9F0F2543CDDE00292017 /* BasicChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125A9F0E2543CDDE00292017 /* BasicChatViewController.swift */; };
 		1281439C25410D52008615A7 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1281439225410D52008615A7 /* SwiftPhoenixClient.framework */; };
 		128143B225410DF3008615A7 /* SwiftPhoenixClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 128143B025410DF3008615A7 /* SwiftPhoenixClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		128143D7254113BD008615A7 /* RxSwiftPhoenixClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 128143D6254113BD008615A7 /* RxSwiftPhoenixClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		128143D92541142F008615A7 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1281439225410D52008615A7 /* SwiftPhoenixClient.framework */; };
-		128143DA2541142F008615A7 /* SwiftPhoenixClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1281439225410D52008615A7 /* SwiftPhoenixClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		12922E202543B10B0034B257 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12922E1F2543B10B0034B257 /* Socket.swift */; };
 		12922E222543B37B0034B257 /* PhoenixTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12922E212543B37B0034B257 /* PhoenixTransport.swift */; };
 		12991DFB254C3EB800BB8650 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991DFA254C3EB800BB8650 /* Defaults.swift */; };
@@ -29,12 +26,10 @@
 		12991E05254C3F3300BB8650 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E04254C3F3300BB8650 /* Channel.swift */; };
 		12991E07254C3F4B00BB8650 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E06254C3F4B00BB8650 /* Message.swift */; };
 		12991E09254C3F5B00BB8650 /* Presence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E08254C3F5B00BB8650 /* Presence.swift */; };
-		12991E0B254C44B900BB8650 /* Channel+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E0A254C44B900BB8650 /* Channel+Rx.swift */; };
 		12991E0F254C454C00BB8650 /* SocketSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E0E254C454C00BB8650 /* SocketSpy.swift */; };
 		12991E11254C456F00BB8650 /* FakeTimerQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E10254C456F00BB8650 /* FakeTimerQueue.swift */; };
 		12991E13254C458100BB8650 /* TestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E12254C458100BB8650 /* TestHelpers.swift */; };
 		12991E15254C45FC00BB8650 /* FakeTimerQueueSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E14254C45FC00BB8650 /* FakeTimerQueueSpec.swift */; };
-		12991E1D254C4BE100BB8650 /* ChannelRxSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E1C254C4BE100BB8650 /* ChannelRxSpec.swift */; };
 		12EF620425524B6800A6EE9B /* SocketSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF61FF25524B6800A6EE9B /* SocketSpec.swift */; };
 		12EF620525524B6800A6EE9B /* ChannelSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620025524B6800A6EE9B /* ChannelSpec.swift */; };
 		12EF620625524B6800A6EE9B /* PresenceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620125524B6800A6EE9B /* PresenceSpec.swift */; };
@@ -42,20 +37,10 @@
 		12EF620825524B6800A6EE9B /* DefaultSerializerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620325524B6800A6EE9B /* DefaultSerializerSpec.swift */; };
 		12EF620E25524EEF00A6EE9B /* MockableClass.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620C25524EEF00A6EE9B /* MockableClass.generated.swift */; };
 		12EF620F25524EEF00A6EE9B /* MockableProtocol.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620D25524EEF00A6EE9B /* MockableProtocol.generated.swift */; };
-		631D187B259CE1D7005FAC0E /* RxSwiftPhoenixClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 128143D6254113BD008615A7 /* RxSwiftPhoenixClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		631D187F259CE1D7005FAC0E /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1281439225410D52008615A7 /* SwiftPhoenixClient.framework */; };
-		631D1882259CE1D7005FAC0E /* SwiftPhoenixClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1281439225410D52008615A7 /* SwiftPhoenixClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6338892125D1E72000A05817 /* StarscreamTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 631D1892259CE2A8005FAC0E /* StarscreamTransport.swift */; };
 		635669C4261631DC0068B665 /* URLSessionTransportSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635669C3261631DC0068B665 /* URLSessionTransportSpec.swift */; };
-		6397FE8A259967E9005E66C3 /* RxSwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 128143D425411361008615A7 /* RxSwiftPhoenixClient.framework */; };
 		63ACBE9426D53DF500171582 /* HeartbeatTimerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ACBE9326D53DF500171582 /* HeartbeatTimerSpec.swift */; };
-		63B526852656CF9600289719 /* Starscream.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B526842656CF9600289719 /* Starscream.xcframework */; };
-		63B5268E2656CFFE00289719 /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B5268D2656CFFE00289719 /* RxSwift.xcframework */; };
 		63B526992656D05300289719 /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B5268D2656CFFE00289719 /* RxSwift.xcframework */; };
 		63B5269E2656D05600289719 /* Starscream.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B526842656CF9600289719 /* Starscream.xcframework */; };
-		63B526B02656D0DE00289719 /* StarscreamSwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 631D1886259CE1D7005FAC0E /* StarscreamSwiftPhoenixClient.framework */; };
-		63B526B12656D0DE00289719 /* StarscreamSwiftPhoenixClient.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 631D1886259CE1D7005FAC0E /* StarscreamSwiftPhoenixClient.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		63B526D92656D53700289719 /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B5268D2656CFFE00289719 /* RxSwift.xcframework */; };
 		63B526DE2656D53700289719 /* Nimble.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B526DC2656D53700289719 /* Nimble.xcframework */; };
 		63B526DF2656D53700289719 /* Quick.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B526DD2656D53700289719 /* Quick.xcframework */; };
 		63DE6CCA272A2ECB00E2A728 /* MessageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DE6CC9272A2ECB00E2A728 /* MessageSpec.swift */; };
@@ -77,73 +62,15 @@
 			remoteGlobalIDString = 1281439125410D52008615A7;
 			remoteInfo = SwiftPhoenixClient;
 		};
-		128143DB2541142F008615A7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1281438925410D52008615A7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1281439125410D52008615A7;
-			remoteInfo = SwiftPhoenixClient;
-		};
-		12991E16254C494100BB8650 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1281438925410D52008615A7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 128143CA25411361008615A7;
-			remoteInfo = RxSwiftPhoenixClient;
-		};
-		631D1879259CE1D7005FAC0E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1281438925410D52008615A7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1281439125410D52008615A7;
-			remoteInfo = SwiftPhoenixClient;
-		};
-		6397FE8C259967E9005E66C3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1281438925410D52008615A7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 128143CA25411361008615A7;
-			remoteInfo = RxSwiftPhoenixClient;
-		};
-		63B526B22656D0DE00289719 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1281438925410D52008615A7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 631D1877259CE1D7005FAC0E;
-			remoteInfo = StarscreamSwiftPhoenixClient;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		128143DD2541142F008615A7 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				128143DA2541142F008615A7 /* SwiftPhoenixClient.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		631D1881259CE1D7005FAC0E /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				631D1882259CE1D7005FAC0E /* SwiftPhoenixClient.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		63B526B42656D0DE00289719 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				63B526B12656D0DE00289719 /* StarscreamSwiftPhoenixClient.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -163,8 +90,6 @@
 		1281439B25410D52008615A7 /* SwiftPhoenixClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftPhoenixClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		128143B025410DF3008615A7 /* SwiftPhoenixClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftPhoenixClient.h; sourceTree = "<group>"; };
 		128143B125410DF3008615A7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		128143D425411361008615A7 /* RxSwiftPhoenixClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RxSwiftPhoenixClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		128143D6254113BD008615A7 /* RxSwiftPhoenixClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RxSwiftPhoenixClient.h; sourceTree = "<group>"; };
 		12922E1F2543B10B0034B257 /* Socket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
 		12922E212543B37B0034B257 /* PhoenixTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoenixTransport.swift; sourceTree = "<group>"; };
 		12991DFA254C3EB800BB8650 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
@@ -175,12 +100,10 @@
 		12991E04254C3F3300BB8650 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		12991E06254C3F4B00BB8650 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		12991E08254C3F5B00BB8650 /* Presence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Presence.swift; sourceTree = "<group>"; };
-		12991E0A254C44B900BB8650 /* Channel+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Channel+Rx.swift"; sourceTree = "<group>"; };
 		12991E0E254C454C00BB8650 /* SocketSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketSpy.swift; sourceTree = "<group>"; };
 		12991E10254C456F00BB8650 /* FakeTimerQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeTimerQueue.swift; sourceTree = "<group>"; };
 		12991E12254C458100BB8650 /* TestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
 		12991E14254C45FC00BB8650 /* FakeTimerQueueSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeTimerQueueSpec.swift; sourceTree = "<group>"; };
-		12991E1C254C4BE100BB8650 /* ChannelRxSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelRxSpec.swift; sourceTree = "<group>"; };
 		12EF61FF25524B6800A6EE9B /* SocketSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketSpec.swift; sourceTree = "<group>"; };
 		12EF620025524B6800A6EE9B /* ChannelSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelSpec.swift; sourceTree = "<group>"; };
 		12EF620125524B6800A6EE9B /* PresenceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresenceSpec.swift; sourceTree = "<group>"; };
@@ -188,8 +111,6 @@
 		12EF620325524B6800A6EE9B /* DefaultSerializerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultSerializerSpec.swift; sourceTree = "<group>"; };
 		12EF620C25524EEF00A6EE9B /* MockableClass.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockableClass.generated.swift; sourceTree = "<group>"; };
 		12EF620D25524EEF00A6EE9B /* MockableProtocol.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockableProtocol.generated.swift; sourceTree = "<group>"; };
-		631D1886259CE1D7005FAC0E /* StarscreamSwiftPhoenixClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StarscreamSwiftPhoenixClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		631D1892259CE2A8005FAC0E /* StarscreamTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarscreamTransport.swift; sourceTree = "<group>"; };
 		635669C3261631DC0068B665 /* URLSessionTransportSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionTransportSpec.swift; sourceTree = "<group>"; };
 		63ACBE9326D53DF500171582 /* HeartbeatTimerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatTimerSpec.swift; sourceTree = "<group>"; };
 		63B526842656CF9600289719 /* Starscream.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Starscream.xcframework; path = Carthage/Build/Starscream.xcframework; sourceTree = "<group>"; };
@@ -207,9 +128,7 @@
 			files = (
 				63B526992656D05300289719 /* RxSwift.xcframework in Frameworks */,
 				125A9EF82543C84700292017 /* SwiftPhoenixClient.framework in Frameworks */,
-				6397FE8A259967E9005E66C3 /* RxSwiftPhoenixClient.framework in Frameworks */,
 				63B5269E2656D05600289719 /* Starscream.xcframework in Frameworks */,
-				63B526B02656D0DE00289719 /* StarscreamSwiftPhoenixClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,26 +145,7 @@
 			files = (
 				63B526DE2656D53700289719 /* Nimble.xcframework in Frameworks */,
 				63B526DF2656D53700289719 /* Quick.xcframework in Frameworks */,
-				63B526D92656D53700289719 /* RxSwift.xcframework in Frameworks */,
 				1281439C25410D52008615A7 /* SwiftPhoenixClient.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		128143CF25411361008615A7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				128143D92541142F008615A7 /* SwiftPhoenixClient.framework in Frameworks */,
-				63B5268E2656CFFE00289719 /* RxSwift.xcframework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		631D187E259CE1D7005FAC0E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				63B526852656CF9600289719 /* Starscream.xcframework in Frameworks */,
-				631D187F259CE1D7005FAC0E /* SwiftPhoenixClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,9 +183,7 @@
 			children = (
 				1281439225410D52008615A7 /* SwiftPhoenixClient.framework */,
 				1281439B25410D52008615A7 /* SwiftPhoenixClientTests.xctest */,
-				128143D425411361008615A7 /* RxSwiftPhoenixClient.framework */,
 				125A9EE42543C82800292017 /* Basic.app */,
-				631D1886259CE1D7005FAC0E /* StarscreamSwiftPhoenixClient.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -293,20 +191,10 @@
 		128143AC25410DF3008615A7 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				631D1891259CE258005FAC0E /* StarscreamSwiftPhoenixClient */,
-				128143AD25410DF3008615A7 /* RxSwiftPhoenixClient */,
 				128143AE25410DF3008615A7 /* SwiftPhoenixClient */,
 				128143AF25410DF3008615A7 /* Supporting Files */,
 			);
 			path = Sources;
-			sourceTree = "<group>";
-		};
-		128143AD25410DF3008615A7 /* RxSwiftPhoenixClient */ = {
-			isa = PBXGroup;
-			children = (
-				12991E0A254C44B900BB8650 /* Channel+Rx.swift */,
-			);
-			path = RxSwiftPhoenixClient;
 			sourceTree = "<group>";
 		};
 		128143AE25410DF3008615A7 /* SwiftPhoenixClient */ = {
@@ -330,7 +218,6 @@
 			isa = PBXGroup;
 			children = (
 				128143B025410DF3008615A7 /* SwiftPhoenixClient.h */,
-				128143D6254113BD008615A7 /* RxSwiftPhoenixClient.h */,
 				128143B125410DF3008615A7 /* Info.plist */,
 			);
 			path = "Supporting Files";
@@ -387,7 +274,6 @@
 		12EF61FE25524B6800A6EE9B /* SwiftPhoenixClientTests */ = {
 			isa = PBXGroup;
 			children = (
-				12991E1C254C4BE100BB8650 /* ChannelRxSpec.swift */,
 				12EF61FF25524B6800A6EE9B /* SocketSpec.swift */,
 				12EF620025524B6800A6EE9B /* ChannelSpec.swift */,
 				12EF620125524B6800A6EE9B /* PresenceSpec.swift */,
@@ -407,14 +293,6 @@
 				12EF620D25524EEF00A6EE9B /* MockableProtocol.generated.swift */,
 			);
 			path = Mocks;
-			sourceTree = "<group>";
-		};
-		631D1891259CE258005FAC0E /* StarscreamSwiftPhoenixClient */ = {
-			isa = PBXGroup;
-			children = (
-				631D1892259CE2A8005FAC0E /* StarscreamTransport.swift */,
-			);
-			path = StarscreamSwiftPhoenixClient;
 			sourceTree = "<group>";
 		};
 		63F0F5912592E58800C904FB /* basic */ = {
@@ -444,22 +322,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		128143CB25411361008615A7 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				128143D7254113BD008615A7 /* RxSwiftPhoenixClient.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		631D187A259CE1D7005FAC0E /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				631D187B259CE1D7005FAC0E /* RxSwiftPhoenixClient.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -476,8 +338,6 @@
 			);
 			dependencies = (
 				125A9EFB2543C84700292017 /* PBXTargetDependency */,
-				6397FE8D259967E9005E66C3 /* PBXTargetDependency */,
-				63B526B32656D0DE00289719 /* PBXTargetDependency */,
 			);
 			name = Basic;
 			productName = Basic;
@@ -513,53 +373,12 @@
 			buildRules = (
 			);
 			dependencies = (
-				12991E17254C494100BB8650 /* PBXTargetDependency */,
 				1281439E25410D52008615A7 /* PBXTargetDependency */,
 			);
 			name = SwiftPhoenixClientTests;
 			productName = SwiftPhoenixClientTests;
 			productReference = 1281439B25410D52008615A7 /* SwiftPhoenixClientTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		128143CA25411361008615A7 /* RxSwiftPhoenixClient */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 128143D125411361008615A7 /* Build configuration list for PBXNativeTarget "RxSwiftPhoenixClient" */;
-			buildPhases = (
-				128143CB25411361008615A7 /* Headers */,
-				128143CD25411361008615A7 /* Sources */,
-				128143CF25411361008615A7 /* Frameworks */,
-				128143D025411361008615A7 /* Resources */,
-				128143DD2541142F008615A7 /* Embed Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				128143DC2541142F008615A7 /* PBXTargetDependency */,
-			);
-			name = RxSwiftPhoenixClient;
-			productName = SwiftPhoenixClient;
-			productReference = 128143D425411361008615A7 /* RxSwiftPhoenixClient.framework */;
-			productType = "com.apple.product-type.framework";
-		};
-		631D1877259CE1D7005FAC0E /* StarscreamSwiftPhoenixClient */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 631D1883259CE1D7005FAC0E /* Build configuration list for PBXNativeTarget "StarscreamSwiftPhoenixClient" */;
-			buildPhases = (
-				631D187A259CE1D7005FAC0E /* Headers */,
-				631D187C259CE1D7005FAC0E /* Sources */,
-				631D187E259CE1D7005FAC0E /* Frameworks */,
-				631D1880259CE1D7005FAC0E /* Resources */,
-				631D1881259CE1D7005FAC0E /* Embed Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				631D1878259CE1D7005FAC0E /* PBXTargetDependency */,
-			);
-			name = StarscreamSwiftPhoenixClient;
-			productName = SwiftPhoenixClient;
-			productReference = 631D1886259CE1D7005FAC0E /* StarscreamSwiftPhoenixClient.framework */;
-			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -581,9 +400,6 @@
 					1281439A25410D52008615A7 = {
 						CreatedOnToolsVersion = 11.7;
 					};
-					128143CA25411361008615A7 = {
-						LastSwiftMigration = 1170;
-					};
 				};
 			};
 			buildConfigurationList = 1281438C25410D52008615A7 /* Build configuration list for PBXProject "SwiftPhoenixClient" */;
@@ -600,8 +416,6 @@
 			projectRoot = "";
 			targets = (
 				1281439125410D52008615A7 /* SwiftPhoenixClient */,
-				128143CA25411361008615A7 /* RxSwiftPhoenixClient */,
-				631D1877259CE1D7005FAC0E /* StarscreamSwiftPhoenixClient */,
 				1281439A25410D52008615A7 /* SwiftPhoenixClientTests */,
 				125A9EE32543C82800292017 /* Basic */,
 			);
@@ -627,20 +441,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1281439925410D52008615A7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		128143D025411361008615A7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		631D1880259CE1D7005FAC0E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -695,24 +495,7 @@
 				12EF620525524B6800A6EE9B /* ChannelSpec.swift in Sources */,
 				12EF620E25524EEF00A6EE9B /* MockableClass.generated.swift in Sources */,
 				12EF620625524B6800A6EE9B /* PresenceSpec.swift in Sources */,
-				12991E1D254C4BE100BB8650 /* ChannelRxSpec.swift in Sources */,
 				12EF620425524B6800A6EE9B /* SocketSpec.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		128143CD25411361008615A7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				12991E0B254C44B900BB8650 /* Channel+Rx.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		631D187C259CE1D7005FAC0E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				6338892125D1E72000A05817 /* StarscreamTransport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -728,31 +511,6 @@
 			isa = PBXTargetDependency;
 			target = 1281439125410D52008615A7 /* SwiftPhoenixClient */;
 			targetProxy = 1281439D25410D52008615A7 /* PBXContainerItemProxy */;
-		};
-		128143DC2541142F008615A7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 1281439125410D52008615A7 /* SwiftPhoenixClient */;
-			targetProxy = 128143DB2541142F008615A7 /* PBXContainerItemProxy */;
-		};
-		12991E17254C494100BB8650 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 128143CA25411361008615A7 /* RxSwiftPhoenixClient */;
-			targetProxy = 12991E16254C494100BB8650 /* PBXContainerItemProxy */;
-		};
-		631D1878259CE1D7005FAC0E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 1281439125410D52008615A7 /* SwiftPhoenixClient */;
-			targetProxy = 631D1879259CE1D7005FAC0E /* PBXContainerItemProxy */;
-		};
-		6397FE8D259967E9005E66C3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 128143CA25411361008615A7 /* RxSwiftPhoenixClient */;
-			targetProxy = 6397FE8C259967E9005E66C3 /* PBXContainerItemProxy */;
-		};
-		63B526B32656D0DE00289719 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 631D1877259CE1D7005FAC0E /* StarscreamSwiftPhoenixClient */;
-			targetProxy = 63B526B22656D0DE00289719 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1095,128 +853,6 @@
 			};
 			name = Release;
 		};
-		128143D225411361008615A7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_ENABLE_MODULES = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "$(SRCROOT)/Sources/Supporting Files/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.SwiftPhoenixClient;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TVOS_DEPLOYMENT_TARGET = 10.0;
-				WATCHOS_DEPLOYMENT_TARGET = 3.0;
-			};
-			name = Debug;
-		};
-		128143D325411361008615A7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_ENABLE_MODULES = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "$(SRCROOT)/Sources/Supporting Files/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.SwiftPhoenixClient;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
-				SWIFT_VERSION = 5.0;
-				TVOS_DEPLOYMENT_TARGET = 10.0;
-				WATCHOS_DEPLOYMENT_TARGET = 3.0;
-			};
-			name = Release;
-		};
-		631D1884259CE1D7005FAC0E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_ENABLE_MODULES = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "$(SRCROOT)/Sources/Supporting Files/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.SwiftPhoenixClient;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TVOS_DEPLOYMENT_TARGET = 10.0;
-				WATCHOS_DEPLOYMENT_TARGET = 3.0;
-			};
-			name = Debug;
-		};
-		631D1885259CE1D7005FAC0E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CLANG_ENABLE_MODULES = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "$(SRCROOT)/Sources/Supporting Files/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.SwiftPhoenixClient;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
-				SWIFT_VERSION = 5.0;
-				TVOS_DEPLOYMENT_TARGET = 10.0;
-				WATCHOS_DEPLOYMENT_TARGET = 3.0;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1252,24 +888,6 @@
 			buildConfigurations = (
 				128143AA25410D52008615A7 /* Debug */,
 				128143AB25410D52008615A7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		128143D125411361008615A7 /* Build configuration list for PBXNativeTarget "RxSwiftPhoenixClient" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				128143D225411361008615A7 /* Debug */,
-				128143D325411361008615A7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		631D1883259CE1D7005FAC0E /* Build configuration list for PBXNativeTarget "StarscreamSwiftPhoenixClient" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				631D1884259CE1D7005FAC0E /* Debug */,
-				631D1885259CE1D7005FAC0E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -1,4 +1,2 @@
-github "Quick/Nimble" "v9.2.0"
+github "Quick/Nimble" "v9.2.1"
 github "Quick/Quick" "v4.0.0"
-github "ReactiveX/RxSwift" "5.1.2"
-github "daltoniam/Starscream" "3.1.1"
