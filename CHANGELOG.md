@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file. The format 
 This product uses [Semantic Versioning](https://semver.org/).
 
 
+## 5.0.0
+* Removes RxSwift dependency
+* Removes Starscream dependency
+* Creating new repos to host these extensions
+
 ## 4.0.0
 * Updates RxSwift version to 6.x
 

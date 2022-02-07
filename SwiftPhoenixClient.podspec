@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "SwiftPhoenixClient"
-  s.version          = "4.0.0"
+  s.version          = "5.0.0"
   s.summary          = "Connect your Phoenix and iOS applications through WebSockets!"
   s.swift_version    = "5.0"
   s.description  = <<-EOS
@@ -30,8 +30,6 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target    = '10.0'
   s.watchos.deployment_target = '3.0'
 
-  s.default_subspec = "Core"
   s.swift_version = '5.0'
-
   s.source_files  = "Sources/SwiftPhoenixClient/"
 end
