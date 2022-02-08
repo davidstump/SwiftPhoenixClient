@@ -792,6 +792,9 @@ public class Socket: PhoenixTransportDelegate {
   }
   
   public func onClose(code: Int) {
+    if code == CloseCode.normal.rawValue && self.closingAbnormally {
+      self.logItems("transport", "server confirmed client-initiated abnormal close")
+    }
     self.closeWasClean = code != CloseCode.abnormal.rawValue
     self.onConnectionClosed(code: code)
   }
