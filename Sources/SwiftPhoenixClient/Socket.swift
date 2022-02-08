@@ -157,6 +157,9 @@ public class Socket: PhoenixTransportDelegate {
   
   /// True if the Socket closed cleaned. False if not (connection timeout, heartbeat, etc)
   var closeWasClean: Bool = false
+
+  /// True if the Socket is being closed abnormally
+  var closingAbnormally: Bool = false
   
   /// The connection to the server
   var connection: PhoenixTransport? = nil
@@ -239,8 +242,9 @@ public class Socket: PhoenixTransportDelegate {
     // Do not attempt to reconnect if the socket is currently connected
     guard !isConnected else { return }
     
-    // Reset the clean close flag when attempting to connect
+    // Reset the clean close flags when attempting to connect
     self.closeWasClean = false
+    self.closingAbnormally = false
 
     // We need to build this right before attempting to connect as the
     // parameters could be built upon demand and change over time
@@ -267,8 +271,9 @@ public class Socket: PhoenixTransportDelegate {
   /// - paramter callback: Optional. Called when disconnected
   public func disconnect(code: CloseCode = CloseCode.normal,
                          callback: (() -> Void)? = nil) {
-      // The socket was closed cleanly by the User
-      self.closeWasClean = true
+    // The socket was closed cleanly by the User
+    self.closeWasClean = true
+    self.closingAbnormally = false
     
     // Reset any reconnects and teardown the socket connection
     self.reconnectTimer.reset()
@@ -572,9 +577,10 @@ public class Socket: PhoenixTransportDelegate {
   internal func onConnectionOpen() {
     self.logItems("transport", "Connected to \(endPoint)")
     
-    // Reset the closeWasClean flag now that the socket has been connected
+    // Reset the close flags now that the socket has been connected
     self.closeWasClean = false
-    
+    self.closingAbnormally = false
+
     // Send any messages that were waiting for a connection
     self.flushSendBuffer()
     
@@ -590,14 +596,20 @@ public class Socket: PhoenixTransportDelegate {
   
   internal func onConnectionClosed(code: Int?) {
     self.logItems("transport", "close")
+
+    // Send an error to all channels
     self.triggerChannelError()
     
     // Prevent the heartbeat from triggering if the
     self.heartbeatTimer?.stop()
     
-    // Only attempt to reconnect if the socket did not close normally
-    if (!self.closeWasClean) {
+    // Only attempt to reconnect if the socket did not close normally,
+    // or if it was closed abnormally but on client side (e.g. due to heartbeat timeout)
+    if (!self.closeWasClean || self.closingAbnormally) {
       self.reconnectTimer.scheduleTimeout()
+
+      // Reset the transient client-initiated abnormal close flag
+      self.closingAbnormally = false
     }
     
     self.stateChangeCallbacks.close.forEach({ $0.callback.call() })
@@ -753,11 +765,11 @@ public class Socket: PhoenixTransportDelegate {
   }
   
   internal func abnormalClose(_ reason: String) {
-    self.closeWasClean = false
+    self.closingAbnormally = true
     
     /*
      We use NORMAL here since the client is the one determining to close the
-     connection. However, we keep a flag `closeWasClean` set to false so that
+     connection. However, we keep a flag `closingAbnormally` set to true so that
      the client knows that it should attempt to reconnect.
      */
     self.connection?.disconnect(code: CloseCode.normal.rawValue, reason: reason)
