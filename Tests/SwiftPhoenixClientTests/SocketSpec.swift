@@ -294,10 +294,10 @@ class SocketSpec: QuickSpec {
       })
       
       it("flags the socket as closed cleanly", closure: {
-        expect(socket.closeWasClean).to(beFalse())
+        expect(socket.closeStatus).to(equal(.unknown))
         
         socket.disconnect()
-        expect(socket.closeWasClean).to(beTrue())
+        expect(socket.closeStatus).to(equal(.clean))
       })
       
       it("calls callback", closure: {

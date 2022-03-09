@@ -154,9 +154,9 @@ public class Socket: PhoenixTransportDelegate {
   
   /// Timer to use when attempting to reconnect
   var reconnectTimer: TimeoutTimer
-  
-  /// True if the Socket closed cleaned. False if not (connection timeout, heartbeat, etc)
-  var closeWasClean: Bool = false
+
+  /// Close status
+  var closeStatus: CloseStatus = .unknown
   
   /// The connection to the server
   var connection: PhoenixTransport? = nil
@@ -239,8 +239,8 @@ public class Socket: PhoenixTransportDelegate {
     // Do not attempt to reconnect if the socket is currently connected
     guard !isConnected else { return }
     
-    // Reset the clean close flag when attempting to connect
-    self.closeWasClean = false
+    // Reset the close status when attempting to connect
+    self.closeStatus = .unknown
 
     // We need to build this right before attempting to connect as the
     // parameters could be built upon demand and change over time
@@ -267,8 +267,8 @@ public class Socket: PhoenixTransportDelegate {
   /// - paramter callback: Optional. Called when disconnected
   public func disconnect(code: CloseCode = CloseCode.normal,
                          callback: (() -> Void)? = nil) {
-      // The socket was closed cleanly by the User
-      self.closeWasClean = true
+    // The socket was closed cleanly by the User
+    self.closeStatus = .clean
     
     // Reset any reconnects and teardown the socket connection
     self.reconnectTimer.reset()
@@ -572,9 +572,9 @@ public class Socket: PhoenixTransportDelegate {
   internal func onConnectionOpen() {
     self.logItems("transport", "Connected to \(endPoint)")
     
-    // Reset the closeWasClean flag now that the socket has been connected
-    self.closeWasClean = false
-    
+    // Reset the close status now that the socket has been connected
+    self.closeStatus = .unknown
+
     // Send any messages that were waiting for a connection
     self.flushSendBuffer()
     
@@ -590,13 +590,16 @@ public class Socket: PhoenixTransportDelegate {
   
   internal func onConnectionClosed(code: Int?) {
     self.logItems("transport", "close")
+
+    // Send an error to all channels
     self.triggerChannelError()
     
     // Prevent the heartbeat from triggering if the
     self.heartbeatTimer?.stop()
     
-    // Only attempt to reconnect if the socket did not close normally
-    if (!self.closeWasClean) {
+    // Only attempt to reconnect if the socket did not close normally,
+    // or if it was closed abnormally but on client side (e.g. due to heartbeat timeout)
+    if (self.closeStatus.shouldReconnect) {
       self.reconnectTimer.scheduleTimeout()
     }
     
@@ -753,12 +756,15 @@ public class Socket: PhoenixTransportDelegate {
   }
   
   internal func abnormalClose(_ reason: String) {
-    self.closeWasClean = false
+    self.closeStatus = .abnormal
     
     /*
      We use NORMAL here since the client is the one determining to close the
-     connection. However, we keep a flag `closeWasClean` set to false so that
+     connection. However, we set to close status to abnormal so that
      the client knows that it should attempt to reconnect.
+
+     If the server subsequently acknowledges with code 1000 (normal close),
+     the socket will keep the `.abnormal` close status and trigger a reconnection.
      */
     self.connection?.disconnect(code: CloseCode.normal.rawValue, reason: reason)
   }
@@ -780,7 +786,7 @@ public class Socket: PhoenixTransportDelegate {
   }
   
   public func onClose(code: Int) {
-    self.closeWasClean = code != CloseCode.abnormal.rawValue
+    self.closeStatus.update(transportCloseCode: code)
     self.onConnectionClosed(code: code)
   }
 }
@@ -796,5 +802,52 @@ extension Socket {
     case normal = 1000
 
     case goingAway = 1001
+  }
+}
+
+
+//----------------------------------------------------------------------
+// MARK: - Close Status
+//----------------------------------------------------------------------
+extension Socket {
+  /// Indicates the different closure states a socket can be in.
+  enum CloseStatus {
+    /// Undetermined closure state
+    case unknown
+    /// A clean closure requested either by the client or the server
+    case clean
+    /// An abnormal closure requested by the client
+    case abnormal
+    
+    init(closeCode: Int) {
+      switch closeCode {
+      case CloseCode.abnormal.rawValue:
+        self = .abnormal
+      default:
+        self = .clean
+      }
+    }
+    
+    mutating func update(transportCloseCode: Int) {
+      switch self {
+      case .unknown, .clean:
+        // Allow transport layer to override these statuses.
+        self = .init(closeCode: transportCloseCode)
+      case .abnormal:
+        // Do not allow transport layer to override the abnormal close status.
+        // The socket itself should reset it on the next connection attempt.
+        // See `Socket.abnormalClose(_:)` for more information.
+        break
+      }
+    }
+    
+    var shouldReconnect: Bool {
+      switch self {
+      case .unknown, .abnormal:
+        return true
+      case .clean:
+        return false
+      }
+    }
   }
 }

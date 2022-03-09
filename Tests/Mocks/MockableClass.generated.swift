@@ -660,11 +660,11 @@ class SocketMock: Socket {
         set(value) { underlyingReconnectTimer = value }
     }
     var underlyingReconnectTimer: (TimeoutTimer)!
-    override var closeWasClean: Bool {
-        get { return underlyingCloseWasClean }
-        set(value) { underlyingCloseWasClean = value }
+    override var closeStatus: CloseStatus {
+      get { return underlyingCloseStatus }
+      set(value) { underlyingCloseStatus = value }
     }
-    var underlyingCloseWasClean: (Bool)!
+    var underlyingCloseStatus: (CloseStatus)!
     var connectionSetCount: Int = 0
     var connectionDidGetSet: Bool { return connectionSetCount > 0 }
     override var connection: PhoenixTransport? {
