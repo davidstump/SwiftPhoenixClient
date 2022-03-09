@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file. The format 
 This product uses [Semantic Versioning](https://semver.org/).
 
 
+## 5.1.0
+* Improves reconnection logic around a heartbeat timeout
+
 ## 5.0.0
 * Removes RxSwift dependency
 * Removes Starscream dependency
