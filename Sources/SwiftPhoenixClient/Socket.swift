@@ -268,7 +268,7 @@ public class Socket: PhoenixTransportDelegate {
   public func disconnect(code: CloseCode = CloseCode.normal,
                          callback: (() -> Void)? = nil) {
     // The socket was closed cleanly by the User
-    self.closeStatus = .clean
+    self.closeStatus = CloseStatus(closeCode: code.rawValue)
     
     // Reset any reconnects and teardown the socket connection
     self.reconnectTimer.reset()
@@ -819,10 +819,17 @@ extension Socket {
     /// An abnormal closure requested by the client
     case abnormal
     
+    /// Temporarily close the socket, pausing reconnect attempts. Useful on mobile
+    /// clients when disconnecting a because the app resigned active but should
+    /// reconnect when app enters active state.
+    case temporary
+    
     init(closeCode: Int) {
       switch closeCode {
       case CloseCode.abnormal.rawValue:
         self = .abnormal
+      case CloseCode.goingAway.rawValue:
+        self = .temporary
       default:
         self = .clean
       }
@@ -830,7 +837,7 @@ extension Socket {
     
     mutating func update(transportCloseCode: Int) {
       switch self {
-      case .unknown, .clean:
+      case .unknown, .clean, .temporary:
         // Allow transport layer to override these statuses.
         self = .init(closeCode: transportCloseCode)
       case .abnormal:
@@ -845,7 +852,7 @@ extension Socket {
       switch self {
       case .unknown, .abnormal:
         return true
-      case .clean:
+      case .clean, .temporary:
         return false
       }
     }

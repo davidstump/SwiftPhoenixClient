@@ -39,8 +39,6 @@
 		12EF620F25524EEF00A6EE9B /* MockableProtocol.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620D25524EEF00A6EE9B /* MockableProtocol.generated.swift */; };
 		635669C4261631DC0068B665 /* URLSessionTransportSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635669C3261631DC0068B665 /* URLSessionTransportSpec.swift */; };
 		63ACBE9426D53DF500171582 /* HeartbeatTimerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ACBE9326D53DF500171582 /* HeartbeatTimerSpec.swift */; };
-		63B526992656D05300289719 /* RxSwift.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B5268D2656CFFE00289719 /* RxSwift.xcframework */; };
-		63B5269E2656D05600289719 /* Starscream.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B526842656CF9600289719 /* Starscream.xcframework */; };
 		63B526DE2656D53700289719 /* Nimble.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B526DC2656D53700289719 /* Nimble.xcframework */; };
 		63B526DF2656D53700289719 /* Quick.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B526DD2656D53700289719 /* Quick.xcframework */; };
 		63DE6CCA272A2ECB00E2A728 /* MessageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DE6CC9272A2ECB00E2A728 /* MessageSpec.swift */; };
@@ -126,9 +124,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				63B526992656D05300289719 /* RxSwift.xcframework in Frameworks */,
 				125A9EF82543C84700292017 /* SwiftPhoenixClient.framework in Frameworks */,
-				63B5269E2656D05600289719 /* Starscream.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

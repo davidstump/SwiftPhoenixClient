@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Zsx-Hf-BVQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Zsx-Hf-BVQ">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -106,8 +106,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Basic Chat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bzZ-eQ-71I">
-                                <rect key="frame" x="20" y="64" width="203" height="53"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Basic" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bzZ-eQ-71I">
+                                <rect key="frame" x="20" y="64" width="103" height="53"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="44"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -145,12 +145,23 @@
                                     <action selector="onConnectButtonPressed:" destination="kvj-CR-pCE" eventType="touchUpInside" id="01e-UK-Kon"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xcA-w9-IFM">
+                                <rect key="frame" x="257" y="72.5" width="54" height="36"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <state key="normal" title="Pause"/>
+                                <connections>
+                                    <action selector="onConnectButtonPressed:" destination="kvj-CR-pCE" eventType="touchUpInside" id="tHJ-d0-DOf"/>
+                                    <action selector="onPausePressed:" destination="kvj-CR-pCE" eventType="touchUpInside" id="DFU-1I-GCv"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="aNG-mQ-eOn"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="aCb-6h-kVE" firstAttribute="top" secondItem="8vj-8R-JAk" secondAttribute="top" id="0jQ-EO-UqX"/>
                             <constraint firstItem="8vj-8R-JAk" firstAttribute="top" secondItem="KF5-Gt-2Qg" secondAttribute="bottom" constant="8" id="1L9-aq-gIU"/>
+                            <constraint firstItem="slt-ax-j8X" firstAttribute="leading" secondItem="xcA-w9-IFM" secondAttribute="trailing" constant="8" id="3ck-hZ-c8W"/>
+                            <constraint firstItem="slt-ax-j8X" firstAttribute="centerY" secondItem="xcA-w9-IFM" secondAttribute="centerY" id="D8Y-4b-ilb"/>
                             <constraint firstItem="slt-ax-j8X" firstAttribute="centerY" secondItem="bzZ-eQ-71I" secondAttribute="centerY" id="FJQ-4m-Tbw"/>
                             <constraint firstItem="bzZ-eQ-71I" firstAttribute="top" secondItem="aNG-mQ-eOn" secondAttribute="top" constant="20" id="IUb-ZL-Q3S"/>
                             <constraint firstItem="aNG-mQ-eOn" firstAttribute="trailing" secondItem="aCb-6h-kVE" secondAttribute="trailing" constant="20" id="JxZ-Gw-Sf5"/>
@@ -170,6 +181,7 @@
                         <outlet property="chatWindow" destination="KF5-Gt-2Qg" id="t4M-l4-Mww"/>
                         <outlet property="connectButton" destination="slt-ax-j8X" id="z5A-IX-s74"/>
                         <outlet property="messageField" destination="8vj-8R-JAk" id="QU5-Ub-eek"/>
+                        <outlet property="pauseButton" destination="xcA-w9-IFM" id="Ag8-dn-6ou"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="l8U-lP-vWR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
