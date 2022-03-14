@@ -8,7 +8,6 @@
 
 import UIKit
 import SwiftPhoenixClient
-import StarscreamSwiftPhoenixClient
 
 /*
  Testing with Basic Chat
@@ -45,9 +44,15 @@ class BasicChatViewController: UIViewController {
   // MARK: - Child Views
   
   @IBOutlet weak var connectButton: UIButton!
+  
+  @IBOutlet weak var pauseButton: UIButton!
   @IBOutlet weak var messageField: UITextField!
   @IBOutlet weak var chatWindow: UITextView!
   
+  
+  // Notifcation Subscriptions
+  private var didbecomeActiveObservervation: NSObjectProtocol?
+  private var willResignActiveObservervation: NSObjectProtocol?
   
   // MARK: - Variables
   let username: String = "Basic"
@@ -92,6 +97,7 @@ class BasicChatViewController: UIViewController {
     }
     
     socket.logger = { msg in print("LOG:", msg) }
+    
   }
   
   
@@ -99,10 +105,32 @@ class BasicChatViewController: UIViewController {
   @IBAction func onConnectButtonPressed(_ sender: Any) {
     if socket.isConnected {
       disconnectAndLeave()
+      
+      self.removeAppActiveObservation()
     } else {
       connectAndJoin()
+      
+      // When app enters foreground, be sure that the socket is connected
+      self.observeDidBecomeActive()
     }
   }
+  
+  private var isPaused: Bool = false
+  @IBAction func onPausePressed(_ sender: Any) {
+  
+    if isPaused {
+      self.socket.connect()
+      self.pauseButton.setTitle("Pause", for: .normal)
+    } else {
+      self.socket.disconnect(code: .goingAway)
+      self.pauseButton.setTitle("Resume", for: .normal)
+    }
+    
+    self.isPaused = !isPaused
+    
+  }
+  
+  
   
   @IBAction func sendMessage(_ sender: UIButton) {
     let payload = ["user": username, "body": messageField.text!]
@@ -122,6 +150,41 @@ class BasicChatViewController: UIViewController {
   
   
   // MARK: - Private
+  private func observeDidBecomeActive() {
+    //Make sure there's no other observations
+    self.removeAppActiveObservation()
+    
+    self.didbecomeActiveObservervation = NotificationCenter.default
+      .addObserver(forName: UIApplication.didBecomeActiveNotification,
+                   object: nil,
+                   queue: .main) { [weak self] _ in self?.socket.pauseConnection() }
+    
+    // When the app resigns being active, the leave any existing channels
+    // and disconnect from the websocket.
+    self.willResignActiveObservervation = NotificationCenter.default
+      .addObserver(forName: UIApplication.willResignActiveNotification,
+                   object: nil,
+                   queue: .main) { [weak self] _ in self?.socket.resumeConnection() }
+  }
+  
+  private func removeAppActiveObservation() {
+    if let observer = self.didbecomeActiveObservervation {
+      NotificationCenter.default.removeObserver(observer)
+      self.didbecomeActiveObservervation = nil
+    }
+    
+    if let observer = self.willResignActiveObservervation {
+      NotificationCenter.default.removeObserver(observer)
+      self.willResignActiveObservervation = nil
+    }
+  }
+  
+  
+  
+  
+  
+  
+  
   private func disconnectAndLeave() {
     //     Be sure the leave the channel or call socket.remove(lobbyChannel)
     lobbyChannel.leave()

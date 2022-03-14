@@ -7,10 +7,7 @@
 //
 
 import UIKit
-import RxSwift
 import SwiftPhoenixClient
-import RxSwiftPhoenixClient
-import StarscreamSwiftPhoenixClient
 
 struct Shout {
   let name: String
@@ -42,8 +39,8 @@ class ChatRoomViewController: UIViewController {
   
   // MARK: - Attributes
   private let username: String = "ChatRoom"
-  //  private let socket = Socket("https://phxchat.herokuapp.com/socket/websocket")
-  private let socket = Socket(endPoint: "https://phxchat.herokuapp.com/socket/websocket", transport: { url in return StarscreamTransport(url: url) })
+    private let socket = Socket("https://phxchat.herokuapp.com/socket/websocket")
+//  private let socket = Socket(endPoint: "https://phxchat.herokuapp.com/socket/websocket", transport: { url in return StarscreamTransport(url: url) })
   private let topic: String = "room:lobby"
   
   private var lobbyChannel: Channel?
@@ -53,7 +50,7 @@ class ChatRoomViewController: UIViewController {
   private var didbecomeActiveObservervation: NSObjectProtocol?
   private var willResignActiveObservervation: NSObjectProtocol?
   
-  private let disposeBag = DisposeBag()
+//  private let disposeBag = DisposeBag()
   
   
   // MARK: - Lifecycle
@@ -145,22 +142,22 @@ class ChatRoomViewController: UIViewController {
     
     // Setup the Channel to receive and send messages
     let channel = socket.channel(topic, params: ["status": "joining"])
-    channel.rx
-      .on("shout")
-      .observeOn(MainScheduler.asyncInstance)
-      .subscribe( onNext: { (message) in
-        let payload = message.payload
-        guard
-          let name = payload["name"] as? String,
-          let message = payload["message"] as? String else { return }
-        
-        let shout = Shout(name: name, message: message)
-        self.shouts.append(shout)
-        
-        let indexPath = IndexPath(row: self.shouts.count - 1, section: 0)
-        self.tableView.reloadData() //reloadRows(at: [indexPath], with: .automatic)
-        self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-      }).disposed(by: disposeBag)
+//    channel.rx
+//      .on("shout")
+//      .observeOn(MainScheduler.asyncInstance)
+//      .subscribe( onNext: { (message) in
+//        let payload = message.payload
+//        guard
+//          let name = payload["name"] as? String,
+//          let message = payload["message"] as? String else { return }
+//
+//        let shout = Shout(name: name, message: message)
+//        self.shouts.append(shout)
+//
+//        let indexPath = IndexPath(row: self.shouts.count - 1, section: 0)
+//        self.tableView.reloadData() //reloadRows(at: [indexPath], with: .automatic)
+//        self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+//      }).disposed(by: disposeBag)
     
     // Now connect the socket and join the channel
     self.lobbyChannel = channel
