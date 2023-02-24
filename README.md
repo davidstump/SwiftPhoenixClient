@@ -25,35 +25,11 @@ where as `ChatRoomViewController` is a more "complete" example which targets
 dwyl's [phoenix-chat-example](https://github.com/dwyl/phoenix-chat-example) Heroku app.
 
 
-## Modules
-
-
-Prior to v5.0.0, SwiftPhoenixClient came bundled with RxSwift and Starscream extensions. These have been (or are in the process of being) broken
-out into separate repositories so they can be excluded if desired.
-
 ### SwiftPhoenixClient
 
 The core module which provides the Phoenix Channels and Presence logic. It also
 uses URLSession's default WebSocket implementation which has a minimum iOS target
 of 13.0.
-
-### StarscreamSwiftPhoenixClient
-
-If you are targeting iOS < 13.0, or if you you prefer to use [Starscream](https://github.com/daltoniam/Starscream), then
-you will need to also use the Starscream module to connect to your server.
-
-Please see the StarscreamSwiftPhoenixClient repository for details
-
-Coming soon.
-
-
-### RxSwift
-
-If you are also using RxSwift in your project, then this module provides
-extensions for you to use to observe events on a channel. 
-
-Please see the [RxSwiftPhoenixClient](https://github.com/dsrees/RxSwiftPhoenixClient) repo for more details.
-
 
 
 ## Installation
@@ -65,7 +41,7 @@ Podfile. Keep in mind that in order to use Swift Phoenix Client, the minimum iOS
 target must be '9.0'
 
 ```RUBY
-pod "SwiftPhoenixClient", '~> 5.1'
+pod "SwiftPhoenixClient", '~> 5.2'
 ```
 
 and running `pod install`. From there you will need to add `import SwiftPhoenixClient` in any class you want it to be used.
@@ -76,7 +52,7 @@ If you use Carthage to manage your dependencies, simply add
 SwiftPhoenixClient to your `Cartfile`:
 
 ```
-github "davidstump/SwiftPhoenixClient" ~> 5.1
+github "davidstump/SwiftPhoenixClient" ~> 5.2
 ```
 
 Then run `carthage update`.
@@ -92,7 +68,7 @@ _Note: Instructions below are for using **SwiftPM** without the Xcode UI. It's t
 To integrate using Apple's Swift package manager, without Xcode integration, add the following as a dependency to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/davidstump/SwiftPhoenixClient.git", .upToNextMajor(from: "5.1.0"))
+.package(url: "https://github.com/davidstump/SwiftPhoenixClient.git", .upToNextMajor(from: "5.2.0"))
 ```
 
 and then specify `"SwiftPhoenixClient"` as a dependency of the Target in which you wish to use SwiftPhoenixClient.
