@@ -133,7 +133,13 @@ class ChatRoomViewController: UIViewController {
     }
     
     socket.delegateOnError(to: self) { (self, error) in
-      print("CHAT ROOM: Socket Errored. \(error)")
+      let (error, response) = error
+      if let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode > 400 {
+        print("CHAT ROOM: Socket Errored. \(statusCode)")
+        self.socket.disconnect()
+      } else {
+        print("CHAT ROOM: Socket Errored. \(error)")
+      }
     }
     
     socket.logger = { msg in print("LOG:", msg) }

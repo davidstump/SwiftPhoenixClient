@@ -75,9 +75,11 @@ public protocol PhoenixTransportDelegate {
   /**
    Notified when the `Transport` receives an error.
    
-   - Parameter error: Error from the underlying `Transport` implementation
+   - Parameter error: Client-side error from the underlying `Transport` implementation
+   - Parameter response: Response from the server, if any, that occurred with the Error
+   
    */
-  func onError(error: Error)
+  func onError(error: Error, response: URLResponse?)
   
   /**
    Notified when the `Transport` receives a message from the server.
@@ -249,7 +251,8 @@ public class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocke
     // The task has terminated. Inform the delegate that the transport has closed abnormally
     // if this was caused by an error.
     guard let err = error else { return }
-    self.abnormalErrorReceived(err)
+    
+    self.abnormalErrorReceived(err, response: task.response)
   }
   
   
@@ -273,17 +276,17 @@ public class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocke
         self.receive()
       case .failure(let error):
         print("Error when receiving \(error)")
-        self.abnormalErrorReceived(error)
+        self.abnormalErrorReceived(error, response: nil)
       }
     }
   }
   
-  private func abnormalErrorReceived(_ error: Error) {
+  private func abnormalErrorReceived(_ error: Error, response: URLResponse? ) {
     // Set the state of the Transport to closed
     self.readyState = .closed
     
     // Inform the Transport's delegate that an error occurred.
-    self.delegate?.onError(error: error)
+    self.delegate?.onError(error: error, response: response)
     
     // An abnormal error is results in an abnormal closure, such as internet getting dropped
     // so inform the delegate that the Transport has closed abnormally. This will kick off
