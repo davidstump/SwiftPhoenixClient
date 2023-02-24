@@ -38,7 +38,7 @@ public typealias PayloadClosure = () -> Payload?
 struct StateChangeCallbacks {
   var open: [(ref: String, callback: Delegated<Void, Void>)] = []
   var close: [(ref: String, callback: Delegated<Void, Void>)] = []
-  var error: [(ref: String, callback: Delegated<Error, Void>)] = []
+  var error: [(ref: String, callback: Delegated<(Error, URLResponse?), Void>)] = []
   var message: [(ref: String, callback: Delegated<Message, Void>)] = []
 }
 
@@ -384,8 +384,8 @@ public class Socket: PhoenixTransportDelegate {
   ///
   /// - parameter callback: Called when the Socket errors
   @discardableResult
-  public func onError(callback: @escaping (Error) -> Void) -> String {
-    var delegated = Delegated<Error, Void>()
+  public func onError(callback: @escaping ((Error, URLResponse?)) -> Void) -> String {
+    var delegated = Delegated<(Error, URLResponse?), Void>()
     delegated.manuallyDelegate(with: callback)
     
     return self.append(callback: delegated, to: &self.stateChangeCallbacks.error)
@@ -404,8 +404,8 @@ public class Socket: PhoenixTransportDelegate {
   /// - parameter callback: Called when the Socket errors
   @discardableResult
   public func delegateOnError<T: AnyObject>(to owner: T,
-                                            callback: @escaping ((T, Error) -> Void)) -> String {
-    var delegated = Delegated<Error, Void>()
+                                            callback: @escaping ((T, (Error, URLResponse?)) -> Void)) -> String {
+    var delegated = Delegated<(Error, URLResponse?), Void>()
     delegated.delegate(to: owner, with: callback)
 
     return self.append(callback: delegated, to: &self.stateChangeCallbacks.error)
@@ -606,14 +606,14 @@ public class Socket: PhoenixTransportDelegate {
     self.stateChangeCallbacks.close.forEach({ $0.callback.call() })
   }
   
-  internal func onConnectionError(_ error: Error) {
-    self.logItems("transport", error)
+  internal func onConnectionError(_ error: Error, response: URLResponse?) {
+    self.logItems("transport", error, response ?? "")
     
     // Send an error to all channels
     self.triggerChannelError()
     
     // Inform any state callabcks of the error
-    self.stateChangeCallbacks.error.forEach({ $0.callback.call(error) })
+    self.stateChangeCallbacks.error.forEach({ $0.callback.call((error, response)) })
   }
   
   internal func onConnectionMessage(_ rawMessage: String) {
@@ -777,8 +777,8 @@ public class Socket: PhoenixTransportDelegate {
     self.onConnectionOpen()
   }
   
-  public func onError(error: Error) {
-    self.onConnectionError(error)
+  public func onError(error: Error, response: URLResponse?) {
+    self.onConnectionError(error, response: response)
   }
   
   public func onMessage(message: String) {

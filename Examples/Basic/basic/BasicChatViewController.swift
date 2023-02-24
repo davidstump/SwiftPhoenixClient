@@ -84,8 +84,15 @@ class BasicChatViewController: UIViewController {
       }
     }
     
-    socket.delegateOnError(to: self) { (self, error) in
-      self.addText("Socket Errored: " + error.localizedDescription)
+    socket.delegateOnError(to: self) { (self, arg1) in
+      let (error, response) = arg1
+      
+      if let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode > 400 {
+        self.addText("Socket Errored: \(statusCode)")
+        self.socket.disconnect()
+      } else {
+        self.addText("Socket Errored: " + error.localizedDescription)
+      }
     }
     
     socket.logger = { msg in print("LOG:", msg) }
