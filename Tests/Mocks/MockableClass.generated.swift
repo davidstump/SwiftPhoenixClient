@@ -816,11 +816,11 @@ class SocketMock: Socket {
     var onErrorCallbackCalled: Bool {
         return onErrorCallbackCallsCount > 0
     }
-    var onErrorCallbackReceivedCallback: ((Error) -> Void)?
+    var onErrorCallbackReceivedCallback: (((Error, URLResponse?)) -> Void)?
     var onErrorCallbackReturnValue: String!
-    var onErrorCallbackClosure: ((@escaping (Error) -> Void) -> String)?
+    var onErrorCallbackClosure: ((@escaping ((Error, URLResponse?)) -> Void) -> String)?
 
-    override func onError(callback: @escaping (Error) -> Void) -> String {
+    override func onError(callback: @escaping ((Error, URLResponse?)) -> Void) -> String {
         onErrorCallbackCallsCount += 1
         onErrorCallbackReceivedCallback = callback
         return onErrorCallbackClosure.map({ $0(callback) }) ?? makeRefReturnValue
@@ -836,7 +836,7 @@ class SocketMock: Socket {
     var delegateOnErrorToCallbackReturnValue: String!
 
     override func delegateOnError<T: AnyObject>(to owner: T,
-                                            callback: @escaping ((T, Error) -> Void)) -> String {
+                                            callback: @escaping ((T, (Error, URLResponse?)) -> Void)) -> String {
         delegateOnErrorToCallbackCallsCount += 1
         return makeRefReturnValue
     }
@@ -1028,7 +1028,7 @@ class SocketMock: Socket {
     var onConnectionErrorReceivedError: Error?
     var onConnectionErrorClosure: ((Error) -> Void)?
 
-    override func onConnectionError(_ error: Error) {
+    override func onConnectionError(_ error: Error, response: URLResponse?) {
         onConnectionErrorCallsCount += 1
         onConnectionErrorReceivedError = error
         onConnectionErrorClosure?(error)
@@ -1178,7 +1178,7 @@ class SocketMock: Socket {
     var onErrorErrorReceivedError: Error?
     var onErrorErrorClosure: ((Error) -> Void)?
 
-    override func onError(error: Error) {
+    override func onError(error: Error, response: URLResponse?) {
         onErrorErrorCallsCount += 1
         onErrorErrorReceivedError = error
         onErrorErrorClosure?(error)

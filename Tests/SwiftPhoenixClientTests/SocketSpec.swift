@@ -204,7 +204,7 @@ class SocketSpec: QuickSpec {
         var close = 0
         socket.onClose { close += 1 }
         
-        var lastError: Error?
+        var lastError: (Error, URLResponse?)?
         socket.onError(callback: { (error) in lastError = error })
         
         var lastMessage: Message?
@@ -219,7 +219,7 @@ class SocketSpec: QuickSpec {
         mockWebSocket.delegate?.onClose(code: 1000)
         expect(close).to(equal(1))
         
-        mockWebSocket.delegate?.onError(error: TestError.stub)
+        mockWebSocket.delegate?.onError(error: TestError.stub, response: nil)
         expect(lastError).toNot(beNil())
         
         let data: [Any] = ["2", "6", "topic", "event", ["response": ["go": true], "status": "ok"]]
@@ -235,7 +235,7 @@ class SocketSpec: QuickSpec {
         var close = 0
         socket.onClose { close += 1 }
         
-        var lastError: Error?
+        var lastError: (Error, URLResponse?)?
         socket.onError(callback: { (error) in lastError = error })
         
         var lastMessage: Message?
@@ -251,7 +251,7 @@ class SocketSpec: QuickSpec {
         mockWebSocket.delegate?.onClose(code: 1000)
         expect(close).to(equal(0))
         
-        mockWebSocket.delegate?.onError(error: TestError.stub)
+        mockWebSocket.delegate?.onError(error: TestError.stub, response: nil)
         expect(lastError).to(beNil())
         
         let data: [Any] = ["2", "6", "topic", "event", ["response": ["go": true], "status": "ok"]]
@@ -845,10 +845,10 @@ class SocketSpec: QuickSpec {
       }
       
       it("triggers onClose callbacks", closure: {
-        var lastError: Error?
+        var lastError: (Error, URLResponse?)?
         socket.onError(callback: { (error) in lastError = error })
         
-        socket.onConnectionError(TestError.stub)
+        socket.onConnectionError(TestError.stub, response: nil)
         expect(lastError).toNot(beNil())
       })
       
@@ -863,7 +863,7 @@ class SocketSpec: QuickSpec {
         channel.join()
         expect(channel.state).to(equal(.joining))
         
-        socket.onConnectionError(TestError.stub)
+        socket.onConnectionError(TestError.stub, response: nil)
         expect(errorCalled).to(beTrue())
       })
       
@@ -877,7 +877,7 @@ class SocketSpec: QuickSpec {
         channel.join().trigger("ok", payload: [:])
         expect(channel.state).to(equal(.joined))
         
-        socket.onConnectionError(TestError.stub)
+        socket.onConnectionError(TestError.stub, response: nil)
         expect(errorCalled).to(beTrue())
       })
       
@@ -892,7 +892,7 @@ class SocketSpec: QuickSpec {
         channel.leave()
         expect(channel.state).to(equal(.closed))
         
-        socket.onConnectionError(TestError.stub)
+        socket.onConnectionError(TestError.stub, response: nil)
         expect(errorCalled).to(beFalse())
       })
     }

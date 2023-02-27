@@ -229,7 +229,12 @@ public class Socket: PhoenixTransportDelegate {
   
   /// - return: True if the socket is connected
   public var isConnected: Bool {
-    return self.connection?.readyState == .open
+    return self.connectionState == .open
+  }
+  
+  /// - return: The state of the connect. [.connecting, .open, .closing, .closed]
+  public var connectionState: PhoenixTransportReadyState {
+    return self.connection?.readyState ?? .closed
   }
   
   /// Connects the Socket. The params passed to the Socket on initialization

@@ -640,7 +640,7 @@ class ChannelSpec: QuickSpec {
         let mockPush = PushMock(channel: channel, event: "event")
         channel.joinPush = mockPush
         
-        spySocket.onConnectionError(TestError.stub)
+        spySocket.onConnectionError(TestError.stub, response: nil)
         
         fakeClock.tick(1.0)
         expect(mockPush.sendCallsCount).to(equal(0))
@@ -657,7 +657,7 @@ class ChannelSpec: QuickSpec {
         let mockPush = PushMock(channel: channel, event: "event")
         channel.joinPush = mockPush
         
-        spySocket.onConnectionError(TestError.stub)
+        spySocket.onConnectionError(TestError.stub, response: nil)
         
         fakeClock.tick(1.0)
         expect(mockPush.sendCallsCount).to(equal(0))
