@@ -68,7 +68,7 @@ _Note: Instructions below are for using **SwiftPM** without the Xcode UI. It's t
 To integrate using Apple's Swift package manager, without Xcode integration, add the following as a dependency to your `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/davidstump/SwiftPhoenixClient.git", .upToNextMajor(from: "5.2.0"))
+.package(url: "https://github.com/davidstump/SwiftPhoenixClient.git", .upToNextMajor(from: "5.2.1"))
 ```
 
 and then specify `"SwiftPhoenixClient"` as a dependency of the Target in which you wish to use SwiftPhoenixClient.
