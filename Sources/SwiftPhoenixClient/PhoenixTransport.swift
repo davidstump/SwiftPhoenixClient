@@ -131,7 +131,7 @@ public enum PhoenixTransportReadyState {
  your own WebSocket library or implementation.
  */
 @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
-public class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketDelegate {
+open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketDelegate {
   
   
   /// The URL to connect to
