@@ -24,7 +24,7 @@ import Foundation
 
 /**
  Heartbeat Timer class which manages the lifecycle of the underlying
- timer which triggers when a hearbeat should be fired. This heartbeat
+ timer which triggers when a heartbeat should be fired. This heartbeat
  runs on it's own Queue so that it does not interfere with the main
  queue but guarantees thread safety.
  */
@@ -36,6 +36,9 @@ class HeartbeatTimer {
   //----------------------------------------------------------------------
   // The interval to wait before firing the Timer
   let timeInterval: TimeInterval
+
+  /// The maximum amount of time which the system may delay the delivery of the timer events
+  let leeway: DispatchTimeInterval
   
   // The DispatchQueue to schedule the timers on
   let queue: DispatchQueue
@@ -54,12 +57,15 @@ class HeartbeatTimer {
   /**
    Create a new HeartbeatTimer
    
-   - Parameter timeInterval: Interval to fire the timer. Repeats
-   - parameter queue: Queue to schedule the timer on
+   - Parameters:
+     - timeInterval: Interval to fire the timer. Repeats
+     - queue: Queue to schedule the timer on
+     - leeway: The maximum amount of time which the system may delay the delivery of the timer events
    */
-  init(timeInterval: TimeInterval, queue: DispatchQueue) {
+  init(timeInterval: TimeInterval, queue: DispatchQueue = Defaults.heartbeatQueue, leeway: DispatchTimeInterval = Defaults.heartbeatLeeway) {
     self.timeInterval = timeInterval
     self.queue = queue
+    self.leeway = leeway
   }
   
   /**
@@ -80,7 +86,8 @@ class HeartbeatTimer {
       // Schedule the timer to first fire in `timeInterval` and then
       // repeat every `timeInterval`
       timer.schedule(deadline: DispatchTime.now() + self.timeInterval,
-                     repeating: self.timeInterval)
+                     repeating: self.timeInterval,
+                     leeway: self.leeway)
       
       // Start the timer
       timer.resume()

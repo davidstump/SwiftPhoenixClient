@@ -20,7 +20,7 @@
 
 import Foundation
 
-/// A collection of default values and behaviors used accross the Client
+/// A collection of default values and behaviors used across the Client
 public class Defaults {
   
   /// Default timeout when sending messages
@@ -28,6 +28,9 @@ public class Defaults {
   
   /// Default interval to send heartbeats on
   public static let heartbeatInterval: TimeInterval = 30.0
+
+  /// Default maximum amount of time which the system may delay heartbeat events in order to minimize power usage
+  public static let heartbeatLeeway: DispatchTimeInterval = .milliseconds(10)
   
   /// Default reconnect algorithm for the socket
   public static let reconnectSteppedBackOff: (Int) -> TimeInterval = { tries in
