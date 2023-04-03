@@ -190,8 +190,8 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
   public var readyState: PhoenixTransportReadyState = .closed
   public var delegate: PhoenixTransportDelegate? = nil
   
-  public func connect() {
-    // Set the trasport state as connecting
+  open func connect() {
+    // Set the transport state as connecting
     self.readyState = .connecting
     
     // Create the session and websocket task
@@ -202,7 +202,7 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
     self.task?.resume()
   }
   
-  public func disconnect(code: Int, reason: String?) {
+  open func disconnect(code: Int, reason: String?) {
     /*
      TODO:
      1. Provide a "strict" mode that fails if an invalid close code is given
@@ -217,7 +217,7 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
     self.task?.cancel(with: closeCode, reason: reason?.data(using: .utf8))
   }
   
-  public func send(data: Data) {
+  open func send(data: Data) {
     self.task?.send(.string(String(data: data, encoding: .utf8)!)) { (error) in
       // TODO: What is the behavior when an error occurs?
     }
@@ -225,9 +225,9 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
   
   
   // MARK: - URLSessionWebSocketDelegate
-  public func urlSession(_ session: URLSession,
-                         webSocketTask: URLSessionWebSocketTask,
-                         didOpenWithProtocol protocol: String?) {
+  open func urlSession(_ session: URLSession,
+                       webSocketTask: URLSessionWebSocketTask,
+                       didOpenWithProtocol protocol: String?) {
     // The Websocket is connected. Set Transport state to open and inform delegate
     self.readyState = .open
     self.delegate?.onOpen()
@@ -236,18 +236,18 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
     self.receive()
   }
   
-  public func urlSession(_ session: URLSession,
-                         webSocketTask: URLSessionWebSocketTask,
-                         didCloseWith closeCode: URLSessionWebSocketTask.CloseCode,
-                         reason: Data?) {
+  open func urlSession(_ session: URLSession,
+                       webSocketTask: URLSessionWebSocketTask,
+                       didCloseWith closeCode: URLSessionWebSocketTask.CloseCode,
+                       reason: Data?) {
     // A close frame was received from the server.
     self.readyState = .closed
     self.delegate?.onClose(code: closeCode.rawValue)
   }
   
-  public func urlSession(_ session: URLSession,
-                         task: URLSessionTask,
-                         didCompleteWithError error: Error?) {
+  open func urlSession(_ session: URLSession,
+                       task: URLSessionTask,
+                       didCompleteWithError error: Error?) {
     // The task has terminated. Inform the delegate that the transport has closed abnormally
     // if this was caused by an error.
     guard let err = error else { return }
