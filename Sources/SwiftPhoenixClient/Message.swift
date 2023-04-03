@@ -67,6 +67,7 @@ public class Message {
   }
 
   init?(json: [Any?]) {
+    guard json.count > 4 else { return nil }
     self.joinRef = json[0] as? String
     self.ref = json[1] as? String ?? ""
     
