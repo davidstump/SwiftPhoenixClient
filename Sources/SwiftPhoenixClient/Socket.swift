@@ -78,8 +78,8 @@ public class Socket: PhoenixTransportDelegate {
     return self.paramsClosure?()
   }
   
-  /// The optional params closure used to get params whhen connecting. Must
-  /// be set when initializaing the Socket.
+  /// The optional params closure used to get params when connecting. Must
+  /// be set when initializing the Socket.
   public let paramsClosure: PayloadClosure?
   
   /// The WebSocket transport. Default behavior is to provide a
@@ -92,7 +92,7 @@ public class Socket: PhoenixTransportDelegate {
   /// Override to provide custom encoding of data before writing to the socket
   public var encode: (Any) -> Data = Defaults.encode
   
-  /// Override to provide customd decoding of data read from the socket
+  /// Override to provide custom decoding of data read from the socket
   public var decode: (Data) -> Any? = Defaults.decode
   
   /// Timeout to use when opening connections
@@ -100,6 +100,9 @@ public class Socket: PhoenixTransportDelegate {
   
   /// Interval between sending a heartbeat
   public var heartbeatInterval: TimeInterval = Defaults.heartbeatInterval
+
+  /// The maximum amount of time which the system may delay heartbeats in order to optimize power usage
+  public var heartbeatLeeway: DispatchTimeInterval = Defaults.heartbeatLeeway
   
   /// Interval between socket reconnect attempts, in seconds
   public var reconnectAfter: (Int) -> TimeInterval = Defaults.reconnectSteppedBackOff
@@ -269,7 +272,7 @@ public class Socket: PhoenixTransportDelegate {
   /// Disconnects the socket
   ///
   /// - parameter code: Optional. Closing status code
-  /// - paramter callback: Optional. Called when disconnected
+  /// - parameter callback: Optional. Called when disconnected
   public func disconnect(code: CloseCode = CloseCode.normal,
                          callback: (() -> Void)? = nil) {
     // The socket was closed cleanly by the User
@@ -564,7 +567,7 @@ public class Socket: PhoenixTransportDelegate {
   
   /// Logs the message. Override Socket.logger for specialized logging. noops by default
   ///
-  /// - paramter items: List of items to be logged. Behaves just like debugPrint()
+  /// - parameter items: List of items to be logged. Behaves just like debugPrint()
   func logItems(_ items: Any...) {
     let msg = items.map( { return String(describing: $0) } ).joined(separator: ", ")
     self.logger?("SwiftPhoenixClient: \(msg)")
@@ -617,7 +620,7 @@ public class Socket: PhoenixTransportDelegate {
     // Send an error to all channels
     self.triggerChannelError()
     
-    // Inform any state callabcks of the error
+    // Inform any state callbacks of the error
     self.stateChangeCallbacks.error.forEach({ $0.callback.call((error, response)) })
   }
   
@@ -725,13 +728,13 @@ public class Socket: PhoenixTransportDelegate {
     // Do not start up the heartbeat timer if skipHeartbeat is true
     guard !skipHeartbeat else { return }
 
-    self.heartbeatTimer = HeartbeatTimer(timeInterval: heartbeatInterval)
+    self.heartbeatTimer = HeartbeatTimer(timeInterval: heartbeatInterval, leeway: heartbeatLeeway)
     self.heartbeatTimer?.start(eventHandler: { [weak self] in
       self?.sendHeartbeat()
     })
   }
   
-  /// Sends a hearbeat payload to the phoenix serverss
+  /// Sends a heartbeat payload to the phoenix servers
   @objc func sendHeartbeat() {
     // Do not send if the connection is closed
     guard isConnected else { return }
