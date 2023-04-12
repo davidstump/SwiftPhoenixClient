@@ -137,10 +137,10 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
   /// The URL to connect to
   internal let url: URL
   
-  /// The URLSession configuratio
+  /// The URLSession configuration
   internal let configuration: URLSessionConfiguration
     
-  /// The underling URLsession. Assigned during `connect()`
+  /// The underling URLSession. Assigned during `connect()`
   private var session: URLSession? = nil
   
   /// The ongoing task. Assigned during `connect()`
@@ -195,7 +195,7 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
     self.readyState = .connecting
     
     // Create the session and websocket task
-    self.session = URLSession(configuration: self.configuration, delegate: self, delegateQueue: OperationQueue())
+    self.session = URLSession(configuration: self.configuration, delegate: self, delegateQueue: nil)
     self.task = self.session?.webSocketTask(with: url)
     
     // Start the task
