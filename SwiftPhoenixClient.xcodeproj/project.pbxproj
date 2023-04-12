@@ -43,6 +43,7 @@
 		63B526DF2656D53700289719 /* Quick.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63B526DD2656D53700289719 /* Quick.xcframework */; };
 		63DE6CCA272A2ECB00E2A728 /* MessageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DE6CC9272A2ECB00E2A728 /* MessageSpec.swift */; };
 		63F0F58D2592E44800C904FB /* ChatRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F0F58C2592E44800C904FB /* ChatRoomViewController.swift */; };
+		63F3765329E7296F00A5AB6E /* SynchronizedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F3765229E7296F00A5AB6E /* SynchronizedArray.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,6 +118,7 @@
 		63B526DD2656D53700289719 /* Quick.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Quick.xcframework; path = Carthage/Build/Quick.xcframework; sourceTree = "<group>"; };
 		63DE6CC9272A2ECB00E2A728 /* MessageSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageSpec.swift; sourceTree = "<group>"; };
 		63F0F58C2592E44800C904FB /* ChatRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewController.swift; sourceTree = "<group>"; };
+		63F3765229E7296F00A5AB6E /* SynchronizedArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynchronizedArray.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -206,6 +208,7 @@
 				12922E1F2543B10B0034B257 /* Socket.swift */,
 				12991E00254C3F1300BB8650 /* TimeoutTimer.swift */,
 				12922E212543B37B0034B257 /* PhoenixTransport.swift */,
+				63F3765229E7296F00A5AB6E /* SynchronizedArray.swift */,
 			);
 			path = SwiftPhoenixClient;
 			sourceTree = "<group>";
@@ -463,6 +466,7 @@
 			files = (
 				12991DFB254C3EB800BB8650 /* Defaults.swift in Sources */,
 				12991E05254C3F3300BB8650 /* Channel.swift in Sources */,
+				63F3765329E7296F00A5AB6E /* SynchronizedArray.swift in Sources */,
 				12991E09254C3F5B00BB8650 /* Presence.swift in Sources */,
 				12991E01254C3F1300BB8650 /* TimeoutTimer.swift in Sources */,
 				12991E07254C3F4B00BB8650 /* Message.swift in Sources */,
