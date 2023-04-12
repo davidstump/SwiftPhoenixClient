@@ -216,7 +216,7 @@ class SocketSpec: QuickSpec {
         mockWebSocket.delegate?.onOpen()
         expect(open).to(equal(1))
         
-        mockWebSocket.delegate?.onClose(code: 1000)
+        mockWebSocket.delegate?.onClose(code: 1000, reason: nil)
         expect(close).to(equal(1))
         
         mockWebSocket.delegate?.onError(error: TestError.stub, response: nil)
@@ -248,7 +248,7 @@ class SocketSpec: QuickSpec {
         mockWebSocket.delegate?.onOpen()
         expect(open).to(equal(0))
         
-        mockWebSocket.delegate?.onClose(code: 1000)
+        mockWebSocket.delegate?.onClose(code: 1000, reason: nil)
         expect(close).to(equal(0))
         
         mockWebSocket.delegate?.onError(error: TestError.stub, response: nil)
@@ -741,7 +741,7 @@ class SocketSpec: QuickSpec {
       }
       
       it("schedules reconnectTimer timeout if normal close", closure: {
-        socket.onConnectionClosed(code: Socket.CloseCode.normal.rawValue)
+        socket.onConnectionClosed(code: Socket.CloseCode.normal.rawValue, reason: nil)
         expect(mockTimeoutTimer.scheduleTimeoutCalled).to(beTrue())
       })
       
@@ -752,7 +752,7 @@ class SocketSpec: QuickSpec {
       })
       
       it("schedules reconnectTimer timeout if not normal close", closure: {
-        socket.onConnectionClosed(code: 1001)
+        socket.onConnectionClosed(code: 1001, reason: nil)
         expect(mockTimeoutTimer.scheduleTimeoutCalled).to(beTrue())
       })
       
@@ -760,7 +760,7 @@ class SocketSpec: QuickSpec {
         socket.disconnect()
         socket.connect()
         
-        socket.onConnectionClosed(code: 1001)
+        socket.onConnectionClosed(code: 1001, reason: nil)
         expect(mockTimeoutTimer.scheduleTimeoutCalled).to(beTrue())
       })
       
@@ -774,7 +774,7 @@ class SocketSpec: QuickSpec {
         channel.join()
         expect(channel.state).to(equal(.joining))
 
-        socket.onConnectionClosed(code: 1001)
+        socket.onConnectionClosed(code: 1001, reason: nil)
         expect(errorCalled).to(beTrue())
       })
       
@@ -788,7 +788,7 @@ class SocketSpec: QuickSpec {
         channel.join().trigger("ok", payload: [:])
         expect(channel.state).to(equal(.joined))
         
-        socket.onConnectionClosed(code: 1001)
+        socket.onConnectionClosed(code: 1001, reason: nil)
         expect(errorCalled).to(beTrue())
       })
       
@@ -803,7 +803,7 @@ class SocketSpec: QuickSpec {
         channel.leave()
         expect(channel.state).to(equal(.closed))
         
-        socket.onConnectionClosed(code: 1001)
+        socket.onConnectionClosed(code: 1001, reason: nil)
         expect(errorCalled).to(beFalse())
       })
       
@@ -816,7 +816,7 @@ class SocketSpec: QuickSpec {
         var threeCalled = 0
         socket.onOpen { threeCalled += 1 }
         
-        socket.onConnectionClosed(code: 1000)
+        socket.onConnectionClosed(code: 1000, reason: nil)
         expect(oneCalled).to(equal(1))
         expect(twoCalled).to(equal(1))
         expect(threeCalled).to(equal(0))

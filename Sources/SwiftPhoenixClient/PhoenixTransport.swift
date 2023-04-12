@@ -92,8 +92,9 @@ public protocol PhoenixTransportDelegate {
    Notified when the `Transport` closes.
    
    - Parameter code: Code that was sent when the `Transport` closed
+   - Parameter reason: A concise human-readable prose explanation for the closure
    */
-  func onClose(code: Int)
+  func onClose(code: Int, reason: String?)
 }
 
 //----------------------------------------------------------------------
@@ -243,7 +244,7 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
                        reason: Data?) {
     // A close frame was received from the server.
     self.readyState = .closed
-    self.delegate?.onClose(code: closeCode.rawValue)
+    self.delegate?.onClose(code: closeCode.rawValue, reason: reason.flatMap { String(data: $0, encoding: .utf8) })
   }
   
   open func urlSession(_ session: URLSession,
@@ -282,7 +283,7 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
     }
   }
   
-  private func abnormalErrorReceived(_ error: Error, response: URLResponse? ) {
+  private func abnormalErrorReceived(_ error: Error, response: URLResponse?) {
     // Set the state of the Transport to closed
     self.readyState = .closed
     
@@ -292,6 +293,6 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
     // An abnormal error is results in an abnormal closure, such as internet getting dropped
     // so inform the delegate that the Transport has closed abnormally. This will kick off
     // the reconnect logic.
-    self.delegate?.onClose(code: Socket.CloseCode.abnormal.rawValue)
+    self.delegate?.onClose(code: Socket.CloseCode.abnormal.rawValue, reason: error.localizedDescription)
   }
 }
