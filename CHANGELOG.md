@@ -3,9 +3,15 @@ All notable changes to this project will be documented in this file. The format 
 
 This product uses [Semantic Versioning](https://semver.org/).
 
+### 5.3.0
+* Fix retain cycles in `URLSessionTransport` and using default operation queue
+* Adding an optional `leeway` to the `HeartbeatTimer`
+* Added additional `open` methods in `URLSessionTransport` for further customization
+* Using a thread-safe array for Channel bindings
+
 ## 5.2.2
 * Changed `URLSessionTransport` to `open` to provide for custom behavior, such as SSL Pinning
-* 
+
 ## 5.2.1
 * Added `connectionState` to `Socket` which exposes the Socket's ready state
 
