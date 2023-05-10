@@ -25,9 +25,25 @@ public class SynchronizedArray<Element> {
         }
     }
     
-    func filter(_ isIncluded: (Element) -> Bool) -> [Element] {
-        var result = [Element]()
-        queue.sync { result = self.array.filter(isIncluded) }
+    func removeAll() {
+        queue.async(flags: .barrier) {
+            self.array.removeAll()
+        }
+    }
+    
+    func forEach(_ body: @escaping (Element) -> Void) {
+        queue.async(flags: .barrier) {
+            self.array.forEach(body)
+        }
+    }
+    
+    func filter(_ isIncluded: (Element) -> Bool) -> SynchronizedArray<Element> {
+        var result = SynchronizedArray<Element>()
+        queue.sync {
+            self.array.filter(isIncluded).forEach {
+                result.append($0)
+            }
+        }
         return result
     }
 }
