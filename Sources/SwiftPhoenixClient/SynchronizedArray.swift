@@ -38,7 +38,7 @@ public class SynchronizedArray<Element> {
     }
     
     func filter(_ isIncluded: (Element) -> Bool) -> SynchronizedArray<Element> {
-        var result = SynchronizedArray<Element>()
+        let result = SynchronizedArray<Element>()
         queue.sync {
             self.array.filter(isIncluded).forEach {
                 result.append($0)
