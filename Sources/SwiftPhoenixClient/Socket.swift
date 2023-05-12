@@ -140,7 +140,7 @@ public class Socket: PhoenixTransportDelegate {
   var stateChangeCallbacks: StateChangeCallbacks = StateChangeCallbacks()
   
   /// Collection on channels created for the Socket
-  var channels: [Channel] = []
+  public internal(set) var channels: [Channel] = []
   
   /// Buffers messages that need to be sent once the socket has connected. It is an array
   /// of tuples, with the ref of the message to send and the callback that will send the message.
