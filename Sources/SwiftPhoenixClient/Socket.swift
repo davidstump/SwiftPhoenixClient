@@ -37,7 +37,7 @@ public typealias PayloadClosure = () -> Payload?
 /// Struct that gathers callbacks assigned to the Socket
 struct StateChangeCallbacks {
   var open: [(ref: String, callback: Delegated<Void, Void>)] = []
-  var close: [(ref: String, callback: Delegated<Void, Void>)] = []
+  var close: [(ref: String, callback: Delegated<(Int, String?), Void>)] = []
   var error: [(ref: String, callback: Delegated<(Error, URLResponse?), Void>)] = []
   var message: [(ref: String, callback: Delegated<Message, Void>)] = []
 }
@@ -204,7 +204,7 @@ public class Socket: PhoenixTransportDelegate {
     self.reconnectTimer = TimeoutTimer()
     self.reconnectTimer.callback.delegate(to: self) { (self) in
       self.logItems("Socket attempting to reconnect")
-      self.teardown() { self.connect() }
+      self.teardown(reason: "reconnection") { self.connect() }
     }
     self.reconnectTimer.timerCalculation
       .delegate(to: self) { (self, tries) -> TimeInterval in
@@ -274,19 +274,19 @@ public class Socket: PhoenixTransportDelegate {
   /// - parameter code: Optional. Closing status code
   /// - parameter callback: Optional. Called when disconnected
   public func disconnect(code: CloseCode = CloseCode.normal,
+                         reason: String? = nil,
                          callback: (() -> Void)? = nil) {
     // The socket was closed cleanly by the User
     self.closeStatus = CloseStatus(closeCode: code.rawValue)
     
     // Reset any reconnects and teardown the socket connection
     self.reconnectTimer.reset()
-    self.teardown(code: code, callback: callback)
+    self.teardown(code: code, reason: reason, callback: callback)
   }
   
-  
-  internal func teardown(code: CloseCode = CloseCode.normal, callback: (() -> Void)? = nil) {
+  internal func teardown(code: CloseCode = CloseCode.normal, reason: String? = nil, callback: (() -> Void)? = nil) {
     self.connection?.delegate = nil
-    self.connection?.disconnect(code: code.rawValue, reason: nil)
+    self.connection?.disconnect(code: code.rawValue, reason: reason)
     self.connection = nil
     
     // The socket connection has been torndown, heartbeats are not needed
@@ -294,7 +294,7 @@ public class Socket: PhoenixTransportDelegate {
     
     // Since the connection's delegate was nil'd out, inform all state
     // callbacks that the connection has closed
-    self.stateChangeCallbacks.close.forEach({ $0.callback.call() })
+    self.stateChangeCallbacks.close.forEach({ $0.callback.call((code.rawValue, reason)) })
     callback?()
   }
   
@@ -354,7 +354,22 @@ public class Socket: PhoenixTransportDelegate {
   /// - parameter callback: Called when the Socket is closed
   @discardableResult
   public func onClose(callback: @escaping () -> Void) -> String {
-    var delegated = Delegated<Void, Void>()
+    return self.onClose { _, _ in callback() }
+  }
+
+  /// Registers callbacks for connection close events. Does not handle retain
+  /// cycles. Use `delegateOnClose(_:)` for automatic handling of retain cycles.
+  ///
+  /// Example:
+  ///
+  ///     socket.onClose() { [weak self] code, reason in
+  ///         self?.print("Socket Connection Close")
+  ///     }
+  ///
+  /// - parameter callback: Called when the Socket is closed
+  @discardableResult
+  public func onClose(callback: @escaping (Int, String?) -> Void) -> String {
+    var delegated = Delegated<(Int, String?), Void>()
     delegated.manuallyDelegate(with: callback)
     
     return self.append(callback: delegated, to: &self.stateChangeCallbacks.close)
@@ -374,12 +389,28 @@ public class Socket: PhoenixTransportDelegate {
   @discardableResult
   public func delegateOnClose<T: AnyObject>(to owner: T,
                                             callback: @escaping ((T) -> Void)) -> String {
-    var delegated = Delegated<Void, Void>()
+    return self.delegateOnClose(to: owner) { owner, _ in callback(owner) }
+  }
+
+  /// Registers callbacks for connection close events. Automatically handles
+  /// retain cycles. Use `onClose()` to handle yourself.
+  ///
+  /// Example:
+  ///
+  ///     socket.delegateOnClose(self) { self, code, reason in
+  ///         self.print("Socket Connection Close")
+  ///     }
+  ///
+  /// - parameter owner: Class registering the callback. Usually `self`
+  /// - parameter callback: Called when the Socket is closed
+  @discardableResult
+  public func delegateOnClose<T: AnyObject>(to owner: T,
+                                            callback: @escaping ((T, (Int, String?)) -> Void)) -> String {
+    var delegated = Delegated<(Int, String?), Void>()
     delegated.delegate(to: owner, with: callback)
    
     return self.append(callback: delegated, to: &self.stateChangeCallbacks.close)
   }
-  
   
   /// Registers callbacks for connection error events. Does not handle retain
   /// cycles. Use `delegateOnError(to:)` for automatic handling of retain cycles.
@@ -596,7 +627,7 @@ public class Socket: PhoenixTransportDelegate {
     self.stateChangeCallbacks.open.forEach({ $0.callback.call() })
   }
   
-  internal func onConnectionClosed(code: Int?) {
+  internal func onConnectionClosed(code: Int, reason: String?) {
     self.logItems("transport", "close")
 
     // Send an error to all channels
@@ -611,7 +642,7 @@ public class Socket: PhoenixTransportDelegate {
       self.reconnectTimer.scheduleTimeout()
     }
     
-    self.stateChangeCallbacks.close.forEach({ $0.callback.call() })
+    self.stateChangeCallbacks.close.forEach({ $0.callback.call((code, reason)) })
   }
   
   internal func onConnectionError(_ error: Error, response: URLResponse?) {
@@ -793,9 +824,9 @@ public class Socket: PhoenixTransportDelegate {
     self.onConnectionMessage(message)
   }
   
-  public func onClose(code: Int) {
+  public func onClose(code: Int, reason: String? = nil) {
     self.closeStatus.update(transportCloseCode: code)
-    self.onConnectionClosed(code: code)
+    self.onConnectionClosed(code: code, reason: reason)
   }
 }
 

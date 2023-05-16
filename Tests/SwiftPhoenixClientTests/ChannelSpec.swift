@@ -31,7 +31,7 @@ class ChannelSpec: QuickSpec {
     
     /// Utility method to easily filter the bindings for a channel by their event
     func getBindings(_ event: String) -> [Binding]? {
-      return channel.bindingsDel.filter({ $0.event == event })
+      return channel.syncBindingsDel.filter({ $0.event == event })
     }
     
     

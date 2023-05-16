@@ -42,6 +42,11 @@ class ChannelMock: Channel {
         set(value) { underlyingState = value }
     }
     var underlyingState: (ChannelState)!
+    override var syncBindingsDel: SynchronizedArray<Binding> {
+        get { return underlyingSyncBindingsDel }
+        set(value) { underlyingSyncBindingsDel = value }
+    }
+    var underlyingSyncBindingsDel: (SynchronizedArray<Binding>)!
     override var bindingRef: Int {
         get { return underlyingBindingRef }
         set(value) { underlyingBindingRef = value }
@@ -605,6 +610,11 @@ class SocketMock: Socket {
         set(value) { underlyingHeartbeatInterval = value }
     }
     var underlyingHeartbeatInterval: (TimeInterval)!
+    override var heartbeatLeeway: DispatchTimeInterval {
+        get { return underlyingHeartbeatLeeway }
+        set(value) { underlyingHeartbeatLeeway = value }
+    }
+    var underlyingHeartbeatLeeway: (DispatchTimeInterval)!
     override var reconnectAfter: (Int) -> TimeInterval {
         get { return underlyingReconnectAfter }
         set(value) { underlyingReconnectAfter = value }
@@ -674,20 +684,20 @@ class SocketMock: Socket {
 
     //MARK: - init
 
-    var initParamsReceivedArguments: (endPoint: String, params: Payload?)?
-    var initParamsClosure: ((String, Payload?) -> Void)?
+    var initParamsVsnReceivedArguments: (endPoint: String, params: Payload?, vsn: String)?
+    var initParamsVsnClosure: ((String, Payload?, String) -> Void)?
 
 
     //MARK: - init
 
-    var initParamsClosureReceivedArguments: (endPoint: String, paramsClosure: PayloadClosure?)?
-    var initParamsClosureClosure: ((String, PayloadClosure?) -> Void)?
+    var initParamsClosureVsnReceivedArguments: (endPoint: String, paramsClosure: PayloadClosure?, vsn: String)?
+    var initParamsClosureVsnClosure: ((String, PayloadClosure?, String) -> Void)?
 
 
     //MARK: - init
 
-    var initEndPointTransportParamsClosureReceivedArguments: (endPoint: String, transport: (URL) -> PhoenixTransport, paramsClosure: PayloadClosure?)?
-    var initEndPointTransportParamsClosureClosure: ((String, @escaping ((URL) -> PhoenixTransport), PayloadClosure?) -> Void)?
+    var initEndPointTransportParamsClosureVsnReceivedArguments: (endPoint: String, transport: (URL) -> PhoenixTransport, paramsClosure: PayloadClosure?, vsn: String)?
+    var initEndPointTransportParamsClosureVsnClosure: ((String, @escaping (URL) -> PhoenixTransport, PayloadClosure?, String) -> Void)?
 
 
     //MARK: - deinit
@@ -715,34 +725,33 @@ class SocketMock: Socket {
 
     //MARK: - disconnect
 
-    var disconnectCodeCallbackCallsCount = 0
-    var disconnectCodeCallbackCalled: Bool {
-        return disconnectCodeCallbackCallsCount > 0
+    var disconnectCodeReasonCallbackCallsCount = 0
+    var disconnectCodeReasonCallbackCalled: Bool {
+        return disconnectCodeReasonCallbackCallsCount > 0
     }
-    var disconnectCodeCallbackReceivedArguments: (code: CloseCode, callback: (() -> Void)?)?
-    var disconnectCodeCallbackClosure: ((CloseCode, (() -> Void)?) -> Void)?
+    var disconnectCodeReasonCallbackReceivedArguments: (code: CloseCode, reason: String?, callback: (() -> Void)?)?
+    var disconnectCodeReasonCallbackClosure: ((CloseCode, String?, (() -> Void)?) -> Void)?
 
-    override func disconnect(code: CloseCode = CloseCode.normal,
-                         callback: (() -> Void)? = nil) {
-        disconnectCodeCallbackCallsCount += 1
-    disconnectCodeCallbackReceivedArguments = (code: code, callback: callback)
-        disconnectCodeCallbackClosure?(code, callback)
+    override func disconnect(code: CloseCode = CloseCode.normal, reason: String? = nil, callback: (() -> Void)? = nil) {
+        disconnectCodeReasonCallbackCallsCount += 1
+    disconnectCodeReasonCallbackReceivedArguments = (code: code, reason: reason, callback: callback)
+        disconnectCodeReasonCallbackClosure?(code, reason, callback)
     }
 
 
     //MARK: - teardown
 
-    var teardownCodeCallbackCallsCount = 0
-    var teardownCodeCallbackCalled: Bool {
-        return teardownCodeCallbackCallsCount > 0
+    var teardownCodeReasonCallbackCallsCount = 0
+    var teardownCodeReasonCallbackCalled: Bool {
+        return teardownCodeReasonCallbackCallsCount > 0
     }
-    var teardownCodeCallbackReceivedArguments: (code: CloseCode, callback: (() -> Void)?)?
-    var teardownCodeCallbackClosure: ((CloseCode, (() -> Void)?) -> Void)?
+    var teardownCodeReasonCallbackReceivedArguments: (code: CloseCode, reason: String?, callback: (() -> Void)?)?
+    var teardownCodeReasonCallbackClosure: ((CloseCode, String?, (() -> Void)?) -> Void)?
 
-    override func teardown(code: CloseCode = CloseCode.normal, callback: (() -> Void)? = nil) {
-        teardownCodeCallbackCallsCount += 1
-    teardownCodeCallbackReceivedArguments = (code: code, callback: callback)
-        teardownCodeCallbackClosure?(code, callback)
+    override func teardown(code: CloseCode = CloseCode.normal, reason: String? = nil, callback: (() -> Void)? = nil) {
+        teardownCodeReasonCallbackCallsCount += 1
+    teardownCodeReasonCallbackReceivedArguments = (code: code, reason: reason, callback: callback)
+        teardownCodeReasonCallbackClosure?(code, reason, callback)
     }
 
 
@@ -759,7 +768,7 @@ class SocketMock: Socket {
     override func onOpen(callback: @escaping () -> Void) -> String {
         onOpenCallbackCallsCount += 1
         onOpenCallbackReceivedCallback = callback
-        return onOpenCallbackClosure.map({ $0(callback) }) ?? makeRefReturnValue
+        return onOpenCallbackClosure.map({ $0(callback) }) ?? onOpenCallbackReturnValue
     }
 
 
@@ -774,7 +783,7 @@ class SocketMock: Socket {
     override func delegateOnOpen<T: AnyObject>(to owner: T,
                                            callback: @escaping ((T) -> Void)) -> String {
         delegateOnOpenToCallbackCallsCount += 1
-        return makeRefReturnValue
+        return delegateOnOpenToCallbackReturnValue
     }
 
 
@@ -791,7 +800,24 @@ class SocketMock: Socket {
     override func onClose(callback: @escaping () -> Void) -> String {
         onCloseCallbackCallsCount += 1
         onCloseCallbackReceivedCallback = callback
-        return onCloseCallbackClosure.map({ $0(callback) }) ?? makeRefReturnValue
+        return onCloseCallbackClosure.map({ $0(callback) }) ?? onCloseCallbackReturnValue
+    }
+
+
+    //MARK: - onClose
+
+    var onCloseCallbackWithCodeCallsCount = 0
+    var onCloseCallbackWithCodeCalled: Bool {
+        return onCloseCallbackWithCodeCallsCount > 0
+    }
+    var onCloseCallbackWithCodeReceivedCallback: ((Int, String?) -> Void)?
+    var onCloseCallbackWithCodeReturnValue: String!
+    var onCloseCallbackWithCodeClosure: ((@escaping (Int, String?) -> Void) -> String)?
+
+    override func onClose(callback: @escaping (Int, String?) -> Void) -> String {
+        onCloseCallbackWithCodeCallsCount += 1
+        onCloseCallbackWithCodeReceivedCallback = callback
+        return onCloseCallbackWithCodeClosure.map({ $0(callback) }) ?? onCloseCallbackWithCodeReturnValue
     }
 
 
@@ -803,10 +829,23 @@ class SocketMock: Socket {
     }
     var delegateOnCloseToCallbackReturnValue: String!
 
-    override func delegateOnClose<T: AnyObject>(to owner: T,
-                                            callback: @escaping ((T) -> Void)) -> String {
+    override func delegateOnClose<T: AnyObject>(to owner: T, callback: @escaping (T) -> Void) -> String {
         delegateOnCloseToCallbackCallsCount += 1
-        return makeRefReturnValue
+        return delegateOnCloseToCallbackReturnValue
+    }
+
+
+    //MARK: - delegateOnClose<T: AnyObject>
+
+    var delegateOnCloseToCallbackWithCodeCallsCount = 0
+    var delegateOnCloseToCallbackWithCodeCalled: Bool {
+        return delegateOnCloseToCallbackWithCodeCallsCount > 0
+    }
+    var delegateOnCloseToCallbackWithCodeReturnValue: String!
+
+    override func delegateOnClose<T: AnyObject>(to owner: T, callback: @escaping (T, (Int, String?)) -> Void) -> String {
+        delegateOnCloseToCallbackWithCodeCallsCount += 1
+        return delegateOnCloseToCallbackWithCodeReturnValue
     }
 
 
@@ -823,7 +862,7 @@ class SocketMock: Socket {
     override func onError(callback: @escaping ((Error, URLResponse?)) -> Void) -> String {
         onErrorCallbackCallsCount += 1
         onErrorCallbackReceivedCallback = callback
-        return onErrorCallbackClosure.map({ $0(callback) }) ?? makeRefReturnValue
+        return onErrorCallbackClosure.map({ $0(callback) }) ?? onErrorCallbackReturnValue
     }
 
 
@@ -838,7 +877,7 @@ class SocketMock: Socket {
     override func delegateOnError<T: AnyObject>(to owner: T,
                                             callback: @escaping ((T, (Error, URLResponse?)) -> Void)) -> String {
         delegateOnErrorToCallbackCallsCount += 1
-        return makeRefReturnValue
+        return delegateOnErrorToCallbackReturnValue
     }
 
 
@@ -855,7 +894,7 @@ class SocketMock: Socket {
     override func onMessage(callback: @escaping (Message) -> Void) -> String {
         onMessageCallbackCallsCount += 1
         onMessageCallbackReceivedCallback = callback
-        return onMessageCallbackClosure.map({ $0(callback) }) ?? makeRefReturnValue
+        return onMessageCallbackClosure.map({ $0(callback) }) ?? onMessageCallbackReturnValue
     }
 
 
@@ -870,7 +909,7 @@ class SocketMock: Socket {
     override func delegateOnMessage<T: AnyObject>(to owner: T,
                                               callback: @escaping ((T, Message) -> Void)) -> String {
         delegateOnMessageToCallbackCallsCount += 1
-        return makeRefReturnValue
+        return delegateOnMessageToCallbackReturnValue
     }
 
 
@@ -1005,33 +1044,33 @@ class SocketMock: Socket {
 
     //MARK: - onConnectionClosed
 
-    var onConnectionClosedCodeCallsCount = 0
-    var onConnectionClosedCodeCalled: Bool {
-        return onConnectionClosedCodeCallsCount > 0
+    var onConnectionClosedCodeReasonCallsCount = 0
+    var onConnectionClosedCodeReasonCalled: Bool {
+        return onConnectionClosedCodeReasonCallsCount > 0
     }
-    var onConnectionClosedCodeReceivedCode: Int?
-    var onConnectionClosedCodeClosure: ((Int?) -> Void)?
+    var onConnectionClosedCodeReasonReceivedArguments: (code: Int, reason: String?)?
+    var onConnectionClosedCodeReasonClosure: ((Int, String?) -> Void)?
 
-    override func onConnectionClosed(code: Int?) {
-        onConnectionClosedCodeCallsCount += 1
-        onConnectionClosedCodeReceivedCode = code
-        onConnectionClosedCodeClosure?(code)
+    override func onConnectionClosed(code: Int, reason: String?) {
+        onConnectionClosedCodeReasonCallsCount += 1
+    onConnectionClosedCodeReasonReceivedArguments = (code: code, reason: reason)
+        onConnectionClosedCodeReasonClosure?(code, reason)
     }
 
 
     //MARK: - onConnectionError
 
-    var onConnectionErrorCallsCount = 0
-    var onConnectionErrorCalled: Bool {
-        return onConnectionErrorCallsCount > 0
+    var onConnectionErrorResponseCallsCount = 0
+    var onConnectionErrorResponseCalled: Bool {
+        return onConnectionErrorResponseCallsCount > 0
     }
-    var onConnectionErrorReceivedError: Error?
-    var onConnectionErrorClosure: ((Error) -> Void)?
+    var onConnectionErrorResponseReceivedArguments: (error: Error, response: URLResponse?)?
+    var onConnectionErrorResponseClosure: ((Error, URLResponse?) -> Void)?
 
     override func onConnectionError(_ error: Error, response: URLResponse?) {
-        onConnectionErrorCallsCount += 1
-        onConnectionErrorReceivedError = error
-        onConnectionErrorClosure?(error)
+        onConnectionErrorResponseCallsCount += 1
+    onConnectionErrorResponseReceivedArguments = (error: error, response: response)
+        onConnectionErrorResponseClosure?(error, response)
     }
 
 
@@ -1171,17 +1210,17 @@ class SocketMock: Socket {
 
     //MARK: - onError
 
-    var onErrorErrorCallsCount = 0
-    var onErrorErrorCalled: Bool {
-        return onErrorErrorCallsCount > 0
+    var onErrorErrorResponseCallsCount = 0
+    var onErrorErrorResponseCalled: Bool {
+        return onErrorErrorResponseCallsCount > 0
     }
-    var onErrorErrorReceivedError: Error?
-    var onErrorErrorClosure: ((Error) -> Void)?
+    var onErrorErrorResponseReceivedArguments: (error: Error, response: URLResponse?)?
+    var onErrorErrorResponseClosure: ((Error, URLResponse?) -> Void)?
 
     override func onError(error: Error, response: URLResponse?) {
-        onErrorErrorCallsCount += 1
-        onErrorErrorReceivedError = error
-        onErrorErrorClosure?(error)
+        onErrorErrorResponseCallsCount += 1
+    onErrorErrorResponseReceivedArguments = (error: error, response: response)
+        onErrorErrorResponseClosure?(error, response)
     }
 
 
@@ -1203,17 +1242,17 @@ class SocketMock: Socket {
 
     //MARK: - onClose
 
-    var onCloseCodeCallsCount = 0
-    var onCloseCodeCalled: Bool {
-        return onCloseCodeCallsCount > 0
+    var onCloseCodeReasonCallsCount = 0
+    var onCloseCodeReasonCalled: Bool {
+        return onCloseCodeReasonCallsCount > 0
     }
-    var onCloseCodeReceivedCode: Int?
-    var onCloseCodeClosure: ((Int) -> Void)?
+    var onCloseCodeReasonReceivedArguments: (code: Int, reason: String?)?
+    var onCloseCodeReasonClosure: ((Int, String?) -> Void)?
 
-    override func onClose(code: Int) {
-        onCloseCodeCallsCount += 1
-        onCloseCodeReceivedCode = code
-        onCloseCodeClosure?(code)
+    override func onClose(code: Int, reason: String? = nil) {
+        onCloseCodeReasonCallsCount += 1
+    onCloseCodeReasonReceivedArguments = (code: code, reason: reason)
+        onCloseCodeReasonClosure?(code, reason)
     }
 
 
