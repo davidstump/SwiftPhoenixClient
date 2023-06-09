@@ -36,7 +36,7 @@ public typealias PayloadClosure = () -> Payload?
 
 /// Struct that gathers callbacks assigned to the Socket
 struct StateChangeCallbacks {
-  var open: [(ref: String, callback: Delegated<Void, Void>)] = []
+  var open: [(ref: String, callback: Delegated<(URLResponse?), Void>)] = []
   var close: [(ref: String, callback: Delegated<(Int, String?), Void>)] = []
   var error: [(ref: String, callback: Delegated<(Error, URLResponse?), Void>)] = []
   var message: [(ref: String, callback: Delegated<Message, Void>)] = []
@@ -316,7 +316,22 @@ public class Socket: PhoenixTransportDelegate {
   /// - parameter callback: Called when the Socket is opened
   @discardableResult
   public func onOpen(callback: @escaping () -> Void) -> String {
-    var delegated = Delegated<Void, Void>()
+    return self.onOpen { _ in callback() }
+  }
+  
+  /// Registers callbacks for connection open events. Does not handle retain
+  /// cycles. Use `delegateOnOpen(to:)` for automatic handling of retain cycles.
+  ///
+  /// Example:
+  ///
+  ///     socket.onOpen() { [weak self] response in
+  ///         self?.print("Socket Connection Open")
+  ///     }
+  ///
+  /// - parameter callback: Called when the Socket is opened
+  @discardableResult
+  public func onOpen(callback: @escaping (URLResponse?) -> Void) -> String {
+    var delegated = Delegated<(URLResponse?), Void>()
     delegated.manuallyDelegate(with: callback)
     
     return self.append(callback: delegated, to: &self.stateChangeCallbacks.open)
@@ -336,7 +351,24 @@ public class Socket: PhoenixTransportDelegate {
   @discardableResult
   public func delegateOnOpen<T: AnyObject>(to owner: T,
                                            callback: @escaping ((T) -> Void)) -> String {
-    var delegated = Delegated<Void, Void>()
+    return self.delegateOnOpen(to: owner) { owner, _ in callback(owner) }
+  }
+
+  /// Registers callbacks for connection open events. Automatically handles
+  /// retain cycles. Use `onOpen()` to handle yourself.
+  ///
+  /// Example:
+  ///
+  ///     socket.delegateOnOpen(to: self) { self, response in
+  ///         self.print("Socket Connection Open")
+  ///     }
+  ///
+  /// - parameter owner: Class registering the callback. Usually `self`
+  /// - parameter callback: Called when the Socket is opened
+  @discardableResult
+  public func delegateOnOpen<T: AnyObject>(to owner: T,
+                                           callback: @escaping ((T, (URLResponse?)) -> Void)) -> String {
+    var delegated = Delegated<(URLResponse?), Void>()
     delegated.delegate(to: owner, with: callback)
     
     return self.append(callback: delegated, to: &self.stateChangeCallbacks.open)
@@ -608,7 +640,7 @@ public class Socket: PhoenixTransportDelegate {
   // MARK: - Connection Events
   //----------------------------------------------------------------------
   /// Called when the underlying Websocket connects to it's host
-  internal func onConnectionOpen() {
+  internal func onConnectionOpen(response: URLResponse?) {
     self.logItems("transport", "Connected to \(endPoint)")
     
     // Reset the close status now that the socket has been connected
@@ -624,7 +656,7 @@ public class Socket: PhoenixTransportDelegate {
     self.resetHeartbeat()
     
     // Inform all onOpen callbacks that the Socket has opened
-    self.stateChangeCallbacks.open.forEach({ $0.callback.call() })
+    self.stateChangeCallbacks.open.forEach({ $0.callback.call((response)) })
   }
   
   internal func onConnectionClosed(code: Int, reason: String?) {
@@ -812,8 +844,8 @@ public class Socket: PhoenixTransportDelegate {
   //----------------------------------------------------------------------
   // MARK: - TransportDelegate
   //----------------------------------------------------------------------
-  public func onOpen() {
-    self.onConnectionOpen()
+  public func onOpen(response: URLResponse?) {
+    self.onConnectionOpen(response: response)
   }
   
   public func onError(error: Error, response: URLResponse?) {
