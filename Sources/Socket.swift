@@ -490,11 +490,17 @@ public class Socket {
         "event": event,
         "payload": payload
       ]
-      
+
       if let safeRef = ref { body["ref"] = safeRef }
       if let safeJoinRef = joinRef { body["join_ref"] = safeJoinRef}
       
-      let data = self.encode(body)
+      var data: Data = Data()
+      
+      if let payload = body["payload"] as? [String: Any], let _ = payload["data"] as? Data {
+        data = self.binaryEncode(body)
+      } else {
+        data = self.encode(body)
+      }
       
       self.logItems("push", "Sending \(String(data: data, encoding: String.Encoding.utf8) ?? "")" )
       self.connection?.write(data: data)
@@ -509,6 +515,78 @@ public class Socket {
       self.sendBuffer.append(callback)
     }
   }
+  
+  private func binaryEncode(_ message: [String: Any]) -> Data {
+    let META_LENGTH = 4
+    let HEADER_LENGTH = 1
+    guard let joinRef = message["join_ref"] as? String,
+          let ref = message["ref"] as? String,
+          let event = message["event"] as? String,
+          let topic = message["topic"] as? String,
+          let payload = message["payload"] as? [String: Data] else {
+              fatalError("Invalid message format")
+    }
+
+    let metaLength = META_LENGTH + joinRef.count + ref.count + topic.count + event.count
+    var header = Data(count: HEADER_LENGTH + metaLength)
+    var offset = 0
+
+    header.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) -> Void in
+        let view = buffer.bindMemory(to: UInt8.self)
+        view[offset] = 0
+        offset += 1
+        view[offset] = UInt8(joinRef.count)
+        offset += 1
+        view[offset] = UInt8(ref.count)
+        offset += 1
+        view[offset] = UInt8(topic.count)
+        offset += 1
+        view[offset] = UInt8(event.count)
+        offset += 1
+
+        let joinRefData = joinRef.data(using: .utf8)!
+        joinRefData.withUnsafeBytes { (joinRefBuffer: UnsafeRawBufferPointer) -> Void in
+            for i in 0..<joinRefData.count {
+                view[offset] = joinRefBuffer[i]
+                offset += 1
+            }
+        }
+
+        let refData = ref.data(using: .utf8)!
+        refData.withUnsafeBytes { (refBuffer: UnsafeRawBufferPointer) -> Void in
+            for i in 0..<refData.count {
+                view[offset] = refBuffer[i]
+                offset += 1
+            }
+        }
+
+        let topicData = topic.data(using: .utf8)!
+        topicData.withUnsafeBytes { (topicBuffer: UnsafeRawBufferPointer) -> Void in
+            for i in 0..<topicData.count {
+                view[offset] = topicBuffer[i]
+                offset += 1
+            }
+        }
+
+        let eventData = event.data(using: .utf8)!
+        eventData.withUnsafeBytes { (eventBuffer: UnsafeRawBufferPointer) -> Void in
+            for i in 0..<eventData.count {
+                view[offset] = eventBuffer[i]
+                offset += 1
+            }
+        }
+    }
+
+    var combined = header
+
+    if let data = payload["data"] {
+      print("data: ", data)
+      combined.append(data)
+      print("combined: ", combined)
+    }
+
+    return combined
+}
   
   /// - return: the next message ref, accounting for overflows
   public func makeRef() -> String {
