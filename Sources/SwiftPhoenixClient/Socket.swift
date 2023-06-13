@@ -36,7 +36,7 @@ public typealias PayloadClosure = () -> Payload?
 
 /// Struct that gathers callbacks assigned to the Socket
 struct StateChangeCallbacks {
-  var open: [(ref: String, callback: Delegated<(URLResponse?), Void>)] = []
+  var open: [(ref: String, callback: Delegated<URLResponse?, Void>)] = []
   var close: [(ref: String, callback: Delegated<(Int, String?), Void>)] = []
   var error: [(ref: String, callback: Delegated<(Error, URLResponse?), Void>)] = []
   var message: [(ref: String, callback: Delegated<Message, Void>)] = []
@@ -331,7 +331,7 @@ public class Socket: PhoenixTransportDelegate {
   /// - parameter callback: Called when the Socket is opened
   @discardableResult
   public func onOpen(callback: @escaping (URLResponse?) -> Void) -> String {
-    var delegated = Delegated<(URLResponse?), Void>()
+    var delegated = Delegated<URLResponse?, Void>()
     delegated.manuallyDelegate(with: callback)
     
     return self.append(callback: delegated, to: &self.stateChangeCallbacks.open)
@@ -367,8 +367,8 @@ public class Socket: PhoenixTransportDelegate {
   /// - parameter callback: Called when the Socket is opened
   @discardableResult
   public func delegateOnOpen<T: AnyObject>(to owner: T,
-                                           callback: @escaping ((T, (URLResponse?)) -> Void)) -> String {
-    var delegated = Delegated<(URLResponse?), Void>()
+                                           callback: @escaping ((T, URLResponse?) -> Void)) -> String {
+    var delegated = Delegated<URLResponse?, Void>()
     delegated.delegate(to: owner, with: callback)
     
     return self.append(callback: delegated, to: &self.stateChangeCallbacks.open)
