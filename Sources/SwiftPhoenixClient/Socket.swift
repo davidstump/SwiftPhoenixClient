@@ -604,7 +604,8 @@ public class Socket: PhoenixTransportDelegate {
                      ref: String? = nil,
                      joinRef: String? = nil) {
     
-    let callback: (() throws -> ()) = {
+    let callback: (() throws -> ()) = { [weak self] in
+      guard let self else { return }
       let body: [Any?] = [joinRef, ref, topic, event, payload]
       let data = self.encode(body)
       
