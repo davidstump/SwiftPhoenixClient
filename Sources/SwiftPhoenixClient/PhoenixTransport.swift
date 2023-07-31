@@ -42,6 +42,11 @@ public protocol PhoenixTransport {
   func connect()
   
   /**
+   Connect to the server
+   */
+  func connect(with headers: [String : Any])
+    
+  /**
    Disconnect from the server.
    
    - Parameters:
@@ -202,6 +207,23 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
     self.task?.resume()
   }
   
+  open func connect(with headers: [String : Any]) {
+    // Set the transport state as connecting
+    self.readyState = .connecting
+    
+    // Create the session, request, and websocket task
+    self.session = URLSession(configuration: self.configuration, delegate: self, delegateQueue: nil)
+    var request = URLRequest(url: url)
+    for header in headers {
+        guard let value = header.value as? String else { return }
+        request.addValue(value, forHTTPHeaderField: header.key)
+    }
+    self.task = self.session?.webSocketTask(with: request)
+    
+    // Start the task
+    self.task?.resume()
+  }
+    
   open func disconnect(code: Int, reason: String?) {
     /*
      TODO:
