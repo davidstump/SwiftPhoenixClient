@@ -42,7 +42,7 @@ public protocol PhoenixTransport {
   func connect()
   
   /**
-   Connect to the server
+   Connect to the server with request headers
    */
   func connect(with headers: [String : Any])
     
