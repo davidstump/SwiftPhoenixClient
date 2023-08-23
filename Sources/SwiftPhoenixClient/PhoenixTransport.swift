@@ -40,7 +40,7 @@ public protocol PhoenixTransport {
    Connect to the server
    */
   func connect(with headers: [String : Any])
-    
+  
   /**
    Disconnect from the server.
    
@@ -206,7 +206,7 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
     // Start the task
     self.task?.resume()
   }
-    
+  
   open func disconnect(code: Int, reason: String?) {
     /*
      TODO:
