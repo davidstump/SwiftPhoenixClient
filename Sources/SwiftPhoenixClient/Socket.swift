@@ -241,9 +241,10 @@ public class Socket: PhoenixTransportDelegate {
   }
   
   /// Connects the Socket. The params passed to the Socket on initialization
-  /// will be sent through the connection as query parameters. If the Socket is already connected,
-  /// then this call will be ignored.
-  public func connect() {
+  /// will be sent through the connection as query parameters.
+  /// Any headers passed to this function will be added to the connection request.
+  /// If the Socket is already connected, then this call will be ignored.
+  public func connect(with headers: [String : Any] = [:]) {
     // Do not attempt to reconnect if the socket is currently connected
     guard !isConnected else { return }
     
@@ -266,25 +267,6 @@ public class Socket: PhoenixTransportDelegate {
 //    self.connection?.enabledSSLCipherSuites = enabledSSLCipherSuites
 //    #endif
     
-    self.connection?.connect()
-  }
-    
-  /// Connects the Socket. The params passed to the Socket on initialization
-  /// will be sent through the connection. The headers passed to this function will be added to the connection request.
-  /// If the Socket is already connected, then this call will be ignored.
-  public func connect(with headers: [String : Any]) {
-    // Do not attempt to reconnect if the socket is currently connected
-    guard !isConnected else { return }
-    
-    // Reset the close status when attempting to connect
-    self.closeStatus = .unknown
-    // We need to build this right before attempting to connect as the
-    // parameters could be built upon demand and change over time
-    self.endPointUrl = Socket.buildEndpointUrl(endpoint: self.endPoint,
-                                               paramsClosure: self.paramsClosure,
-                                               vsn: vsn)
-    self.connection = self.transport(self.endPointUrl)
-    self.connection?.delegate = self
     self.connection?.connect(with: headers)
   }
   

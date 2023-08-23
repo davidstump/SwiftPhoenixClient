@@ -39,11 +39,6 @@ public protocol PhoenixTransport {
   /**
    Connect to the server
    */
-  func connect()
-  
-  /**
-   Connect to the server with request headers
-   */
   func connect(with headers: [String : Any])
     
   /**
@@ -195,19 +190,7 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
   public var readyState: PhoenixTransportReadyState = .closed
   public var delegate: PhoenixTransportDelegate? = nil
   
-  open func connect() {
-    // Set the transport state as connecting
-    self.readyState = .connecting
-    
-    // Create the session and websocket task
-    self.session = URLSession(configuration: self.configuration, delegate: self, delegateQueue: nil)
-    self.task = self.session?.webSocketTask(with: url)
-    
-    // Start the task
-    self.task?.resume()
-  }
-  
-  open func connect(with headers: [String : Any]) {
+  open func connect(with headers: [String : Any] = [:]) {
     // Set the transport state as connecting
     self.readyState = .connecting
     
