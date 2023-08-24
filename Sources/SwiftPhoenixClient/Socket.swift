@@ -97,6 +97,9 @@ public class Socket: PhoenixTransportDelegate {
   
   /// Timeout to use when opening connections
   public var timeout: TimeInterval = Defaults.timeoutInterval
+    
+  /// Custom headers to be added to the socket connection request
+  public var headers: [String : Any] = [:]
   
   /// Interval between sending a heartbeat
   public var heartbeatInterval: TimeInterval = Defaults.heartbeatInterval
@@ -171,6 +174,7 @@ public class Socket: PhoenixTransportDelegate {
   @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
   public convenience init(_ endPoint: String,
                           params: Payload? = nil,
+                          headers: [String : Any] = [:],
                           vsn: String = Defaults.vsn) {
     self.init(endPoint: endPoint,
               transport: { url in return URLSessionTransport(url: url) },
@@ -181,6 +185,7 @@ public class Socket: PhoenixTransportDelegate {
   @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
   public convenience init(_ endPoint: String,
                           paramsClosure: PayloadClosure?,
+                          headers: [String : Any] = [:],
                           vsn: String = Defaults.vsn) {
     self.init(endPoint: endPoint,
               transport: { url in return URLSessionTransport(url: url) },
@@ -192,9 +197,11 @@ public class Socket: PhoenixTransportDelegate {
   public init(endPoint: String,
        transport: @escaping ((URL) -> PhoenixTransport),
        paramsClosure: PayloadClosure? = nil,
+       headers: [String : Any] = [:],
        vsn: String = Defaults.vsn) {
     self.transport = transport
     self.paramsClosure = paramsClosure
+    self.headers = headers
     self.endPoint = endPoint
     self.vsn = vsn
     self.endPointUrl = Socket.buildEndpointUrl(endpoint: endPoint,
@@ -242,9 +249,8 @@ public class Socket: PhoenixTransportDelegate {
   
   /// Connects the Socket. The params passed to the Socket on initialization
   /// will be sent through the connection as query parameters.
-  /// Any headers passed to this function will be added to the connection request.
   /// If the Socket is already connected, then this call will be ignored.
-  public func connect(with headers: [String : Any] = [:]) {
+  public func connect() {
     // Do not attempt to reconnect if the socket is currently connected
     guard !isConnected else { return }
     
@@ -267,7 +273,7 @@ public class Socket: PhoenixTransportDelegate {
 //    self.connection?.enabledSSLCipherSuites = enabledSSLCipherSuites
 //    #endif
     
-    self.connection?.connect(with: headers)
+    self.connection?.connect(with: self.headers)
   }
   
   /// Disconnects the socket
