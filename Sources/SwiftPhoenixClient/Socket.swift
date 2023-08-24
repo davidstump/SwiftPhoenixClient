@@ -179,6 +179,7 @@ public class Socket: PhoenixTransportDelegate {
     self.init(endPoint: endPoint,
               transport: { url in return URLSessionTransport(url: url) },
               paramsClosure: { params },
+              headers: headers,
               vsn: vsn)
   }
 
@@ -190,6 +191,7 @@ public class Socket: PhoenixTransportDelegate {
     self.init(endPoint: endPoint,
               transport: { url in return URLSessionTransport(url: url) },
               paramsClosure: paramsClosure,
+              headers: headers,
               vsn: vsn)
   }
   
