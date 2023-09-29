@@ -36,10 +36,10 @@ public typealias PayloadClosure = () -> Payload?
 
 /// Struct that gathers callbacks assigned to the Socket
 struct StateChangeCallbacks {
-  var open: [(ref: String, callback: Delegated<URLResponse?, Void>)] = []
-  var close: [(ref: String, callback: Delegated<(Int, String?), Void>)] = []
-  var error: [(ref: String, callback: Delegated<(Error, URLResponse?), Void>)] = []
-  var message: [(ref: String, callback: Delegated<Message, Void>)] = []
+    var open: SynchronizedArray<(ref: String, callback: Delegated<URLResponse?, Void>)> = .init()
+    var close: SynchronizedArray<(ref: String, callback: Delegated<(Int, String?), Void>)> = .init()
+    var error: SynchronizedArray<(ref: String, callback: Delegated<(Error, URLResponse?), Void>)> = .init()
+    var message: SynchronizedArray<(ref: String, callback: Delegated<Message, Void>)> = .init()
 }
 
 
@@ -521,7 +521,7 @@ public class Socket: PhoenixTransportDelegate {
     return self.append(callback: delegated, to: &self.stateChangeCallbacks.message)
   }
   
-  private func append<T>(callback: T, to array: inout [(ref: String, callback: T)]) -> String {
+  private func append<T>(callback: T, to array: inout SynchronizedArray<(ref: String, callback: T)>) -> String {
     let ref = makeRef()
     array.append((ref, callback))
     return ref
