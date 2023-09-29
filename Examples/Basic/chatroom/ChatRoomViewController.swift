@@ -39,8 +39,8 @@ class ChatRoomViewController: UIViewController {
   
   // MARK: - Attributes
   private let username: String = "ChatRoom"
-//  private let socket = Socket("http://localhost:4000/socket/websocket")
-  	private let socket = Socket("https://phoenix-chat.fly.dev/socket/websocket")
+  private let socket = Socket("http://localhost:4000/socket/websocket")
+//  	private let socket = Socket("https://phoenix-chat.fly.dev/socket/websocket")
   private let topic: String = "room:lobby"
   
   private var lobbyChannel: Channel?
@@ -82,7 +82,10 @@ class ChatRoomViewController: UIViewController {
   @IBAction func onSendButtonPressed(_ sender: Any) {
     // Create and send the payload
     let payload = ["name": username, "message": messageInput.text!]
-    self.lobbyChannel?.push("shout", payload: payload)
+      self.lobbyChannel?.push("shout", payload: payload)
+          .receive("ok", callback: { message in
+              print(message)
+          })
     
     // Clear the text intput
     self.messageInput.text = ""

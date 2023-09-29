@@ -280,6 +280,9 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
         case .data:
           print("Data received. This method is unsupported by the Client")
         case .string(let text):
+            print("==============================>>>")
+            print(text)
+            print("<<<==============================")
           self?.delegate?.onMessage(message: text)
         default:
           fatalError("Unknown result was received. [\(result)]")

@@ -22,18 +22,83 @@ final class SerializerTest: XCTestCase {
     }
     
     func testJsonDecodesMessage() throws {
-        let message = serializer.decode(text: "[\"0\",\"1\",\"t\",\"e\",{\"foo\":1}]")
+        let payload = "[\"0\",\"1\",\"t\",\"e\",{\"foo\":1}]"
+        let message = serializer.decode(text: payload)
+        
+        
+        XCTAssertEqual(message.joinRef, "0")
+        XCTAssertEqual(message.ref, "1")
+        XCTAssertEqual(message.topic, "t")
+        XCTAssertEqual(message.event, "e")
+        
+        XCTAssertNil(message.status)
+        XCTAssertEqual(message.textPayload, "{\"foo\":1}")
+    }
+    
+    func testJsonDecodesAbnormalMessage() throws {
+        let payload = "[\"0\",\"1\",\"t\",\"e\",\"foobar\"]"
+        let message = serializer.decode(text: payload)
+        
+        
+        XCTAssertEqual(message.joinRef, "0")
+        XCTAssertEqual(message.ref, "1")
+        XCTAssertEqual(message.topic, "t")
+        XCTAssertEqual(message.event, "e")
+        
+        XCTAssertNil(message.status)
+        XCTAssertEqual(message.textPayload, "{\"foo\":1}")
+    }
+    
+    func testJsonDecodesEmptyReply() throws {
+        let payload = "[null,\"1\",\"t\",\"e\",{\"response\":{},\"status\":\"ok\"}]"
+        let message = serializer.decode(text: payload)
+        
+        XCTAssertNil(message.joinRef)
+        XCTAssertEqual(message.ref, "1")
+        XCTAssertEqual(message.topic, "t")
+        XCTAssertEqual(message.event, "e")
+        
+        XCTAssertEqual(message.status, "ok")
+        XCTAssertEqual(message.textPayload, "{}")
+    }
+    
+    func testJsonDecodesAbnormalReply() throws {
+        let payload = "[null,\"1\",\"t\",\"e\",{\"response\":\"foobar\",\"status\":\"ok\"}]"
+        let message = serializer.decode(text: payload)
+        
+        XCTAssertNil(message.joinRef)
+        XCTAssertEqual(message.ref, "1")
+        XCTAssertEqual(message.topic, "t")
+        XCTAssertEqual(message.event, "e")
+        
+        XCTAssertEqual(message.status, "ok")
+        XCTAssertEqual(message.textPayload, "{}")
     }
     
     func testJsonDecodesReply() throws {
-        let message = serializer.decode(text: "[\"0\",\"1\",\"t\",\"e\",{\"foo\":1}]")
+        let payload = "[null,\"1\",\"t\",\"e\",{\"response\":{\"foo\":1},\"status\":\"ok\"}]"
+        let message = serializer.decode(text: payload)
+        
+        XCTAssertNil(message.joinRef)
+        XCTAssertEqual(message.ref, "1")
+        XCTAssertEqual(message.topic, "t")
+        XCTAssertEqual(message.event, "e")
+        
+        XCTAssertEqual(message.status, "ok")
+        XCTAssertEqual(message.textPayload, "{\"foo\":1}")
     }
     
     func testJsonDecodesBroadcast() throws {
-        let message = serializer.decode(text: "[null,\"1\",\"t\",\"e\",{\"foo\":1}]")
+        let payload = "[null,null,\"t\",\"e\",{\"foo\":1]"
+        let message = serializer.decode(text: payload)
         
+        XCTAssertNil(message.joinRef)
+        XCTAssertNil(message.ref)
+        XCTAssertEqual(message.topic, "t")
+        XCTAssertEqual(message.event, "e")
+        
+        XCTAssertNil(message.status)
+        XCTAssertEqual(message.textPayload, "{\"foo\":1}")
     }
-    
-    
 }
 
