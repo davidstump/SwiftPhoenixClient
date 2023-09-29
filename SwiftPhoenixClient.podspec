@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "SwiftPhoenixClient"
-  s.version          = "5.3.0"
+  s.version          = "5.3.1"
   s.summary          = "Connect your Phoenix and iOS applications through WebSockets!"
   s.swift_version    = "5.0"
   s.description  = <<-EOS
