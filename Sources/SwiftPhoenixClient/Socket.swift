@@ -97,6 +97,9 @@ public class Socket: PhoenixTransportDelegate {
   
   /// Timeout to use when opening connections
   public var timeout: TimeInterval = Defaults.timeoutInterval
+    
+  /// Custom headers to be added to the socket connection request
+  public var headers: [String : Any] = [:]
   
   /// Interval between sending a heartbeat
   public var heartbeatInterval: TimeInterval = Defaults.heartbeatInterval
@@ -266,7 +269,7 @@ public class Socket: PhoenixTransportDelegate {
 //    self.connection?.enabledSSLCipherSuites = enabledSSLCipherSuites
 //    #endif
     
-    self.connection?.connect()
+    self.connection?.connect(with: self.headers)
   }
   
   /// Disconnects the socket
