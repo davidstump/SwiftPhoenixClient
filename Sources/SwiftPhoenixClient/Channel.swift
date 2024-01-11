@@ -75,7 +75,7 @@ public class Channel {
   var state: ChannelState
   
   /// Collection of event bindings
-  var syncBindingsDel: SynchronizedArray<Binding>
+  let syncBindingsDel: SynchronizedArray<Binding>
   
   /// Tracks event binding ref counters
   var bindingRef: Int
@@ -572,9 +572,11 @@ public class Channel {
   func trigger(_ message: Message) {
     let handledMessage = self.onMessage(message)
     
-    self.syncBindingsDel
-      .filter( { return $0.event == message.event } )
-      .forEach( { $0.callback.call(handledMessage) } )
+    self.syncBindingsDel.forEach { binding in
+        if binding.event == message.event {
+            binding.callback.call(handledMessage)
+        }
+    }
   }
   
   /// Triggers an event to the correct event bindings created by

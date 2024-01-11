@@ -36,10 +36,10 @@ public typealias PayloadClosure = () -> Payload?
 
 /// Struct that gathers callbacks assigned to the Socket
 struct StateChangeCallbacks {
-    var open: SynchronizedArray<(ref: String, callback: Delegated<URLResponse?, Void>)> = .init()
-    var close: SynchronizedArray<(ref: String, callback: Delegated<(Int, String?), Void>)> = .init()
-    var error: SynchronizedArray<(ref: String, callback: Delegated<(Error, URLResponse?), Void>)> = .init()
-    var message: SynchronizedArray<(ref: String, callback: Delegated<Message, Void>)> = .init()
+    let open: SynchronizedArray<(ref: String, callback: Delegated<URLResponse?, Void>)> = .init()
+    let close: SynchronizedArray<(ref: String, callback: Delegated<(Int, String?), Void>)> = .init()
+    let error: SynchronizedArray<(ref: String, callback: Delegated<(Error, URLResponse?), Void>)> = .init()
+    let message: SynchronizedArray<(ref: String, callback: Delegated<Message, Void>)> = .init()
 }
 
 
@@ -140,7 +140,7 @@ public class Socket: PhoenixTransportDelegate {
   // MARK: - Private Attributes
   //----------------------------------------------------------------------
   /// Callbacks for socket state changes
-  var stateChangeCallbacks: StateChangeCallbacks = StateChangeCallbacks()
+  let stateChangeCallbacks: StateChangeCallbacks = StateChangeCallbacks()
   
   /// Collection on channels created for the Socket
   public internal(set) var channels: [Channel] = []
@@ -337,7 +337,7 @@ public class Socket: PhoenixTransportDelegate {
     var delegated = Delegated<URLResponse?, Void>()
     delegated.manuallyDelegate(with: callback)
     
-    return self.append(callback: delegated, to: &self.stateChangeCallbacks.open)
+    return self.append(callback: delegated, to: self.stateChangeCallbacks.open)
   }
   
   /// Registers callbacks for connection open events. Automatically handles
@@ -374,7 +374,7 @@ public class Socket: PhoenixTransportDelegate {
     var delegated = Delegated<URLResponse?, Void>()
     delegated.delegate(to: owner, with: callback)
     
-    return self.append(callback: delegated, to: &self.stateChangeCallbacks.open)
+    return self.append(callback: delegated, to: self.stateChangeCallbacks.open)
   }
   
   /// Registers callbacks for connection close events. Does not handle retain
@@ -407,7 +407,7 @@ public class Socket: PhoenixTransportDelegate {
     var delegated = Delegated<(Int, String?), Void>()
     delegated.manuallyDelegate(with: callback)
     
-    return self.append(callback: delegated, to: &self.stateChangeCallbacks.close)
+    return self.append(callback: delegated, to: self.stateChangeCallbacks.close)
   }
   
   /// Registers callbacks for connection close events. Automatically handles
@@ -444,7 +444,7 @@ public class Socket: PhoenixTransportDelegate {
     var delegated = Delegated<(Int, String?), Void>()
     delegated.delegate(to: owner, with: callback)
    
-    return self.append(callback: delegated, to: &self.stateChangeCallbacks.close)
+    return self.append(callback: delegated, to: self.stateChangeCallbacks.close)
   }
   
   /// Registers callbacks for connection error events. Does not handle retain
@@ -462,7 +462,7 @@ public class Socket: PhoenixTransportDelegate {
     var delegated = Delegated<(Error, URLResponse?), Void>()
     delegated.manuallyDelegate(with: callback)
     
-    return self.append(callback: delegated, to: &self.stateChangeCallbacks.error)
+    return self.append(callback: delegated, to: self.stateChangeCallbacks.error)
   }
   
   /// Registers callbacks for connection error events. Automatically handles
@@ -482,7 +482,7 @@ public class Socket: PhoenixTransportDelegate {
     var delegated = Delegated<(Error, URLResponse?), Void>()
     delegated.delegate(to: owner, with: callback)
 
-    return self.append(callback: delegated, to: &self.stateChangeCallbacks.error)
+    return self.append(callback: delegated, to: self.stateChangeCallbacks.error)
   }
   
   /// Registers callbacks for connection message events. Does not handle
@@ -501,7 +501,7 @@ public class Socket: PhoenixTransportDelegate {
     var delegated = Delegated<Message, Void>()
     delegated.manuallyDelegate(with: callback)
     
-    return self.append(callback: delegated, to: &self.stateChangeCallbacks.message)
+    return self.append(callback: delegated, to: self.stateChangeCallbacks.message)
   }
   
   /// Registers callbacks for connection message events. Automatically handles
@@ -521,10 +521,10 @@ public class Socket: PhoenixTransportDelegate {
     var delegated = Delegated<Message, Void>()
     delegated.delegate(to: owner, with: callback)
     
-    return self.append(callback: delegated, to: &self.stateChangeCallbacks.message)
+    return self.append(callback: delegated, to: self.stateChangeCallbacks.message)
   }
   
-  private func append<T>(callback: T, to array: inout SynchronizedArray<(ref: String, callback: T)>) -> String {
+  private func append<T>(callback: T, to array: SynchronizedArray<(ref: String, callback: T)>) -> String {
     let ref = makeRef()
     array.append((ref, callback))
     return ref
@@ -582,10 +582,10 @@ public class Socket: PhoenixTransportDelegate {
   ///
   /// - Parameter refs: List of refs returned by calls to `onOpen`, `onClose`, etc
   public func off(_ refs: [String]) {
-    self.stateChangeCallbacks.open = self.stateChangeCallbacks.open.filter({ !refs.contains($0.ref) })
-    self.stateChangeCallbacks.close = self.stateChangeCallbacks.close.filter({ !refs.contains($0.ref) })
-    self.stateChangeCallbacks.error = self.stateChangeCallbacks.error.filter({ !refs.contains($0.ref) })
-    self.stateChangeCallbacks.message = self.stateChangeCallbacks.message.filter({ !refs.contains($0.ref) })
+    self.stateChangeCallbacks.open.removeAll { refs.contains($0.ref) }
+    self.stateChangeCallbacks.close.removeAll { refs.contains($0.ref) }
+    self.stateChangeCallbacks.error.removeAll { refs.contains($0.ref) }
+    self.stateChangeCallbacks.message.removeAll { refs.contains($0.ref) }
   }
   
   
@@ -737,7 +737,7 @@ public class Socket: PhoenixTransportDelegate {
   
   /// Removes an item from the sendBuffer with the matching ref
   internal func removeFromSendBuffer(ref: String) {
-    self.sendBuffer = self.sendBuffer.filter({ $0.ref != ref })
+    self.sendBuffer.removeAll { $0.ref == ref }
   }
 
   /// Builds a fully qualified socket `URL` from `endPoint` and `params`.
