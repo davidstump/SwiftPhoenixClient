@@ -147,7 +147,7 @@ public class Socket: PhoenixTransportDelegate {
   
   /// Buffers messages that need to be sent once the socket has connected. It is an array
   /// of tuples, with the ref of the message to send and the callback that will send the message.
-  var sendBuffer: [(ref: String?, callback: () throws -> ())] = []
+  let sendBuffer = SynchronizedArray<(ref: String?, callback: () throws -> ())>()
   
   /// Ref counter for messages
   var ref: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
@@ -730,9 +730,9 @@ public class Socket: PhoenixTransportDelegate {
   
   /// Send all messages that were buffered before the socket opened
   internal func flushSendBuffer() {
-    guard isConnected && sendBuffer.count > 0 else { return }
+    guard isConnected else { return }
     self.sendBuffer.forEach( { try? $0.callback() } )
-    self.sendBuffer = []
+    self.sendBuffer.removeAll()
   }
   
   /// Removes an item from the sendBuffer with the matching ref
