@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file. The format 
 
 This product uses [Semantic Versioning](https://semver.org/).
 
+### 5.3.2
+* Fixed various thread-related crashes
+
 ### 5.3.1
 * Added `socket.headers` which will be added to the `URLRequest` when opening a WebSocket connection
 * Using thread-safe array for Socket callback bindings, fixing a crash when creating a channel

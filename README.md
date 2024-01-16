@@ -41,7 +41,7 @@ Podfile. Keep in mind that in order to use Swift Phoenix Client, the minimum iOS
 target must be '9.0'
 
 ```RUBY
-pod "SwiftPhoenixClient", '~> 5.2'
+pod "SwiftPhoenixClient", '~> 5.3'
 ```
 
 and running `pod install`. From there you will need to add `import SwiftPhoenixClient` in any class you want it to be used.
@@ -52,7 +52,7 @@ If you use Carthage to manage your dependencies, simply add
 SwiftPhoenixClient to your `Cartfile`:
 
 ```
-github "davidstump/SwiftPhoenixClient" ~> 5.2
+github "davidstump/SwiftPhoenixClient" ~> 5.3
 ```
 
 Then run `carthage update`.
