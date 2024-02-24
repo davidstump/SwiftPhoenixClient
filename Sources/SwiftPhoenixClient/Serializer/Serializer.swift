@@ -14,6 +14,12 @@ import Foundation
 ///
 protocol Serializer {
     
+    /// Encodes MessageV6 into a `String` to be sent back to a Phoenix server as raw text
+    ///
+    /// - parameter message: `MessageV6` to encode
+    /// - returns: Raw text to send back to the server
+    func encode(message: MessageV6) -> String
+    
     /// Decodes a raw [String] from a Phoenix server into a [SocketMessage] structure
     /// Throws a `preconditionFailure` if passed a malformed message
     ///

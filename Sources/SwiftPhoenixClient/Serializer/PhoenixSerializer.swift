@@ -15,8 +15,20 @@ import Foundation
 ///
 class PhoenixSerializer: Serializer {
     
-    func decode(text: String) -> SocketMessage {
+    func encode(message: MessageV6) -> String {
+        let jsonArray = [
+            message.joinRef,
+            message.ref,
+            message.topic,
+            message.event,
+            message.payload
+        ]
         
+        return convertToString(json: jsonArray)
+        
+    }
+    
+    func decode(text: String) -> SocketMessage {
         guard
             let textData = text.data(using: .utf8),
             let textJson = try? JSONSerialization
@@ -50,16 +62,7 @@ class PhoenixSerializer: Serializer {
                     payload: response
                 )
             )
-        } else if joinRef == nil && ref == nil {
-            
-            return .broadcast(
-                Broadcast(
-                    topic: topic,
-                    event: event,
-                    payload: convertToString(json: payload)
-                )
-            )
-        } else {
+        } else if joinRef != nil || ref != nil {
             return .message(
                 MessageV6(
                     joinRef: joinRef,
@@ -69,23 +72,29 @@ class PhoenixSerializer: Serializer {
                     payload: convertToString(json: payload)
                 )
             )
+        } else {
+            return .broadcast(
+                Broadcast(
+                    topic: topic,
+                    event: event,
+                    payload: convertToString(json: payload)
+                )
+            )
         }
     }
     
     private func convertToString(json: Any) -> String {
-        if json is [String: Any] {
+        if json is String {
+            return json as! String
+        } else {
             guard let jsonData = try? JSONSerialization
                 .data(withJSONObject: json,
                       options: JSONSerialization.WritingOptions()),
                   let jsonString = String(data: jsonData, encoding: .utf8) else {
                 preconditionFailure("Expected json object to serialize to a String.")
             }
-                
             return jsonString
-        } else if json is String {
-            return json as! String
-        } else {
-            preconditionFailure("Expected json to be a string or a dictionary. Got \(json)")
+            
         }
     }
 }

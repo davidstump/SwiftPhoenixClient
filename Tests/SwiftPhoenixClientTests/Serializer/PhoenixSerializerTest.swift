@@ -13,6 +13,22 @@ final class PhoenixSerializerTest: XCTestCase {
 
     private let serializer: Serializer = PhoenixSerializer()
     
+    // - - - - - encode(Message) - - - - -
+    func test_encodePush() {
+        let message = MessageV6(
+            joinRef: "0",
+            ref: "1",
+            topic: "t",
+            event: "e",
+            payload: "{\"foo\": 1}"
+        )
+        let text = serializer.encode(message: message)
+        XCTAssertEqual(text, """
+        ["0","1","t","e","{\\"foo\\": 1}"]
+        """
+        )
+      }
+    
     
     // - - - - - decode(text) - - - - -
     func test_decodeMessage() throws {
