@@ -9,6 +9,48 @@
 import Foundation
 
 
+enum PayloadV6: Equatable {
+    case binary(Data)
+    case json(String)
+    
+    
+    func asBinary() -> Data {
+        switch self {
+        case .binary(let data):
+            data
+        default:
+            preconditionFailure("Expected payload to be data. Was json")
+        }
+    }
+    
+    func asJson() -> String {
+        switch self {
+        case .json(let string):
+            string
+        default:
+            preconditionFailure("Expected payload to be json. Was data")
+        }
+    }
+    
+    
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        switch lhs {
+        case .binary(let lhsData):
+            switch rhs {
+            case .binary(let rhsData): return lhsData == rhsData
+            default: return false
+            }
+        case .json(let lhsJson):
+            switch rhs {
+            case .json(let rhsJson):
+                return lhsJson == rhsJson
+            default: return false
+            }
+        }
+    }
+}
+
+
 ///
 /// Defines a message dispatched over client to channels and vice-versa.
 ///
@@ -30,9 +72,8 @@ struct MessageV6 {
     /// The string event name, for example "phx_join"
     let event: String
     
-    // TODO: Payload can be a JSON String or Binary Data
     /// The message payload
-    let payload: String
+    let payload: PayloadV6
 }
 
 ///
@@ -56,9 +97,8 @@ struct Reply {
     /// The reply status as a string
     let status: String
     
-    // TODO: Payload can be a JSON String or Binary Data
     /// The reply payload
-    let payload: String
+    let payload: PayloadV6
 }
 
 ///
@@ -76,9 +116,8 @@ struct Broadcast {
     /// The string event name, for example "phx_join"
     let event: String
     
-    // TODO: Payload can be a JSON String or Binary Data
     /// The reply payload
-    let payload: String
+    let payload: PayloadV6
 }
 
 
