@@ -6,8 +6,6 @@
 //  Copyright © 2024 SwiftPhoenixClient. All rights reserved.
 //
 
-import Foundation
-
 ///
 /// The default implementation of [Serializer] for encoding and decoding messages. Matches the JS
 /// client behavior. You can build your own if you'd like by implementing `Serializer` and passing

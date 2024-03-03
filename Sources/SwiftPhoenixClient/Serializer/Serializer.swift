@@ -12,7 +12,7 @@ import Foundation
 /// Converts JSON received from the server into Messages and Messages into JSON to be sent to
 /// the Server
 ///
-protocol Serializer {
+public protocol Serializer {
     
     /// Encodes MessageV6 into a `String` to be sent back to a Phoenix server as raw text
     ///

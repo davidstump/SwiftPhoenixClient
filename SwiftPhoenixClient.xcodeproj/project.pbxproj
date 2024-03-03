@@ -205,12 +205,12 @@
 				12991DFA254C3EB800BB8650 /* Defaults.swift */,
 				12991DFC254C3ED300BB8650 /* Delegated.swift */,
 				12991DFE254C3EF900BB8650 /* HeartbeatTimer.swift */,
+				12922E212543B37B0034B257 /* PhoenixTransport.swift */,
 				12991E06254C3F4B00BB8650 /* Message.swift */,
 				12991E08254C3F5B00BB8650 /* Presence.swift */,
 				12991E02254C3F2300BB8650 /* Push.swift */,
 				12922E1F2543B10B0034B257 /* Socket.swift */,
 				12991E00254C3F1300BB8650 /* TimeoutTimer.swift */,
-				12922E212543B37B0034B257 /* PhoenixTransport.swift */,
 				63F3765229E7296F00A5AB6E /* SynchronizedArray.swift */,
 			);
 			path = SwiftPhoenixClient;

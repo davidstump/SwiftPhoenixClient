@@ -9,11 +9,12 @@
 import Foundation
 
 
-enum PayloadV6: Equatable {
+public enum PayloadV6: Equatable {
     case binary(Data)
     case json(String)
     
     
+    /// Force unwraps the enum as a binary. Throws if it was json
     func asBinary() -> Data {
         switch self {
         case .binary(let data):
@@ -23,6 +24,7 @@ enum PayloadV6: Equatable {
         }
     }
     
+    /// Force unwraps the enum as json. Throws if it was binary
     func asJson() -> String {
         switch self {
         case .json(let string):
@@ -33,7 +35,7 @@ enum PayloadV6: Equatable {
     }
     
     
-    static func == (lhs: Self, rhs: Self) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         switch lhs {
         case .binary(let lhsData):
             switch rhs {
@@ -58,7 +60,7 @@ enum PayloadV6: Equatable {
 ///
 ///     [join_ref,ref,topic,event,payload]
 ///
-struct MessageV6 {
+public struct MessageV6 {
     
     /// The unique string ref when joining
     let joinRef: String?
@@ -83,7 +85,7 @@ struct MessageV6 {
 ///
 ///     [join_ref,ref,topic,nil,%{"status": status, "response": payload}]
 ///
-struct Reply {
+public struct Reply {
     
     /// The unique string ref when joining
     let joinRef: String?
@@ -108,7 +110,7 @@ struct Reply {
 ///
 ///     [nil,nil,topic,event,payload]
 ///
-struct Broadcast {
+public struct Broadcast {
     
     /// The string topic or topic:subtopic pair namespace, for example "messages", "messages:123"
     let topic: String
@@ -124,7 +126,7 @@ struct Broadcast {
 ///
 /// A single value which represents all possible messages from the socket
 ///
-enum SocketMessage {
+public enum SocketMessage {
     case message(MessageV6)
     case reply(Reply)
     case broadcast(Broadcast)
