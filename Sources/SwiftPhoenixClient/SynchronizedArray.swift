@@ -17,10 +17,18 @@ public class SynchronizedArray<Element> {
         self.array = array
     }
     
+    public func copy() -> [Element] {
+        queue.sync { self.array }
+    }
+    
     func append( _ newElement: Element) {
         queue.async(flags: .barrier) {
             self.array.append(newElement)
         }
+    }
+    
+    func first(where predicate: (Element) -> Bool) -> Element? {
+        queue.sync { self.array.first(where: predicate) }
     }
     
     func forEach(_ body: (Element) -> Void) {
