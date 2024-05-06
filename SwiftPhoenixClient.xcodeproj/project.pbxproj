@@ -37,7 +37,10 @@
 		12EF620825524B6800A6EE9B /* DefaultSerializerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620325524B6800A6EE9B /* DefaultSerializerSpec.swift */; };
 		635669C4261631DC0068B665 /* URLSessionTransportSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635669C3261631DC0068B665 /* URLSessionTransportSpec.swift */; };
 		63ACBE9426D53DF500171582 /* HeartbeatTimerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ACBE9326D53DF500171582 /* HeartbeatTimerSpec.swift */; };
-		63DAB0CE2A54529400B93B23 /* ExampleTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DAB0CD2A54529400B93B23 /* ExampleTest.swift */; };
+		63BBCEF52B89774F004A16C9 /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBCEF42B89774F004A16C9 /* Messages.swift */; };
+		63BBCF002B897B0C004A16C9 /* Serializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBCEFF2B897B0C004A16C9 /* Serializer.swift */; };
+		63BBCF032B897D87004A16C9 /* PhoenixSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBCF022B897D87004A16C9 /* PhoenixSerializer.swift */; };
+		63BBCF052B897DEF004A16C9 /* PhoenixSerializerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBCF042B897DEF004A16C9 /* PhoenixSerializerTest.swift */; };
 		63DE6CCA272A2ECB00E2A728 /* MessageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DE6CC9272A2ECB00E2A728 /* MessageSpec.swift */; };
 		63F0F58D2592E44800C904FB /* ChatRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F0F58C2592E44800C904FB /* ChatRoomViewController.swift */; };
 		63F3765329E7296F00A5AB6E /* SynchronizedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F3765229E7296F00A5AB6E /* SynchronizedArray.swift */; };
@@ -111,7 +114,10 @@
 		63B5268D2656CFFE00289719 /* RxSwift.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxSwift.xcframework; path = Carthage/Build/RxSwift.xcframework; sourceTree = "<group>"; };
 		63B526DC2656D53700289719 /* Nimble.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Nimble.xcframework; path = Carthage/Build/Nimble.xcframework; sourceTree = "<group>"; };
 		63B526DD2656D53700289719 /* Quick.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Quick.xcframework; path = Carthage/Build/Quick.xcframework; sourceTree = "<group>"; };
-		63DAB0CD2A54529400B93B23 /* ExampleTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleTest.swift; sourceTree = "<group>"; };
+		63BBCEF42B89774F004A16C9 /* Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Messages.swift; sourceTree = "<group>"; };
+		63BBCEFF2B897B0C004A16C9 /* Serializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Serializer.swift; sourceTree = "<group>"; };
+		63BBCF022B897D87004A16C9 /* PhoenixSerializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoenixSerializer.swift; sourceTree = "<group>"; };
+		63BBCF042B897DEF004A16C9 /* PhoenixSerializerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoenixSerializerTest.swift; sourceTree = "<group>"; };
 		63DE6CC9272A2ECB00E2A728 /* MessageSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageSpec.swift; sourceTree = "<group>"; };
 		63F0F58C2592E44800C904FB /* ChatRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewController.swift; sourceTree = "<group>"; };
 		63F3765229E7296F00A5AB6E /* SynchronizedArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynchronizedArray.swift; sourceTree = "<group>"; };
@@ -192,16 +198,18 @@
 		128143AE25410DF3008615A7 /* SwiftPhoenixClient */ = {
 			isa = PBXGroup;
 			children = (
+				63BBCEFE2B897AF4004A16C9 /* Serializer */,
+				63BBCEF62B897A62004A16C9 /* Messages */,
 				12991E04254C3F3300BB8650 /* Channel.swift */,
 				12991DFA254C3EB800BB8650 /* Defaults.swift */,
 				12991DFC254C3ED300BB8650 /* Delegated.swift */,
 				12991DFE254C3EF900BB8650 /* HeartbeatTimer.swift */,
+				12922E212543B37B0034B257 /* PhoenixTransport.swift */,
 				12991E06254C3F4B00BB8650 /* Message.swift */,
 				12991E08254C3F5B00BB8650 /* Presence.swift */,
 				12991E02254C3F2300BB8650 /* Push.swift */,
 				12922E1F2543B10B0034B257 /* Socket.swift */,
 				12991E00254C3F1300BB8650 /* TimeoutTimer.swift */,
-				12922E212543B37B0034B257 /* PhoenixTransport.swift */,
 				63F3765229E7296F00A5AB6E /* SynchronizedArray.swift */,
 			);
 			path = SwiftPhoenixClient;
@@ -222,7 +230,6 @@
 				12991E0C254C450A00BB8650 /* Fakes */,
 				12991E0D254C451700BB8650 /* Helpers */,
 				12EF61FE25524B6800A6EE9B /* SwiftPhoenixClientTests */,
-				63DAB0CD2A54529400B93B23 /* ExampleTest.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -267,6 +274,7 @@
 		12EF61FE25524B6800A6EE9B /* SwiftPhoenixClientTests */ = {
 			isa = PBXGroup;
 			children = (
+				63BBCF012B897D4F004A16C9 /* Serializer */,
 				12EF61FF25524B6800A6EE9B /* SocketSpec.swift */,
 				12EF620025524B6800A6EE9B /* ChannelSpec.swift */,
 				12EF620125524B6800A6EE9B /* PresenceSpec.swift */,
@@ -277,6 +285,31 @@
 				63DE6CC9272A2ECB00E2A728 /* MessageSpec.swift */,
 			);
 			path = SwiftPhoenixClientTests;
+			sourceTree = "<group>";
+		};
+		63BBCEF62B897A62004A16C9 /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				63BBCEF42B89774F004A16C9 /* Messages.swift */,
+			);
+			path = Messages;
+			sourceTree = "<group>";
+		};
+		63BBCEFE2B897AF4004A16C9 /* Serializer */ = {
+			isa = PBXGroup;
+			children = (
+				63BBCEFF2B897B0C004A16C9 /* Serializer.swift */,
+				63BBCF022B897D87004A16C9 /* PhoenixSerializer.swift */,
+			);
+			path = Serializer;
+			sourceTree = "<group>";
+		};
+		63BBCF012B897D4F004A16C9 /* Serializer */ = {
+			isa = PBXGroup;
+			children = (
+				63BBCF042B897DEF004A16C9 /* PhoenixSerializerTest.swift */,
+			);
+			path = Serializer;
 			sourceTree = "<group>";
 		};
 		63F0F5912592E58800C904FB /* basic */ = {
@@ -450,7 +483,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				12991DFB254C3EB800BB8650 /* Defaults.swift in Sources */,
+				63BBCEF52B89774F004A16C9 /* Messages.swift in Sources */,
 				12991E05254C3F3300BB8650 /* Channel.swift in Sources */,
+				63BBCF032B897D87004A16C9 /* PhoenixSerializer.swift in Sources */,
+				63BBCF002B897B0C004A16C9 /* Serializer.swift in Sources */,
 				63F3765329E7296F00A5AB6E /* SynchronizedArray.swift in Sources */,
 				12991E09254C3F5B00BB8650 /* Presence.swift in Sources */,
 				12991E01254C3F1300BB8650 /* TimeoutTimer.swift in Sources */,
@@ -469,7 +505,7 @@
 			files = (
 				12EF620825524B6800A6EE9B /* DefaultSerializerSpec.swift in Sources */,
 				63ACBE9426D53DF500171582 /* HeartbeatTimerSpec.swift in Sources */,
-				63DAB0CE2A54529400B93B23 /* ExampleTest.swift in Sources */,
+				63BBCF052B897DEF004A16C9 /* PhoenixSerializerTest.swift in Sources */,
 				12991E11254C456F00BB8650 /* FakeTimerQueue.swift in Sources */,
 				12991E15254C45FC00BB8650 /* FakeTimerQueueSpec.swift in Sources */,
 				635669C4261631DC0068B665 /* URLSessionTransportSpec.swift in Sources */,
