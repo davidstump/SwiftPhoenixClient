@@ -199,7 +199,6 @@
 			isa = PBXGroup;
 			children = (
 				63BBCEFE2B897AF4004A16C9 /* Serializer */,
-				63BBCEFD2B897AEE004A16C9 /* Transport */,
 				63BBCEF62B897A62004A16C9 /* Messages */,
 				12991E04254C3F3300BB8650 /* Channel.swift */,
 				12991DFA254C3EB800BB8650 /* Defaults.swift */,
@@ -294,13 +293,6 @@
 				63BBCEF42B89774F004A16C9 /* Messages.swift */,
 			);
 			path = Messages;
-			sourceTree = "<group>";
-		};
-		63BBCEFD2B897AEE004A16C9 /* Transport */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Transport;
 			sourceTree = "<group>";
 		};
 		63BBCEFE2B897AF4004A16C9 /* Serializer */ = {
