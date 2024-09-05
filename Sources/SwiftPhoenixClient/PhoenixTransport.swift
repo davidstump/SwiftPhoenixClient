@@ -266,6 +266,13 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
     // The task has terminated. Inform the delegate that the transport has closed abnormally
     // if this was caused by an error.
     guard let err = error else { return }
+      
+    if let nsError = err as NSError? {
+        // If the client cancels a task, don't treat it as an abnormal error
+        if nsError.domain == "NSURLErrorDomain" && nsError.code == NSURLErrorCancelled {
+            return
+        }
+    }
     
     self.abnormalErrorReceived(err, response: task.response)
   }
@@ -274,13 +281,14 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
   // MARK: - Private
   private func receive() {
     self.task?.receive { [weak self] result in
+        guard let self else { return }
       switch result {
       case .success(let message):
         switch message {
         case .data:
           print("Data received. This method is unsupported by the Client")
         case .string(let text):
-          self?.delegate?.onMessage(message: text)
+          self.delegate?.onMessage(message: text)
         default:
           fatalError("Unknown result was received. [\(result)]")
         }
@@ -288,10 +296,10 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
         // Since `.receive()` is only good for a single message, it must
         // be called again after a message is received in order to
         // received the next message.
-        self?.receive()
+        self.receive()
       case .failure(let error):
         print("Error when receiving \(error)")
-        self?.abnormalErrorReceived(error, response: nil)
+        self.abnormalErrorReceived(error, response: nil)
       }
     }
   }

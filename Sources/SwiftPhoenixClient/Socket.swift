@@ -260,6 +260,7 @@ public class Socket: PhoenixTransportDelegate {
                                                paramsClosure: self.paramsClosure,
                                                vsn: vsn)
 
+    self.connection?.disconnect(code: CloseCode.normal.rawValue, reason: "connect called")
     self.connection = self.transport(self.endPointUrl)
     self.connection?.delegate = self
 //    self.connection?.disableSSLCertValidation = disableSSLCertValidation
