@@ -268,6 +268,17 @@ class SocketSpec: QuickSpec {
         
         expect(mockWebSocket.connectCallsCount).to(equal(1))
       })
+        
+        
+    it("disconnects from old socket before connecting to a new one", closure: {
+      mockWebSocket.readyState = .connecting
+      
+      socket.connect()
+      socket.connect()
+      
+      expect(mockWebSocket.disconnectCodeReasonCallsCount).to(equal(1))
+      expect(mockWebSocket.connectCallsCount).to(equal(2))
+    })
     }
     
     
