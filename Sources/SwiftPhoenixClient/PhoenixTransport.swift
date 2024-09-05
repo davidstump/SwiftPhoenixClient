@@ -267,11 +267,9 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
     // if this was caused by an error.
     guard let err = error else { return }
       
-    if let nsError = err as NSError? {
+    if let urlError = err as? URLError, urlError.code == .cancelled {
         // If the client cancels a task, don't treat it as an abnormal error
-        if nsError.domain == "NSURLErrorDomain" && nsError.code == NSURLErrorCancelled {
-            return
-        }
+        return
     }
     
     self.abnormalErrorReceived(err, response: task.response)
