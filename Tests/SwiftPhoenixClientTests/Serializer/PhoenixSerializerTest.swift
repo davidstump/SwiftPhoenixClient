@@ -92,16 +92,16 @@ final class PhoenixSerializerTest: XCTestCase {
     func test_decodeMessageWithNumbers() throws {
         // TODO: `1.0` will convert to `1` and `1.1` to `1.0001`
     
-//        let text = """
-//        ["1","2", "topic","event",{"int":1,"float":1.1}]
-//        """
-//        
-//        switch serializer.decode(text: text) {
-//        case .message(let message):
-//            XCTAssertEqual(message.payload, "{\"int\":1,\"float\":1.1}")
-//        default:
-//            assertionFailure("Expected type .message")
-//        }
+        let text = """
+        ["1","2", "topic","event",{"int":1,"float":1.1}]
+        """
+        
+        switch serializer.decode(text: text) {
+        case .message(let message):
+            XCTAssertEqual(message.payload, .json("{\"int\":1,\"float\":1.1}"))
+        default:
+            assertionFailure("Expected type .message")
+        }
     }
     
     func test_decodeMessageWithoutJsonPayload() throws {
