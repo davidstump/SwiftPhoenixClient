@@ -90,8 +90,6 @@ final class PhoenixSerializerTest: XCTestCase {
     }
     
     func test_decodeMessageWithNumbers() throws {
-        // TODO: `1.0` will convert to `1` and `1.1` to `1.0001`
-    
         let text = """
         ["1","2", "topic","event",{"int":1,"float":1.1}]
         """
