@@ -10,8 +10,6 @@
 /// The default implementation of [Serializer] for encoding and decoding messages. Matches the JS
 /// client behavior. You can build your own if you'd like by implementing `Serializer` and passing
 /// your custom Serializer to Socket
-
-
 public class PhoenixSerializer: Serializer {
     
     private let HEADER_LENGTH: Int = 1
