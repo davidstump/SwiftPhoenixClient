@@ -59,41 +59,39 @@ struct StateChangeCallbacks {
 public class Socket: PhoenixTransportDelegate {
   
   
-  //----------------------------------------------------------------------
-  // MARK: - Public Attributes
-  //----------------------------------------------------------------------
-  /// The string WebSocket endpoint (ie `"ws://example.com/socket"`,
-  /// `"wss://example.com"`, etc.) That was passed to the Socket during
-  /// initialization. The URL endpoint will be modified by the Socket to
-  /// include `"/websocket"` if missing.
-  public let endPoint: String
+    //----------------------------------------------------------------------
+    // MARK: - Public Attributes
+    //----------------------------------------------------------------------
+    /// The string WebSocket endpoint (ie `"ws://example.com/socket"`,
+    /// `"wss://example.com"`, etc.) That was passed to the Socket during
+    /// initialization. The URL endpoint will be modified by the Socket to
+    /// include `"/websocket"` if missing.
+    public let endPoint: String
 
-  /// The fully qualified socket URL
-  public private(set) var endPointUrl: URL
-  
-  /// Resolves to return the `paramsClosure` result at the time of calling.
-  /// If the `Socket` was created with static params, then those will be
-  /// returned every time.
-  public var params: Payload? {
-    return self.paramsClosure?()
-  }
-  
-  /// The optional params closure used to get params when connecting. Must
-  /// be set when initializing the Socket.
-  public let paramsClosure: PayloadClosure?
-  
-  /// The WebSocket transport. Default behavior is to provide a
-  /// URLSessionWebsocketTask. See README for alternatives.
-  private let transport: ((URL) -> PhoenixTransport)
+    /// The fully qualified socket URL
+    public private(set) var endPointUrl: URL
+    
+    /// Resolves to return the `paramsClosure` result at the time of calling.
+    /// If the `Socket` was created with static params, then those will be
+    /// returned every time.
+    public var params: Payload? {
+        return self.paramsClosure?()
+    }
+    
+    /// The optional params closure used to get params when connecting. Must
+    /// be set when initializing the Socket.
+    public let paramsClosure: PayloadClosure?
+    
+    /// The WebSocket transport. Default behavior is to provide a
+    /// URLSessionWebsocketTask. See README for alternatives.
+    private let transport: ((URL) -> PhoenixTransport)
 
-  /// Phoenix serializer version, defaults to "2.0.0"
-  public let vsn: String
+    /// Phoenix serializer version, defaults to "2.0.0"
+    public let vsn: String
   
-  /// Override to provide custom encoding of data before writing to the socket
-  public var encode: (Any) -> Data = Defaults.encode
-  
-  /// Override to provide custom decoding of data read from the socket
-  public var decode: (Data) -> Any? = Defaults.decode
+    /// Override to provide custom encoding/decoding of data before it is sent to or received from
+    /// the Server.
+    public var serializer: Serializer = PhoenixSerializer()
   
   /// Timeout to use when opening connections
   public var timeout: TimeInterval = Defaults.timeoutInterval
@@ -640,28 +638,28 @@ public class Socket: PhoenixTransportDelegate {
     self.logger?("SwiftPhoenixClient: \(msg)")
   }
   
-  //----------------------------------------------------------------------
-  // MARK: - Connection Events
-  //----------------------------------------------------------------------
-  /// Called when the underlying Websocket connects to it's host
-  internal func onConnectionOpen(response: URLResponse?) {
-    self.logItems("transport", "Connected to \(endPoint)")
-    
-    // Reset the close status now that the socket has been connected
-    self.closeStatus = nil
-
-    // Send any messages that were waiting for a connection
-    self.flushSendBuffer()
-    
-    // Reset how the socket tried to reconnect
-    self.reconnectTimer.reset()
-    
-    // Restart the heartbeat timer
-    self.resetHeartbeat()
-    
-    // Inform all onOpen callbacks that the Socket has opened
-    self.stateChangeCallbacks.open.forEach({ $0.callback.call((response)) })
-  }
+    //----------------------------------------------------------------------
+    // MARK: - Connection Events
+    //----------------------------------------------------------------------
+    /// Called when the underlying Websocket connects to it's host
+    internal func onConnectionOpen(response: URLResponse?) {
+        self.logItems("transport", "Connected to \(endPoint)")
+        
+        // Reset the close status now that the socket has been connected
+        self.closeStatus = nil
+        
+        // Send any messages that were waiting for a connection
+        self.flushSendBuffer()
+        
+        // Reset how the socket tried to reconnect
+        self.reconnectTimer.reset()
+        
+        // Restart the heartbeat timer
+        self.resetHeartbeat()
+        
+        // Inform all onOpen callbacks that the Socket has opened
+        self.stateChangeCallbacks.open.forEach({ $0.callback.call((response)) })
+    }
   
     internal func onConnectionClosed(code: URLSessionWebSocketTask.CloseCode, reason: String?) {
         self.logItems("transport", "close")
@@ -683,42 +681,39 @@ public class Socket: PhoenixTransportDelegate {
         self.stateChangeCallbacks.close.forEach({ $0.callback.call((code.rawValue, reason)) })
     }
   
-  internal func onConnectionError(_ error: Error, response: URLResponse?) {
-    self.logItems("transport", error, response ?? "")
-    
-    // Send an error to all channels
-    self.triggerChannelError()
-    
-    // Inform any state callbacks of the error
-    self.stateChangeCallbacks.error.forEach({ $0.callback.call((error, response)) })
-  }
-  
-  internal func onConnectionMessage(_ rawMessage: String) {
-    self.logItems("receive ", rawMessage)
-    
-    guard
-      let data = rawMessage.data(using: String.Encoding.utf8),
-      let json = decode(data) as? [Any?],
-      let message = Message(json: json)
-      else {
-        self.logItems("receive: Unable to parse JSON: \(rawMessage)")
-        return }
-    
-    // Clear heartbeat ref, preventing a heartbeat timeout disconnect
-    if message.ref == pendingHeartbeatRef { pendingHeartbeatRef = nil }
-    
-    if message.event == "phx_close" {
-      print("Close Event Received")
+    internal func onConnectionError(_ error: Error, response: URLResponse?) {
+        self.logItems("transport", error, response ?? "")
+        
+        // Send an error to all channels
+        self.triggerChannelError()
+        
+        // Inform any state callbacks of the error
+        self.stateChangeCallbacks.error.forEach({ $0.callback.call((error, response)) })
     }
-    
-    // Dispatch the message to all channels that belong to the topic
-    self.channels
-      .filter( { $0.isMember(message) } )
-      .forEach( { $0.trigger(message) } )
-    
-    // Inform all onMessage callbacks of the message
-    self.stateChangeCallbacks.message.forEach({ $0.callback.call(message) })
-  }
+  
+    internal func onConnectionMessage(_ message: SocketMessage) {
+        
+        
+        // Clear heartbeat ref, preventing a heartbeat timeout disconnect
+        if let ref = message.ref, ref == pendingHeartbeatRef {
+            self.clearHeartbeats()
+            self.pendingHeartbeatRef = nil
+            
+        }
+        if message.ref == pendingHeartbeatRef {
+            pendingHeartbeatRef = nil
+        }
+        
+        
+        
+        // Dispatch the message to all channels that belong to the topic
+        self.channels
+            .filter( { $0.isMember(message) } )
+            .forEach( { $0.trigger(message) } )
+        
+        // Inform all onMessage callbacks of the message
+        self.stateChangeCallbacks.message.forEach({ $0.callback.call(message) })
+    }
   
   /// Triggers an error event to all of the connected Channels
   internal func triggerChannelError() {
@@ -786,52 +781,58 @@ public class Socket: PhoenixTransportDelegate {
     dupe.leave()
   }
   
-  //----------------------------------------------------------------------
-  // MARK: - Heartbeat
-  //----------------------------------------------------------------------
-  internal func resetHeartbeat() {
-    // Clear anything related to the heartbeat
-    self.pendingHeartbeatRef = nil
-    self.heartbeatTimer?.stop()
-
-    // Do not start up the heartbeat timer if skipHeartbeat is true
-    guard !skipHeartbeat else { return }
-
-    self.heartbeatTimer = HeartbeatTimer(timeInterval: heartbeatInterval, leeway: heartbeatLeeway)
-    self.heartbeatTimer?.start(eventHandler: { [weak self] in
-      self?.sendHeartbeat()
-    })
-  }
-  
-  /// Sends a heartbeat payload to the phoenix servers
-  @objc func sendHeartbeat() {
-    // Do not send if the connection is closed
-    guard isConnected else { return }
-
-    
-    // If there is a pending heartbeat ref, then the last heartbeat was
-    // never acknowledged by the server. Close the connection and attempt
-    // to reconnect.
-    if let _ = self.pendingHeartbeatRef {
-      self.pendingHeartbeatRef = nil
-      self.logItems("transport",
-                    "heartbeat timeout. Attempting to re-establish connection")
-      
-      // Close the socket manually, flagging the closure as abnormal. Do not use
-      // `teardown` or `disconnect` as they will nil out the websocket delegate.
-      self.abnormalClose("heartbeat timeout")
-      
-      return
+    //----------------------------------------------------------------------
+    // MARK: - Heartbeat
+    //----------------------------------------------------------------------
+    internal func resetHeartbeat() {
+        // Clear anything related to the heartbeat
+        self.pendingHeartbeatRef = nil
+        self.heartbeatTimer?.stop()
+        
+        // Do not start up the heartbeat timer if skipHeartbeat is true
+        guard !skipHeartbeat else { return }
+        
+        self.heartbeatTimer = HeartbeatTimer(timeInterval: heartbeatInterval, leeway: heartbeatLeeway)
+        self.heartbeatTimer?.start(eventHandler: { [weak self] in
+            self?.sendHeartbeat()
+        })
     }
     
-    // The last heartbeat was acknowledged by the server. Send another one
-    self.pendingHeartbeatRef = self.makeRef()
-    self.push(topic: "phoenix",
-              event: ChannelEvent.heartbeat,
-              payload: [:],
-              ref: self.pendingHeartbeatRef)
-  }
-  
+    /// Sends a heartbeat payload to the phoenix servers
+    @objc func sendHeartbeat() {
+        // Do not send if the connection is closed
+        guard isConnected else { return }
+        
+        
+        // If there is a pending heartbeat ref, then the last heartbeat was
+        // never acknowledged by the server. Close the connection and attempt
+        // to reconnect.
+        if let _ = self.pendingHeartbeatRef {
+            self.pendingHeartbeatRef = nil
+            self.logItems("transport",
+                          "heartbeat timeout. Attempting to re-establish connection")
+            
+            // Close the socket manually, flagging the closure as abnormal. Do not use
+            // `teardown` or `disconnect` as they will nil out the websocket delegate.
+            self.abnormalClose("heartbeat timeout")
+            
+            return
+        }
+        
+        // The last heartbeat was acknowledged by the server. Send another one
+        self.pendingHeartbeatRef = self.makeRef()
+        self.push(topic: "phoenix",
+                  event: ChannelEvent.heartbeat,
+                  payload: [:],
+                  ref: self.pendingHeartbeatRef)
+    }
+    
+    private func clearHeartbeats() {
+        // TODO: Move heartbeatsa to async task
+        // TODO: Clear the heartbeat async tasks here
+    }
+    
+    
     internal func abnormalClose(_ reason: String) {
         self.closeStatus = .abnormalClosure
         
@@ -859,13 +860,25 @@ public class Socket: PhoenixTransportDelegate {
     }
     
     public func onMessage(data: Data) {
-        //        TODO: SocketMessage
-        //        self.onConnectionMessage(message)
+        self.logItems("receive ", data)
+        
+        do {
+            let socketMessage = try self.serializer.binaryDecode(data: data)
+            self.onConnectionMessage(socketMessage)
+        } catch {
+            self.logItems("receive: Unable to parse data: \(data)", error.localizedDescription)
+        }
     }
     
     public func onMessage(string: String) {
-//        TODO: SocketMessage
-//        self.onConnectionMessage(message)
+        self.logItems("receive ", string)
+        
+        do {
+            let socketMessage = try self.serializer.decode(text: string)
+            self.onConnectionMessage(socketMessage)
+        } catch {
+            self.logItems("receive: Unable to parse json: \(string)", error.localizedDescription)
+        }
     }
     
     public func onClose(code: URLSessionWebSocketTask.CloseCode, reason: String?) {

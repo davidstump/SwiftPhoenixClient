@@ -130,5 +130,38 @@ public enum SocketMessage {
     case message(MessageV6)
     case reply(Reply)
     case broadcast(Broadcast)
+    
+    var joinRef: String? {
+        switch self {
+        case .message(let message):
+            return message.joinRef
+        case .reply(let reply):
+            return reply.joinRef
+        case .broadcast(_):
+            return nil
+        }
+    }
+    
+    var ref: String? {
+        switch self {
+        case .message(let message):
+            return message.ref
+        case .reply(let reply):
+            return reply.ref
+        case .broadcast(_):
+            return nil
+        }
+    }
+    
+    var event: String {
+        switch self {
+        case .message(let message):
+            return message.event
+        case .reply(_):
+            return ChannelEvent.reply
+        case .broadcast(let broadcast):
+            return broadcast.event
+        }
+    }
 }
 

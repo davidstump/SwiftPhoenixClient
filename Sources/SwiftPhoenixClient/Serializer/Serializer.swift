@@ -34,7 +34,7 @@ public protocol Serializer {
     /// - parameter text: The raw `String` from a Phoenix server
     /// - returns: The `SocketMessage` created from the raw `String`
     /// - throws: `preconditionFailure` if the text could not be converted to a `SocketMessage`
-    func decode(text: String) -> SocketMessage
+    func decode(text: String) throws -> SocketMessage
     
 
     /// Decodes binary  `Data` from a Phoenix server into a `SocketMessage` structure
@@ -42,7 +42,19 @@ public protocol Serializer {
     /// - parameter data: The binary `Data` from a Phoenix server
     /// - returns The `SocketMessage` created from the raw `Data`
     /// - throws `preconditionFailure` if the data could not be converted to a `SocketMessage`
-    func binaryDecode(data: Data) -> SocketMessage
+    func binaryDecode(data: Data) throws -> SocketMessage
+        
+}
+
+/// Custom error thrown during de/serialization if an issue is found during the de/serialization process
+public struct SerializerError: LocalizedError {
+    let description: String
     
+    init(_ description: String) {
+        self.description = description
+    }
     
+    public var errorDescription: String? {
+        description
+    }
 }

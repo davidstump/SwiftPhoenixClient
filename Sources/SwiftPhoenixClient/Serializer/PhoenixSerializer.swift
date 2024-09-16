@@ -73,13 +73,14 @@ public class PhoenixSerializer: Serializer {
     }
     
     
-    public func decode(text: String) -> SocketMessage {
-        guard
-            let jsonData = text.data(using: .utf8),
-            let decodedMessage = try? JSONDecoder().decode(DecodedMessage.self, from: jsonData)
+    public func decode(text: String) throws -> SocketMessage {
+        guard 
+            let jsonData = text.data(using: .utf8)
         else {
-            preconditionFailure("Could not parse message. Expected array of size 5, got. \(text)")
+            preconditionFailure("Could not convert text into valid jsonData. \(text)")
         }
+
+        let decodedMessage = try JSONDecoder().decode(DecodedMessage.self, from: jsonData)
             
         let joinRef = decodedMessage.joinRef
         let ref = decodedMessage.ref
@@ -94,7 +95,7 @@ public class PhoenixSerializer: Serializer {
                 let response = payloadMap["response"],
                 case .string(let status) = payloadMap["status"]
             else {
-                preconditionFailure("Reply was missing valid response an status. \(text)")
+                throw SerializerError("Reply was missing valid response an status. \(text)")
             }
             
             let responseAsJsonString = convertToString(rawJsonValue: response)
@@ -134,18 +135,18 @@ public class PhoenixSerializer: Serializer {
     }
     
     
-    public func binaryDecode(data: Data) -> SocketMessage {
+    public func binaryDecode(data: Data) throws -> SocketMessage {
         let binary = [UInt8](data)
         return switch binary[0] {
-        case KIND_PUSH: decodePush(buffer: binary)
-        case KIND_REPLY: decodeReply(buffer: binary)
-        case KIND_BROADCAST: decodeBroadcast(buffer: binary)
-        default: preconditionFailure("Expected binary data to include a KIND of push, reply, or broadcast. Got \(binary[0])")
+        case KIND_PUSH: try decodePush(buffer: binary)
+        case KIND_REPLY: try decodeReply(buffer: binary)
+        case KIND_BROADCAST: try decodeBroadcast(buffer: binary)
+        default: throw SerializerError("Expected binary data to include a KIND of push, reply, or broadcast. Got \(binary[0])")
         }
     }
     
     // MARK: - Private -
-    private func decodePush(buffer: [UInt8]) -> SocketMessage {
+    private func decodePush(buffer: [UInt8]) throws -> SocketMessage {
         let joinRefSize = Int(buffer[1])
         let topicSize = Int(buffer[2])
         let eventSize = Int(buffer[3])
@@ -154,11 +155,11 @@ public class PhoenixSerializer: Serializer {
         let joinRef = String(bytes: buffer[offset ..< offset + joinRefSize], encoding: .utf8)
         offset += joinRefSize
         guard let topic = String(bytes: buffer[offset ..< offset + topicSize], encoding: .utf8) else {
-            preconditionFailure("Got nil when decoding topic. Topic is required")
+            throw SerializerError("Got nil when decoding topic. Topic is required")
         }
         offset += topicSize
         guard let event = String(bytes: buffer[offset ..< offset + eventSize], encoding: .utf8) else {
-            preconditionFailure("Got nil when decoding event. Event is required")
+            throw SerializerError("Got nil when decoding event. Event is required")
         }
         offset += eventSize
         let data = Data(buffer[offset ..< buffer.count])
@@ -174,7 +175,7 @@ public class PhoenixSerializer: Serializer {
         )
     }
     
-    private func decodeReply(buffer: [UInt8]) -> SocketMessage {
+    private func decodeReply(buffer: [UInt8]) throws -> SocketMessage {
         let joinRefSize = Int(buffer[1])
         let refSize = Int(buffer[2])
         let topicSize = Int(buffer[3])
@@ -186,11 +187,11 @@ public class PhoenixSerializer: Serializer {
         let ref = String(bytes: buffer[offset ..< offset + refSize], encoding: .utf8)
         offset += refSize
         guard let topic = String(bytes: buffer[offset ..< offset + topicSize], encoding: .utf8) else {
-            preconditionFailure("Got nil when decoding topic. Topic is required")
+            throw SerializerError("Got nil when decoding topic. Topic is required")
         }
         offset += topicSize
         guard let event = String(bytes: buffer[offset ..< offset + eventSize], encoding: .utf8) else {
-            preconditionFailure("Got nil when decoding event. Event is required")
+            throw SerializerError("Got nil when decoding event. Event is required")
         }
         offset += eventSize
         let data = Data(buffer[offset ..< buffer.count])
@@ -207,17 +208,17 @@ public class PhoenixSerializer: Serializer {
         )
     }
     
-    private func decodeBroadcast(buffer: [UInt8]) -> SocketMessage {
+    private func decodeBroadcast(buffer: [UInt8]) throws -> SocketMessage {
         let topicSize = Int(buffer[1])
         let eventSize = Int(buffer[2])
         var offset = HEADER_LENGTH + 2
         
         guard let topic = String(bytes: buffer[offset ..< offset + topicSize], encoding: .utf8) else {
-            preconditionFailure("Got nil when decoding topic. Topic is required")
+            throw SerializerError("Got nil when decoding topic. Topic is required")
         }
         offset += topicSize
         guard let event = String(bytes: buffer[offset ..< offset + eventSize], encoding: .utf8) else {
-            preconditionFailure("Got nil when decoding event. Event is required")
+            throw SerializerError("Got nil when decoding event. Event is required")
         }
         offset += eventSize
         let data = Data(buffer[offset ..< buffer.count])
@@ -245,22 +246,9 @@ public class PhoenixSerializer: Serializer {
             let jsonData = try? JSONEncoder().encode(encodable),
             let jsonString = String(data: jsonData, encoding: .utf8)
         else {
-            preconditionFailure("Expected json object to serialize to a String.")
+            preconditionFailure("Expected json object to serialize to a String. \(encodable)")
         }
         
         return jsonString
-//        try!
-//        if json is String {
-//            return json as! String
-//        } else {
-//            guard let jsonData = try? JSONSerialization
-//                .data(withJSONObject: json,
-//                      options: JSONSerialization.WritingOptions()),
-//                  let jsonString = String(data: jsonData, encoding: .utf8) else {
-//                preconditionFailure("Expected json object to serialize to a String.")
-//            }
-//            return jsonString
-//        }
     }
 }
-
