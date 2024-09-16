@@ -233,6 +233,7 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
   }
   
   open func send(data: Data) {
+      
     self.task?.send(.string(String(data: data, encoding: .utf8)!)) { (error) in
       // TODO: What is the behavior when an error occurs?
     }

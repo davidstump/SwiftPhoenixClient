@@ -81,20 +81,6 @@ class PhoenixSerializer: Serializer {
             preconditionFailure("Could not parse message. Expected array of size 5, got. \(text)")
         }
             
-        
-//        
-//        guard
-//            let textData = text.data(using: .utf8),
-//            let decodedMessage = try JSONDecoder().decode(IntermediateDecodedMessage.self, from: textData)
-//            let textJson = try? JSONSerialization
-//                .jsonObject(with: textData,
-//                        options: JSONSerialization.ReadingOptions()),
-//            let jsonArray = textJson as? [Any?],
-//            jsonArray.count == 5
-//        else {
-//            preconditionFailure("Could not parse message. Expected array of size 5, got. \(text)")
-//        }
-        
         let joinRef = decodedMessage.joinRef
         let ref = decodedMessage.ref
         let topic = decodedMessage.topic
@@ -108,7 +94,7 @@ class PhoenixSerializer: Serializer {
                 let response = payloadMap["response"],
                 case .string(let status) = payloadMap["status"]
             else {
-                preconditionFailure("Could not parse message. Expected array of size 5, got. \(text)")
+                preconditionFailure("Reply was missing valid response an status. \(text)")
             }
             
             let responseAsJsonString = convertToString(rawJsonValue: response)
