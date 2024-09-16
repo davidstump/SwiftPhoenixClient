@@ -1,6 +1,5 @@
-// Generated using Sourcery 1.0.2 — https://github.com/krzysztofzablocki/Sourcery
+// Generated using Sourcery 2.2.5 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
-
 // swiftlint:disable line_length
 // swiftlint:disable variable_name
 
@@ -36,15 +35,19 @@ class PhoenixTransportMock: PhoenixTransport {
 
     //MARK: - connect
 
-    var connectCallsCount = 0
-    var connectCalled: Bool {
-        return connectCallsCount > 0
+    var connectWithCallsCount = 0
+    var connectWithCalled: Bool {
+        return connectWithCallsCount > 0
     }
-    var connectClosure: (() -> Void)?
+    var connectWithReceivedHeaders: [String: Any]?
+    var connectWithReceivedInvocations: [[String: Any]] = []
+    var connectWithClosure: (([String: Any]) -> Void)?
 
-    func connect() {
-        connectCallsCount += 1
-        connectClosure?()
+    func connect(with headers: [String: Any]) {
+        connectWithCallsCount += 1
+        connectWithReceivedHeaders = headers
+        connectWithReceivedInvocations.append(headers)
+        connectWithClosure?(headers)
     }
 
     //MARK: - disconnect

@@ -1,6 +1,5 @@
-// Generated using Sourcery 1.0.2 — https://github.com/krzysztofzablocki/Sourcery
+// Generated using Sourcery 2.2.5 — https://github.com/krzysztofzablocki/Sourcery
 // DO NOT EDIT
-
 // swiftlint:disable line_length
 // swiftlint:disable variable_name
 
@@ -42,11 +41,6 @@ class ChannelMock: Channel {
         set(value) { underlyingState = value }
     }
     var underlyingState: (ChannelState)!
-    override var syncBindingsDel: SynchronizedArray<Binding> {
-        get { return underlyingSyncBindingsDel }
-        set(value) { underlyingSyncBindingsDel = value }
-    }
-    var underlyingSyncBindingsDel: (SynchronizedArray<Binding>)!
     override var bindingRef: Int {
         get { return underlyingBindingRef }
         set(value) { underlyingBindingRef = value }
@@ -119,9 +113,9 @@ class ChannelMock: Channel {
     }
     var onCloseReceivedCallback: ((Message) -> Void)?
     var onCloseReturnValue: Int!
-    var onCloseClosure: ((@escaping ((Message) -> Void)) -> Int)?
+    var onCloseClosure: ((@escaping (Message) -> Void) -> Int)?
 
-    override func onClose(_ callback: @escaping ((Message) -> Void)) -> Int {
+    override func onClose(_ callback: @escaping (Message) -> Void) -> Int {
         onCloseCallsCount += 1
         onCloseReceivedCallback = callback
         return onCloseClosure.map({ $0(callback) }) ?? onCloseReturnValue
@@ -136,8 +130,7 @@ class ChannelMock: Channel {
     }
     var delegateOnCloseToCallbackReturnValue: Int!
 
-    override func delegateOnClose<Target: AnyObject>(to owner: Target,
-                                                 callback: @escaping ((Target, Message) -> Void)) -> Int {
+    override func delegateOnClose<Target: AnyObject>(to owner: Target, callback: @escaping (Target, Message) -> Void) -> Int {
         delegateOnCloseToCallbackCallsCount += 1
         return delegateOnCloseToCallbackReturnValue
     }
@@ -151,9 +144,9 @@ class ChannelMock: Channel {
     }
     var onErrorReceivedCallback: ((_ message: Message) -> Void)?
     var onErrorReturnValue: Int!
-    var onErrorClosure: ((@escaping ((_ message: Message) -> Void)) -> Int)?
+    var onErrorClosure: ((@escaping (_ message: Message) -> Void) -> Int)?
 
-    override func onError(_ callback: @escaping ((_ message: Message) -> Void)) -> Int {
+    override func onError(_ callback: @escaping (_ message: Message) -> Void) -> Int {
         onErrorCallsCount += 1
         onErrorReceivedCallback = callback
         return onErrorClosure.map({ $0(callback) }) ?? onErrorReturnValue
@@ -168,8 +161,7 @@ class ChannelMock: Channel {
     }
     var delegateOnErrorToCallbackReturnValue: Int!
 
-    override func delegateOnError<Target: AnyObject>(to owner: Target,
-                                                 callback: @escaping ((Target, Message) -> Void)) -> Int {
+    override func delegateOnError<Target: AnyObject>(to owner: Target, callback: @escaping (Target, Message) -> Void) -> Int {
         delegateOnErrorToCallbackCallsCount += 1
         return delegateOnErrorToCallbackReturnValue
     }
@@ -183,9 +175,9 @@ class ChannelMock: Channel {
     }
     var onCallbackReceivedArguments: (event: String, callback: (Message) -> Void)?
     var onCallbackReturnValue: Int!
-    var onCallbackClosure: ((String, @escaping ((Message) -> Void)) -> Int)?
+    var onCallbackClosure: ((String, @escaping (Message) -> Void) -> Int)?
 
-    override func on(_ event: String, callback: @escaping ((Message) -> Void)) -> Int {
+    override func on(_ event: String, callback: @escaping (Message) -> Void) -> Int {
         onCallbackCallsCount += 1
     onCallbackReceivedArguments = (event: event, callback: callback)
         return onCallbackClosure.map({ $0(event, callback) }) ?? onCallbackReturnValue
@@ -200,9 +192,7 @@ class ChannelMock: Channel {
     }
     var delegateOnToCallbackReturnValue: Int!
 
-    override func delegateOn<Target: AnyObject>(_ event: String,
-                                            to owner: Target,
-                                            callback: @escaping ((Target, Message) -> Void)) -> Int {
+    override func delegateOn<Target: AnyObject>(_ event: String, to owner: Target, callback: @escaping (Target, Message) -> Void) -> Int {
         delegateOnToCallbackCallsCount += 1
         return delegateOnToCallbackReturnValue
     }
@@ -234,9 +224,7 @@ class ChannelMock: Channel {
     var pushPayloadTimeoutReturnValue: Push!
     var pushPayloadTimeoutClosure: ((String, Payload, TimeInterval) -> Push)?
 
-    override func push(_ event: String,
-                   payload: Payload,
-                   timeout: TimeInterval = Defaults.timeoutInterval) -> Push {
+    override func push(_ event: String, payload: Payload, timeout: TimeInterval = Defaults.timeoutInterval) -> Push {
         pushPayloadTimeoutCallsCount += 1
     pushPayloadTimeoutReceivedArguments = (event: event, payload: payload, timeout: timeout)
         return pushPayloadTimeoutClosure.map({ $0(event, payload, timeout) }) ?? pushPayloadTimeoutReturnValue
@@ -350,10 +338,7 @@ class ChannelMock: Channel {
     var triggerEventPayloadRefJoinRefReceivedArguments: (event: String, payload: Payload, ref: String, joinRef: String?)?
     var triggerEventPayloadRefJoinRefClosure: ((String, Payload, String, String?) -> Void)?
 
-    override func trigger(event: String,
-               payload: Payload = [:],
-               ref: String = "",
-               joinRef: String? = nil) {
+    override func trigger(event: String, payload: Payload = [:], ref: String = "", joinRef: String? = nil) {
         triggerEventPayloadRefJoinRefCallsCount += 1
     triggerEventPayloadRefJoinRefReceivedArguments = (event: event, payload: payload, ref: ref, joinRef: joinRef)
         triggerEventPayloadRefJoinRefClosure?(event, payload, ref, joinRef)
@@ -465,10 +450,9 @@ class PushMock: Push {
     }
     var receiveCallbackReceivedArguments: (status: String, callback: (Message) -> ())?
     var receiveCallbackReturnValue: Push!
-    var receiveCallbackClosure: ((String, @escaping ((Message) -> ())) -> Push)?
+    var receiveCallbackClosure: ((String, @escaping (Message) -> ()) -> Push)?
 
-    override func receive(_ status: String,
-                      callback: @escaping ((Message) -> ())) -> Push {
+    override func receive(_ status: String, callback: @escaping (Message) -> ()) -> Push {
         receiveCallbackCallsCount += 1
     receiveCallbackReceivedArguments = (status: status, callback: callback)
         return receiveCallbackClosure.map({ $0(status, callback) }) ?? receiveCallbackReturnValue
@@ -483,9 +467,7 @@ class PushMock: Push {
     }
     var delegateReceiveToCallbackReturnValue: Push!
 
-    override func delegateReceive<Target: AnyObject>(_ status: String,
-                                                 to owner: Target,
-                                                 callback: @escaping ((Target, Message) -> ())) -> Push {
+    override func delegateReceive<Target: AnyObject>(_ status: String, to owner: Target, callback: @escaping (Target, Message) -> ()) -> Push {
         delegateReceiveToCallbackCallsCount += 1
         return delegateReceiveToCallbackReturnValue
     }
@@ -600,6 +582,11 @@ class SocketMock: Socket {
         set(value) { underlyingDecode = value }
     }
     var underlyingDecode: ((Data) -> Any?)!
+    var dataToTextConverterSetCount: Int = 0
+    var dataToTextConverterDidGetSet: Bool { return dataToTextConverterSetCount > 0 }
+    override var dataToTextConverter: ((Data) -> String?)? {
+        didSet { dataToTextConverterSetCount += 1 }
+    }
     override var timeout: TimeInterval {
         get { return underlyingTimeout }
         set(value) { underlyingTimeout = value }
@@ -645,11 +632,6 @@ class SocketMock: Socket {
     override var enabledSSLCipherSuites: [SSLCipherSuite]? {
         didSet { enabledSSLCipherSuitesSetCount += 1 }
     }
-    override var stateChangeCallbacks: StateChangeCallbacks {
-        get { return underlyingStateChangeCallbacks }
-        set(value) { underlyingStateChangeCallbacks = value }
-    }
-    var underlyingStateChangeCallbacks: (StateChangeCallbacks)!
     override var ref: UInt64 {
         get { return underlyingRef }
         set(value) { underlyingRef = value }
@@ -671,8 +653,8 @@ class SocketMock: Socket {
     }
     var underlyingReconnectTimer: (TimeoutTimer)!
     override var closeStatus: CloseStatus {
-      get { return underlyingCloseStatus }
-      set(value) { underlyingCloseStatus = value }
+        get { return underlyingCloseStatus }
+        set(value) { underlyingCloseStatus = value }
     }
     var underlyingCloseStatus: (CloseStatus)!
     var connectionSetCount: Int = 0
@@ -772,6 +754,23 @@ class SocketMock: Socket {
     }
 
 
+    //MARK: - onOpen
+
+    var onOpenCallbackCallsCount = 0
+    var onOpenCallbackCalled: Bool {
+        return onOpenCallbackCallsCount > 0
+    }
+    var onOpenCallbackReceivedCallback: ((URLResponse?) -> Void)?
+    var onOpenCallbackReturnValue: String!
+    var onOpenCallbackClosure: ((@escaping (URLResponse?) -> Void) -> String)?
+
+    override func onOpen(callback: @escaping (URLResponse?) -> Void) -> String {
+        onOpenCallbackCallsCount += 1
+        onOpenCallbackReceivedCallback = callback
+        return onOpenCallbackClosure.map({ $0(callback) }) ?? onOpenCallbackReturnValue
+    }
+
+
     //MARK: - delegateOnOpen<T: AnyObject>
 
     var delegateOnOpenToCallbackCallsCount = 0
@@ -780,8 +779,21 @@ class SocketMock: Socket {
     }
     var delegateOnOpenToCallbackReturnValue: String!
 
-    override func delegateOnOpen<T: AnyObject>(to owner: T,
-                                           callback: @escaping ((T) -> Void)) -> String {
+    override func delegateOnOpen<T: AnyObject>(to owner: T, callback: @escaping (T) -> Void) -> String {
+        delegateOnOpenToCallbackCallsCount += 1
+        return delegateOnOpenToCallbackReturnValue
+    }
+
+
+    //MARK: - delegateOnOpen<T: AnyObject>
+
+    var delegateOnOpenToCallbackCallsCount = 0
+    var delegateOnOpenToCallbackCalled: Bool {
+        return delegateOnOpenToCallbackCallsCount > 0
+    }
+    var delegateOnOpenToCallbackReturnValue: String!
+
+    override func delegateOnOpen<T: AnyObject>(to owner: T, callback: @escaping (T, URLResponse?) -> Void) -> String {
         delegateOnOpenToCallbackCallsCount += 1
         return delegateOnOpenToCallbackReturnValue
     }
@@ -806,18 +818,18 @@ class SocketMock: Socket {
 
     //MARK: - onClose
 
-    var onCloseCallbackWithCodeCallsCount = 0
-    var onCloseCallbackWithCodeCalled: Bool {
-        return onCloseCallbackWithCodeCallsCount > 0
+    var onCloseCallbackCallsCount = 0
+    var onCloseCallbackCalled: Bool {
+        return onCloseCallbackCallsCount > 0
     }
-    var onCloseCallbackWithCodeReceivedCallback: ((Int, String?) -> Void)?
-    var onCloseCallbackWithCodeReturnValue: String!
-    var onCloseCallbackWithCodeClosure: ((@escaping (Int, String?) -> Void) -> String)?
+    var onCloseCallbackReceivedCallback: ((Int, String?) -> Void)?
+    var onCloseCallbackReturnValue: String!
+    var onCloseCallbackClosure: ((@escaping (Int, String?) -> Void) -> String)?
 
     override func onClose(callback: @escaping (Int, String?) -> Void) -> String {
-        onCloseCallbackWithCodeCallsCount += 1
-        onCloseCallbackWithCodeReceivedCallback = callback
-        return onCloseCallbackWithCodeClosure.map({ $0(callback) }) ?? onCloseCallbackWithCodeReturnValue
+        onCloseCallbackCallsCount += 1
+        onCloseCallbackReceivedCallback = callback
+        return onCloseCallbackClosure.map({ $0(callback) }) ?? onCloseCallbackReturnValue
     }
 
 
@@ -837,15 +849,15 @@ class SocketMock: Socket {
 
     //MARK: - delegateOnClose<T: AnyObject>
 
-    var delegateOnCloseToCallbackWithCodeCallsCount = 0
-    var delegateOnCloseToCallbackWithCodeCalled: Bool {
-        return delegateOnCloseToCallbackWithCodeCallsCount > 0
+    var delegateOnCloseToCallbackCallsCount = 0
+    var delegateOnCloseToCallbackCalled: Bool {
+        return delegateOnCloseToCallbackCallsCount > 0
     }
-    var delegateOnCloseToCallbackWithCodeReturnValue: String!
+    var delegateOnCloseToCallbackReturnValue: String!
 
     override func delegateOnClose<T: AnyObject>(to owner: T, callback: @escaping (T, (Int, String?)) -> Void) -> String {
-        delegateOnCloseToCallbackWithCodeCallsCount += 1
-        return delegateOnCloseToCallbackWithCodeReturnValue
+        delegateOnCloseToCallbackCallsCount += 1
+        return delegateOnCloseToCallbackReturnValue
     }
 
 
@@ -874,8 +886,7 @@ class SocketMock: Socket {
     }
     var delegateOnErrorToCallbackReturnValue: String!
 
-    override func delegateOnError<T: AnyObject>(to owner: T,
-                                            callback: @escaping ((T, (Error, URLResponse?)) -> Void)) -> String {
+    override func delegateOnError<T: AnyObject>(to owner: T, callback: @escaping (T, (Error, URLResponse?)) -> Void) -> String {
         delegateOnErrorToCallbackCallsCount += 1
         return delegateOnErrorToCallbackReturnValue
     }
@@ -906,8 +917,7 @@ class SocketMock: Socket {
     }
     var delegateOnMessageToCallbackReturnValue: String!
 
-    override func delegateOnMessage<T: AnyObject>(to owner: T,
-                                              callback: @escaping ((T, Message) -> Void)) -> String {
+    override func delegateOnMessage<T: AnyObject>(to owner: T, callback: @escaping (T, Message) -> Void) -> String {
         delegateOnMessageToCallbackCallsCount += 1
         return delegateOnMessageToCallbackReturnValue
     }
@@ -937,8 +947,7 @@ class SocketMock: Socket {
     var channelParamsReturnValue: Channel!
     var channelParamsClosure: ((String, [String: Any]) -> Channel)?
 
-    override func channel(_ topic: String,
-                      params: [String: Any] = [:]) -> Channel {
+    override func channel(_ topic: String, params: [String: Any] = [:]) -> Channel {
         channelParamsCallsCount += 1
     channelParamsReceivedArguments = (topic: topic, params: params)
         return channelParamsClosure.map({ $0(topic, params) }) ?? channelParamsReturnValue
@@ -986,11 +995,7 @@ class SocketMock: Socket {
     var pushTopicEventPayloadRefJoinRefReceivedArguments: (topic: String, event: String, payload: Payload, ref: String?, joinRef: String?)?
     var pushTopicEventPayloadRefJoinRefClosure: ((String, String, Payload, String?, String?) -> Void)?
 
-    override func push(topic: String,
-                     event: String,
-                     payload: Payload,
-                     ref: String? = nil,
-                     joinRef: String? = nil) {
+    override func push(topic: String, event: String, payload: Payload, ref: String? = nil, joinRef: String? = nil) {
         pushTopicEventPayloadRefJoinRefCallsCount += 1
     pushTopicEventPayloadRefJoinRefReceivedArguments = (topic: topic, event: event, payload: payload, ref: ref, joinRef: joinRef)
         pushTopicEventPayloadRefJoinRefClosure?(topic, event, payload, ref, joinRef)
@@ -1030,15 +1035,17 @@ class SocketMock: Socket {
 
     //MARK: - onConnectionOpen
 
-    var onConnectionOpenCallsCount = 0
-    var onConnectionOpenCalled: Bool {
-        return onConnectionOpenCallsCount > 0
+    var onConnectionOpenResponseCallsCount = 0
+    var onConnectionOpenResponseCalled: Bool {
+        return onConnectionOpenResponseCallsCount > 0
     }
-    var onConnectionOpenClosure: (() -> Void)?
+    var onConnectionOpenResponseReceivedResponse: URLResponse?
+    var onConnectionOpenResponseClosure: ((URLResponse?) -> Void)?
 
-    override func onConnectionOpen() {
-        onConnectionOpenCallsCount += 1
-        onConnectionOpenClosure?()
+    override func onConnectionOpen(response: URLResponse?) {
+        onConnectionOpenResponseCallsCount += 1
+        onConnectionOpenResponseReceivedResponse = response
+        onConnectionOpenResponseClosure?(response)
     }
 
 
@@ -1134,6 +1141,23 @@ class SocketMock: Socket {
     }
 
 
+    //MARK: - buildEndpointUrl
+
+    var buildEndpointUrlEndpointParamsClosureVsnCallsCount = 0
+    var buildEndpointUrlEndpointParamsClosureVsnCalled: Bool {
+        return buildEndpointUrlEndpointParamsClosureVsnCallsCount > 0
+    }
+    var buildEndpointUrlEndpointParamsClosureVsnReceivedArguments: (endpoint: String, params: PayloadClosure?, vsn: String)?
+    var buildEndpointUrlEndpointParamsClosureVsnReturnValue: URL!
+    var buildEndpointUrlEndpointParamsClosureVsnClosure: ((String, PayloadClosure?, String) -> URL)?
+
+    override func buildEndpointUrl(endpoint: String, paramsClosure params: PayloadClosure?, vsn: String) -> URL {
+        buildEndpointUrlEndpointParamsClosureVsnCallsCount += 1
+    buildEndpointUrlEndpointParamsClosureVsnReceivedArguments = (endpoint: endpoint, params: params, vsn: vsn)
+        return buildEndpointUrlEndpointParamsClosureVsnClosure.map({ $0(endpoint, params, vsn) }) ?? buildEndpointUrlEndpointParamsClosureVsnReturnValue
+    }
+
+
     //MARK: - leaveOpenTopic
 
     var leaveOpenTopicTopicCallsCount = 0
@@ -1196,15 +1220,17 @@ class SocketMock: Socket {
 
     //MARK: - onOpen
 
-    var onOpenCallsCount = 0
-    var onOpenCalled: Bool {
-        return onOpenCallsCount > 0
+    var onOpenResponseCallsCount = 0
+    var onOpenResponseCalled: Bool {
+        return onOpenResponseCallsCount > 0
     }
-    var onOpenClosure: (() -> Void)?
+    var onOpenResponseReceivedResponse: URLResponse?
+    var onOpenResponseClosure: ((URLResponse?) -> Void)?
 
-    override func onOpen() {
-        onOpenCallsCount += 1
-        onOpenClosure?()
+    override func onOpen(response: URLResponse?) {
+        onOpenResponseCallsCount += 1
+        onOpenResponseReceivedResponse = response
+        onOpenResponseClosure?(response)
     }
 
 
@@ -1240,6 +1266,22 @@ class SocketMock: Socket {
     }
 
 
+    //MARK: - onMessage
+
+    var onMessageDataCallsCount = 0
+    var onMessageDataCalled: Bool {
+        return onMessageDataCallsCount > 0
+    }
+    var onMessageDataReceivedData: Data?
+    var onMessageDataClosure: ((Data) -> Void)?
+
+    override func onMessage(data: Data) {
+        onMessageDataCallsCount += 1
+        onMessageDataReceivedData = data
+        onMessageDataClosure?(data)
+    }
+
+
     //MARK: - onClose
 
     var onCloseCodeReasonCallsCount = 0
@@ -1256,13 +1298,29 @@ class SocketMock: Socket {
     }
 
 
+    //MARK: - onClose
+
+    var onCloseCodeReasonCallsCount = 0
+    var onCloseCodeReasonCalled: Bool {
+        return onCloseCodeReasonCallsCount > 0
+    }
+    var onCloseCodeReasonReceivedArguments: (code: Int, reason: String?)?
+    var onCloseCodeReasonClosure: ((Int, String?) -> Void)?
+
+    override func onClose(code: Int, reason: String?) {
+        onCloseCodeReasonCallsCount += 1
+    onCloseCodeReasonReceivedArguments = (code: code, reason: reason)
+        onCloseCodeReasonClosure?(code, reason)
+    }
+
+
 }
 class TimeoutTimerMock: TimeoutTimer {
-    override var callback: Delegated<(), Void> {
+    override var callback: Delegated<, Void> {
         get { return underlyingCallback }
         set(value) { underlyingCallback = value }
     }
-    var underlyingCallback: (Delegated<(), Void>)!
+    var underlyingCallback: (Delegated<, Void>)!
     override var timerCalculation: Delegated<Int, TimeInterval> {
         get { return underlyingTimerCalculation }
         set(value) { underlyingTimerCalculation = value }

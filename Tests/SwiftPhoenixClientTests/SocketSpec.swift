@@ -197,7 +197,7 @@ class SocketSpec: QuickSpec {
         expect(socket.connection).toNot(beNil())
       })
       
-      it("set callbacks for connection", closure: {
+      it("set callbacks for connection with string message", closure: {
         var open = 0
         socket.onOpen { open += 1 }
         
@@ -209,7 +209,7 @@ class SocketSpec: QuickSpec {
         
         var lastMessage: Message?
         socket.onMessage(callback: { (message) in lastMessage = message })
-        
+
         mockWebSocket.readyState = .closed
         socket.connect()
         
@@ -227,7 +227,42 @@ class SocketSpec: QuickSpec {
         mockWebSocket.delegate?.onMessage(message: text)
         expect(lastMessage?.payload["go"] as? Bool).to(beTrue())
       })
-      
+
+      it("set callbacks for connection with data message", closure: {
+        var open = 0
+        socket.onOpen { open += 1 }
+
+        var close = 0
+        socket.onClose { close += 1 }
+
+        var lastError: (Error, URLResponse?)?
+        socket.onError(callback: { (error) in lastError = error })
+
+        var lastMessage: Message?
+        socket.onMessage(callback: { (message) in lastMessage = message })
+
+        let dataToTextConverter: (Data -> String?)? = {
+          String(data: $0, encoding: .utf8)
+        }
+
+        mockWebSocket.readyState = .closed
+        socket.connect()
+
+        mockWebSocket.delegate?.onOpen()
+        expect(open).to(equal(1))
+
+        mockWebSocket.delegate?.onClose(code: 1000, reason: nil)
+        expect(close).to(equal(1))
+
+        mockWebSocket.delegate?.onError(error: TestError.stub, response: nil)
+        expect(lastError).toNot(beNil())
+
+        let dataObject: [Any] = ["2", "6", "topic", "event", ["response": ["go": true], "status": "ok"]]
+        let data = Defaults.encode(dataObject)
+        mockWebSocket.delegate?.onMessage(data: data)
+        expect(lastMessage?.payload["go"] as? Bool).to(beTrue())
+      })
+
       it("removes callbacks", closure: {
         var open = 0
         socket.onOpen { open += 1 }

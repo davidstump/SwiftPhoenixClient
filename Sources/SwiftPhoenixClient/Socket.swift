@@ -94,7 +94,10 @@ public class Socket: PhoenixTransportDelegate {
   
   /// Override to provide custom decoding of data read from the socket
   public var decode: (Data) -> Any? = Defaults.decode
-  
+
+  // Provide custom data to text converter
+  public var dataToTextConverter: ((Data) -> String?)?
+
   /// Timeout to use when opening connections
   public var timeout: TimeInterval = Defaults.timeoutInterval
     
@@ -862,7 +865,12 @@ public class Socket: PhoenixTransportDelegate {
   public func onMessage(message: String) {
     self.onConnectionMessage(message)
   }
-  
+
+  public func onMessage(data: Data) {
+    guard let message = dataToTextConverter?(data) else { return }
+    self.onConnectionMessage(message)
+  }
+
   public func onClose(code: Int, reason: String? = nil) {
     self.closeStatus.update(transportCloseCode: code)
     self.onConnectionClosed(code: code, reason: reason)

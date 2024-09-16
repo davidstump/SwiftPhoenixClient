@@ -92,7 +92,15 @@ public protocol PhoenixTransportDelegate {
    - Parameter message: Message received from the server
    */
   func onMessage(message: String)
-  
+
+
+  /**
+   Notified when the `Transport` receives a message from the server.
+
+   - Parameter message: Message received from the server
+   */
+  func onMessage(data: Data)
+
   /**
    Notified when the `Transport` closes.
    
@@ -277,8 +285,8 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
       switch result {
       case .success(let message):
         switch message {
-        case .data:
-          print("Data received. This method is unsupported by the Client")
+        case .data(let data):
+          self?.delegate?.onMessage(data: data)
         case .string(let text):
           self?.delegate?.onMessage(message: text)
         default:
