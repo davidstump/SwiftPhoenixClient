@@ -31,7 +31,7 @@ struct Binding {
   let ref: Int
   
   // The callback to be triggered
-  let callback: Delegated<Message, Void>
+  let callback: Delegated<SocketMessage, Void>
 }
 
 
@@ -236,7 +236,7 @@ public class Channel {
   ///
   /// - parameter msg: The Message received by the client from the server
   /// - return: Must return the message, modified or unmodified
-  public var onMessage: (_ message: Message) -> Message = { (message) in
+  public var onMessage: (_ message: SocketMessage) -> SocketMessage = { (message) in
     return message
   }
   
@@ -273,7 +273,7 @@ public class Channel {
   /// - parameter callback: Called when the Channel closes
   /// - return: Ref counter of the subscription. See `func off()`
   @discardableResult
-  public func onClose(_ callback: @escaping ((Message) -> Void)) -> Int {
+  public func onClose(_ callback: @escaping ((SocketMessage) -> Void)) -> Int {
     return self.on(ChannelEvent.close, callback: callback)
   }
   
@@ -292,7 +292,7 @@ public class Channel {
   /// - return: Ref counter of the subscription. See `func off()`
   @discardableResult
   public func delegateOnClose<Target: AnyObject>(to owner: Target,
-                                                 callback: @escaping ((Target, Message) -> Void)) -> Int {
+                                                 callback: @escaping ((Target, SocketMessage) -> Void)) -> Int {
     return self.delegateOn(ChannelEvent.close, to: owner, callback: callback)
   }
   
@@ -392,8 +392,8 @@ public class Channel {
   @discardableResult
   public func delegateOn<Target: AnyObject>(_ event: String,
                                             to owner: Target,
-                                            callback: @escaping ((Target, Message) -> Void)) -> Int {
-    var delegated = Delegated<Message, Void>()
+                                            callback: @escaping ((Target, SocketMessage) -> Void)) -> Int {
+    var delegated = Delegated<SocketMessage, Void>()
     delegated.delegate(to: owner, with: callback)
     
     return self.on(event, delegated: delegated)
@@ -401,7 +401,7 @@ public class Channel {
   
   /// Shared method between `on` and `manualOn`
   @discardableResult
-  private func on(_ event: String, delegated: Delegated<Message, Void>) -> Int {
+  private func on(_ event: String, delegated: Delegated<SocketMessage, Void>) -> Int {
     let ref = bindingRef
     self.bindingRef = ref + 1
     
@@ -490,7 +490,7 @@ public class Channel {
     self.state = .leaving
     
     /// Delegated callback for a successful or a failed channel leave
-    var onCloseDelegate = Delegated<Message, Void>()
+    var onCloseDelegate = Delegated<SocketMessage, Void>()
     onCloseDelegate.delegate(to: self) { (self, message) in
       self.socket?.logItems("channel", "leave \(self.topic)")
       
@@ -524,7 +524,7 @@ public class Channel {
   /// - parameter payload: The payload for the message
   /// - parameter ref: The reference of the message
   /// - return: Must return the payload, modified or unmodified
-  public func onMessage(callback: @escaping (Message) -> Message) {
+  public func onMessage(callback: @escaping (SocketMessage) -> SocketMessage) {
     self.onMessage = callback
   }
   
@@ -533,7 +533,7 @@ public class Channel {
   // MARK: - Internal
   //----------------------------------------------------------------------
   /// Checks if an event received by the Socket belongs to this Channel
-  func isMember(_ message: Message) -> Bool {
+  func isMember(_ message: SocketMessage) -> Bool {
     // Return false if the message's topic does not match the Channel's topic
     guard message.topic == self.topic else { return false }
 
@@ -543,7 +543,7 @@ public class Channel {
       ChannelEvent.isLifecyleEvent(message.event)
       else { return true }
 
-    self.socket?.logItems("channel", "dropping outdated message", message.topic, message.event, message.rawPayload, safeJoinRef)
+    self.socket?.logItems("channel", "dropping outdated message", message.topic, message.event, message.payload, safeJoinRef)
     return false
   }
   
@@ -569,7 +569,7 @@ public class Channel {
   /// `channel.on("event")`.
   ///
   /// - parameter message: Message to pass to the event bindings
-  func trigger(_ message: Message) {
+  func trigger(_ message: SocketMessage) {
     let handledMessage = self.onMessage(message)
     
     self.syncBindingsDel.forEach { binding in
@@ -590,6 +590,13 @@ public class Channel {
                payload: Payload = [:],
                ref: String = "",
                joinRef: String? = nil) {
+      let message = MessageV6(
+        joinRef: joinRef ?? self.joinRef,
+        ref: ref,
+        topic: self.topic,
+        event: event,
+        payload: <#T##PayloadV6#>
+      )
     let message = Message(ref: ref,
                           topic: self.topic,
                           event: event,

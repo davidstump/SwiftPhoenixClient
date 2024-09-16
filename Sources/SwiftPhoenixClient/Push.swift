@@ -38,7 +38,7 @@ public class Push {
   public var timeout: TimeInterval
   
   /// The server's response to the Push
-  var receivedMessage: Message?
+  var receivedMessage: SocketMessage?
   
   /// Timer which triggers a timeout event
   var timeoutTimer: TimerQueue
@@ -47,7 +47,7 @@ public class Push {
   var timeoutWorkItem: DispatchWorkItem?
   
   /// Hooks into a Push. Where .receive("ok", callback(Payload)) are stored
-  var receiveHooks: [String: [Delegated<Message, Void>]]
+  var receiveHooks: [String: [Delegated<SocketMessage, Void>]]
   
   /// True if the Push has been sent
   var sent: Bool
@@ -125,8 +125,8 @@ public class Push {
   /// - parameter callback: Callback to fire when the status is recevied
   @discardableResult
   public func receive(_ status: String,
-                      callback: @escaping ((Message) -> ())) -> Push {
-    var delegated = Delegated<Message, Void>()
+                      callback: @escaping ((SocketMessage) -> ())) -> Push {
+    var delegated = Delegated<SocketMessage, Void>()
     delegated.manuallyDelegate(with: callback)
     
     return self.receive(status, delegated: delegated)
@@ -150,8 +150,8 @@ public class Push {
   @discardableResult
   public func delegateReceive<Target: AnyObject>(_ status: String,
                                                  to owner: Target,
-                                                 callback: @escaping ((Target, Message) -> ())) -> Push {
-    var delegated = Delegated<Message, Void>()
+                                                 callback: @escaping ((Target, SocketMessage) -> ())) -> Push {
+    var delegated = Delegated<SocketMessage, Void>()
     delegated.delegate(to: owner, with: callback)
     
     return self.receive(status, delegated: delegated)
@@ -159,7 +159,7 @@ public class Push {
   
   /// Shared behavior between `receive` calls
   @discardableResult
-  internal func receive(_ status: String, delegated: Delegated<Message, Void>) -> Push {
+  internal func receive(_ status: String, delegated: Delegated<SocketMessage, Void>) -> Push {
     // If the message has already been received, pass it to the callback immediately
     if hasReceived(status: status), let receivedMessage = self.receivedMessage {
       delegated.call(receivedMessage)
@@ -192,7 +192,7 @@ public class Push {
   ///
   /// - parameter status: Status which was received, e.g. "ok", "error", "timeout"
   /// - parameter response: Response that was received
-  private func matchReceive(_ status: String, message: Message) {
+  private func matchReceive(_ status: String, message: SocketMessage) {
     receiveHooks[status]?.forEach( { $0.call(message) } )
   }
   
@@ -226,17 +226,18 @@ public class Push {
     self.ref = ref
     self.refEvent = refEvent
     
-    /// If a response is received  before the Timer triggers, cancel timer
-    /// and match the recevied event to it's corresponding hook
-    channel.delegateOn(refEvent, to: self) { (self, message) in
-      self.cancelRefEvent()
-      self.cancelTimeout()
-      self.receivedMessage = message
-      
-      /// Check if there is event a status available
-      guard let status = message.status else { return }
-      self.matchReceive(status, message: message)
-    }
+      /// If a response is received  before the Timer triggers, cancel timer
+      /// and match the recevied event to it's corresponding hook
+      channel.delegateOn(refEvent, to: self) { (self, message) in
+          self.cancelRefEvent()
+          self.cancelTimeout()
+          self.receivedMessage = message
+          
+          
+          /// Only continue if there is a reply status available
+          guard case .reply(let reply) = message else { return }
+          self.matchReceive(reply.status, message: message)
+      }
     
     /// Setup and start the Timeout timer.
     let workItem = DispatchWorkItem {
@@ -247,13 +248,14 @@ public class Push {
     self.timeoutTimer.queue(timeInterval: timeout, execute: workItem)
   }
   
-  /// Checks if a status has already been received by the Push.
-  ///
-  /// - parameter status: Status to check
-  /// - return: True if given status has been received by the Push.
-  internal func hasReceived(status: String) -> Bool {
-    return self.receivedMessage?.status == status
-  }
+    /// Checks if a status has already been received by the Push.
+    ///
+    /// - parameter status: Status to check
+    /// - return: True if given status has been received by the Push.
+    internal func hasReceived(status: String) -> Bool {
+        guard case .reply(let reply) = self.receivedMessage else { return false }
+        return reply.status == status
+    }
   
   /// Triggers an event to be sent though the Channel
   internal func trigger(_ status: String, payload: Payload) {

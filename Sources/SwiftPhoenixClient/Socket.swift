@@ -39,7 +39,7 @@ struct StateChangeCallbacks {
     let open: SynchronizedArray<(ref: String, callback: Delegated<URLResponse?, Void>)> = .init()
     let close: SynchronizedArray<(ref: String, callback: Delegated<(Int, String?), Void>)> = .init()
     let error: SynchronizedArray<(ref: String, callback: Delegated<(Error, URLResponse?), Void>)> = .init()
-    let message: SynchronizedArray<(ref: String, callback: Delegated<Message, Void>)> = .init()
+    let message: SynchronizedArray<(ref: String, callback: Delegated<SocketMessage, Void>)> = .init()
 }
 
 
@@ -495,8 +495,8 @@ public class Socket: PhoenixTransportDelegate {
   ///
   /// - parameter callback: Called when the Socket receives a message event
   @discardableResult
-  public func onMessage(callback: @escaping (Message) -> Void) -> String {
-    var delegated = Delegated<Message, Void>()
+  public func onMessage(callback: @escaping (SocketMessage) -> Void) -> String {
+    var delegated = Delegated<SocketMessage, Void>()
     delegated.manuallyDelegate(with: callback)
     
     return self.append(callback: delegated, to: self.stateChangeCallbacks.message)
@@ -515,8 +515,8 @@ public class Socket: PhoenixTransportDelegate {
   /// - parameter callback: Called when the Socket receives a message event
   @discardableResult
   public func delegateOnMessage<T: AnyObject>(to owner: T,
-                                              callback: @escaping ((T, Message) -> Void)) -> String {
-    var delegated = Delegated<Message, Void>()
+                                              callback: @escaping ((T, SocketMessage) -> Void)) -> String {
+    var delegated = Delegated<SocketMessage, Void>()
     delegated.delegate(to: owner, with: callback)
     
     return self.append(callback: delegated, to: self.stateChangeCallbacks.message)
@@ -607,11 +607,16 @@ public class Socket: PhoenixTransportDelegate {
     
     let callback: (() throws -> ()) = { [weak self] in
       guard let self else { return }
-      let body: [Any?] = [joinRef, ref, topic, event, payload]
-      let data = self.encode(body)
-      
-      self.logItems("push", "Sending \(String(data: data, encoding: String.Encoding.utf8) ?? "")" )
-      self.connection?.send(data: data)
+        
+        // TODO: Payload as [String: Any] is problematic. For now, convert to json string using JSONSerialization
+        let jsonData = Defaults.encode(payload)
+        let json = String(data: jsonData, encoding: .utf8)!
+        
+        let message = MessageV6(joinRef: joinRef, ref: ref, topic: topic, event: event, payload: .json(json))
+        let string = serializer.encode(message: message)
+        
+        self.logItems("push", "Sending \(string)" )
+        self.connection?.send(string: string)
     }
     
     /// If the socket is connected, then execute the callback immediately.

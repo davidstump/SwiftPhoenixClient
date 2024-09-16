@@ -153,6 +153,17 @@ public enum SocketMessage {
         }
     }
     
+    var topic: String {
+        switch self {
+        case .message(let message):
+            return message.topic
+        case .reply(let reply):
+            return reply.topic
+        case .broadcast(let broadcast):
+            return broadcast.topic
+        }
+    }
+    
     var event: String {
         switch self {
         case .message(let message):
@@ -161,6 +172,17 @@ public enum SocketMessage {
             return ChannelEvent.reply
         case .broadcast(let broadcast):
             return broadcast.event
+        }
+    }
+    
+    var payload: PayloadV6 {
+        switch self {
+        case .message(let message):
+            return message.payload
+        case .reply(let reply):
+            return reply.payload
+        case .broadcast(let broadcast):
+            return broadcast.payload
         }
     }
 }
