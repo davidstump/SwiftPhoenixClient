@@ -77,7 +77,7 @@ final class PhoenixSerializerTest: XCTestCase {
         ["1","2","topic","event",{"foo":"bar"}]
         """
         
-        switch serializer.decode(text: text) {
+        switch try serializer.decode(text: text) {
         case .message(let message):
             XCTAssertEqual(message.joinRef, "1")
             XCTAssertEqual(message.ref, "2")
@@ -90,18 +90,22 @@ final class PhoenixSerializerTest: XCTestCase {
     }
     
     func test_decodeMessageWithNumbers() throws {
-        // TODO: `1.0` will convert to `1` and `1.1` to `1.0001`
-    
-//        let text = """
-//        ["1","2", "topic","event",{"int":1,"float":1.1}]
-//        """
-//        
-//        switch serializer.decode(text: text) {
-//        case .message(let message):
-//            XCTAssertEqual(message.payload, "{\"int\":1,\"float\":1.1}")
-//        default:
-//            assertionFailure("Expected type .message")
-//        }
+        let text = """
+        ["1","2", "topic","event",{"int":1,"float":1.1}]
+        """
+        
+        switch try serializer.decode(text: text) {
+        case .message(let message):
+            let jsonResult = message.payload.asJson()
+            let excpetedResultsContainJsonResult = [
+                "{\"int\":1,\"float\":1.1}",
+                "{\"float\":1.1,\"int\":1}"
+            ].contains(jsonResult)
+            
+            XCTAssertTrue(excpetedResultsContainJsonResult)
+        default:
+            assertionFailure("Expected type .message")
+        }
     }
     
     func test_decodeMessageWithoutJsonPayload() throws {
@@ -111,7 +115,7 @@ final class PhoenixSerializerTest: XCTestCase {
         ["1","2", "topic","event","payload"]
         """
         
-        switch serializer.decode(text: text) {
+        switch try serializer.decode(text: text) {
         case .message(let message):
             XCTAssertEqual(message.payload, .json("payload"))
         default:
@@ -124,7 +128,7 @@ final class PhoenixSerializerTest: XCTestCase {
         [null,"2", "topic","phx_reply",{"response":"foo","status":"ok"}]
         """
         
-        switch serializer.decode(text: text) {
+        switch try serializer.decode(text: text) {
         case .reply(let reply):
             XCTAssertNil(reply.joinRef)
             XCTAssertEqual(reply.ref, "2")
@@ -141,7 +145,7 @@ final class PhoenixSerializerTest: XCTestCase {
         [null,"2", "topic","phx_reply",{"response":{"foo":"bar"},"status":"ok"}]
         """
         
-        switch serializer.decode(text: text) {
+        switch try serializer.decode(text: text) {
         case .reply(let reply):
             XCTAssertEqual(reply.payload, .json("{\"foo\":\"bar\"}"))
         default:
@@ -154,7 +158,7 @@ final class PhoenixSerializerTest: XCTestCase {
         [null,null,"topic","event",{"user":"foo"}]
         """
         
-        switch serializer.decode(text: text) {
+        switch try serializer.decode(text: text) {
         case .broadcast(let broadcast):
             XCTAssertEqual(broadcast.topic, "topic")
             XCTAssertEqual(broadcast.event, "event")
@@ -166,7 +170,7 @@ final class PhoenixSerializerTest: XCTestCase {
     
     
     // - - - - - binaryDecode(data) - - - - -
-    func test_binaryDecode_push() {
+    func test_binaryDecode_push() throws {
         // "\0\x03\x03\n123topsome-event\x01\x01"
         
         let bin: [UInt8] = [0x00, 0x03, 0x03, 0x0A]
@@ -174,7 +178,7 @@ final class PhoenixSerializerTest: XCTestCase {
         + [0x01, 0x01]
         
 
-        switch serializer.binaryDecode(data: Data(bin)) {
+        switch try serializer.binaryDecode(data: Data(bin)) {
         case .message(let message):
             XCTAssertEqual(message.joinRef, "123")
             XCTAssertNil(message.ref)
@@ -190,14 +194,14 @@ final class PhoenixSerializerTest: XCTestCase {
       }
 
       
-    func test_binaryDecode_reply() {
+    func test_binaryDecode_reply() throws {
         // "\x01\x03\x02\x03\x0210012topok\x01\x01"
         let bin: [UInt8] = [0x01, 0x03, 0x02, 0x03, 0x02]
         + "10012topok".utf8.map { UInt8($0) }
         + [0x01, 0x01]
         
 
-        switch serializer.binaryDecode(data: Data(bin)) {
+        switch try serializer.binaryDecode(data: Data(bin)) {
         case .reply(let reply):
             XCTAssertEqual(reply.joinRef, "100")
             XCTAssertEqual(reply.ref, "12")
@@ -212,14 +216,14 @@ final class PhoenixSerializerTest: XCTestCase {
         }
       }
 
-    func test_binaryDecode_broadcast() {
+    func test_binaryDecode_broadcast() throws{
         // "\x02\x03\ntopsome-event\x01\x01"
         let bin: [UInt8] = [0x02, 0x03, 0x0A]
         + "topsome-event".utf8.map { UInt8($0) }
         + [0x01, 0x01]
         
 
-        switch serializer.binaryDecode(data: Data(bin)) {
+        switch try serializer.binaryDecode(data: Data(bin)) {
         case .broadcast(let broadcast):
             XCTAssertEqual(broadcast.topic, "top")
             XCTAssertEqual(broadcast.event, "some-event")

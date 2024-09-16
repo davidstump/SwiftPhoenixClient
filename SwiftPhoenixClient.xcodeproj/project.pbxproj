@@ -35,6 +35,8 @@
 		12EF620625524B6800A6EE9B /* PresenceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620125524B6800A6EE9B /* PresenceSpec.swift */; };
 		12EF620725524B6800A6EE9B /* TimeoutTimerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620225524B6800A6EE9B /* TimeoutTimerSpec.swift */; };
 		12EF620825524B6800A6EE9B /* DefaultSerializerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620325524B6800A6EE9B /* DefaultSerializerSpec.swift */; };
+		6322938E2C952508003EEDE1 /* RawJsonValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6322938D2C952508003EEDE1 /* RawJsonValue.swift */; };
+		632293902C952689003EEDE1 /* DecodedMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6322938F2C952689003EEDE1 /* DecodedMessage.swift */; };
 		635669C4261631DC0068B665 /* URLSessionTransportSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635669C3261631DC0068B665 /* URLSessionTransportSpec.swift */; };
 		63ACBE9426D53DF500171582 /* HeartbeatTimerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ACBE9326D53DF500171582 /* HeartbeatTimerSpec.swift */; };
 		63BBCEF52B89774F004A16C9 /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBCEF42B89774F004A16C9 /* Messages.swift */; };
@@ -108,6 +110,8 @@
 		12EF620125524B6800A6EE9B /* PresenceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresenceSpec.swift; sourceTree = "<group>"; };
 		12EF620225524B6800A6EE9B /* TimeoutTimerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeoutTimerSpec.swift; sourceTree = "<group>"; };
 		12EF620325524B6800A6EE9B /* DefaultSerializerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultSerializerSpec.swift; sourceTree = "<group>"; };
+		6322938D2C952508003EEDE1 /* RawJsonValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawJsonValue.swift; sourceTree = "<group>"; };
+		6322938F2C952689003EEDE1 /* DecodedMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodedMessage.swift; sourceTree = "<group>"; };
 		635669C3261631DC0068B665 /* URLSessionTransportSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionTransportSpec.swift; sourceTree = "<group>"; };
 		63ACBE9326D53DF500171582 /* HeartbeatTimerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatTimerSpec.swift; sourceTree = "<group>"; };
 		63B526842656CF9600289719 /* Starscream.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Starscream.xcframework; path = Carthage/Build/Starscream.xcframework; sourceTree = "<group>"; };
@@ -300,6 +304,8 @@
 			children = (
 				63BBCEFF2B897B0C004A16C9 /* Serializer.swift */,
 				63BBCF022B897D87004A16C9 /* PhoenixSerializer.swift */,
+				6322938D2C952508003EEDE1 /* RawJsonValue.swift */,
+				6322938F2C952689003EEDE1 /* DecodedMessage.swift */,
 			);
 			path = Serializer;
 			sourceTree = "<group>";
@@ -482,10 +488,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6322938E2C952508003EEDE1 /* RawJsonValue.swift in Sources */,
 				12991DFB254C3EB800BB8650 /* Defaults.swift in Sources */,
 				63BBCEF52B89774F004A16C9 /* Messages.swift in Sources */,
 				12991E05254C3F3300BB8650 /* Channel.swift in Sources */,
 				63BBCF032B897D87004A16C9 /* PhoenixSerializer.swift in Sources */,
+				632293902C952689003EEDE1 /* DecodedMessage.swift in Sources */,
 				63BBCF002B897B0C004A16C9 /* Serializer.swift in Sources */,
 				63F3765329E7296F00A5AB6E /* SynchronizedArray.swift in Sources */,
 				12991E09254C3F5B00BB8650 /* Presence.swift in Sources */,
