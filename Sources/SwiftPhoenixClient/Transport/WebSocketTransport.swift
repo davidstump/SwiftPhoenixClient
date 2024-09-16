@@ -30,7 +30,7 @@ open class WebSocketTransport: NSObject, URLSessionWebSocketDelegate, Transport 
     private var session: URLSession? = nil
     
     /// The delegate that receives open/close information when connecting
-    private var websocketTaskDelegate: URLSessionWebSocketDelegate? = nil
+    private var websocketTaskDelegate: WebSocketTaskDelegate? = nil
     
     /// The ongoing task. Assigned during `connect()`
     private var task: URLSessionWebSocketTask? = nil
@@ -72,6 +72,7 @@ open class WebSocketTransport: NSObject, URLSessionWebSocketDelegate, Transport 
         // replaced the protocol.
         self.url = URL(string: wsEndpoint)!
         self.configuration = configuration
+        self.serializer = serializer
         
         let (stream, continuation) = AsyncThrowingStream
             .makeStream(of: SocketMessage.self, throwing: Error.self)
@@ -94,10 +95,26 @@ open class WebSocketTransport: NSObject, URLSessionWebSocketDelegate, Transport 
             // Create the session and websocket task
             self.websocketTaskDelegate = WebSocketTaskDelegate(
                 onWebSocketTaskDidOpen: { string in
+                    // Mark the socket as open and
+                    self.readyState = .open
+                    
+                    // Resume the async call, signalling that the socket has connected
                     continuation.resume()
                     
+                    // Start listening for messages received from the server.
+                    self.receive()
                 },
                 onWebSocketTaskDidClose: { closeCode, data in
+                    // A close frame was received from the server.
+                    self.readyState = .closed
+                    
+                    // No more messages will be received
+                    self.messagesContinuation.finish()
+                    
+                    // Stop listening for connection events
+                    self.websocketTaskDelegate = nil
+                    
+                    
                 },
                 onWebSocketTaskDidCompleteWithError: { error in
                     // Only propagate errors that occur during the process of connecting the socket.
@@ -106,8 +123,6 @@ open class WebSocketTransport: NSObject, URLSessionWebSocketDelegate, Transport 
                     }
                 }
             )
-            
-            contin
             
             self.session = URLSession(
                 configuration: self.configuration,

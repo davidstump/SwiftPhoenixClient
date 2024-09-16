@@ -12,7 +12,7 @@
 /// your custom Serializer to Socket
 
 
-class PhoenixSerializer: Serializer {
+public class PhoenixSerializer: Serializer {
     
     private let HEADER_LENGTH: Int = 1
     private let META_LENGTH: Int = 4
@@ -21,7 +21,7 @@ class PhoenixSerializer: Serializer {
     private let KIND_REPLY: UInt8 = 1
     private let KIND_BROADCAST: UInt8 = 2
     
-    func encode(message: MessageV6) -> String {
+    public func encode(message: MessageV6) -> String {
         switch message.payload {
         case .json(let json):
             let jsonArray = [
@@ -38,7 +38,7 @@ class PhoenixSerializer: Serializer {
         }
     }
     
-    func binaryEncode(message: MessageV6) -> Data {
+    public func binaryEncode(message: MessageV6) -> Data {
         switch message.payload {
         case .binary(let data):
             var byteArray: [UInt8] = []
@@ -73,8 +73,8 @@ class PhoenixSerializer: Serializer {
     }
     
     
-    func decode(text: String) -> SocketMessage {
-        guard 
+    public func decode(text: String) -> SocketMessage {
+        guard
             let jsonData = text.data(using: .utf8),
             let decodedMessage = try? JSONDecoder().decode(DecodedMessage.self, from: jsonData)
         else {
@@ -134,7 +134,7 @@ class PhoenixSerializer: Serializer {
     }
     
     
-    func binaryDecode(data: Data) -> SocketMessage {
+    public func binaryDecode(data: Data) -> SocketMessage {
         let binary = [UInt8](data)
         return switch binary[0] {
         case KIND_PUSH: decodePush(buffer: binary)

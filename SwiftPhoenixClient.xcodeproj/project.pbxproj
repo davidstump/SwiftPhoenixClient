@@ -316,10 +316,10 @@
 		63BBCEFE2B897AF4004A16C9 /* Serializer */ = {
 			isa = PBXGroup;
 			children = (
-				63BBCEFF2B897B0C004A16C9 /* Serializer.swift */,
+				6322938F2C952689003EEDE1 /* DecodedMessage.swift */,
 				63BBCF022B897D87004A16C9 /* PhoenixSerializer.swift */,
 				6322938D2C952508003EEDE1 /* RawJsonValue.swift */,
-				6322938F2C952689003EEDE1 /* DecodedMessage.swift */,
+				63BBCEFF2B897B0C004A16C9 /* Serializer.swift */,
 			);
 			path = Serializer;
 			sourceTree = "<group>";

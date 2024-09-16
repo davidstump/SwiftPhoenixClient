@@ -136,36 +136,36 @@ public class Socket: PhoenixTransportDelegate {
   #endif
   
   
-  //----------------------------------------------------------------------
-  // MARK: - Private Attributes
-  //----------------------------------------------------------------------
-  /// Callbacks for socket state changes
-  let stateChangeCallbacks: StateChangeCallbacks = StateChangeCallbacks()
-  
-  /// Collection on channels created for the Socket
-  public internal(set) var channels: [Channel] = []
-  
-  /// Buffers messages that need to be sent once the socket has connected. It is an array
-  /// of tuples, with the ref of the message to send and the callback that will send the message.
-  let sendBuffer = SynchronizedArray<(ref: String?, callback: () throws -> ())>()
-  
-  /// Ref counter for messages
-  var ref: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
+    //----------------------------------------------------------------------
+    // MARK: - Private Attributes
+    //----------------------------------------------------------------------
+    /// Callbacks for socket state changes
+    let stateChangeCallbacks: StateChangeCallbacks = StateChangeCallbacks()
     
-  /// Timer that triggers sending new Heartbeat messages
-  var heartbeatTimer: HeartbeatTimer?
-  
-  /// Ref counter for the last heartbeat that was sent
-  var pendingHeartbeatRef: String?
-  
-  /// Timer to use when attempting to reconnect
-  var reconnectTimer: TimeoutTimer
-
-  /// Close status
-  var closeStatus: CloseStatus = .unknown
-  
-  /// The connection to the server
-  var connection: PhoenixTransport? = nil
+    /// Collection on channels created for the Socket
+    public internal(set) var channels: [Channel] = []
+    
+    /// Buffers messages that need to be sent once the socket has connected. It is an array
+    /// of tuples, with the ref of the message to send and the callback that will send the message.
+    let sendBuffer = SynchronizedArray<(ref: String?, callback: () throws -> ())>()
+    
+    /// Ref counter for messages
+    var ref: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
+    
+    /// Timer that triggers sending new Heartbeat messages
+    var heartbeatTimer: HeartbeatTimer?
+    
+    /// Ref counter for the last heartbeat that was sent
+    var pendingHeartbeatRef: String?
+    
+    /// Timer to use when attempting to reconnect
+    var reconnectTimer: TimeoutTimer
+    
+    /// Close status, if one has been received. `nil` otherwise.
+    var closeStatus: URLSessionWebSocketTask.CloseCode? = nil
+    
+    /// The connection to the server
+    var connection: PhoenixTransport? = nil
   
   
   //----------------------------------------------------------------------
@@ -251,7 +251,7 @@ public class Socket: PhoenixTransportDelegate {
     guard !isConnected else { return }
     
     // Reset the close status when attempting to connect
-    self.closeStatus = .unknown
+    self.closeStatus = nil
 
     // We need to build this right before attempting to connect as the
     // parameters could be built upon demand and change over time
@@ -272,34 +272,34 @@ public class Socket: PhoenixTransportDelegate {
     self.connection?.connect(with: self.headers)
   }
   
-  /// Disconnects the socket
-  ///
-  /// - parameter code: Optional. Closing status code
-  /// - parameter callback: Optional. Called when disconnected
-  public func disconnect(code: CloseCode = CloseCode.normal,
-                         reason: String? = nil,
-                         callback: (() -> Void)? = nil) {
-    // The socket was closed cleanly by the User
-    self.closeStatus = CloseStatus(closeCode: code.rawValue)
+    /// Disconnects the socket
+    ///
+    /// - parameter code: Optional. Closing status code
+    /// - parameter callback: Optional. Called when disconnected
+    public func disconnect(code: URLSessionWebSocketTask.CloseCode = .normalClosure,
+                           reason: String? = nil,
+                           callback: (() -> Void)? = nil) {
+        // The socket was closed cleanly by the User
+        self.closeStatus = code
+        
+        // Reset any reconnects and teardown the socket connection
+        self.reconnectTimer.reset()
+        self.teardown(code: code, reason: reason, callback: callback)
+    }
     
-    // Reset any reconnects and teardown the socket connection
-    self.reconnectTimer.reset()
-    self.teardown(code: code, reason: reason, callback: callback)
-  }
-  
-  internal func teardown(code: CloseCode = CloseCode.normal, reason: String? = nil, callback: (() -> Void)? = nil) {
-    self.connection?.delegate = nil
-    self.connection?.disconnect(code: code.rawValue, reason: reason)
-    self.connection = nil
-    
-    // The socket connection has been torndown, heartbeats are not needed
-    self.heartbeatTimer?.stop()
-    
-    // Since the connection's delegate was nil'd out, inform all state
-    // callbacks that the connection has closed
-    self.stateChangeCallbacks.close.forEach({ $0.callback.call((code.rawValue, reason)) })
-    callback?()
-  }
+    internal func teardown(code: URLSessionWebSocketTask.CloseCode = .normalClosure, reason: String? = nil, callback: (() -> Void)? = nil) {
+        self.connection?.delegate = nil
+        self.connection?.disconnect(code: code, reason: reason)
+        self.connection = nil
+        
+        // The socket connection has been torndown, heartbeats are not needed
+        self.heartbeatTimer?.stop()
+        
+        // Since the connection's delegate was nil'd out, inform all state
+        // callbacks that the connection has closed
+        self.stateChangeCallbacks.close.forEach({ $0.callback.call((code.rawValue, reason)) })
+        callback?()
+    }
   
 
   
@@ -648,7 +648,7 @@ public class Socket: PhoenixTransportDelegate {
     self.logItems("transport", "Connected to \(endPoint)")
     
     // Reset the close status now that the socket has been connected
-    self.closeStatus = .unknown
+    self.closeStatus = nil
 
     // Send any messages that were waiting for a connection
     self.flushSendBuffer()
@@ -663,23 +663,25 @@ public class Socket: PhoenixTransportDelegate {
     self.stateChangeCallbacks.open.forEach({ $0.callback.call((response)) })
   }
   
-  internal func onConnectionClosed(code: Int, reason: String?) {
-    self.logItems("transport", "close")
-
-    // Send an error to all channels
-    self.triggerChannelError()
-    
-    // Prevent the heartbeat from triggering if the
-    self.heartbeatTimer?.stop()
-    
-    // Only attempt to reconnect if the socket did not close normally,
-    // or if it was closed abnormally but on client side (e.g. due to heartbeat timeout)
-    if (self.closeStatus.shouldReconnect) {
-      self.reconnectTimer.scheduleTimeout()
+    internal func onConnectionClosed(code: URLSessionWebSocketTask.CloseCode, reason: String?) {
+        self.logItems("transport", "close")
+        
+        // Send an error to all channels
+        self.triggerChannelError()
+        
+        // Prevent the heartbeat from triggering if the
+        self.heartbeatTimer?.stop()
+        
+        // Only attempt to reconnect if the socket did not close normally,
+        // or if it was closed abnormally but on client side (e.g. due to heartbeat timeout)
+        let shouldReconnect = self.closeStatus == nil || self.closeStatus == .abnormalClosure
+        
+        if (shouldReconnect) {
+            self.reconnectTimer.scheduleTimeout()
+        }
+        
+        self.stateChangeCallbacks.close.forEach({ $0.callback.call((code.rawValue, reason)) })
     }
-    
-    self.stateChangeCallbacks.close.forEach({ $0.callback.call((code, reason)) })
-  }
   
   internal func onConnectionError(_ error: Error, response: URLResponse?) {
     self.logItems("transport", error, response ?? "")
@@ -830,40 +832,47 @@ public class Socket: PhoenixTransportDelegate {
               ref: self.pendingHeartbeatRef)
   }
   
-  internal func abnormalClose(_ reason: String) {
-    self.closeStatus = .abnormal
+    internal func abnormalClose(_ reason: String) {
+        self.closeStatus = .abnormalClosure
+        
+        /*
+         We use NORMAL here since the client is the one determining to close the
+         connection. However, we set to close status to abnormal so that
+         the client knows that it should attempt to reconnect.
+         
+         If the server subsequently acknowledges with code 1000 (normal close),
+         the socket will keep the `.abnormal` close status and trigger a reconnection.
+         */
+        self.connection?.disconnect(code: .normalClosure, reason: reason)
+    }
+  
     
-    /*
-     We use NORMAL here since the client is the one determining to close the
-     connection. However, we set to close status to abnormal so that
-     the client knows that it should attempt to reconnect.
-
-     If the server subsequently acknowledges with code 1000 (normal close),
-     the socket will keep the `.abnormal` close status and trigger a reconnection.
-     */
-    self.connection?.disconnect(code: CloseCode.normal.rawValue, reason: reason)
-  }
-  
-  
-  //----------------------------------------------------------------------
-  // MARK: - TransportDelegate
-  //----------------------------------------------------------------------
-  public func onOpen(response: URLResponse?) {
-    self.onConnectionOpen(response: response)
-  }
-  
-  public func onError(error: Error, response: URLResponse?) {
-    self.onConnectionError(error, response: response)
-  }
-  
-  public func onMessage(message: String) {
-    self.onConnectionMessage(message)
-  }
-  
-  public func onClose(code: Int, reason: String? = nil) {
-    self.closeStatus.update(transportCloseCode: code)
-    self.onConnectionClosed(code: code, reason: reason)
-  }
+    //----------------------------------------------------------------------
+    // MARK: - TransportDelegate
+    //----------------------------------------------------------------------
+    public func onOpen(response: URLResponse?) {
+        self.onConnectionOpen(response: response)
+    }
+    
+    public func onError(error: Error, response: URLResponse?) {
+        self.onConnectionError(error, response: response)
+    }
+    
+    public func onMessage(data: Data) {
+        //        TODO: SocketMessage
+        //        self.onConnectionMessage(message)
+    }
+    
+    public func onMessage(string: String) {
+//        TODO: SocketMessage
+//        self.onConnectionMessage(message)
+    }
+    
+    public func onClose(code: URLSessionWebSocketTask.CloseCode, reason: String?) {
+        self.closeStatus = code
+        self.onConnectionClosed(code: code, reason: reason)
+    }
+    
 }
 
 

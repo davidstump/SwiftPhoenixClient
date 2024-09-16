@@ -6,8 +6,6 @@
 //  Copyright © 2024 SwiftPhoenixClient. All rights reserved.
 //
 
-import Foundation
-
 /// Represents a Message received from the Server that has been decoded from the format
 ///     "[join_ref, ref, topic, event, payload]"
 /// into a decodable structure. Will then further be converted into a `MessageV6` before being
