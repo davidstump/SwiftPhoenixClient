@@ -51,7 +51,7 @@ public protocol PhoenixTransport {
      - code: Status code as defined by <ahref="http://tools.ietf.org/html/rfc6455#section-7.4">Section 7.4 of RFC 6455</a>.
      - reason: Reason why the connection is closing. Optional.
      */
-    func disconnect(code: Int, reason: String?)
+    func disconnect(code: URLSessionWebSocketTask.CloseCode, reason: String?)
     
     /**
      Sends a message to the server.
@@ -99,7 +99,7 @@ public protocol PhoenixTransportDelegate {
      - Parameter code: Code that was sent when the `Transport` closed
      - Parameter reason: A concise human-readable prose explanation for the closure
      */
-    func onClose(code: Int, reason: String?)
+    func onClose(code: URLSessionWebSocketTask.CloseCode, reason: String?)
 }
 
 //----------------------------------------------------------------------
@@ -216,19 +216,9 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
         self.task?.resume()
     }
     
-    open func disconnect(code: Int, reason: String?) {
-        /*
-         TODO:
-         1. Provide a "strict" mode that fails if an invalid close code is given
-         2. If strict mode is disabled, default to CloseCode.invalid
-         3. Provide default .normalClosure function
-         */
-        guard let closeCode = URLSessionWebSocketTask.CloseCode.init(rawValue: code) else {
-            fatalError("Could not create a CloseCode with invalid code: [\(code)].")
-        }
-        
+    open func disconnect(code: URLSessionWebSocketTask.CloseCode, reason: String?) {
         self.readyState = .closing
-        self.task?.cancel(with: closeCode, reason: reason?.data(using: .utf8))
+        self.task?.cancel(with: code, reason: reason?.data(using: .utf8))
         self.session?.finishTasksAndInvalidate()
     }
     
@@ -257,7 +247,7 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
                          reason: Data?) {
         // A close frame was received from the server.
         self.readyState = .closed
-        self.delegate?.onClose(code: closeCode.rawValue, reason: reason.flatMap { String(data: $0, encoding: .utf8) })
+        self.delegate?.onClose(code: closeCode, reason: reason.flatMap { String(data: $0, encoding: .utf8) })
     }
     
     open func urlSession(_ session: URLSession,
@@ -306,6 +296,6 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
         // An abnormal error is results in an abnormal closure, such as internet getting dropped
         // so inform the delegate that the Transport has closed abnormally. This will kick off
         // the reconnect logic.
-        self.delegate?.onClose(code: Socket.CloseCode.abnormal.rawValue, reason: error.localizedDescription)
+        self.delegate?.onClose(code: .abnormalClosure, reason: error.localizedDescription)
     }
 }
