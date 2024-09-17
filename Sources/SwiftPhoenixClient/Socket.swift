@@ -19,16 +19,6 @@
 // THE SOFTWARE.
 
 
-import Foundation
-import Combine
-
-public enum SocketError: Error {
-    
-    case abnormalClosureError
-    
-}
-
-
 /// Alias for a JSON dictionary [String: Any]
 public typealias Payload = [String: Any]
 
@@ -244,14 +234,6 @@ public class Socket: PhoenixTransportDelegate {
         return self.connection?.readyState ?? .closed
     }
     
-    
-
-    private var messageSubject: PassthroughSubject<String, Never>? = nil
-    private var messageCancellable: AnyCancellable? = nil
-    
-    
-    private var task: Task<(), Never>? = nil
-    
     /// Connects the Socket. The params passed to the Socket on initialization
     /// will be sent through the connection. If the Socket is already connected,
     /// then this call will be ignored.
@@ -268,32 +250,10 @@ public class Socket: PhoenixTransportDelegate {
                                                    paramsClosure: self.paramsClosure,
                                                    vsn: vsn)
         
-        
-        
         self.connection = self.transport(self.endPointUrl)
         self.connection?.delegate = self
-        
-        print("Socket connected on: \(Thread.current.description)")
-        self.messageSubject = PassthroughSubject()
-        self.messageCancellable = self.messageSubject?
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { message in
-                print("Continuation Received On: \(Thread.current.description)")
-            })
-        
-        
-        
-        //    self.connection?.disableSSLCertValidation = disableSSLCertValidation
-        //
-        //    #if os(Linux)
-        //    #else
-        //    self.connection?.security = security
-        //    self.connection?.enabledSSLCipherSuites = enabledSSLCipherSuites
-        //    #endif
-        
+                
         self.connection?.connect(with: self.headers)
-        print("Connect finished")
-        
     }
     
     /// Disconnects the socket
@@ -305,11 +265,6 @@ public class Socket: PhoenixTransportDelegate {
                            callback: (() -> Void)? = nil) {
         // The socket was closed cleanly by the User
         self.closeStatus = code
-        
-        self.messageCancellable?.cancel()
-        self.messageCancellable = nil
-        
-        self.task?.cancel()
         
         // Reset any reconnects and teardown the socket connection
         self.reconnectTimer.reset()
@@ -735,10 +690,6 @@ public class Socket: PhoenixTransportDelegate {
         
         // Clear heartbeat ref, preventing a heartbeat timeout disconnect
         if message.ref == pendingHeartbeatRef { pendingHeartbeatRef = nil }
-        
-        if message.event == "phx_close" {
-            print("Close Event Received")
-        }
         
         // Dispatch the message to all channels that belong to the topic
         self.channels
