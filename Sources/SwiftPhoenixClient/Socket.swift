@@ -856,7 +856,12 @@ public class Socket: PhoenixTransportDelegate {
     self.onConnectionError(error, response: response)
   }
   
+    
   public func onMessage(message: String) {
+      let (stream, continuation) = AsyncStream.makeStream(of: String.self)
+      
+      continuation.yield(message)
+  print("Running on \(Thread.current.description) thread")
     self.onConnectionMessage(message)
   }
   
