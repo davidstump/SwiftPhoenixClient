@@ -19,15 +19,6 @@
 // THE SOFTWARE.
 
 
-import Foundation
-
-public enum SocketError: Error {
-    
-    case abnormalClosureError
-    
-}
-
-
 /// Alias for a JSON dictionary [String: Any]
 public typealias Payload = [String: Any]
 
@@ -261,14 +252,7 @@ public class Socket: PhoenixTransportDelegate {
         
         self.connection = self.transport(self.endPointUrl)
         self.connection?.delegate = self
-        //    self.connection?.disableSSLCertValidation = disableSSLCertValidation
-        //
-        //    #if os(Linux)
-        //    #else
-        //    self.connection?.security = security
-        //    self.connection?.enabledSSLCipherSuites = enabledSSLCipherSuites
-        //    #endif
-        
+                
         self.connection?.connect(with: self.headers)
     }
     
@@ -612,8 +596,10 @@ public class Socket: PhoenixTransportDelegate {
             let body: [Any?] = [joinRef, ref, topic, event, payload]
             let data = self.encode(body)
             
-            self.logItems("push", "Sending \(String(data: data, encoding: String.Encoding.utf8) ?? "")" )
-            self.connection?.send(data: data)
+            let msg = String(data: data, encoding: String.Encoding.utf8) ?? ""
+            
+            self.logItems("push", "Sending \(msg)" )
+            self.connection?.send(string: msg)
         }
         
         /// If the socket is connected, then execute the callback immediately.
@@ -704,10 +690,6 @@ public class Socket: PhoenixTransportDelegate {
         
         // Clear heartbeat ref, preventing a heartbeat timeout disconnect
         if message.ref == pendingHeartbeatRef { pendingHeartbeatRef = nil }
-        
-        if message.event == "phx_close" {
-            print("Close Event Received")
-        }
         
         // Dispatch the message to all channels that belong to the topic
         self.channels
@@ -849,24 +831,34 @@ public class Socket: PhoenixTransportDelegate {
     // MARK: - TransportDelegate
     //----------------------------------------------------------------------
     public func onOpen(response: URLResponse?) {
-        self.onConnectionOpen(response: response)
+        DispatchQueue.main.async {
+            self.onConnectionOpen(response: response)
+        }
     }
     
     public func onError(error: Error, response: URLResponse?) {
-        self.onConnectionError(error, response: response)
+        DispatchQueue.main.async {
+            self.onConnectionError(error, response: response)
+        }
     }
     
-    
-    public func onMessage(message: String) {
-        let (stream, continuation) = AsyncStream.makeStream(of: String.self)
-        
-        continuation.yield(message)
-        print("Running on \(Thread.current.description) thread")
-        self.onConnectionMessage(message)
+    public func onMessage(data: Data) {
+        DispatchQueue.main.async {
+            // TODO: Serialize socket message
+        }
     }
     
+    public func onMessage(string: String) {
+        DispatchQueue.main.async {
+            // TODO: Serialize socket message
+            self.onConnectionMessage(string)
+        }
+    }
+
     public func onClose(code: URLSessionWebSocketTask.CloseCode, reason: String? = nil) {
-        self.closeStatus = code
-        self.onConnectionClosed(code: code, reason: reason)
+        DispatchQueue.main.async {
+            self.closeStatus = code
+            self.onConnectionClosed(code: code, reason: reason)
+        }
     }
 }

@@ -18,15 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 
 //----------------------------------------------------------------------
 // MARK: - Transport Protocol
 //----------------------------------------------------------------------
-/**
- Defines a `Socket`'s Transport layer.
- */
+/// Defines a `Socket`'s Transport layer.
 // sourcery: AutoMockable
 public protocol PhoenixTransport {
     
@@ -36,78 +32,70 @@ public protocol PhoenixTransport {
     /// Delegate for the `Transport` layer
     var delegate: PhoenixTransportDelegate? { get set }
     
-    /**
-     Connect to the server
-     
-     - Parameters:
-     - headers: Headers to include in the URLRequests when opening the Websocket connection. Can be empty [:]
-     */
+    /// Connect to the server
+    ///
+    /// - Parameters:
+    ///    - headers: Headers to include in the URLRequests when opening the Websocket connection. Can be empty [:]
     func connect(with headers: [String: Any])
     
-    /**
-     Disconnect from the server.
-     
-     - Parameters:
-     - code: Status code as defined by <ahref="http://tools.ietf.org/html/rfc6455#section-7.4">Section 7.4 of RFC 6455</a>.
-     - reason: Reason why the connection is closing. Optional.
-     */
+    /// Disconnect from the server.
+    ///
+    /// - Parameters:
+    ///    - code: Status code as defined by <ahref="http://tools.ietf.org/html/rfc6455#section-7.4">Section 7.4 of RFC 6455</a>.
+    ///    - reason: Reason why the connection is closing. Optional.
     func disconnect(code: URLSessionWebSocketTask.CloseCode, reason: String?)
     
-    /**
-     Sends a message to the server.
-     
-     - Parameter data: Data to send.
-     */
+    /// Sends a data message to the server.
+    ///
+    /// - Parameter data: Data to send.
     func send(data: Data)
+    
+    /// Sends a string message to the server.
+    ///
+    /// - Parameter string: String to send.
+    func send(string: String)
 }
 
 
 //----------------------------------------------------------------------
 // MARK: - Transport Delegate Protocol
 //----------------------------------------------------------------------
-/**
- Delegate to receive notifications of events that occur in the `Transport` layer
- */
+/// Delegate to receive notifications of events that occur in the `Transport` layer.
 public protocol PhoenixTransportDelegate {
     
-    /**
-     Notified when the `Transport` opens.
-     
-     - Parameter response: Response from the server indicating that the WebSocket handshake was successful and the connection has been upgraded to webSockets
-     */
+    /// Notified when the `Transport` opens.
+    ///
+    /// - Parameter response: Response from the server indicating that the WebSocket 
+    ///     handshake was successful and the connection has been upgraded to webSockets
     func onOpen(response: URLResponse?)
     
-    /**
-     Notified when the `Transport` receives an error.
-     
-     - Parameter error: Client-side error from the underlying `Transport` implementation
-     - Parameter response: Response from the server, if any, that occurred with the Error
-     
-     */
+    /// Notified when the `Transport` receives an error.
+    ///
+    /// - Parameter error: Client-side error from the underlying `Transport` implementation
+    /// - Parameter response: Response from the server, if any, that occurred with the Error
     func onError(error: Error, response: URLResponse?)
     
-    /**
-     Notified when the `Transport` receives a message from the server.
-     
-     - Parameter message: Message received from the server
-     */
-    func onMessage(message: String)
+    /// Notified when the `Transport` receives a string from the server.
+    ///
+    /// - Parameter string: String received from the server
+    func onMessage(string: String)
     
-    /**
-     Notified when the `Transport` closes.
-     
-     - Parameter code: Code that was sent when the `Transport` closed
-     - Parameter reason: A concise human-readable prose explanation for the closure
-     */
+    /// Notified when the `Transport` receives data from the server.
+    ///
+    /// - Parameter data: Data received from the server
+    func onMessage(data: Data)
+    
+    /// Notified when the `Transport` closes.
+    ///
+    /// - Parameter code: Code that was sent when the `Transport` closed
+    /// - Parameter reason: A concise human-readable prose explanation for the closure
     func onClose(code: URLSessionWebSocketTask.CloseCode, reason: String?)
 }
 
 //----------------------------------------------------------------------
 // MARK: - Transport Ready State Enum
 //----------------------------------------------------------------------
-/**
- Available `ReadyState`s of a `Transport` layer.
- */
+/// Available `ReadyState`s of a `Transport` layer.
 public enum PhoenixTransportReadyState {
     
     /// The `Transport` is opening a connection to the server.
@@ -127,15 +115,14 @@ public enum PhoenixTransportReadyState {
 //----------------------------------------------------------------------
 // MARK: - Default Websocket Transport Implementation
 //----------------------------------------------------------------------
-/**
- A `Transport` implementation that relies on URLSession's native WebSocket
- implementation.
+/// A `Transport` implementation that relies on URLSession's native WebSocket
+/// implementation.
+///
+/// This implementation ships default with SwiftPhoenixClient however
+/// SwiftPhoenixClient supports earlier OS versions using one of the submodule
+/// `Transport` implementations. Or you can create your own implementation using
+/// your own WebSocket library or implementation.
  
- This implementation ships default with SwiftPhoenixClient however
- SwiftPhoenixClient supports earlier OS versions using one of the submodule
- `Transport` implementations. Or you can create your own implementation using
- your own WebSocket library or implementation.
- */
 @available(macOS 10.15, iOS 13, watchOS 6, tvOS 13, *)
 open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketDelegate {
     
@@ -153,27 +140,26 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
     private var task: URLSessionWebSocketTask? = nil
     
     
-    /**
-     Initializes a `Transport` layer built using URLSession's WebSocket
-     
-     Example:
-     
-     ```swift
-     let url = URL("wss://example.com/socket")
-     let transport: Transport = URLSessionTransport(url: url)
-     ```
-     
-     Using a custom `URLSessionConfiguration`
-     
-     ```swift
-     let url = URL("wss://example.com/socket")
-     let configuration = URLSessionConfiguration.default
-     let transport: Transport = URLSessionTransport(url: url, configuration: configuration)
-     ```
-     
-     - parameter url: URL to connect to
-     - parameter configuration: Provide your own URLSessionConfiguration. Uses `.default` if none provided
-     */
+    /// Initializes a `Transport` layer built using URLSession's WebSocket
+    ///
+    /// Example:
+    ///
+    /// ```swift
+    /// let url = URL("wss://example.com/socket")
+    /// let transport: Transport = URLSessionTransport(url: url)
+    /// ```
+    ///
+    /// Using a custom `URLSessionConfiguration`
+    ///
+    /// ```swift
+    /// let url = URL("wss://example.com/socket")
+    /// let configuration = URLSessionConfiguration.default
+    /// let transport: Transport = URLSessionTransport(url: url, configuration: configuration)
+    /// ```
+    ///
+    /// - parameter url: URL to connect to
+    /// - parameter configuration: Provide your own URLSessionConfiguration. Uses `.default` if none provided
+    
     public init(url: URL, configuration: URLSessionConfiguration = .default) {
         
         // URLSession requires that the endpoint be "wss" instead of "https".
@@ -189,7 +175,6 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
         
         super.init()
     }
-    
     
     
     // MARK: - Transport
@@ -222,10 +207,18 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
         self.session?.finishTasksAndInvalidate()
     }
     
+    open func send(string: String) {
+        self.send(message: .string(string))
+    }
+    
     open func send(data: Data) {
-        self.task?.send(.string(String(data: data, encoding: .utf8)!)) { (error) in
+        self.send(message: .data(data))
+    }
+    
+    private func send(message: URLSessionWebSocketTask.Message) {
+        self.task?.send(message, completionHandler: { error in
             // TODO: What is the behavior when an error occurs?
-        }
+        })
     }
     
     
@@ -247,7 +240,10 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
                          reason: Data?) {
         // A close frame was received from the server.
         self.readyState = .closed
-        self.delegate?.onClose(code: closeCode, reason: reason.flatMap { String(data: $0, encoding: .utf8) })
+        self.delegate?.onClose(
+            code: closeCode,
+            reason: reason.flatMap { String(data: $0, encoding: .utf8) }
+        )
     }
     
     open func urlSession(_ session: URLSession,
@@ -256,7 +252,6 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
         // The task has terminated. Inform the delegate that the transport has closed abnormally
         // if this was caused by an error.
         guard let err = error else { return }
-        
         self.abnormalErrorReceived(err, response: task.response)
     }
     
@@ -265,23 +260,19 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
     private func receive() {
         self.task?.receive { [weak self] result in
             switch result {
-            case .success(let message):
-                switch message {
-                case .data:
-                    print("Data received. This method is unsupported by the Client")
-                case .string(let text):
-                    self?.delegate?.onMessage(message: text)
-                default:
-                    fatalError("Unknown result was received. [\(result)]")
-                }
-                
-                // Since `.receive()` is only good for a single message, it must
-                // be called again after a message is received in order to
-                // received the next message.
+            case .success(.data(let data)):
+                self?.delegate?.onMessage(data: data)
                 self?.receive()
+                
+            case .success(.string(let string)):
+                self?.delegate?.onMessage(string: string)
+                self?.receive()
+                
             case .failure(let error):
-                print("Error when receiving \(error)")
                 self?.abnormalErrorReceived(error, response: nil)
+                
+            default:
+                fatalError("Unknown result was received. [\(result)]")
             }
         }
     }
@@ -292,6 +283,7 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
         
         // Inform the Transport's delegate that an error occurred.
         self.delegate?.onError(error: error, response: response)
+        
         
         // An abnormal error is results in an abnormal closure, such as internet getting dropped
         // so inform the delegate that the Transport has closed abnormally. This will kick off
