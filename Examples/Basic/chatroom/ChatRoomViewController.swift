@@ -142,7 +142,7 @@ class ChatRoomViewController: UIViewController {
       }
     }
     
-    socket.logger = { msg in print("LOG:", msg) }
+//    socket.logger = { msg in print("LOG:", msg) }
     
     // Setup the Channel to receive and send messages
     let channel = socket.channel(topic, params: ["status": "joining"])

@@ -20,6 +20,7 @@
 
 
 import Foundation
+import Combine
 
 public enum SocketError: Error {
     
@@ -243,6 +244,14 @@ public class Socket: PhoenixTransportDelegate {
         return self.connection?.readyState ?? .closed
     }
     
+    
+
+    private var messageSubject: PassthroughSubject<String, Never>? = nil
+    private var messageCancellable: AnyCancellable? = nil
+    
+    
+    private var task: Task<(), Never>? = nil
+    
     /// Connects the Socket. The params passed to the Socket on initialization
     /// will be sent through the connection. If the Socket is already connected,
     /// then this call will be ignored.
@@ -259,8 +268,21 @@ public class Socket: PhoenixTransportDelegate {
                                                    paramsClosure: self.paramsClosure,
                                                    vsn: vsn)
         
+        
+        
         self.connection = self.transport(self.endPointUrl)
         self.connection?.delegate = self
+        
+        print("Socket connected on: \(Thread.current.description)")
+        self.messageSubject = PassthroughSubject()
+        self.messageCancellable = self.messageSubject?
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { message in
+                print("Continuation Received On: \(Thread.current.description)")
+            })
+        
+        
+        
         //    self.connection?.disableSSLCertValidation = disableSSLCertValidation
         //
         //    #if os(Linux)
@@ -270,6 +292,8 @@ public class Socket: PhoenixTransportDelegate {
         //    #endif
         
         self.connection?.connect(with: self.headers)
+        print("Connect finished")
+        
     }
     
     /// Disconnects the socket
@@ -281,6 +305,11 @@ public class Socket: PhoenixTransportDelegate {
                            callback: (() -> Void)? = nil) {
         // The socket was closed cleanly by the User
         self.closeStatus = code
+        
+        self.messageCancellable?.cancel()
+        self.messageCancellable = nil
+        
+        self.task?.cancel()
         
         // Reset any reconnects and teardown the socket connection
         self.reconnectTimer.reset()
@@ -849,24 +878,30 @@ public class Socket: PhoenixTransportDelegate {
     // MARK: - TransportDelegate
     //----------------------------------------------------------------------
     public func onOpen(response: URLResponse?) {
+        print("On Open Received On: \(Thread.current.description)")
         self.onConnectionOpen(response: response)
     }
     
     public func onError(error: Error, response: URLResponse?) {
+        print("On Error Received On: \(Thread.current.description)")
         self.onConnectionError(error, response: response)
     }
     
     
     public func onMessage(message: String) {
-        let (stream, continuation) = AsyncStream.makeStream(of: String.self)
-        
-        continuation.yield(message)
-        print("Running on \(Thread.current.description) thread")
+        print("On Message Received On: \(Thread.current.description)")
+        messageSubject?.send(message)
+//        DispatchQueue.main.sync {
+//            
+//        }
         self.onConnectionMessage(message)
     }
     
+
     public func onClose(code: URLSessionWebSocketTask.CloseCode, reason: String? = nil) {
+        print("On Close Received On: \(Thread.current.description)")
         self.closeStatus = code
+        
         self.onConnectionClosed(code: code, reason: reason)
     }
 }

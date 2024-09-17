@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+import Combine
 
 
 //----------------------------------------------------------------------
@@ -151,6 +151,13 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
     
     /// The ongoing task. Assigned during `connect()`
     private var task: URLSessionWebSocketTask? = nil
+    
+    
+    private let openSubject: PassthroughSubject<URLResponse?, Never>? = nil
+    private let closeSubject: PassthroughSubject<URLResponse?, Never>? = nil
+    private let errorSubject: PassthroughSubject<URLResponse?, Never>? = nil
+    private let messageSubject: PassthroughSubject<URLResponse?, Never>? = nil
+    
     
     
     /**
