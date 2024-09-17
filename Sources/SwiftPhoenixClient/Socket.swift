@@ -641,8 +641,10 @@ public class Socket: PhoenixTransportDelegate {
             let body: [Any?] = [joinRef, ref, topic, event, payload]
             let data = self.encode(body)
             
-            self.logItems("push", "Sending \(String(data: data, encoding: String.Encoding.utf8) ?? "")" )
-            self.connection?.send(data: data)
+            let msg = String(data: data, encoding: String.Encoding.utf8) ?? ""
+            
+            self.logItems("push", "Sending \(msg)" )
+            self.connection?.send(string: msg)
         }
         
         /// If the socket is connected, then execute the callback immediately.
@@ -878,45 +880,34 @@ public class Socket: PhoenixTransportDelegate {
     // MARK: - TransportDelegate
     //----------------------------------------------------------------------
     public func onOpen(response: URLResponse?) {
-        print("On Open Received On: \(Thread.current.description)")
-        self.onConnectionOpen(response: response)
+        DispatchQueue.main.async {
+            self.onConnectionOpen(response: response)
+        }
     }
     
     public func onError(error: Error, response: URLResponse?) {
-        print("On Error Received On: \(Thread.current.description)")
-        self.onConnectionError(error, response: response)
+        DispatchQueue.main.async {
+            self.onConnectionError(error, response: response)
+        }
     }
     
-    
     public func onMessage(data: Data) {
-        print("On Data Message Received On: \(Thread.current.description)")
         DispatchQueue.main.async {
-            print("On Data Message Received On: \(Thread.current.description)")
+            // TODO: Serialize socket message
         }
     }
     
     public func onMessage(string: String) {
-        print("On String Message Received On: \(Thread.current.description)")
         DispatchQueue.main.async {
-            print("On String Message Received On: \(Thread.current.description)")
+            // TODO: Serialize socket message
             self.onConnectionMessage(string)
         }
     }
-    
-//    public func onMessage(message: String) {
-//        print("On Message Received On: \(Thread.current.description)")
-//        messageSubject?.send(message)
-////        DispatchQueue.main.sync {
-////            
-////        }
-//        self.onConnectionMessage(message)
-//    }
-    
 
     public func onClose(code: URLSessionWebSocketTask.CloseCode, reason: String? = nil) {
-        print("On Close Received On: \(Thread.current.description)")
-        self.closeStatus = code
-        
-        self.onConnectionClosed(code: code, reason: reason)
+        DispatchQueue.main.async {
+            self.closeStatus = code
+            self.onConnectionClosed(code: code, reason: reason)
+        }
     }
 }
