@@ -888,14 +888,29 @@ public class Socket: PhoenixTransportDelegate {
     }
     
     
-    public func onMessage(message: String) {
-        print("On Message Received On: \(Thread.current.description)")
-        messageSubject?.send(message)
-//        DispatchQueue.main.sync {
-//            
-//        }
-        self.onConnectionMessage(message)
+    public func onMessage(data: Data) {
+        print("On Data Message Received On: \(Thread.current.description)")
+        DispatchQueue.main.async {
+            print("On Data Message Received On: \(Thread.current.description)")
+        }
     }
+    
+    public func onMessage(string: String) {
+        print("On String Message Received On: \(Thread.current.description)")
+        DispatchQueue.main.async {
+            print("On String Message Received On: \(Thread.current.description)")
+            self.onConnectionMessage(string)
+        }
+    }
+    
+//    public func onMessage(message: String) {
+//        print("On Message Received On: \(Thread.current.description)")
+//        messageSubject?.send(message)
+////        DispatchQueue.main.sync {
+////            
+////        }
+//        self.onConnectionMessage(message)
+//    }
     
 
     public func onClose(code: URLSessionWebSocketTask.CloseCode, reason: String? = nil) {
