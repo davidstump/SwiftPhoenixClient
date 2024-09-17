@@ -37,7 +37,7 @@ public typealias PayloadClosure = () -> Payload?
 /// Struct that gathers callbacks assigned to the Socket
 struct StateChangeCallbacks {
     let open: SynchronizedArray<(ref: String, callback: Delegated<URLResponse?, Void>)> = .init()
-    let close: SynchronizedArray<(ref: String, callback: Delegated<(Int, String?), Void>)> = .init()
+    let close: SynchronizedArray<(ref: String, callback: Delegated<(URLSessionWebSocketTask.CloseCode, String?), Void>)> = .init()
     let error: SynchronizedArray<(ref: String, callback: Delegated<(Error, URLResponse?), Void>)> = .init()
     let message: SynchronizedArray<(ref: String, callback: Delegated<Message, Void>)> = .init()
 }
@@ -162,7 +162,7 @@ public class Socket: PhoenixTransportDelegate {
     var reconnectTimer: TimeoutTimer
     
     /// Close status
-    var closeStatus: CloseStatus = .unknown
+    var closeStatus: URLSessionWebSocketTask.CloseCode? = nil
     
     /// The connection to the server
     var connection: PhoenixTransport? = nil
@@ -251,7 +251,7 @@ public class Socket: PhoenixTransportDelegate {
         guard !isConnected else { return }
         
         // Reset the close status when attempting to connect
-        self.closeStatus = .unknown
+        self.closeStatus = nil
         
         // We need to build this right before attempting to connect as the
         // parameters could be built upon demand and change over time
@@ -276,20 +276,20 @@ public class Socket: PhoenixTransportDelegate {
     ///
     /// - parameter code: Optional. Closing status code
     /// - parameter callback: Optional. Called when disconnected
-    public func disconnect(code: CloseCode = CloseCode.normal,
+    public func disconnect(code: URLSessionWebSocketTask.CloseCode = .normalClosure,
                            reason: String? = nil,
                            callback: (() -> Void)? = nil) {
         // The socket was closed cleanly by the User
-        self.closeStatus = CloseStatus(closeCode: code.rawValue)
+        self.closeStatus = code
         
         // Reset any reconnects and teardown the socket connection
         self.reconnectTimer.reset()
         self.teardown(code: code, reason: reason, callback: callback)
     }
     
-    internal func teardown(code: CloseCode = CloseCode.normal, reason: String? = nil, callback: (() -> Void)? = nil) {
+    internal func teardown(code: URLSessionWebSocketTask.CloseCode = .normalClosure, reason: String? = nil, callback: (() -> Void)? = nil) {
         self.connection?.delegate = nil
-        self.connection?.disconnect(code: code.rawValue, reason: reason)
+        self.connection?.disconnect(code: code, reason: reason)
         self.connection = nil
         
         // The socket connection has been torndown, heartbeats are not needed
@@ -297,7 +297,7 @@ public class Socket: PhoenixTransportDelegate {
         
         // Since the connection's delegate was nil'd out, inform all state
         // callbacks that the connection has closed
-        self.stateChangeCallbacks.close.forEach({ $0.callback.call((code.rawValue, reason)) })
+        self.stateChangeCallbacks.close.forEach({ $0.callback.call((code, reason)) })
         callback?()
     }
     
@@ -403,8 +403,8 @@ public class Socket: PhoenixTransportDelegate {
     ///
     /// - parameter callback: Called when the Socket is closed
     @discardableResult
-    public func onClose(callback: @escaping (Int, String?) -> Void) -> String {
-        var delegated = Delegated<(Int, String?), Void>()
+    public func onClose(callback: @escaping (URLSessionWebSocketTask.CloseCode, String?) -> Void) -> String {
+        var delegated = Delegated<(URLSessionWebSocketTask.CloseCode, String?), Void>()
         delegated.manuallyDelegate(with: callback)
         
         return self.append(callback: delegated, to: self.stateChangeCallbacks.close)
@@ -440,8 +440,8 @@ public class Socket: PhoenixTransportDelegate {
     /// - parameter callback: Called when the Socket is closed
     @discardableResult
     public func delegateOnClose<T: AnyObject>(to owner: T,
-                                              callback: @escaping ((T, (Int, String?)) -> Void)) -> String {
-        var delegated = Delegated<(Int, String?), Void>()
+                                              callback: @escaping ((T, (URLSessionWebSocketTask.CloseCode, String?)) -> Void)) -> String {
+        var delegated = Delegated<(URLSessionWebSocketTask.CloseCode, String?), Void>()
         delegated.delegate(to: owner, with: callback)
         
         return self.append(callback: delegated, to: self.stateChangeCallbacks.close)
@@ -648,7 +648,7 @@ public class Socket: PhoenixTransportDelegate {
         self.logItems("transport", "Connected to \(endPoint)")
         
         // Reset the close status now that the socket has been connected
-        self.closeStatus = .unknown
+        self.closeStatus = nil
         
         // Send any messages that were waiting for a connection
         self.flushSendBuffer()
@@ -663,7 +663,7 @@ public class Socket: PhoenixTransportDelegate {
         self.stateChangeCallbacks.open.forEach({ $0.callback.call((response)) })
     }
     
-    internal func onConnectionClosed(code: Int, reason: String?) {
+    internal func onConnectionClosed(code: URLSessionWebSocketTask.CloseCode, reason: String?) {
         self.logItems("transport", "close")
         
         // Send an error to all channels
@@ -674,7 +674,7 @@ public class Socket: PhoenixTransportDelegate {
         
         // Only attempt to reconnect if the socket did not close normally,
         // or if it was closed abnormally but on client side (e.g. due to heartbeat timeout)
-        if (self.closeStatus.shouldReconnect) {
+        if (self.closeStatus == nil || self.closeStatus == .invalid) {
             self.reconnectTimer.scheduleTimeout()
         }
         
@@ -831,7 +831,7 @@ public class Socket: PhoenixTransportDelegate {
     }
     
     internal func abnormalClose(_ reason: String) {
-        self.closeStatus = .abnormal
+        self.closeStatus = .abnormalClosure
         
         /*
          We use NORMAL here since the client is the one determining to close the
@@ -841,7 +841,7 @@ public class Socket: PhoenixTransportDelegate {
          If the server subsequently acknowledges with code 1000 (normal close),
          the socket will keep the `.abnormal` close status and trigger a reconnection.
          */
-        self.connection?.disconnect(code: CloseCode.normal.rawValue, reason: reason)
+        self.connection?.disconnect(code: URLSessionWebSocketTask.CloseCode.normalClosure, reason: reason)
     }
     
     
@@ -865,76 +865,8 @@ public class Socket: PhoenixTransportDelegate {
         self.onConnectionMessage(message)
     }
     
-    public func onClose(code: Int, reason: String? = nil) {
-        self.closeStatus.update(transportCloseCode: code)
+    public func onClose(code: URLSessionWebSocketTask.CloseCode, reason: String? = nil) {
+        self.closeStatus = code
         self.onConnectionClosed(code: code, reason: reason)
-    }
-}
-
-
-//----------------------------------------------------------------------
-// MARK: - Close Codes
-//----------------------------------------------------------------------
-extension Socket {
-    public enum CloseCode : Int {
-        case abnormal = 999
-        
-        case normal = 1000
-        
-        case goingAway = 1001
-    }
-}
-
-
-//----------------------------------------------------------------------
-// MARK: - Close Status
-//----------------------------------------------------------------------
-extension Socket {
-    /// Indicates the different closure states a socket can be in.
-    enum CloseStatus {
-        /// Undetermined closure state
-        case unknown
-        /// A clean closure requested either by the client or the server
-        case clean
-        /// An abnormal closure requested by the client
-        case abnormal
-        
-        /// Temporarily close the socket, pausing reconnect attempts. Useful on mobile
-        /// clients when disconnecting a because the app resigned active but should
-        /// reconnect when app enters active state.
-        case temporary
-        
-        init(closeCode: Int) {
-            switch closeCode {
-            case CloseCode.abnormal.rawValue:
-                self = .abnormal
-            case CloseCode.goingAway.rawValue:
-                self = .temporary
-            default:
-                self = .clean
-            }
-        }
-        
-        mutating func update(transportCloseCode: Int) {
-            switch self {
-            case .unknown, .clean, .temporary:
-                // Allow transport layer to override these statuses.
-                self = .init(closeCode: transportCloseCode)
-            case .abnormal:
-                // Do not allow transport layer to override the abnormal close status.
-                // The socket itself should reset it on the next connection attempt.
-                // See `Socket.abnormalClose(_:)` for more information.
-                break
-            }
-        }
-        
-        var shouldReconnect: Bool {
-            switch self {
-            case .unknown, .abnormal:
-                return true
-            case .clean, .temporary:
-                return false
-            }
-        }
     }
 }
