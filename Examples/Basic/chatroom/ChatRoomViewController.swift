@@ -82,7 +82,7 @@ class ChatRoomViewController: UIViewController {
   @IBAction func onSendButtonPressed(_ sender: Any) {
     // Create and send the payload
     let payload = ["name": username, "message": messageInput.text!]
-    self.lobbyChannel?.push("shout", payload: payload)
+    try! self.lobbyChannel?.push("shout", payload: payload)
     
     // Clear the text intput
     self.messageInput.text = ""

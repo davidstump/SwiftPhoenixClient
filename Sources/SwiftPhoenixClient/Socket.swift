@@ -80,6 +80,12 @@ public class Socket: PhoenixTransportDelegate {
     /// Phoenix serializer version, defaults to "2.0.0"
     public let vsn: String
     
+    /// Serializer for encoding/decoding messages to and from the Server
+    public var serializer: Serializer = PhoenixSerializer()
+    
+    /// Encoder for encoding payloads pushed through channels
+    public var encoder: PayloadEncoder = JSONPayloadEncoder.default
+    
     /// Override to provide custom encoding of data before writing to the socket
     public var encode: (Any) -> Data = Defaults.encode
     
@@ -113,20 +119,7 @@ public class Socket: PhoenixTransportDelegate {
     /// Enable/Disable SSL certificate validation. Default is false. This
     /// must be set before calling `socket.connect()` in order to be applied
     public var disableSSLCertValidation: Bool = false
-    
-#if os(Linux)
-#else
-    /// Configure custom SSL validation logic, eg. SSL pinning. This
-    /// must be set before calling `socket.connect()` in order to apply.
-    //  public var security: SSLTrustValidator?
-    
-    /// Configure the encryption used by your client by setting the
-    /// allowed cipher suites supported by your server. This must be
-    /// set before calling `socket.connect()` in order to apply.
-    public var enabledSSLCipherSuites: [SSLCipherSuite]?
-#endif
-    
-    
+        
     //----------------------------------------------------------------------
     // MARK: - Private Attributes
     //----------------------------------------------------------------------
@@ -539,8 +532,9 @@ public class Socket: PhoenixTransportDelegate {
     /// - parameter params: Optional. Parameters for the channel
     /// - return: A new channel
     public func channel(_ topic: String,
-                        params: [String: Any] = [:]) -> Channel {
-        let channel = Channel(topic: topic, params: params, socket: self)
+                        params: Payload = [:]) -> Channel {
+        let payload = try! self.encoder.encode(params)
+        let channel = Channel(topic: topic, params: payload, socket: self)
         self.channels.append(channel)
         
         return channel
@@ -587,19 +581,24 @@ public class Socket: PhoenixTransportDelegate {
     /// - parameter joinRef: Optional. Defaults to nil
     internal func push(topic: String,
                        event: String,
-                       payload: Payload,
+                       payload: PayloadV6,
                        ref: String? = nil,
                        joinRef: String? = nil) {
         
         let callback: (() throws -> ()) = { [weak self] in
             guard let self else { return }
-            let body: [Any?] = [joinRef, ref, topic, event, payload]
-            let data = self.encode(body)
+            let message = MessageV6(joinRef: joinRef, ref: ref, topic: topic, event: event, payload: payload)
             
-            let msg = String(data: data, encoding: String.Encoding.utf8) ?? ""
-            
-            self.logItems("push", "Sending \(msg)" )
-            self.connection?.send(string: msg)
+            switch message.payload {
+            case .json(_):
+                let stringToSend = serializer.encode(message: message)
+                self.logItems("push", "Sending \(stringToSend)" )
+                self.connection?.send(string: stringToSend)
+            case .binary(_):
+                let binaryToSend = serializer.binaryEncode(message: message)
+                self.logItems("push", "Sending \(binaryToSend.count) bytes" )
+                self.connection?.send(data: binaryToSend)
+            }
         }
         
         /// If the socket is connected, then execute the callback immediately.
@@ -808,7 +807,7 @@ public class Socket: PhoenixTransportDelegate {
         self.pendingHeartbeatRef = self.makeRef()
         self.push(topic: "phoenix",
                   event: ChannelEvent.heartbeat,
-                  payload: [:],
+                  payload: .json("{}"),
                   ref: self.pendingHeartbeatRef)
     }
     
