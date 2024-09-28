@@ -32,7 +32,7 @@ public class Push {
     public let event: String
     
     /// The payload, for example ["user_id": "abc123"]
-    public var payload: Payload
+    public var payload: PayloadV6
     
     /// The push timeout. Default is 10.0 seconds
     public var timeout: TimeInterval
@@ -68,7 +68,7 @@ public class Push {
     /// - parameter timeout: Optional. The push timeout. Default is 10.0s
     init(channel: Channel,
          event: String,
-         payload: Payload = [:],
+         payload: PayloadV6 = .json("{}"),
          timeout: TimeInterval = Defaults.timeoutInterval) {
         self.channel = channel
         self.event = event
@@ -98,6 +98,7 @@ public class Push {
         
         self.startTimeout()
         self.sent = true
+        
         self.channel?.socket?.push(
             topic: channel?.topic ?? "",
             event: self.event,

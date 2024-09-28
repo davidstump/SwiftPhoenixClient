@@ -113,7 +113,7 @@ class BasicChatViewController: UIViewController {
   @IBAction func sendMessage(_ sender: UIButton) {
     let payload = ["user": username, "body": messageField.text!]
     
-    self.lobbyChannel
+    try! self.lobbyChannel
       .push("new:msg", payload: payload)
       .receive("ok") { (message) in
         print("success", message)

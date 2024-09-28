@@ -24,11 +24,11 @@ class SocketSpy: Socket {
   
   private(set) var pushCalled: Bool?
   private(set) var pushCallCount: Int = 0
-  private(set) var pushArgs: [Int: (topic: String, event: String, payload: Payload, ref: String?, joinRef: String?)] = [:]
+  private(set) var pushArgs: [Int: (topic: String, event: String, payload: PayloadV6, ref: String?, joinRef: String?)] = [:]
   
   override func push(topic: String,
                      event: String,
-                     payload: Payload,
+                     payload: PayloadV6,
                      ref: String? = nil,
                      joinRef: String? = nil) {
     self.pushCalled = true

@@ -64,12 +64,15 @@ public class Channel {
     public let topic: String
     
     /// The params sent when joining the channel
-    public var params: Payload {
+    public var params: PayloadV6 {
         didSet { self.joinPush.payload = params }
     }
     
     /// The Socket that the channel belongs to
     weak var socket: Socket?
+    
+    /// Encoder used to encode payloads into serializable `PayloadV6`
+    var encoder: PayloadEncoder
     
     /// Current state of the Channel
     var state: ChannelState
@@ -103,11 +106,15 @@ public class Channel {
     /// - parameter topic: Topic of the Channel
     /// - parameter params: Optional. Parameters to send when joining.
     /// - parameter socket: Socket that the channel is a part of
-    init(topic: String, params: [String: Any] = [:], socket: Socket) {
+    init(
+        topic: String,
+        params: PayloadV6 = .json("{}"),
+        socket: Socket) {
         self.state = ChannelState.closed
         self.topic = topic
         self.params = params
         self.socket = socket
+        self.encoder = socket.encoder
         self.syncBindingsDel = SynchronizedArray()
         self.bindingRef = 0
         self.timeout = socket.timeout
@@ -442,13 +449,41 @@ public class Channel {
     ///         .push("event", payload: ["message": "hello")
     ///         .receive("ok") { _ in { print("message sent") }
     ///
-    /// - parameter event: Event to push
-    /// - parameter payload: Payload to push
-    /// - parameter timeout: Optional timeout
+    /// - Parameters:
+    ///    - event:     Event to push
+    ///    - payload:   `Encodable` Payload to push
+    ///    - timeout:   Optional timeout
+    ///
+    /// - Returns:      A `Push` which can receive replies from the server
+    /// - Throws:       If the payload cannot be propely encoded.
     @discardableResult
     public func push(_ event: String,
-                     payload: Payload,
+                     payload: Encodable,
+                     timeout: TimeInterval = Defaults.timeoutInterval) throws -> Push {
+        let payload = try self.encoder.encode(payload)
+        return self.push(event, payload: payload, timeout: timeout)
+    }
+    
+    @discardableResult
+    public func push(_ event: String,
+                     payload: [String: Any],
+                     timeout: TimeInterval = Defaults.timeoutInterval) throws -> Push {
+        let payload = try self.encoder.encode(payload)
+        return self.push(event, payload: payload, timeout: timeout)
+    }
+    
+    @discardableResult
+    public func push(_ event: String,
+                     payload: Data,
                      timeout: TimeInterval = Defaults.timeoutInterval) -> Push {
+        return self.push(event, payload: .binary(payload), timeout: timeout)
+    }
+    
+    
+    
+    private func push(_ event: String,
+                     payload: PayloadV6,
+                     timeout: TimeInterval) -> Push {
         guard joinedOnce else { fatalError("Tried to push \(event) to \(self.topic) before joining. Use channel.join() before pushing events") }
         
         let pushEvent = Push(channel: self,
@@ -464,6 +499,8 @@ public class Channel {
         
         return pushEvent
     }
+    
+    
     
     /// Leaves the channel
     ///

@@ -12,6 +12,9 @@
 /// your custom Serializer to Socket
 public class PhoenixSerializer: Serializer {
     
+    /// Returns a serializer with default parameters
+    public static var `default`: PhoenixSerializer { PhoenixSerializer() }
+    
     private let HEADER_LENGTH: Int = 1
     private let META_LENGTH: Int = 4
     
@@ -19,16 +22,37 @@ public class PhoenixSerializer: Serializer {
     private let KIND_REPLY: UInt8 = 1
     private let KIND_BROADCAST: UInt8 = 2
     
+    
+    private let encoder: JSONEncoder
+    private let decoder: JSONDecoder
+    
+    init(
+        encoder: JSONEncoder = JSONEncoder(),
+        decoder: JSONDecoder = JSONDecoder()
+    ) {
+        self.encoder = encoder
+        self.decoder = decoder
+    }
+    
+    
     public func encode(message: MessageV6) -> String {
         switch message.payload {
-        case .json(let json):
-            let jsonArray = [
-                message.joinRef,
-                message.ref,
-                message.topic,
-                message.event,
-                json
-            ]
+        case .json(let payloadString):
+            
+            guard
+                let payloadData = payloadString.data(using: .utf8),
+                let payloadJson = try? decoder.decode(RawJsonValue.self, from: payloadData)
+            else {
+                preconditionFailure("Could not convert text into valid json. \(payloadString)")
+            }
+
+            let jsonArray = RawJsonValue.array([
+                .string(message.joinRef ?? ""),
+                .string(message.ref ?? ""),
+                .string(message.topic),
+                .string(message.event),
+                payloadJson
+            ])
             
             return convertToString(encodable: jsonArray)
         default:
@@ -230,7 +254,7 @@ public class PhoenixSerializer: Serializer {
         )
     }
     
-    private func convertToString(rawJsonValue: RawJsonValue) -> String {
+    internal func convertToString(rawJsonValue: RawJsonValue) -> String {
         switch rawJsonValue {
         case .string(let rawString):
             return rawString
@@ -239,7 +263,7 @@ public class PhoenixSerializer: Serializer {
         }
     }
     
-    private func convertToString(encodable: Encodable) -> String {
+    internal func convertToString(encodable: Encodable) -> String {
         guard
             let jsonData = try? JSONEncoder().encode(encodable),
             let jsonString = String(data: jsonData, encoding: .utf8)
