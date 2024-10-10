@@ -190,6 +190,9 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
     super.init()
   }
   
+  deinit {
+    self.delegate = nil
+  }
   
   
   // MARK: - Transport
@@ -274,13 +277,15 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
   // MARK: - Private
   private func receive() {
     self.task?.receive { [weak self] result in
+      guard let self = self else { return }
+        
       switch result {
       case .success(let message):
         switch message {
         case .data:
           print("Data received. This method is unsupported by the Client")
         case .string(let text):
-          self?.delegate?.onMessage(message: text)
+          self.delegate?.onMessage(message: text)
         default:
           fatalError("Unknown result was received. [\(result)]")
         }
@@ -288,10 +293,10 @@ open class URLSessionTransport: NSObject, PhoenixTransport, URLSessionWebSocketD
         // Since `.receive()` is only good for a single message, it must
         // be called again after a message is received in order to
         // received the next message.
-        self?.receive()
+        self.receive()
       case .failure(let error):
         print("Error when receiving \(error)")
-        self?.abnormalErrorReceived(error, response: nil)
+        self.abnormalErrorReceived(error, response: nil)
       }
     }
   }

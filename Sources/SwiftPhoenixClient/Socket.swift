@@ -238,6 +238,10 @@ public class Socket: PhoenixTransportDelegate {
   public var isConnected: Bool {
     return self.connectionState == .open
   }
+    
+  public var isConnecting: Bool {
+    return self.connectionState == .connecting
+  }
   
   /// - return: The state of the connect. [.connecting, .open, .closing, .closed]
   public var connectionState: PhoenixTransportReadyState {
@@ -248,8 +252,8 @@ public class Socket: PhoenixTransportDelegate {
   /// will be sent through the connection. If the Socket is already connected,
   /// then this call will be ignored.
   public func connect() {
-    // Do not attempt to reconnect if the socket is currently connected
-    guard !isConnected else { return }
+    // Do not attempt to reconnect if the socket is currently connected or in the process of connecting
+    guard !isConnected && !isConnecting else { return }
     
     // Reset the close status when attempting to connect
     self.closeStatus = .unknown
