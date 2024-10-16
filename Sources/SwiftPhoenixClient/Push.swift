@@ -262,7 +262,6 @@ public class Push {
         
         var mutPayload = payload
         mutPayload["status"] = status
-        
         self.channel?.trigger(event: refEvent, payload: mutPayload)
     }
 }

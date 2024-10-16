@@ -49,7 +49,7 @@ public struct Message {
     let status: String?
     
     /// The payload of the message to send or that was received.`
-    let payload: MessagePayload
+    public let payload: MessagePayload
     
     static func reply(
         joinRef: String?,

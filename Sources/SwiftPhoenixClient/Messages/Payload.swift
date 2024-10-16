@@ -22,7 +22,7 @@ public enum MessagePayload: Equatable {
     
     
     /// Force unwraps the enum as a binary. Throws if it was json
-    func asBinary() -> Data {
+    public func asBinary() -> Data {
         switch self {
         case .binary(let data):
             data
@@ -32,7 +32,7 @@ public enum MessagePayload: Equatable {
     }
     
     /// Force unwraps the enum as json. Throws if it was binary
-    func asJson() -> String {
+    public func asJson() -> String {
         switch self {
         case .json(let string):
             string
