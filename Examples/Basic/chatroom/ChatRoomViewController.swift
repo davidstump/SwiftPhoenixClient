@@ -9,7 +9,7 @@
 import UIKit
 import SwiftPhoenixClient
 
-struct Shout {
+struct Shout: Codable {
     let name: String
     let message: String
 }
@@ -49,6 +49,9 @@ class ChatRoomViewController: UIViewController {
     // Notifcation Subscriptions
     private var didbecomeActiveObservervation: NSObjectProtocol?
     private var willResignActiveObservervation: NSObjectProtocol?
+    
+    
+    private let jsonDecoder = JSONDecoder()
     
     
     // MARK: - Lifecycle
@@ -147,13 +150,12 @@ class ChatRoomViewController: UIViewController {
         // Setup the Channel to receive and send messages
         let channel = socket.channel(topic, params: ["status": "joining"])
         channel.delegateOn("shout", to: self) { (self, message) in
-            let payload = message.payload
-            guard
-                let name = payload["name"] as? String,
-                let message = payload["message"] as? String else { return }
+            let payload = message.payload.asJson()
             
-            let shout = Shout(name: name, message: message)
-            self.shouts.append(shout)
+            let data = payload.data(using: .utf8)!
+            let shout = try? self.jsonDecoder.decode(Shout.self, from: data)
+            
+            self.shouts.append(shout!)
             
             
             DispatchQueue.main.async {
