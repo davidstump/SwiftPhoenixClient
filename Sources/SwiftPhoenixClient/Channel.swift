@@ -544,8 +544,7 @@ public class Channel {
             ChannelEvent.isLifecyleEvent(message.event)
         else { return true }
         
-        // TODO: 6.x
-//        self.socket?.logItems("channel", "dropping outdated message", message.topic, message.event, message.rawPayload, safeJoinRef)
+        self.socket?.logItems("channel", "dropping outdated message", message.topic, message.event, message.payload, safeJoinRef)
         return false
     }
     

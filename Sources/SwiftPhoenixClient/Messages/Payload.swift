@@ -8,6 +8,10 @@
 
 import Foundation
 
+typealias EncodablePayload = Encodable & Sendable
+typealias
+
+
 ///
 /// Provides a messages payload as either a string or as binary data.
 ///

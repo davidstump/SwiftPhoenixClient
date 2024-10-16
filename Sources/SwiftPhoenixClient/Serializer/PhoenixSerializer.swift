@@ -10,6 +10,7 @@
 /// The default implementation of [Serializer] for encoding and decoding messages. Matches the JS
 /// client behavior. You can build your own if you'd like by implementing `Serializer` and passing
 /// your custom Serializer to Socket
+///
 public class PhoenixSerializer: Serializer {
     
     private let HEADER_LENGTH: Int = 1
@@ -18,6 +19,8 @@ public class PhoenixSerializer: Serializer {
     private let KIND_PUSH: UInt8 = 0
     private let KIND_REPLY: UInt8 = 1
     private let KIND_BROADCAST: UInt8 = 2
+    
+    
     
     public func encode(message: Message) -> String {
         switch message.payload {
