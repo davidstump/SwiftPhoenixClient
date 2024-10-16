@@ -230,7 +230,7 @@ public class PhoenixSerializer: Serializer {
         }
     }
     
-    private func convertToString(encodable: Encodable) -> String {
+    private func convertToString(encodable: Encodable & Sendable) -> String {
         guard
             let jsonData = try? JSONEncoder().encode(encodable),
             let jsonString = String(data: jsonData, encoding: .utf8)

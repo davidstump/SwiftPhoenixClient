@@ -9,7 +9,7 @@
 import Foundation
 
 typealias EncodablePayload = Encodable & Sendable
-typealias
+typealias DictionaryPayload = [String: any Any & Sendable]
 
 
 ///
