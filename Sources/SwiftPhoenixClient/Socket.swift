@@ -80,6 +80,9 @@ public class Socket: PhoenixTransportDelegate {
     /// Phoenix serializer version, defaults to "2.0.0"
     public let vsn: String
     
+    /// Serializer used to encode/decode between the clienet and the server.
+    public var serializer: Serializer = PhoenixSerializer()
+    
     /// Override to provide custom encoding of data before writing to the socket
     public var encode: (Any) -> Data = Defaults.encode
     
@@ -677,17 +680,7 @@ public class Socket: PhoenixTransportDelegate {
         self.stateChangeCallbacks.error.forEach({ $0.callback.call((error, response)) })
     }
     
-    internal func onConnectionMessage(_ rawMessage: String) {
-        self.logItems("receive ", rawMessage)
-        
-        guard
-            let data = rawMessage.data(using: String.Encoding.utf8),
-            let json = decode(data) as? [Any?],
-            let message = Message(json: json)
-        else {
-            self.logItems("receive: Unable to parse JSON: \(rawMessage)")
-            return }
-        
+    internal func onConnectionMessage(_ message: Message) {
         // Clear heartbeat ref, preventing a heartbeat timeout disconnect
         if message.ref == pendingHeartbeatRef { pendingHeartbeatRef = nil }
         
@@ -843,16 +836,23 @@ public class Socket: PhoenixTransportDelegate {
     }
     
     public func onMessage(data: Data) {
-        DispatchQueue.main.async {
-            // TODO: Serialize socket message
+        guard let message = try? serializer.binaryDecode(data: data) else {
+            self.logItems("receive: Unable to parse binary: \(data)")
+            return
         }
+        
+        self.logItems("receive ", data)
+        DispatchQueue.main.async { self.onConnectionMessage(message) }
     }
     
     public func onMessage(string: String) {
-        DispatchQueue.main.async {
-            // TODO: Serialize socket message
-            self.onConnectionMessage(string)
+        guard let message = try? serializer.decode(text: string) else {
+            self.logItems("receive: Unable to parse JSON: \(string)")
+            return
         }
+        
+        self.logItems("receive ", string)
+        DispatchQueue.main.async { self.onConnectionMessage(message) }
     }
 
     public func onClose(code: URLSessionWebSocketTask.CloseCode, reason: String? = nil) {

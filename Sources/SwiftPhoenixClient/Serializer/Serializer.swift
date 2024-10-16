@@ -16,7 +16,7 @@ public protocol Serializer {
     ///
     /// - parameter message: `MessageV6` with a json payload to encode
     /// - returns: Raw text to send back to the server
-    func encode(message: MessageV6) -> String
+    func encode(message: Message) -> String
     
     ///
     /// Encodes a `MessageV6` into `Data` to be sent back to a Phoenix server as binary data
@@ -24,7 +24,7 @@ public protocol Serializer {
     /// - parameter message `SocketMessage` with a binary payload to encode
     /// - returns Binary data to send back to the server
     ///
-    func binaryEncode(message: MessageV6) -> Data
+    func binaryEncode(message: Message) -> Data
     
     /// Decodes a raw `String` from a Phoenix server into a `SocketMessage` structure
     /// Throws a `preconditionFailure` if passed a malformed message
@@ -32,7 +32,7 @@ public protocol Serializer {
     /// - parameter text: The raw `String` from a Phoenix server
     /// - returns: The `SocketMessage` created from the raw `String`
     /// - throws: `preconditionFailure` if the text could not be converted to a `SocketMessage`
-    func decode(text: String) throws -> SocketMessage
+    func decode(text: String) throws -> Message
     
 
     /// Decodes binary  `Data` from a Phoenix server into a `SocketMessage` structure
@@ -40,7 +40,7 @@ public protocol Serializer {
     /// - parameter data: The binary `Data` from a Phoenix server
     /// - returns The `SocketMessage` created from the raw `Data`
     /// - throws `preconditionFailure` if the data could not be converted to a `SocketMessage`
-    func binaryDecode(data: Data) throws -> SocketMessage
+    func binaryDecode(data: Data) throws -> Message
     
 }
 

@@ -38,8 +38,8 @@
 		6322938E2C952508003EEDE1 /* RawJsonValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6322938D2C952508003EEDE1 /* RawJsonValue.swift */; };
 		632293902C952689003EEDE1 /* DecodedMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6322938F2C952689003EEDE1 /* DecodedMessage.swift */; };
 		635669C4261631DC0068B665 /* URLSessionTransportSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635669C3261631DC0068B665 /* URLSessionTransportSpec.swift */; };
+		638073472CBF3EE300F8986F /* Payload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 638073462CBF3EE300F8986F /* Payload.swift */; };
 		63ACBE9426D53DF500171582 /* HeartbeatTimerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ACBE9326D53DF500171582 /* HeartbeatTimerSpec.swift */; };
-		63BBCEF52B89774F004A16C9 /* Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBCEF42B89774F004A16C9 /* Messages.swift */; };
 		63BBCF002B897B0C004A16C9 /* Serializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBCEFF2B897B0C004A16C9 /* Serializer.swift */; };
 		63BBCF032B897D87004A16C9 /* PhoenixSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBCF022B897D87004A16C9 /* PhoenixSerializer.swift */; };
 		63BBCF052B897DEF004A16C9 /* PhoenixSerializerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBCF042B897DEF004A16C9 /* PhoenixSerializerTest.swift */; };
@@ -113,12 +113,12 @@
 		6322938D2C952508003EEDE1 /* RawJsonValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawJsonValue.swift; sourceTree = "<group>"; };
 		6322938F2C952689003EEDE1 /* DecodedMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodedMessage.swift; sourceTree = "<group>"; };
 		635669C3261631DC0068B665 /* URLSessionTransportSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionTransportSpec.swift; sourceTree = "<group>"; };
+		638073462CBF3EE300F8986F /* Payload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payload.swift; sourceTree = "<group>"; };
 		63ACBE9326D53DF500171582 /* HeartbeatTimerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatTimerSpec.swift; sourceTree = "<group>"; };
 		63B526842656CF9600289719 /* Starscream.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Starscream.xcframework; path = Carthage/Build/Starscream.xcframework; sourceTree = "<group>"; };
 		63B5268D2656CFFE00289719 /* RxSwift.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxSwift.xcframework; path = Carthage/Build/RxSwift.xcframework; sourceTree = "<group>"; };
 		63B526DC2656D53700289719 /* Nimble.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Nimble.xcframework; path = Carthage/Build/Nimble.xcframework; sourceTree = "<group>"; };
 		63B526DD2656D53700289719 /* Quick.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Quick.xcframework; path = Carthage/Build/Quick.xcframework; sourceTree = "<group>"; };
-		63BBCEF42B89774F004A16C9 /* Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Messages.swift; sourceTree = "<group>"; };
 		63BBCEFF2B897B0C004A16C9 /* Serializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Serializer.swift; sourceTree = "<group>"; };
 		63BBCF022B897D87004A16C9 /* PhoenixSerializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoenixSerializer.swift; sourceTree = "<group>"; };
 		63BBCF042B897DEF004A16C9 /* PhoenixSerializerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoenixSerializerTest.swift; sourceTree = "<group>"; };
@@ -209,7 +209,6 @@
 				12991DFC254C3ED300BB8650 /* Delegated.swift */,
 				12991DFE254C3EF900BB8650 /* HeartbeatTimer.swift */,
 				12922E212543B37B0034B257 /* PhoenixTransport.swift */,
-				12991E06254C3F4B00BB8650 /* Message.swift */,
 				12991E08254C3F5B00BB8650 /* Presence.swift */,
 				12991E02254C3F2300BB8650 /* Push.swift */,
 				12922E1F2543B10B0034B257 /* Socket.swift */,
@@ -294,7 +293,8 @@
 		63BBCEF62B897A62004A16C9 /* Messages */ = {
 			isa = PBXGroup;
 			children = (
-				63BBCEF42B89774F004A16C9 /* Messages.swift */,
+				12991E06254C3F4B00BB8650 /* Message.swift */,
+				638073462CBF3EE300F8986F /* Payload.swift */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
@@ -490,7 +490,6 @@
 			files = (
 				6322938E2C952508003EEDE1 /* RawJsonValue.swift in Sources */,
 				12991DFB254C3EB800BB8650 /* Defaults.swift in Sources */,
-				63BBCEF52B89774F004A16C9 /* Messages.swift in Sources */,
 				12991E05254C3F3300BB8650 /* Channel.swift in Sources */,
 				63BBCF032B897D87004A16C9 /* PhoenixSerializer.swift in Sources */,
 				632293902C952689003EEDE1 /* DecodedMessage.swift in Sources */,
@@ -499,6 +498,7 @@
 				12991E09254C3F5B00BB8650 /* Presence.swift in Sources */,
 				12991E01254C3F1300BB8650 /* TimeoutTimer.swift in Sources */,
 				12991E07254C3F4B00BB8650 /* Message.swift in Sources */,
+				638073472CBF3EE300F8986F /* Payload.swift in Sources */,
 				12991DFD254C3ED300BB8650 /* Delegated.swift in Sources */,
 				12991DFF254C3EF900BB8650 /* HeartbeatTimer.swift in Sources */,
 				12991E03254C3F2300BB8650 /* Push.swift in Sources */,
@@ -655,6 +655,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -714,6 +715,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -795,7 +797,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Sources/Supporting Files/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -806,7 +807,6 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.SwiftPhoenixClientTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx";
@@ -814,7 +814,6 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Debug;
 		};
@@ -826,7 +825,6 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Sources/Supporting Files/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -837,7 +835,6 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.github.SwiftPhoenixClientTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx";
@@ -845,7 +842,6 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 12.0;
 			};
 			name = Release;
 		};
