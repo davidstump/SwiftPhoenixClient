@@ -220,11 +220,18 @@ public class Channel {
         // Perform when the join reply is received
         self.delegateOn(ChannelEvent.reply, to: self) { (self, message) in
             // Trigger bindings
-            // TODO: 6.x
-//            self.trigger(event: self.replyEventName(message.ref),
-//                         payload: message.rawPayload,
-//                         ref: message.ref,
-//                         joinRef: message.joinRef)
+            guard let ref = message.ref else { return }
+            
+            let message = Message(
+                joinRef: message.joinRef,
+                ref: message.ref,
+                topic: self.topic,
+                event: self.replyEventName(ref),
+                status: message.status,
+                payload: message.payload
+            )
+            
+            self.trigger(message)
         }
     }
     
@@ -591,14 +598,35 @@ public class Channel {
                  payload: Payload = [:],
                  ref: String = "",
                  joinRef: String? = nil) {
-        // TODO: 6.x
-//        let message = Message(ref: ref,
-//                              topic: self.topic,
-//                              event: event,
-//                              payload: payload,
-//                              joinRef: joinRef ?? self.joinRef)
-//        self.trigger(message)
+        
+        // Convert the dictionary into a json string. This is an intermitent
+        // step until a more robust solution is found
+        let data = Defaults.encode(payload)
+        let json = String(data: data, encoding: .utf8)!
+        
+        self.trigger(
+            event: event,
+            payload: .json(json),
+            ref: ref,
+            joinRef: joinRef
+        )
     }
+    
+    func trigger(event: String,
+                 payload: MessagePayload,
+                 ref: String?,
+                 joinRef: String? = nil) {
+        let message = Message.message(
+            joinRef: joinRef ?? self.joinRef,
+            ref: ref,
+            topic: self.topic,
+            event: event,
+            payload: payload
+        )
+        
+        self.trigger(message)
+    }
+    
     
     /// - parameter ref: The ref of the event push
     /// - return: The event name of the reply
