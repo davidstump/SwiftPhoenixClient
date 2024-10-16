@@ -220,10 +220,11 @@ public class Channel {
         // Perform when the join reply is received
         self.delegateOn(ChannelEvent.reply, to: self) { (self, message) in
             // Trigger bindings
-            self.trigger(event: self.replyEventName(message.ref),
-                         payload: message.rawPayload,
-                         ref: message.ref,
-                         joinRef: message.joinRef)
+            // TODO: 6.x
+//            self.trigger(event: self.replyEventName(message.ref),
+//                         payload: message.rawPayload,
+//                         ref: message.ref,
+//                         joinRef: message.joinRef)
         }
     }
     
@@ -543,7 +544,8 @@ public class Channel {
             ChannelEvent.isLifecyleEvent(message.event)
         else { return true }
         
-        self.socket?.logItems("channel", "dropping outdated message", message.topic, message.event, message.rawPayload, safeJoinRef)
+        // TODO: 6.x
+//        self.socket?.logItems("channel", "dropping outdated message", message.topic, message.event, message.rawPayload, safeJoinRef)
         return false
     }
     
@@ -590,12 +592,13 @@ public class Channel {
                  payload: Payload = [:],
                  ref: String = "",
                  joinRef: String? = nil) {
-        let message = Message(ref: ref,
-                              topic: self.topic,
-                              event: event,
-                              payload: payload,
-                              joinRef: joinRef ?? self.joinRef)
-        self.trigger(message)
+        // TODO: 6.x
+//        let message = Message(ref: ref,
+//                              topic: self.topic,
+//                              event: event,
+//                              payload: payload,
+//                              joinRef: joinRef ?? self.joinRef)
+//        self.trigger(message)
     }
     
     /// - parameter ref: The ref of the event push

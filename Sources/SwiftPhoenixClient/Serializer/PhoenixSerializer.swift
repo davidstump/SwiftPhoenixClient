@@ -19,7 +19,7 @@ public class PhoenixSerializer: Serializer {
     private let KIND_REPLY: UInt8 = 1
     private let KIND_BROADCAST: UInt8 = 2
     
-    public func encode(message: MessageV6) -> String {
+    public func encode(message: Message) -> String {
         switch message.payload {
         case .json(let json):
             let jsonArray = [
@@ -36,7 +36,7 @@ public class PhoenixSerializer: Serializer {
         }
     }
     
-    public func binaryEncode(message: MessageV6) -> Data {
+    public func binaryEncode(message: Message) -> Data {
         switch message.payload {
         case .binary(let data):
             var byteArray: [UInt8] = []
@@ -63,7 +63,7 @@ public class PhoenixSerializer: Serializer {
             byteArray.append(contentsOf: message.topic.utf8.map { UInt8($0) })
             byteArray.append(contentsOf: message.event.utf8.map { UInt8($0) })
             byteArray.append(contentsOf: data)
-
+            
             return Data(byteArray)
         default:
             preconditionFailure("Expected message to have a binary payload.")
@@ -71,15 +71,15 @@ public class PhoenixSerializer: Serializer {
     }
     
     
-    public func decode(text: String) throws -> SocketMessage {
+    public func decode(text: String) throws -> Message {
         guard
             let jsonData = text.data(using: .utf8)
         else {
             preconditionFailure("Could not convert text into valid jsonData. \(text)")
         }
-
+        
         let decodedMessage = try JSONDecoder().decode(DecodedMessage.self, from: jsonData)
-            
+        
         let joinRef = decodedMessage.joinRef
         let ref = decodedMessage.ref
         let topic = decodedMessage.topic
@@ -98,42 +98,37 @@ public class PhoenixSerializer: Serializer {
             
             let responseAsJsonString = convertToString(rawJsonValue: response)
             
-            return .reply(
-                Reply(
-                    joinRef: joinRef,
-                    ref: ref,
-                    topic: topic,
-                    status: status,
-                    payload: .json(responseAsJsonString)
-                )
+            return Message.reply(
+                joinRef: joinRef,
+                ref: ref,
+                topic: topic,
+                status: status,
+                payload: .json(responseAsJsonString)
             )
         } else if joinRef != nil || ref != nil {
             let payloadAsJsonString = convertToString(rawJsonValue: payload)
             
-            return .message(
-                MessageV6(
-                    joinRef: joinRef,
-                    ref: ref,
-                    topic: topic,
-                    event: event,
-                    payload: .json(payloadAsJsonString)
-                )
+            return Message.message(
+                joinRef: joinRef,
+                ref: ref,
+                topic: topic,
+                event: event,
+                payload: .json(payloadAsJsonString)
             )
         } else {
             let payloadAsJsonString = convertToString(encodable: payload)
             
-            return .broadcast(
-                Broadcast(
-                    topic: topic,
-                    event: event,
-                    payload: .json(payloadAsJsonString)
-                )
+            return Message.broadcast(
+                topic: topic,
+                event: event,
+                payload: .json(payloadAsJsonString)
+                
             )
         }
     }
     
     
-    public func binaryDecode(data: Data) throws -> SocketMessage {
+    public func binaryDecode(data: Data) throws -> Message {
         let binary = [UInt8](data)
         return switch binary[0] {
         case KIND_PUSH: try decodePush(buffer: binary)
@@ -144,7 +139,7 @@ public class PhoenixSerializer: Serializer {
     }
     
     // MARK: - Private -
-    private func decodePush(buffer: [UInt8]) throws -> SocketMessage {
+    private func decodePush(buffer: [UInt8]) throws -> Message {
         let joinRefSize = Int(buffer[1])
         let topicSize = Int(buffer[2])
         let eventSize = Int(buffer[3])
@@ -162,18 +157,15 @@ public class PhoenixSerializer: Serializer {
         offset += eventSize
         let data = Data(buffer[offset ..< buffer.count])
         
-        return SocketMessage.message(
-            MessageV6(
-                joinRef: joinRef,
-                ref: nil,
-                topic: topic,
-                event: event,
-                payload: .binary(data)
-            )
-        )
+        return Message.message(
+            joinRef: joinRef,
+            ref: nil,
+            topic: topic,
+            event: event,
+            payload: .binary(data)        )
     }
     
-    private func decodeReply(buffer: [UInt8]) throws -> SocketMessage {
+    private func decodeReply(buffer: [UInt8]) throws -> Message {
         let joinRefSize = Int(buffer[1])
         let refSize = Int(buffer[2])
         let topicSize = Int(buffer[3])
@@ -195,18 +187,16 @@ public class PhoenixSerializer: Serializer {
         let data = Data(buffer[offset ..< buffer.count])
         
         // for binary messages, payload = {status: event, response: data}
-        return SocketMessage.reply(
-            Reply(
-                joinRef: joinRef,
-                ref: ref,
-                topic: topic,
-                status: event,
-                payload: .binary(data)
-            )
+        return Message.reply(
+            joinRef: joinRef,
+            ref: ref,
+            topic: topic,
+            status: event,
+            payload: .binary(data)
         )
     }
     
-    private func decodeBroadcast(buffer: [UInt8]) throws -> SocketMessage {
+    private func decodeBroadcast(buffer: [UInt8]) throws -> Message {
         let topicSize = Int(buffer[1])
         let eventSize = Int(buffer[2])
         var offset = HEADER_LENGTH + 2
@@ -221,12 +211,10 @@ public class PhoenixSerializer: Serializer {
         offset += eventSize
         let data = Data(buffer[offset ..< buffer.count])
         
-        return SocketMessage.broadcast(
-            Broadcast(
-                topic: topic,
-                event: event,
-                payload: .binary(data)
-            )
+        return Message.broadcast(
+            topic: topic,
+            event: event,
+            payload: .binary(data)
         )
     }
     

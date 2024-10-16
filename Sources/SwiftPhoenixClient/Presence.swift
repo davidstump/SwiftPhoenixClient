@@ -226,36 +226,38 @@ public final class Presence {
     
     
     self.channel?.delegateOn(stateEvent, to: self) { (self, message) in
-      guard let newState = message.rawPayload as? State else { return }
-      
-      self.joinRef = self.channel?.joinRef
-      self.state = Presence.syncState(self.state,
-                                      newState: newState,
-                                      onJoin: self.caller.onJoin,
-                                      onLeave: self.caller.onLeave)
-      
-      self.pendingDiffs.forEach({ (diff) in
-        self.state = Presence.syncDiff(self.state,
-                                       diff: diff,
-                                       onJoin: self.caller.onJoin,
-                                       onLeave: self.caller.onLeave)
-      })
-      
-      self.pendingDiffs = []
-      self.caller.onSync()
+        // TODO: Fix Presence since Payload has been overhauled
+//      guard let newState = message.rawPayload as? State else { return }
+//      let newState = [
+//      self.joinRef = self.channel?.joinRef
+//      self.state = Presence.syncState(self.state,
+//                                      newState: newState,
+//                                      onJoin: self.caller.onJoin,
+//                                      onLeave: self.caller.onLeave)
+//      
+//      self.pendingDiffs.forEach({ (diff) in
+//        self.state = Presence.syncDiff(self.state,
+//                                       diff: diff,
+//                                       onJoin: self.caller.onJoin,
+//                                       onLeave: self.caller.onLeave)
+//      })
+//      
+//      self.pendingDiffs = []
+//      self.caller.onSync()
     }
     
     self.channel?.delegateOn(diffEvent, to: self) { (self, message) in
-      guard let diff = message.rawPayload as? Diff else { return }
-      if self.isPendingSyncState {
-        self.pendingDiffs.append(diff)
-      } else {
-        self.state = Presence.syncDiff(self.state,
-                                       diff: diff,
-                                       onJoin: self.caller.onJoin,
-                                       onLeave: self.caller.onLeave)
-        self.caller.onSync()
-      }
+        // TODO: Fix Presence since Payload has been overhauled
+//      guard let diff = message.rawPayload as? Diff else { return }
+//      if self.isPendingSyncState {
+//        self.pendingDiffs.append(diff)
+//      } else {
+//        self.state = Presence.syncDiff(self.state,
+//                                       diff: diff,
+//                                       onJoin: self.caller.onJoin,
+//                                       onLeave: self.caller.onLeave)
+//        self.caller.onSync()
+//      }
     }
   }
   

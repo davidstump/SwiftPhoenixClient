@@ -680,24 +680,25 @@ public class Socket: PhoenixTransportDelegate {
     internal func onConnectionMessage(_ rawMessage: String) {
         self.logItems("receive ", rawMessage)
         
-        guard
-            let data = rawMessage.data(using: String.Encoding.utf8),
-            let json = decode(data) as? [Any?],
-            let message = Message(json: json)
-        else {
-            self.logItems("receive: Unable to parse JSON: \(rawMessage)")
-            return }
-        
-        // Clear heartbeat ref, preventing a heartbeat timeout disconnect
-        if message.ref == pendingHeartbeatRef { pendingHeartbeatRef = nil }
-        
-        // Dispatch the message to all channels that belong to the topic
-        self.channels
-            .filter( { $0.isMember(message) } )
-            .forEach( { $0.trigger(message) } )
-        
-        // Inform all onMessage callbacks of the message
-        self.stateChangeCallbacks.message.forEach({ $0.callback.call(message) })
+        // TODO: 6.x
+//        guard
+//            let data = rawMessage.data(using: String.Encoding.utf8),
+//            let json = decode(data) as? [Any?],
+//            let message = Message(json: json)
+//        else {
+//            self.logItems("receive: Unable to parse JSON: \(rawMessage)")
+//            return }
+//        
+//        // Clear heartbeat ref, preventing a heartbeat timeout disconnect
+//        if message.ref == pendingHeartbeatRef { pendingHeartbeatRef = nil }
+//        
+//        // Dispatch the message to all channels that belong to the topic
+//        self.channels
+//            .filter( { $0.isMember(message) } )
+//            .forEach( { $0.trigger(message) } )
+//        
+//        // Inform all onMessage callbacks of the message
+//        self.stateChangeCallbacks.message.forEach({ $0.callback.call(message) })
     }
     
     /// Triggers an error event to all of the connected Channels
