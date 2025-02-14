@@ -722,4 +722,183 @@ struct SocketTest {
     }
     
     // MARK: -- onConnectionError --
+    @Test func onConnectionError_triggers_onClose_callback() async throws {
+        let (socket, _) = setupSocket()
+        
+        var lastError: Error? = nil
+        var lastResponse: URLResponse? = nil
+        socket.onError { error, response in
+            lastError = error
+            lastResponse = response
+        }
+
+        socket.onConnectionError(TestError.stub, response: URLResponse())
+        #expect(lastError != nil)
+        #expect(lastResponse != nil)
+    }
+    
+    @Test func onConnectionError_triggers_channel_error_if_joining_with_open_connection() async throws {
+        let (socket, _) = setupSocket()
+        let channel = socket.channel("topic")
+        
+        var errorMessage: ChannelMessage<Any>? = nil
+        channel.on(ChannelEvent.error) { errorMessage = $0 }
+        
+        channel.join()
+        socket.onConnectionOpen(response: nil)
+        #expect(channel.state == .joining)
+        
+        socket.onConnectionError(TestError.stub, response: nil)
+        #expect(errorMessage?.event == "phx_error")
+    }
+    
+    @Test func onConnectionError_triggers_channel_error_if_joining_with_no_connection() async throws {
+        let (socket, _) = setupSocket()
+        let channel = socket.channel("topic")
+        
+        var errorMessage: ChannelMessage<Any>? = nil
+        channel.on(ChannelEvent.error) { errorMessage = $0 }
+        
+        channel.join()
+        #expect(channel.state == .joining)
+        
+        socket.onConnectionError(TestError.stub, response: nil)
+        #expect(errorMessage?.event == "phx_error")
+    }
+    
+    @Test func onConnectionError_triggers_channel_error_if_joined() async throws {
+        let (socket, _) = setupSocket()
+        let channel = socket.channel("topic")
+        
+        var errorMessage: ChannelMessage<Any>? = nil
+        channel.on(ChannelEvent.error) { errorMessage = $0 }
+        
+        channel.join().trigger("ok", payload: [:])
+        socket.onConnectionOpen(response: nil)
+        #expect(channel.state == .joined)
+        
+        socket.onConnectionError(TestError.stub, response: nil)
+        #expect(errorMessage?.event == "phx_error")
+    }
+    
+    
+    @Test func onConnectionError_does_not_trigger_channel_error_after_leave() async throws {
+        let (socket, _) = setupSocket()
+        let channel = socket.channel("topic")
+        
+        var errorMessage: ChannelMessage<Any>? = nil
+        channel.on(ChannelEvent.error) { errorMessage = $0 }
+        
+        channel.join().trigger("ok", payload: [:])
+        channel.leave()
+        #expect(channel.state == .closed)
+        
+        socket.onConnectionError(TestError.stub, response: nil)
+        #expect(errorMessage == nil)
+    }
+    
+    // MARK: -- onConnectionMessage --
+    @Test func onConnectionMessage_parses_raw_message_and_triggers_channel_event() throws {
+        let (socket, _) = setupSocket()
+        let targetChannel = socket.channel("topic")
+        let otherChannel = socket.channel("off-topic")
+        
+        var targetMessage: ChannelMessage<Any>? = nil
+        targetChannel.on("event") { msg in
+            targetMessage = msg
+        }
+        
+        var otherMessage: ChannelMessage<Any>? = nil
+        otherChannel.on("event") { otherMessage = $0 }
+        
+        let message = """
+        [null,"ref","topic","event","payload"]
+        """
+        // Calling onMessage here since it parses the text first before passing
+        // the IncomingMessage through to onConnectionMessage
+        socket.onMessage(string: message)
+        Thread.sleep(forTimeInterval: 0.2) // syncarray runs on .async
+        
+        #expect(targetMessage?.ref == "ref")
+        #expect(targetMessage?.topic == "topic")
+        #expect(targetMessage?.event == "event")
+        let payload = try! targetMessage?.payload.get() as! String
+        #expect(payload == "payload")
+        
+        #expect(otherMessage == nil)
+    }
+    
+    @Test func onConnectionMessage_parses_binary_message_and_triggers_channel_event() throws {
+        let (socket, _) = setupSocket()
+        let targetChannel = socket.channel("top")
+        let otherChannel = socket.channel("off-top")
+        
+        var targetMessage: ChannelMessage<Data>? = nil
+        targetChannel.onData("some-event") { msg in
+            targetMessage = msg
+        }
+        
+        var otherMessage: ChannelMessage<Data>? = nil
+        otherChannel.onData("some-event") { otherMessage = $0 }
+        
+        let bin: [UInt8] = [0x00, 0x03, 0x03, 0x0A]
+        + "123topsome-event".utf8.map { UInt8($0) }
+        + [0x01, 0x01]
+        
+        // Calling onMessage here since it parses the text first before passing
+        // the IncomingMessage through to onConnectionMessage
+        socket.onMessage(data: Data(bin))
+        Thread.sleep(forTimeInterval: 0.2) // syncarray runs on .async
+        
+        #expect(targetMessage?.joinRef == "123")
+        #expect(targetMessage?.ref == nil)
+        #expect(targetMessage?.topic == "top")
+        #expect(targetMessage?.event == "some-event")
+        #expect(targetMessage?.status == nil)
+        
+        if case .success(let data) = targetMessage?.payload {
+            let binary = [UInt8](data)
+            #expect(binary == [0x01, 0x01])
+        } else {
+            fatalError("expected decided payload type")
+        }
+        
+        #expect(otherMessage == nil)
+    }
+    
+    @Test func onConnectionMessage_triggers_onMessage_callbacks() throws {
+        let (socket, _) = setupSocket()
+
+        var incomingMessage: IncomingMessage? = nil
+        socket.onMessage { incomingMessage = $0 }
+        
+        let message = """
+        [null,"ref","topic","event","payload"]
+        """
+        
+        socket.onMessage(string: message)
+        Thread.sleep(forTimeInterval: 0.2) // syncarray runs on .async
+        
+        #expect(incomingMessage?.topic == "topic")
+        #expect(incomingMessage?.event == "event")
+        
+        if case .deferred(let rawIncomingText) = incomingMessage?.payload {
+            #expect(rawIncomingText == message.data(using: .utf8))
+        } else {
+            fatalError("expected deferred payload type")
+        }
+    }
+    
+    @Test func onConnectionMessage_clears_pending_heartbeat() throws {
+        let (socket, _) = setupSocket()
+        socket.pendingHeartbeatRef = "5"
+
+        let message = """
+        [null,"5","phoenix","phx_reply",{"status":"ok","response":{}}]
+        """
+
+        socket.onMessage(string: message)
+        Thread.sleep(forTimeInterval: 0.5) // syncarray runs on .async
+        #expect(socket.pendingHeartbeatRef == nil)
+    }
 }

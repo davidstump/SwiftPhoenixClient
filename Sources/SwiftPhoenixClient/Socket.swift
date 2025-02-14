@@ -701,7 +701,9 @@ public class Socket: TransportDelegate {
         }
         
         self.logItems("receive ", string)
-        DispatchQueue.main.async { self.onConnectionMessage(decodedMessage) }
+        DispatchQueue.main.async {
+            self.onConnectionMessage(decodedMessage)
+        }
     }
 
     public func onClose(code: URLSessionWebSocketTask.CloseCode, reason: String? = nil) {
