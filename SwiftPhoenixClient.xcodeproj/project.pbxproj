@@ -56,9 +56,6 @@
 		63AEB5A92D4FBBC700E8A3CC /* TransportReadyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AEB5A82D4FBBC700E8A3CC /* TransportReadyState.swift */; };
 		63AEB5AB2D4FBC0500E8A3CC /* Transport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AEB5AA2D4FBC0500E8A3CC /* Transport.swift */; };
 		63AEB5AD2D4FBC4200E8A3CC /* TransportDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AEB5AC2D4FBC4200E8A3CC /* TransportDelegate.swift */; };
-		63AEB5B32D4FC31B00E8A3CC /* MockableProtocol.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AEB5B02D4FC31B00E8A3CC /* MockableProtocol.generated.swift */; };
-		63AEB5B42D4FC31B00E8A3CC /* MockableWebSocketClient.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AEB5B12D4FC31B00E8A3CC /* MockableWebSocketClient.generated.swift */; };
-		63AEB5B52D4FC31B00E8A3CC /* MockableClass.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AEB5AF2D4FC31B00E8A3CC /* MockableClass.generated.swift */; };
 		63BBCF032B897D87004A16C9 /* TransportSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBCF022B897D87004A16C9 /* TransportSerializer.swift */; };
 		63BBCF052B897DEF004A16C9 /* TransportSerializerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBCF042B897DEF004A16C9 /* TransportSerializerTest.swift */; };
 		63DE6CCA272A2ECB00E2A728 /* MessageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DE6CC9272A2ECB00E2A728 /* MessageSpec.swift */; };
@@ -149,9 +146,6 @@
 		63AEB5A82D4FBBC700E8A3CC /* TransportReadyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportReadyState.swift; sourceTree = "<group>"; };
 		63AEB5AA2D4FBC0500E8A3CC /* Transport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transport.swift; sourceTree = "<group>"; };
 		63AEB5AC2D4FBC4200E8A3CC /* TransportDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportDelegate.swift; sourceTree = "<group>"; };
-		63AEB5AF2D4FC31B00E8A3CC /* MockableClass.generated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockableClass.generated.swift; sourceTree = "<group>"; };
-		63AEB5B02D4FC31B00E8A3CC /* MockableProtocol.generated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockableProtocol.generated.swift; sourceTree = "<group>"; };
-		63AEB5B12D4FC31B00E8A3CC /* MockableWebSocketClient.generated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockableWebSocketClient.generated.swift; sourceTree = "<group>"; };
 		63B526842656CF9600289719 /* Starscream.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Starscream.xcframework; path = Carthage/Build/Starscream.xcframework; sourceTree = "<group>"; };
 		63B5268D2656CFFE00289719 /* RxSwift.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = RxSwift.xcframework; path = Carthage/Build/RxSwift.xcframework; sourceTree = "<group>"; };
 		63B526DC2656D53700289719 /* Nimble.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Nimble.xcframework; path = Carthage/Build/Nimble.xcframework; sourceTree = "<group>"; };
@@ -395,9 +389,6 @@
 		63AEB5B22D4FC31B00E8A3CC /* Mocks */ = {
 			isa = PBXGroup;
 			children = (
-				63AEB5AF2D4FC31B00E8A3CC /* MockableClass.generated.swift */,
-				63AEB5B02D4FC31B00E8A3CC /* MockableProtocol.generated.swift */,
-				63AEB5B12D4FC31B00E8A3CC /* MockableWebSocketClient.generated.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -626,9 +617,6 @@
 				634398502CD009F800A2B9AC /* SocketTest.swift in Sources */,
 				12EF620825524B6800A6EE9B /* DefaultSerializerSpec.swift in Sources */,
 				63ACBE9426D53DF500171582 /* HeartbeatTimerSpec.swift in Sources */,
-				63AEB5B32D4FC31B00E8A3CC /* MockableProtocol.generated.swift in Sources */,
-				63AEB5B42D4FC31B00E8A3CC /* MockableWebSocketClient.generated.swift in Sources */,
-				63AEB5B52D4FC31B00E8A3CC /* MockableClass.generated.swift in Sources */,
 				63BBCF052B897DEF004A16C9 /* TransportSerializerTest.swift in Sources */,
 				12991E11254C456F00BB8650 /* FakeTimerQueue.swift in Sources */,
 				12991E15254C45FC00BB8650 /* FakeTimerQueueSpec.swift in Sources */,
