@@ -59,6 +59,7 @@
 		63BBCF032B897D87004A16C9 /* TransportSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBCF022B897D87004A16C9 /* TransportSerializer.swift */; };
 		63BBCF052B897DEF004A16C9 /* TransportSerializerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBCF042B897DEF004A16C9 /* TransportSerializerTest.swift */; };
 		63CE36C32D5EEF7F008E96DE /* MockableProtocol.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CE36BF2D5EEF7F008E96DE /* MockableProtocol.generated.swift */; };
+		63CE36C52D5EF00A008E96DE /* ChannelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CE36C42D5EF00A008E96DE /* ChannelTest.swift */; };
 		63DE6CCA272A2ECB00E2A728 /* MessageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DE6CC9272A2ECB00E2A728 /* MessageSpec.swift */; };
 		63F0F58D2592E44800C904FB /* ChatRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F0F58C2592E44800C904FB /* ChatRoomViewController.swift */; };
 		63F3765329E7296F00A5AB6E /* SynchronizedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F3765229E7296F00A5AB6E /* SynchronizedArray.swift */; };
@@ -154,6 +155,7 @@
 		63BBCF022B897D87004A16C9 /* TransportSerializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportSerializer.swift; sourceTree = "<group>"; };
 		63BBCF042B897DEF004A16C9 /* TransportSerializerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportSerializerTest.swift; sourceTree = "<group>"; };
 		63CE36BF2D5EEF7F008E96DE /* MockableProtocol.generated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockableProtocol.generated.swift; sourceTree = "<group>"; };
+		63CE36C42D5EF00A008E96DE /* ChannelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelTest.swift; sourceTree = "<group>"; };
 		63DE6CC9272A2ECB00E2A728 /* MessageSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageSpec.swift; sourceTree = "<group>"; };
 		63F0F58C2592E44800C904FB /* ChatRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewController.swift; sourceTree = "<group>"; };
 		63F3765229E7296F00A5AB6E /* SynchronizedArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynchronizedArray.swift; sourceTree = "<group>"; };
@@ -373,6 +375,7 @@
 			children = (
 				6343984D2CD0075B00A2B9AC /* DefaultsTest.swift */,
 				6343984F2CD009F800A2B9AC /* SocketTest.swift */,
+				63CE36C42D5EF00A008E96DE /* ChannelTest.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -622,6 +625,7 @@
 				63CE36C32D5EEF7F008E96DE /* MockableProtocol.generated.swift in Sources */,
 				63ACBE9426D53DF500171582 /* HeartbeatTimerSpec.swift in Sources */,
 				63BBCF052B897DEF004A16C9 /* TransportSerializerTest.swift in Sources */,
+				63CE36C52D5EF00A008E96DE /* ChannelTest.swift in Sources */,
 				12991E11254C456F00BB8650 /* FakeTimerQueue.swift in Sources */,
 				12991E15254C45FC00BB8650 /* FakeTimerQueueSpec.swift in Sources */,
 				635669C4261631DC0068B665 /* URLSessionTransportSpec.swift in Sources */,
