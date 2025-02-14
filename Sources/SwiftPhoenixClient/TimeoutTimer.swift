@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import Foundation
+
 /// Creates a timer that can perform calculated reties by setting
 /// `timerCalculation` , such as exponential backoff.
 ///
@@ -39,16 +41,28 @@
 ///     reconnectTimer.scheduleTimeout() // fires after 5000ms
 ///     reconnectTimer.reset()
 ///     reconnectTimer.scheduleTimeout() // fires after 1000ms
-
-import Foundation
-
+///
 // sourcery: AutoMockable
-class TimeoutTimer {
+protocol ScheduleTimer {
+    
+    /// Callback to be informed when the underlying Timer fires
+    var callback: (() -> Void)? { get set }
+    
+    /// Provides TimeInterval to use when scheduling the timer
+    var timerCalculation: ((Int) -> TimeInterval)? { get set }
+    
+    /// Schedules a timeout callback to fire after a calculated timeout duration.
+    func scheduleTimeout()
+    
+    /// Resets to the timer's intial state, canceling all scheduled timeouts.
+    func reset()
+    
+}
+
+
+class TimeoutTimer: ScheduleTimer {
   
-  /// Callback to be informed when the underlying Timer fires
   var callback: (() -> Void)? = nil
-  
-  /// Provides TimeInterval to use when scheduling the timer
   var timerCalculation: ((Int) -> TimeInterval)? = nil
   
   /// The work to be done when the queue fires
@@ -60,16 +74,11 @@ class TimeoutTimer {
   /// The Queue to execute on. In testing, this is overridden
   var queue: TimerQueue = TimerQueue.main
   
-  
-  /// Resets the Timer, clearing the number of tries and stops
-  /// any scheduled timeout.
   func reset() {
     self.tries = 0
     self.clearTimer()
   }
   
-  
-  /// Schedules a timeout callback to fire after a calculated timeout duration.
   func scheduleTimeout() {
     // Clear any ongoing timer, not resetting the number of tries
     self.clearTimer()

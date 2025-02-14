@@ -53,6 +53,22 @@ func buildIncomingMessage(
         )
     }
 
+func buildOutgoingMessage(
+    joinRef: String? = nil,
+    ref: String? = nil,
+    topic: String,
+    event: String,
+    payload: OutgoingPayload
+) -> OutgoingMessage {
+    return OutgoingMessage(
+        joinRef: joinRef,
+        ref: ref,
+        topic: topic,
+        event: event,
+        payload: payload
+    )
+}
+
 struct TestData: Codable {
     let foo: Int
 }

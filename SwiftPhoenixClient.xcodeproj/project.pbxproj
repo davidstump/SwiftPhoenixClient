@@ -271,6 +271,7 @@
 		128143B425410E01008615A7 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				63AEB5B22D4FC31B00E8A3CC /* Mocks */,
 				12991E0C254C450A00BB8650 /* Fakes */,
 				12991E0D254C451700BB8650 /* Helpers */,
 				12EF61FE25524B6800A6EE9B /* SwiftPhoenixClientTests */,
@@ -383,6 +384,13 @@
 				63AEB5A82D4FBBC700E8A3CC /* TransportReadyState.swift */,
 			);
 			path = Transport;
+			sourceTree = "<group>";
+		};
+		63AEB5B22D4FC31B00E8A3CC /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Mocks;
 			sourceTree = "<group>";
 		};
 		63BBCEFE2B897AF4004A16C9 /* Serialization */ = {

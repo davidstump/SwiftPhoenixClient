@@ -141,10 +141,10 @@ public class Socket: TransportDelegate {
     var pendingHeartbeatRef: String?
     
     /// Timer to use when attempting to reconnect
-    var reconnectTimer: TimeoutTimer
+    var reconnectTimer: ScheduleTimer
     
-    /// Close status
-    var closeStatus: URLSessionWebSocketTask.CloseCode? = nil
+    /// Indicates if the socket disconnect was indended or not.
+    var closeWasClean = false
     
     /// The connection to the server
     var connection: Transport? = nil
@@ -266,7 +266,7 @@ public class Socket: TransportDelegate {
         guard !isConnected else { return }
         
         // Reset the close status when attempting to connect
-        self.closeStatus = nil
+        self.closeWasClean = false
         
         self.connection = self.transport(self.endPointUrl)
         self.connection?.delegate = self
@@ -282,14 +282,16 @@ public class Socket: TransportDelegate {
                            reason: String? = nil,
                            callback: (() -> Void)? = nil) {
         // The socket was closed cleanly by the User
-        self.closeStatus = code
+        self.closeWasClean = true
         
         // Reset any reconnects and teardown the socket connection
         self.reconnectTimer.reset()
         self.teardown(code: code, reason: reason, callback: callback)
     }
     
-    internal func teardown(code: URLSessionWebSocketTask.CloseCode = .normalClosure, reason: String? = nil, callback: (() -> Void)? = nil) {
+    internal func teardown(code: URLSessionWebSocketTask.CloseCode = .normalClosure,
+                           reason: String? = nil,
+                           callback: (() -> Void)? = nil) {
         self.connection?.delegate = nil
         self.connection?.disconnect(code: code, reason: reason)
         self.connection = nil
@@ -512,7 +514,7 @@ public class Socket: TransportDelegate {
         self.logItems("transport", "Connected to \(endPoint)")
         
         // Reset the close status now that the socket has been connected
-        self.closeStatus = nil
+        self.closeWasClean = false
         
         // Send any messages that were waiting for a connection
         self.flushSendBuffer()
@@ -538,7 +540,7 @@ public class Socket: TransportDelegate {
         
         // Only attempt to reconnect if the socket did not close normally,
         // or if it was closed abnormally but on client side (e.g. due to heartbeat timeout)
-        if (self.closeStatus == nil || self.closeStatus == .invalid) {
+        if (!self.closeWasClean && code != .normalClosure) {
             self.reconnectTimer.scheduleTimeout()
         }
         
@@ -612,14 +614,15 @@ public class Socket: TransportDelegate {
         // Do not start up the heartbeat timer if skipHeartbeat is true
         guard !skipHeartbeat else { return }
         
-        self.heartbeatTimer = HeartbeatTimer(timeInterval: heartbeatInterval, leeway: heartbeatLeeway)
+        self.heartbeatTimer = HeartbeatTimer(timeInterval: heartbeatInterval,
+                                             leeway: heartbeatLeeway)
         self.heartbeatTimer?.start(eventHandler: { [weak self] in
             self?.sendHeartbeat()
         })
     }
     
     /// Sends a heartbeat payload to the phoenix servers
-    @objc func sendHeartbeat() {
+    func sendHeartbeat() {
         // Do not send if the connection is closed
         guard isConnected else { return }
         
@@ -631,6 +634,12 @@ public class Socket: TransportDelegate {
             self.pendingHeartbeatRef = nil
             self.logItems("transport",
                           "heartbeat timeout. Attempting to re-establish connection")
+            
+            // Inform channels that an error has occurred
+            self.triggerChannelError()
+            
+            // The close was not done cleanly, but instead caused by a timeout
+            self.closeWasClean = false
             
             // Close the socket manually, flagging the closure as abnormal. Do not use
             // `teardown` or `disconnect` as they will nil out the websocket delegate.
@@ -646,8 +655,6 @@ public class Socket: TransportDelegate {
     }
     
     internal func abnormalClose(_ reason: String) {
-        self.closeStatus = .abnormalClosure
-        
         /*
          We use NORMAL here since the client is the one determining to close the
          connection. However, we set to close status to abnormal so that
@@ -656,7 +663,7 @@ public class Socket: TransportDelegate {
          If the server subsequently acknowledges with code 1000 (normal close),
          the socket will keep the `.abnormal` close status and trigger a reconnection.
          */
-        self.connection?.disconnect(code: URLSessionWebSocketTask.CloseCode.normalClosure, reason: reason)
+        self.connection?.disconnect(code: .normalClosure, reason: reason)
     }
     
     
@@ -694,12 +701,13 @@ public class Socket: TransportDelegate {
         }
         
         self.logItems("receive ", string)
-        DispatchQueue.main.async { self.onConnectionMessage(decodedMessage) }
+        DispatchQueue.main.async {
+            self.onConnectionMessage(decodedMessage)
+        }
     }
 
     public func onClose(code: URLSessionWebSocketTask.CloseCode, reason: String? = nil) {
         DispatchQueue.main.async {
-            self.closeStatus = code
             self.onConnectionClosed(code: code, reason: reason)
         }
     }

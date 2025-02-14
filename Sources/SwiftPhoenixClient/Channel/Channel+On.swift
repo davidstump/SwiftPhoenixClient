@@ -74,7 +74,7 @@ extension Channel {
     /// - return: Ref counter of the subscription. See `func off()`
     @discardableResult
     public func onError(_ callback: @escaping (ChannelMessage<Any>) -> Void) -> Int {
-        return self.on(ChannelEvent.close, callback: callback)
+        return self.on(ChannelEvent.error, callback: callback)
     }
     
     
