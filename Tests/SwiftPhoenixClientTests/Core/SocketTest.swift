@@ -270,7 +270,11 @@ struct SocketTest {
         let channel = socket.channel("topic", params: ["one": "two"])
         #expect(channel.socket === socket)
         #expect(channel.topic == "topic")
-        #expect(channel.params["one"] as? String == "two")
+        
+        expectJson(channel.params) { params in
+            let params = params as! [String: Any]
+            #expect(params["one"] as! String == "two")
+        }
     }
     
     @Test func channel_adds_channel_to_sockets_channel_list() async throws {

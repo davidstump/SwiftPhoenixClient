@@ -69,6 +69,15 @@ func buildOutgoingMessage(
     )
 }
 
+func expectJson(_ payload: OutgoingPayload?, block: (Any) -> Void) {
+    guard let payload else { fatalError("expected json payload") }
+    if case .json(let value) = payload {
+        block(value)
+    } else {
+        fatalError("expected json payload")
+    }
+}
+
 struct TestData: Codable {
     let foo: Int
 }

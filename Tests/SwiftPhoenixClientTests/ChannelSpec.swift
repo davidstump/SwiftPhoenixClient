@@ -78,7 +78,7 @@
 //      
 //      it("sets up joinPush with literal params", closure: {
 //        channel = Channel(topic: "topic", params: ["one": "two"], socket: mockSocket)
-//        let joinPush = channel.joinPush
+//        let joinPush = channel.joinPushC
 //        
 //        expect(joinPush?.channel === channel).to(beTrue())
 //        expect(joinPush?.payload["one"] as? String).to(equal("two"))

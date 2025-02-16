@@ -23,13 +23,16 @@ import Testing
         }
     
         
-        @Test
+        @Test("sets defaults")
         func setsDefaults() async throws {
             let channel = Channel(topic: "topic", params: ["one": "two"], socket: socket)
             
             #expect(channel.state == .closed)
             #expect(channel.topic == "topic")
-            #expect(channel.params["one"] as! String == "two")
+            expectJson(channel.params) { params in
+                let params = params as! [String: Any]
+                #expect(params["one"] as! String == "two")
+            }
             #expect(channel.socket === socket)
             #expect(channel.timeout == 1234)
             #expect(channel.joinedOnce == false)
@@ -37,8 +40,11 @@ import Testing
             #expect(channel.pushBuffer.isEmpty)
         }
         
-        @Test func setsUpJoinPushObjectWithLiteralParams() async throws {
-            let channel = Channel(topic: "topic", params: ["one": "two"], socket: socket)
+        @Test("sets up join push object with literal params")
+        func joinPushLiteralParams() async throws {
+            let channel = Channel(topic: "topic",
+                                  params: .json(["one": "two"]),
+                                  socket: socket)
             let joinPush = channel.joinPush
             
             #expect(joinPush?.channel === channel)
@@ -54,6 +60,72 @@ import Testing
         }
     }
     
+    @Suite("updating join params")
+    struct UpdatingJoinParams {
+        let socket = SocketSpy(endPoint: "/", transport: { _ in TransportMock() })
+        
+        init() {
+            socket.timeout = 1234
+        }
+        
+        @Test("can update the join params")
+        func updateJoinParams() async throws {
+            let channel = Channel(topic: "topic",
+                                  params: .json(["value": 1]),
+                                  socket: socket)
+            let joinPush = channel.joinPush
+            
+            #expect(joinPush?.channel === channel)
+            #expect(joinPush?.event == "phx_join")
+            #expect(joinPush?.timeout == 1234)
+            expectJson(joinPush?.payload) { payload in
+                let payload = payload as! [String: Any]
+                #expect(payload["value"] as! Int == 1)
+            }
+            
+            channel.params = .json(["value": 2])
+            #expect(joinPush?.channel === channel)
+            #expect(joinPush?.event == "phx_join")
+            #expect(joinPush?.timeout == 1234)
+            expectJson(joinPush?.payload) { payload in
+                let payload = payload as! [String: Any]
+                #expect(payload["value"] as! Int == 2)
+            }
+            
+            expectJson(channel.params) { params in
+                let params = params as! [String: Any]
+                #expect(params["value"] as! Int == 2)
+            }
+        }
+    }
     
-    
+    @Suite("join")
+    struct ChannelJoin {
+        
+        let socket = Socket("/socket")
+        let channel: Channel
+        
+        init() {
+            channel = socket.channel("topic", params: ["one": "two"])
+        }
+        
+        @Test("sets state to joining")
+        func testJoining() async throws {
+            channel.join()
+            #expect(channel.state == .joining)
+        }
+        
+        @Test("sets joinedOnce to true")
+        func testJoinedOnce() async throws {
+            #expect(channel.joinedOnce == false)
+            channel.join()
+            #expect(channel.joinedOnce == true)
+        }
+        
+        @Test("throws if attempting to join multiple times")
+        func testJoinsMultipleTimes() async throws {
+            channel.join()
+            
+        }
+    }
 }

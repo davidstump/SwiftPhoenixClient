@@ -427,6 +427,11 @@ public class Socket: TransportDelegate {
     /// - return: A new channel
     public func channel(_ topic: String,
                         params: [String: Any] = [:]) -> Channel {
+        return channel(topic, params: .json(params))
+    }
+    
+    public func channel(_ topic: String,
+                        params: OutgoingPayload) -> Channel {
         let channel = Channel(topic: topic, params: params, socket: self)
         self.channels.append(channel)
         

@@ -50,8 +50,8 @@ public class Channel {
     public let topic: String
     
     /// The params sent when joining the channel
-    public var params: Payload {
-        didSet { self.joinPush.payload = .json(params) }
+    public var params: OutgoingPayload {
+        didSet { self.joinPush.payload = params }
     }
     
     /// The Socket that the channel belongs to
@@ -92,6 +92,14 @@ public class Channel {
     /// Refs of stateChange hooks
     var stateChangeRefs: [String]
     
+    convenience init(
+        topic: String,
+        params: [String: Any] = [:],
+        socket: Socket
+    ) {
+        self.init(topic: topic, params: .json(params), socket: socket)
+    }
+    
     /// Initialize a Channel
     ///
     /// - parameter topic: Topic of the Channel
@@ -99,7 +107,7 @@ public class Channel {
     /// - parameter socket: Socket that the channel is a part of
     init(
         topic: String,
-        params: [String: Any] = [:],
+        params: OutgoingPayload = .json([:]),
         socket: Socket
     ) {
         self.state = ChannelState.closed
@@ -146,7 +154,7 @@ public class Channel {
         // Setup Push Event to be sent when joining
         self.joinPush = Push(channel: self,
                              event: ChannelEvent.join,
-                             payload: .json(params),
+                             payload: params,
                              timeout: self.timeout)
         
         /// Handle when a response is received after join()
@@ -264,6 +272,7 @@ public class Channel {
     ///
     /// - parameter timeout: Optional. Defaults to Channel's timeout
     /// - return: Push event
+    /// - throws: If the channel has already tried to join
     @discardableResult
     public func join(timeout: TimeInterval? = nil) -> Push {
         guard !joinedOnce else {
