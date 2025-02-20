@@ -274,10 +274,9 @@ public class Channel {
     /// - return: Push event
     /// - throws: If the channel has already tried to join
     @discardableResult
-    public func join(timeout: TimeInterval? = nil) -> Push {
+    public func join(timeout: TimeInterval? = nil) throws -> Push {
         guard !joinedOnce else {
-            fatalError("tried to join multiple times. 'join' "
-                       + "can only be called a single time per channel instance")
+            throw ChannelError.alreadyJoined
         }
         
         // Join the Channel

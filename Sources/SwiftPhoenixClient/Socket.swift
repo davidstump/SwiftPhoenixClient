@@ -154,19 +154,19 @@ public class Socket: TransportDelegate {
     // MARK: - Initialization
     //----------------------------------------------------------------------
     public convenience init(_ endPoint: String, params: Payload? = nil) {
-        self.init(endPoint: endPoint,
+        self.init(endPoint,
                   transport: { url in return URLSessionTransport(url: url) },
                   params: { params })
     }
     
     public convenience init(_ endPoint: String, params: PayloadClosure?) {
-        self.init(endPoint: endPoint,
+        self.init(endPoint,
                   transport: { url in return URLSessionTransport(url: url) },
                   params: params)
     }
     
     
-    public init(endPoint: String,
+    public init(_ endPoint: String,
                 transport: @escaping ((URL) -> Transport),
                 params: PayloadClosure? = nil) {
         self.transport = transport

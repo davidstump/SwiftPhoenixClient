@@ -21,10 +21,35 @@
 @testable import SwiftPhoenixClient
 
 class SocketSpy: Socket {
-  
-  private(set) var pushCalled: Bool?
-  private(set) var pushCallCount: Int = 0
-  private(set) var pushArgs: [Int: (topic: String, event: String, payload: Data, ref: String?, joinRef: String?)] = [:]
+    
+    
+    private(set) var makeRefCallCount: Int = 0
+    var makeRefCalled: Bool { makeRefCallCount > 0 }
+    var makeRefReturnValue: String? = nil
+    
+    override func makeRef() -> String {
+        makeRefCallCount += 1
+        guard let returnValue = makeRefReturnValue else { return super.makeRef() }
+        return returnValue
+    }
+    
+    
+    private(set) var pushOutgoingCallCount: Int = 0
+    var pushOutgoingCalled: Bool { pushOutgoingCallCount > 0 }
+    private(set) var pushOutgoingReceivedMessage: OutgoingMessage? = nil
+    
+    override func push(outgoing message: OutgoingMessage) {
+        pushOutgoingCallCount += 1
+        pushOutgoingReceivedMessage = message
+        super.push(outgoing: message)
+    }
+    
+    
+//    
+//    
+//  private(set) var pushCalled: Bool?
+//  private(set) var pushCallCount: Int = 0
+//  private(set) var pushArgs: [Int: (topic: String, event: String, payload: Data, ref: String?, joinRef: String?)] = [:]
   
 //  override func push(topic: String,
 //                     event: String,

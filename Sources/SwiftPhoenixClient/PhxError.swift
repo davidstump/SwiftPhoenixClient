@@ -8,6 +8,21 @@
 
 import Foundation
 
+public enum ChannelError: LocalizedError {
+    case alreadyJoined
+    
+    public var errorDescription: String? {
+        switch self {
+        case .alreadyJoined:
+            NSLocalizedString(
+                "tried to join multiple times. 'join' can only be called a single time per channel instance",
+                comment: "Already Joined")
+        }
+    }
+    
+    
+}
+
 public enum PhxError: Error {
     
     public enum SerializerReason {

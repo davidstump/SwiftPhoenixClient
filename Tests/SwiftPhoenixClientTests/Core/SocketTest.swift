@@ -17,7 +17,7 @@ struct SocketTest {
         let mockTransport = TransportMock()
         mockTransport.readyState = readyState
         
-        let socket = Socket(endPoint: endpoint) { _ in return mockTransport }
+        let socket = Socket(endpoint) { _ in return mockTransport }
         
         return (socket, mockTransport)
     }
@@ -682,7 +682,7 @@ struct SocketTest {
         var errorMessage: ChannelMessage<Any>? = nil
         channel.on(ChannelEvent.error) { errorMessage = $0 }
         
-        channel.join()
+        try channel.join()
         #expect(channel.state == .joining)
         
         socket.onConnectionClosed(code: .goingAway, reason: nil)
@@ -695,7 +695,7 @@ struct SocketTest {
         var errorMessage: ChannelMessage<Any>? = nil
         channel.on(ChannelEvent.error) { errorMessage = $0 }
         
-        channel.join().trigger("ok", payload: [:])
+        try channel.join().trigger("ok", payload: [:])
         #expect(channel.state == .joined)
         
         socket.onConnectionClosed(code: .goingAway, reason: nil)
@@ -709,7 +709,7 @@ struct SocketTest {
         var errorMessage: ChannelMessage<Any>? = nil
         channel.on(ChannelEvent.error) { errorMessage = $0 }
         
-        channel.join().trigger("ok", payload: [:])
+        try channel.join().trigger("ok", payload: [:])
         channel.leave().trigger("ok", payload: [:])
         #expect(channel.state == .closed)
         
@@ -748,7 +748,7 @@ struct SocketTest {
         var errorMessage: ChannelMessage<Any>? = nil
         channel.on(ChannelEvent.error) { errorMessage = $0 }
         
-        channel.join()
+        try channel.join()
         socket.onConnectionOpen(response: nil)
         #expect(channel.state == .joining)
         
@@ -763,7 +763,7 @@ struct SocketTest {
         var errorMessage: ChannelMessage<Any>? = nil
         channel.on(ChannelEvent.error) { errorMessage = $0 }
         
-        channel.join()
+        try channel.join()
         #expect(channel.state == .joining)
         
         socket.onConnectionError(TestError.stub, response: nil)
@@ -777,7 +777,7 @@ struct SocketTest {
         var errorMessage: ChannelMessage<Any>? = nil
         channel.on(ChannelEvent.error) { errorMessage = $0 }
         
-        channel.join().trigger("ok", payload: [:])
+        try channel.join().trigger("ok", payload: [:])
         socket.onConnectionOpen(response: nil)
         #expect(channel.state == .joined)
         
@@ -793,7 +793,7 @@ struct SocketTest {
         var errorMessage: ChannelMessage<Any>? = nil
         channel.on(ChannelEvent.error) { errorMessage = $0 }
         
-        channel.join().trigger("ok", payload: [:])
+        try channel.join().trigger("ok", payload: [:])
         channel.leave()
         #expect(channel.state == .closed)
         
