@@ -946,45 +946,5 @@
 //        expect { channel.push("event", payload: [:]) }.to(throwAssertion())
 //      })
 //    }
-//    
-//    describe("leave") {
-//      beforeEach {
-//        mockClient.readyState = .open
-//        channel.join().trigger("ok", payload: [:])
-//      }
-//      
-//      it("unsubscribes from server events", closure: {
-//        mockSocket.makeRefClosure = nil
-//        mockSocket.makeRefReturnValue = kDefaultRef
-//        
-//        let joinRef = channel.joinRef
-//        channel.leave()
-//        
-//        expect(mockSocket.pushTopicEventPayloadRefJoinRefCalled).to(beTrue())
-//        let args = mockSocket.pushTopicEventPayloadRefJoinRefReceivedArguments
-//        expect(args?.topic).to(equal("topic"))
-//        expect(args?.event).to(equal("phx_leave"))
-//        expect(args?.payload).to(beEmpty())
-//        expect(args?.joinRef).to(equal(joinRef))
-//        expect(args?.ref).to(equal(kDefaultRef))
-//      })
-//      
-//      it("closes channel on 'ok' from server", closure: {
-//        let socket = Socket(endPoint: "/socket", transport: { _ in return mockClient })
-//        
-//        let channel = socket.channel("topic", params: ["one": "two"])
-//        channel.join().trigger("ok", payload: [:])
-//        
-//        let anotherChannel = socket.channel("another", params: ["three": "four"])
-//        
-//        expect(socket.channels).to(haveCount(2))
-//        
-//        channel.leave().trigger("ok", payload: [:])
-//        expect(socket.channels).to(haveCount(1))
-//        expect(socket.channels.first === anotherChannel).to(beTrue())
-//      })
-//    }
-//    
-//    
 //  }
 //}

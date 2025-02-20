@@ -848,6 +848,60 @@ struct ChannelTest {
         }
     }
     
+    @Suite("leave")
+    struct Leave {
+        let socket: SocketSpy
+        let channel: Channel
+        
+        init() throws {
+            let transport = TransportMock()
+            socket = SocketSpy("/socket", transport: { _ in transport })
+            socket.connection = transport
+            transport.readyState = .open
+            
+            channel = socket.channel("topic", params: ["one": "two"])
+            try channel.join().trigger("ok", payload: [:])
+        }
+        
+        @Test("unsubscribes from server events")
+        func unsubscribesFromServerEvents() async throws {
+            socket.makeRefReturnValue = "1"
+            
+            let joinRef = channel.joinRef
+            channel.leave()
+            
+            #expect(socket.pushOutgoingCalled)
+            let outgoingMessage = socket.pushOutgoingReceivedMessage
+            #expect(outgoingMessage?.topic == "topic")
+            #expect(outgoingMessage?.event == "phx_leave")
+            #expect(outgoingMessage?.joinRef == joinRef)
+            #expect(outgoingMessage?.ref == "1")
+        }
+        
+        @Test("closes channel on 'ok' from server")
+        func closesChanelOnOkfromServer() async throws {
+            let socket = Socket("/socket", transport: { _ in TransportMock() })
+            
+            let channel = socket.channel("topic", params: ["one": "two"])
+            try channel.join().trigger("ok", payload: [:])
+            
+            let anotherChannel = socket.channel("another", params: ["three": "four"])
+            #expect(socket.channels.count == 2)
+            
+            channel.leave().trigger("ok", payload: [:])
+            #expect(socket.channels.count == 1)
+            #expect(socket.channels.first === anotherChannel)
+        }
+        
+        @Test("sets state to closed on 'ok' event")
+        func setsStateToClosedOnOkEvent() async throws {
+            #expect(channel.state != .closed)
+            
+            channel.leave().trigger("ok", payload: [:])
+            #expect(channel.state == .closed)
+        }
+    }
+    
     @Suite("isMemeber")
     struct IsMember {
         let socket: SocketSpy
