@@ -37,12 +37,33 @@ class SocketSpy: Socket {
     private(set) var pushOutgoingCallCount: Int = 0
     var pushOutgoingCalled: Bool { pushOutgoingCallCount > 0 }
     private(set) var pushOutgoingReceivedMessage: OutgoingMessage? = nil
+    private(set) var pushOutgoingReceivedMessages: [Int :OutgoingMessage] = [:]
     
     override func push(outgoing message: OutgoingMessage) {
         pushOutgoingCallCount += 1
         pushOutgoingReceivedMessage = message
+        pushOutgoingReceivedMessages[pushOutgoingCallCount] = message
         super.push(outgoing: message)
     }
+    
+    private(set) var removeCallCount: Int = 0
+    var removeCalled: Bool { pushOutgoingCallCount > 0 }
+    private(set) var removeReceivedChannel: Channel? = nil
+    
+    override func remove(_ channel: Channel) {
+        removeCallCount += 1
+        removeReceivedChannel = channel
+    }
+    
+    private(set) var removeFromSendBufferCallCount: Int = 0
+    var removeFromSendBufferCalled: Bool { removeFromSendBufferCallCount > 0 }
+    private(set) var removeFromSendBufferReceivedRef: String? = nil
+    
+    override func removeFromSendBuffer(ref: String) {
+        removeFromSendBufferCallCount += 1
+        removeFromSendBufferReceivedRef = ref
+    }
+    
     
     
 //    

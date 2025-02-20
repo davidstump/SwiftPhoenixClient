@@ -26,6 +26,7 @@ struct ReceiveHook {
     let callback: SubscriptionCallback
 }
 
+
 /// Represnts pushing data to a `Channel` through the `Socket`
 public class Push {
     
@@ -161,7 +162,7 @@ public class Push {
     }
     
     @discardableResult
-    func _receive(_ status: String,
+    internal func _receive(_ status: String,
                          callback: @escaping (IncomingMessage) -> Void) -> Push {
         let subscriptionCallback = InternalSubscriptionCallback(callback: callback)
         return appendReceive(status, callback: subscriptionCallback)

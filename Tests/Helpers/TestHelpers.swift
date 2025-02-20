@@ -36,15 +36,17 @@ func transform(_ lhs: [AnyHashable: Any],
     return (NSDictionary(dictionary: lhs), NSDictionary(dictionary: rhs))
 }
 
-
 func buildIncomingMessage(
+    joinRef: String? = nil,
+    ref: String? = nil,
+    topic: String = "t",
     event: String = "e",
-    payload: IncomingPayload
+    payload: IncomingPayload = .deferred(Data())
 ) -> IncomingMessage {
         return IncomingMessage(
-            joinRef: nil,
-            ref: nil,
-            topic: "t",
+            joinRef: joinRef,
+            ref: ref,
+            topic: topic,
             event: event,
             status: nil,
             payload: payload,
@@ -84,8 +86,13 @@ struct TestData: Codable {
 
 extension Channel {
     /// Utility method to easily filter the bindings for a channel by their event
-    //  func getBindings(_ event: String) -> [Binding]? {
-    //      return nil
-    ////    return self.syncBindingsDel.filter({ $0.event == event })
-    //  }
+    func getChannelSubscription(_ event: String) -> [ChannelSubscription] {
+        var subscriptions = [ChannelSubscription]()
+        self.subscriptions.forEach { subscription in
+            guard subscription.event == event else { return }
+            subscriptions.append(subscription)
+        }
+        
+        return subscriptions
+      }
 }

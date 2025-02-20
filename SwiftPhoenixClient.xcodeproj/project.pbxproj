@@ -28,6 +28,7 @@
 		1284F4D22D4959E20090D0DA /* OutgoingShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1284F4D12D4959E20090D0DA /* OutgoingShape.swift */; };
 		12922E202543B10B0034B257 /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12922E1F2543B10B0034B257 /* Socket.swift */; };
 		12922E222543B37B0034B257 /* URLSessionTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12922E212543B37B0034B257 /* URLSessionTransport.swift */; };
+		1295E6F12D67B67500D4D45A /* PushSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1295E6F02D67B67500D4D45A /* PushSpy.swift */; };
 		12991DFB254C3EB800BB8650 /* Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991DFA254C3EB800BB8650 /* Defaults.swift */; };
 		12991DFF254C3EF900BB8650 /* HeartbeatTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991DFE254C3EF900BB8650 /* HeartbeatTimer.swift */; };
 		12991E01254C3F1300BB8650 /* TimeoutTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12991E00254C3F1300BB8650 /* TimeoutTimer.swift */; };
@@ -120,6 +121,7 @@
 		1284F4D12D4959E20090D0DA /* OutgoingShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutgoingShape.swift; sourceTree = "<group>"; };
 		12922E1F2543B10B0034B257 /* Socket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Socket.swift; sourceTree = "<group>"; };
 		12922E212543B37B0034B257 /* URLSessionTransport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionTransport.swift; sourceTree = "<group>"; };
+		1295E6F02D67B67500D4D45A /* PushSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushSpy.swift; sourceTree = "<group>"; };
 		12991DFA254C3EB800BB8650 /* Defaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Defaults.swift; sourceTree = "<group>"; };
 		12991DFE254C3EF900BB8650 /* HeartbeatTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatTimer.swift; sourceTree = "<group>"; };
 		12991E00254C3F1300BB8650 /* TimeoutTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeoutTimer.swift; sourceTree = "<group>"; };
@@ -330,6 +332,7 @@
 				12991E0E254C454C00BB8650 /* SocketSpy.swift */,
 				12991E10254C456F00BB8650 /* FakeTimerQueue.swift */,
 				12991E14254C45FC00BB8650 /* FakeTimerQueueSpec.swift */,
+				1295E6F02D67B67500D4D45A /* PushSpy.swift */,
 			);
 			path = Fakes;
 			sourceTree = "<group>";
@@ -627,6 +630,7 @@
 				63BBCF052B897DEF004A16C9 /* TransportSerializerTest.swift in Sources */,
 				63CE36C52D5EF00A008E96DE /* ChannelTest.swift in Sources */,
 				12991E11254C456F00BB8650 /* FakeTimerQueue.swift in Sources */,
+				1295E6F12D67B67500D4D45A /* PushSpy.swift in Sources */,
 				12991E15254C45FC00BB8650 /* FakeTimerQueueSpec.swift in Sources */,
 				635669C4261631DC0068B665 /* URLSessionTransportSpec.swift in Sources */,
 				12A61E7E2D49E94C000B62E1 /* DataPayloadParserTest.swift in Sources */,
