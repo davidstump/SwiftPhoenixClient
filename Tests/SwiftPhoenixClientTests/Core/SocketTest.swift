@@ -671,6 +671,7 @@ struct SocketTest {
             
             socket.onConnectionOpen(response: nil)
             DispatchQueue.main.sync { /* sync array no-op */}
+            Thread.sleep(forTimeInterval: 0.2) // syncarray runs on .async
             #expect(socket.sendBuffer.isEmpty)
         }
         
