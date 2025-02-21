@@ -43,18 +43,14 @@
 		12A61E812D49E954000B62E1 /* DecodablePayloadParserTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A61E802D49E954000B62E1 /* DecodablePayloadParserTest.swift */; };
 		12A61E852D49E95B000B62E1 /* JsonPayloadParserTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A61E832D49E95B000B62E1 /* JsonPayloadParserTest.swift */; };
 		12C2F0992D68BAD90089B49F /* ChannelError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C2F0982D68BAD90089B49F /* ChannelError.swift */; };
-		12EF620425524B6800A6EE9B /* SocketSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF61FF25524B6800A6EE9B /* SocketSpec.swift */; };
-		12EF620525524B6800A6EE9B /* ChannelSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620025524B6800A6EE9B /* ChannelSpec.swift */; };
+		12C2F09B2D68F9540089B49F /* TimeoutTimerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C2F09A2D68F9540089B49F /* TimeoutTimerTest.swift */; };
+		12C2F09D2D68FCE20089B49F /* HeartbeatTimerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C2F09C2D68FCE20089B49F /* HeartbeatTimerTest.swift */; };
 		12EF620625524B6800A6EE9B /* PresenceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620125524B6800A6EE9B /* PresenceSpec.swift */; };
-		12EF620725524B6800A6EE9B /* TimeoutTimerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620225524B6800A6EE9B /* TimeoutTimerSpec.swift */; };
-		12EF620825524B6800A6EE9B /* DefaultSerializerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620325524B6800A6EE9B /* DefaultSerializerSpec.swift */; };
 		634398462CCFDA9200A2B9AC /* PayloadDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634398452CCFDA9200A2B9AC /* PayloadDecoder.swift */; };
 		6343984A2CCFDDBD00A2B9AC /* TransportSerializerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634398492CCFDDBD00A2B9AC /* TransportSerializerError.swift */; };
 		6343984E2CD0075B00A2B9AC /* DefaultsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6343984D2CD0075B00A2B9AC /* DefaultsTest.swift */; };
 		634398502CD009F800A2B9AC /* SocketTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6343984F2CD009F800A2B9AC /* SocketTest.swift */; };
 		634E20EC2CC4813D0037A570 /* PayloadEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634E20EB2CC4813D0037A570 /* PayloadEncoder.swift */; };
-		635669C4261631DC0068B665 /* URLSessionTransportSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635669C3261631DC0068B665 /* URLSessionTransportSpec.swift */; };
-		63ACBE9426D53DF500171582 /* HeartbeatTimerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63ACBE9326D53DF500171582 /* HeartbeatTimerSpec.swift */; };
 		63AEB5A92D4FBBC700E8A3CC /* TransportReadyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AEB5A82D4FBBC700E8A3CC /* TransportReadyState.swift */; };
 		63AEB5AB2D4FBC0500E8A3CC /* Transport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AEB5AA2D4FBC0500E8A3CC /* Transport.swift */; };
 		63AEB5AD2D4FBC4200E8A3CC /* TransportDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AEB5AC2D4FBC4200E8A3CC /* TransportDelegate.swift */; };
@@ -62,7 +58,6 @@
 		63BBCF052B897DEF004A16C9 /* TransportSerializerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63BBCF042B897DEF004A16C9 /* TransportSerializerTest.swift */; };
 		63CE36C32D5EEF7F008E96DE /* MockableProtocol.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CE36BF2D5EEF7F008E96DE /* MockableProtocol.generated.swift */; };
 		63CE36C52D5EF00A008E96DE /* ChannelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CE36C42D5EF00A008E96DE /* ChannelTest.swift */; };
-		63DE6CCA272A2ECB00E2A728 /* MessageSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DE6CC9272A2ECB00E2A728 /* MessageSpec.swift */; };
 		63F0F58D2592E44800C904FB /* ChatRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F0F58C2592E44800C904FB /* ChatRoomViewController.swift */; };
 		63F3765329E7296F00A5AB6E /* SynchronizedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F3765229E7296F00A5AB6E /* SynchronizedArray.swift */; };
 /* End PBXBuildFile section */
@@ -137,18 +132,14 @@
 		12A61E802D49E954000B62E1 /* DecodablePayloadParserTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodablePayloadParserTest.swift; sourceTree = "<group>"; };
 		12A61E832D49E95B000B62E1 /* JsonPayloadParserTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonPayloadParserTest.swift; sourceTree = "<group>"; };
 		12C2F0982D68BAD90089B49F /* ChannelError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelError.swift; sourceTree = "<group>"; };
-		12EF61FF25524B6800A6EE9B /* SocketSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketSpec.swift; sourceTree = "<group>"; };
-		12EF620025524B6800A6EE9B /* ChannelSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelSpec.swift; sourceTree = "<group>"; };
+		12C2F09A2D68F9540089B49F /* TimeoutTimerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeoutTimerTest.swift; sourceTree = "<group>"; };
+		12C2F09C2D68FCE20089B49F /* HeartbeatTimerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatTimerTest.swift; sourceTree = "<group>"; };
 		12EF620125524B6800A6EE9B /* PresenceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresenceSpec.swift; sourceTree = "<group>"; };
-		12EF620225524B6800A6EE9B /* TimeoutTimerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeoutTimerSpec.swift; sourceTree = "<group>"; };
-		12EF620325524B6800A6EE9B /* DefaultSerializerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultSerializerSpec.swift; sourceTree = "<group>"; };
 		634398452CCFDA9200A2B9AC /* PayloadDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayloadDecoder.swift; sourceTree = "<group>"; };
 		634398492CCFDDBD00A2B9AC /* TransportSerializerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportSerializerError.swift; sourceTree = "<group>"; };
 		6343984D2CD0075B00A2B9AC /* DefaultsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsTest.swift; sourceTree = "<group>"; };
 		6343984F2CD009F800A2B9AC /* SocketTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketTest.swift; sourceTree = "<group>"; };
 		634E20EB2CC4813D0037A570 /* PayloadEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayloadEncoder.swift; sourceTree = "<group>"; };
-		635669C3261631DC0068B665 /* URLSessionTransportSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionTransportSpec.swift; sourceTree = "<group>"; };
-		63ACBE9326D53DF500171582 /* HeartbeatTimerSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatTimerSpec.swift; sourceTree = "<group>"; };
 		63AEB5A82D4FBBC700E8A3CC /* TransportReadyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportReadyState.swift; sourceTree = "<group>"; };
 		63AEB5AA2D4FBC0500E8A3CC /* Transport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transport.swift; sourceTree = "<group>"; };
 		63AEB5AC2D4FBC4200E8A3CC /* TransportDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportDelegate.swift; sourceTree = "<group>"; };
@@ -160,7 +151,6 @@
 		63BBCF042B897DEF004A16C9 /* TransportSerializerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportSerializerTest.swift; sourceTree = "<group>"; };
 		63CE36BF2D5EEF7F008E96DE /* MockableProtocol.generated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockableProtocol.generated.swift; sourceTree = "<group>"; };
 		63CE36C42D5EF00A008E96DE /* ChannelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelTest.swift; sourceTree = "<group>"; };
-		63DE6CC9272A2ECB00E2A728 /* MessageSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageSpec.swift; sourceTree = "<group>"; };
 		63F0F58C2592E44800C904FB /* ChatRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewController.swift; sourceTree = "<group>"; };
 		63F3765229E7296F00A5AB6E /* SynchronizedArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynchronizedArray.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -371,15 +361,9 @@
 			children = (
 				12A61E7C2D49E93B000B62E1 /* Parser */,
 				6343984C2CD0075100A2B9AC /* Core */,
-				63BBCF012B897D4F004A16C9 /* Serializatoin */,
-				12EF61FF25524B6800A6EE9B /* SocketSpec.swift */,
-				12EF620025524B6800A6EE9B /* ChannelSpec.swift */,
+				63BBCF012B897D4F004A16C9 /* Serialization */,
 				12EF620125524B6800A6EE9B /* PresenceSpec.swift */,
-				12EF620225524B6800A6EE9B /* TimeoutTimerSpec.swift */,
-				12EF620325524B6800A6EE9B /* DefaultSerializerSpec.swift */,
-				635669C3261631DC0068B665 /* URLSessionTransportSpec.swift */,
-				63ACBE9326D53DF500171582 /* HeartbeatTimerSpec.swift */,
-				63DE6CC9272A2ECB00E2A728 /* MessageSpec.swift */,
+				12C2F09C2D68FCE20089B49F /* HeartbeatTimerTest.swift */,
 			);
 			path = SwiftPhoenixClientTests;
 			sourceTree = "<group>";
@@ -387,6 +371,7 @@
 		6343984C2CD0075100A2B9AC /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				12C2F09A2D68F9540089B49F /* TimeoutTimerTest.swift */,
 				6343984D2CD0075B00A2B9AC /* DefaultsTest.swift */,
 				6343984F2CD009F800A2B9AC /* SocketTest.swift */,
 				63CE36C42D5EF00A008E96DE /* ChannelTest.swift */,
@@ -423,12 +408,12 @@
 			path = Serialization;
 			sourceTree = "<group>";
 		};
-		63BBCF012B897D4F004A16C9 /* Serializatoin */ = {
+		63BBCF012B897D4F004A16C9 /* Serialization */ = {
 			isa = PBXGroup;
 			children = (
 				63BBCF042B897DEF004A16C9 /* TransportSerializerTest.swift */,
 			);
-			path = Serializatoin;
+			path = Serialization;
 			sourceTree = "<group>";
 		};
 		63F0F5912592E58800C904FB /* basic */ = {
@@ -636,24 +621,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				634398502CD009F800A2B9AC /* SocketTest.swift in Sources */,
-				12EF620825524B6800A6EE9B /* DefaultSerializerSpec.swift in Sources */,
 				63CE36C32D5EEF7F008E96DE /* MockableProtocol.generated.swift in Sources */,
-				63ACBE9426D53DF500171582 /* HeartbeatTimerSpec.swift in Sources */,
 				63BBCF052B897DEF004A16C9 /* TransportSerializerTest.swift in Sources */,
 				63CE36C52D5EF00A008E96DE /* ChannelTest.swift in Sources */,
 				12991E11254C456F00BB8650 /* FakeTimerQueue.swift in Sources */,
+				12C2F09D2D68FCE20089B49F /* HeartbeatTimerTest.swift in Sources */,
 				1295E6F12D67B67500D4D45A /* PushSpy.swift in Sources */,
 				12991E15254C45FC00BB8650 /* FakeTimerQueueSpec.swift in Sources */,
-				635669C4261631DC0068B665 /* URLSessionTransportSpec.swift in Sources */,
 				12A61E7E2D49E94C000B62E1 /* DataPayloadParserTest.swift in Sources */,
-				12EF620725524B6800A6EE9B /* TimeoutTimerSpec.swift in Sources */,
-				63DE6CCA272A2ECB00E2A728 /* MessageSpec.swift in Sources */,
 				12991E0F254C454C00BB8650 /* SocketSpy.swift in Sources */,
 				12991E13254C458100BB8650 /* TestHelpers.swift in Sources */,
+				12C2F09B2D68F9540089B49F /* TimeoutTimerTest.swift in Sources */,
 				12A61E812D49E954000B62E1 /* DecodablePayloadParserTest.swift in Sources */,
-				12EF620525524B6800A6EE9B /* ChannelSpec.swift in Sources */,
 				12EF620625524B6800A6EE9B /* PresenceSpec.swift in Sources */,
-				12EF620425524B6800A6EE9B /* SocketSpec.swift in Sources */,
 				6343984E2CD0075B00A2B9AC /* DefaultsTest.swift in Sources */,
 				12A61E852D49E95B000B62E1 /* JsonPayloadParserTest.swift in Sources */,
 			);

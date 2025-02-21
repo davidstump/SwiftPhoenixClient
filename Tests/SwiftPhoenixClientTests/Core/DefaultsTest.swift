@@ -11,15 +11,18 @@ import Testing
 
 struct DefaultsTest {
 
-    @Test func timeoutInterval_is10seconds() async throws {
+    @Test("timeoutInterval defaults to 10 seconds")
+    func timeoutInterval_is10seconds() async throws {
         #expect(Defaults.timeoutInterval == 10.0)
     }
     
-    @Test func heartbeatInterval_is30seconds() async throws {
+    @Test("heartbeatInterval defaults to 30 seconds")
+    func heartbeatInterval_is30seconds() async throws {
         #expect(Defaults.heartbeatInterval == 30.0)
     }
 
-    @Test func reconnectSteppedBackoff_triesBeforeMaxingOut() async throws {
+    @Test("reconnectSteppedBackOff tries before maxing out")
+    func reconnectSteppedBackoff_triesBeforeMaxingOut() async throws {
         let backoff = Defaults.reconnectSteppedBackOff
         #expect(backoff(0) == 0.010) // 10ms
         #expect(backoff(1) == 0.010) // 10ms
@@ -35,7 +38,8 @@ struct DefaultsTest {
         #expect(backoff(11) == 5.00) // 5_000ms (5s)
     }
     
-    @Test func rejoinSteppedBackOff_triesBeforeMaxingOut() async throws {
+    @Test("rejoinSteppedbackOff tries before maxing out")
+    func rejoinSteppedBackOff_triesBeforeMaxingOut() async throws {
         let backoff = Defaults.rejoinSteppedBackOff
         #expect(backoff(0) == 1)
         #expect(backoff(1) == 1)

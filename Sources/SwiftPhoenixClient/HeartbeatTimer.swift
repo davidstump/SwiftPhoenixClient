@@ -30,101 +30,92 @@ import Foundation
  */
 
 class HeartbeatTimer {
-  
-  //----------------------------------------------------------------------
-  // MARK: - Dependencies
-  //----------------------------------------------------------------------
-  // The interval to wait before firing the Timer
-  let timeInterval: TimeInterval
-
-  /// The maximum amount of time which the system may delay the delivery of the timer events
-  let leeway: DispatchTimeInterval
-  
-  // The DispatchQueue to schedule the timers on
-  let queue: DispatchQueue
-  
-  // UUID which specifies the Timer instance. Verifies that timers are different
-  let uuid: String = UUID().uuidString
-  
-  //----------------------------------------------------------------------
-  // MARK: - Properties
-  //----------------------------------------------------------------------
-  // The underlying, cancelable, resettable, timer.
-  private var temporaryTimer: DispatchSourceTimer? = nil
-  // The event handler that is called by the timer when it fires.
-  private var temporaryEventHandler: (() -> Void)? = nil
-  
-  /**
-   Create a new HeartbeatTimer
-   
-   - Parameters:
+    
+    //----------------------------------------------------------------------
+    // MARK: - Dependencies
+    //----------------------------------------------------------------------
+    // The interval to wait before firing the Timer
+    let timeInterval: TimeInterval
+    
+    /// The maximum amount of time which the system may delay the delivery of the timer events
+    let leeway: DispatchTimeInterval
+    
+    // The DispatchQueue to schedule the timers on
+    let queue: DispatchQueue
+    
+    //----------------------------------------------------------------------
+    // MARK: - Properties
+    //----------------------------------------------------------------------
+    // The underlying, cancelable, resettable, timer.
+    private var temporaryTimer: DispatchSourceTimer? = nil
+    // The event handler that is called by the timer when it fires.
+    private var temporaryEventHandler: (() -> Void)? = nil
+    
+    /**
+     Create a new HeartbeatTimer
+     
+     - Parameters:
      - timeInterval: Interval to fire the timer. Repeats
      - queue: Queue to schedule the timer on
      - leeway: The maximum amount of time which the system may delay the delivery of the timer events
-   */
-  init(timeInterval: TimeInterval, queue: DispatchQueue = Defaults.heartbeatQueue, leeway: DispatchTimeInterval = Defaults.heartbeatLeeway) {
-    self.timeInterval = timeInterval
-    self.queue = queue
-    self.leeway = leeway
-  }
-  
-  /**
-   Create a new HeartbeatTimer
-   
-   - Parameter timeInterval: Interval to fire the timer. Repeats
-   */
-  convenience init(timeInterval: TimeInterval) {
-    self.init(timeInterval: timeInterval, queue: Defaults.heartbeatQueue)
-  }
-  
-  func start(eventHandler: @escaping () -> Void) {
-    queue.sync {
-      // Create a new DispatchSourceTimer, passing the event handler
-      let timer = DispatchSource.makeTimerSource(flags: [], queue: queue)
-      timer.setEventHandler(handler: eventHandler)
-      
-      // Schedule the timer to first fire in `timeInterval` and then
-      // repeat every `timeInterval`
-      timer.schedule(deadline: DispatchTime.now() + self.timeInterval,
-                     repeating: self.timeInterval,
-                     leeway: self.leeway)
-      
-      // Start the timer
-      timer.resume()
-      self.temporaryEventHandler = eventHandler
-      self.temporaryTimer = timer
+     */
+    init(timeInterval: TimeInterval, queue: DispatchQueue = Defaults.heartbeatQueue, leeway: DispatchTimeInterval = Defaults.heartbeatLeeway) {
+        self.timeInterval = timeInterval
+        self.queue = queue
+        self.leeway = leeway
     }
-  }
-  
-  func stop() {
-    // Must be queued synchronously to prevent threading issues.
-    queue.sync {
-      // DispatchSourceTimer will automatically cancel when released
-      temporaryTimer = nil
-      temporaryEventHandler = nil
+    
+    /**
+     Create a new HeartbeatTimer
+     
+     - Parameter timeInterval: Interval to fire the timer. Repeats
+     */
+    convenience init(timeInterval: TimeInterval) {
+        self.init(timeInterval: timeInterval, queue: Defaults.heartbeatQueue)
     }
-  }
-  
-  /**
-   True if the Timer exists and has not been cancelled. False otherwise
-   */
-  var isValid: Bool {
-    guard let timer = self.temporaryTimer else { return false }
-    return !timer.isCancelled
-  }
-  
-  /**
-   Calls the Timer's event handler immediately. This method
-   is primarily used in tests (not ideal)
-   */
-  func fire() {
-    guard isValid else { return }
-    self.temporaryEventHandler?()
-  }
-}
-
-extension HeartbeatTimer: Equatable {
-  static func == (lhs: HeartbeatTimer, rhs: HeartbeatTimer) -> Bool {
-    return lhs.uuid == rhs.uuid
-  }
+    
+    func start(eventHandler: @escaping () -> Void) {
+        queue.sync {
+            // Create a new DispatchSourceTimer, passing the event handler
+            let timer = DispatchSource.makeTimerSource(flags: [], queue: queue)
+            timer.setEventHandler(handler: eventHandler)
+            
+            // Schedule the timer to first fire in `timeInterval` and then
+            // repeat every `timeInterval`
+            timer.schedule(deadline: DispatchTime.now() + self.timeInterval,
+                           repeating: self.timeInterval,
+                           leeway: self.leeway)
+            
+            // Start the timer
+            timer.resume()
+            self.temporaryEventHandler = eventHandler
+            self.temporaryTimer = timer
+        }
+    }
+    
+    func stop() {
+        // Must be queued synchronously to prevent threading issues.
+        queue.sync {
+            // DispatchSourceTimer will automatically cancel when released
+            temporaryTimer = nil
+            temporaryEventHandler = nil
+        }
+    }
+    
+    /**
+     True if the Timer exists and has not been cancelled. False otherwise
+     */
+    var isValid: Bool {
+        guard let timer = self.temporaryTimer else { return false }
+        return !timer.isCancelled
+    }
+    
+    /**
+     Calls the Timer's event handler immediately. This method
+     is primarily used in tests (not ideal)
+     */
+    func fire() {
+        guard isValid else { return }
+        self.temporaryEventHandler?()
+    }
 }

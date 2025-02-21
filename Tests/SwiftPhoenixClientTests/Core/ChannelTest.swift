@@ -10,7 +10,7 @@ import Foundation
 import Testing
 @testable import SwiftPhoenixClient
 
-@Suite("Channel")
+@Suite("Channel", .serialized)
 struct ChannelTest {
     
     @Suite("constructor")
@@ -180,7 +180,7 @@ struct ChannelTest {
             channel.joinPush.trigger("ok", payload: [:])
         }
         
-        @Suite("timeout behavior")
+        @Suite("timeout behavior", .serialized)
         class TimeoutBehavior {
             
             let transport: TransportMock
@@ -311,7 +311,7 @@ struct ChannelTest {
         }
     }
     
-    @Suite("joinPush")
+    @Suite("joinPush", .serialized)
     class JoinPush {
         
         let transport: TransportMock
@@ -589,7 +589,7 @@ struct ChannelTest {
         }
     }
     
-    @Suite("onError")
+    @Suite("onError", .serialized)
     class OnError {
         
         let socket: SocketSpy
@@ -711,7 +711,7 @@ struct ChannelTest {
         }
     }
     
-    @Suite("onClose")
+    @Suite("onClose", .serialized)
     class OnClose {
         let socket: SocketSpy
         let channel: Channel
@@ -1026,7 +1026,7 @@ struct ChannelTest {
         }
     }
     
-    @Suite("push")
+    @Suite("push", .serialized)
     class PushSuite {
         
         let socket: SocketSpy
