@@ -64,6 +64,15 @@ class SocketSpy: Socket {
         removeFromSendBufferReceivedRef = ref
     }
     
+    private(set) var isConnectedCallCount: Int = 0
+    var isConnectedCalled: Bool { isConnectedCallCount > 0 }
+    var isConnectedReturnValue: Bool?
+    
+    override var isConnected: Bool {
+        guard let isConnectedReturnValue else { return super.isConnected }
+        return isConnectedReturnValue
+    }
+    
     
     
 //    

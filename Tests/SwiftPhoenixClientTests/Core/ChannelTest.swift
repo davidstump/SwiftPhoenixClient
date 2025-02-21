@@ -902,6 +902,147 @@ struct ChannelTest {
         }
     }
     
+    @Suite("push")
+    class PushSuite {
+        
+        let socket: SocketSpy
+        let channel: Channel
+         
+        let fakeClock: FakeTimerQueue
+        
+        init() {
+            fakeClock = FakeTimerQueue()
+            TimerQueue.main = fakeClock
+
+            socket = SocketSpy("/socket", transport: { _ in TransportMock() })
+            socket.makeRefReturnValue = "1"
+            socket.isConnectedReturnValue = true
+            
+            channel = socket.channel("topic", params: ["one": "two"])
+        }
+        
+        deinit {
+            fakeClock.reset()
+        }
+        
+        private func expectSocketPushParamsCalled() {
+            let outgoingMessage = socket.pushOutgoingReceivedMessage
+            #expect(outgoingMessage?.topic == "topic")
+            #expect(outgoingMessage?.event == "event")
+            expectJson(outgoingMessage?.payload) { any in
+                let json = any as! [String: String]
+                #expect(json["foo"] == "bar")
+            }
+            #expect(outgoingMessage?.joinRef == channel.joinRef)
+            #expect(outgoingMessage?.ref == "1")
+        }
+        
+        private func refuteSocketPushParamsCalled() {
+            let outgoingMessage = socket.pushOutgoingReceivedMessage
+            #expect(outgoingMessage?.event != "event")
+            expectJson(outgoingMessage?.payload) { any in
+                let json = any as! [String: String]
+                #expect(json["foo"] != "bar")
+            }
+        }
+        
+        
+        @Test("sends push event when successfully joined")
+        func sendsPushEventWhenSuccessfullyJoined() throws {
+            try channel.join().trigger("ok", payload: [:])
+            channel.push("event", payload: ["foo": "bar"])
+            
+            #expect(socket.pushOutgoingCalled)
+            expectSocketPushParamsCalled()
+        }
+        
+        @Test("enqueues push event to be sent once join has succeeded")
+        func enqueuesPushEventToBeSentOnceJoinHasSucceeded() throws {
+            let joinPush = try channel.join()
+            channel.push("event", payload: ["foo": "bar"])
+            
+            refuteSocketPushParamsCalled()
+            
+            fakeClock.tick(channel.timeout / 2)
+            joinPush.trigger("ok", payload: [:])
+            
+            expectSocketPushParamsCalled()
+        }
+        
+        @Test("does not push if channel join times out")
+        func doesNotPushIfChannelJoinTimesOut() throws {
+            let joinPush = try channel.join()
+            channel.push("event", payload: ["foo": "bar"])
+            
+            refuteSocketPushParamsCalled()
+            
+            fakeClock.tick(channel.timeout * 2)
+            joinPush.trigger("ok", payload: [:])
+            
+            refuteSocketPushParamsCalled()
+        }
+        
+        @Test("uses channel timeout by default")
+        func usesChannelTimeoutByDefault() throws {
+            try channel.join().trigger("ok", payload: [:])
+            
+            var timeoutCallsCount = 0
+            channel
+                .push("event", payload: ["foo": "bar"])
+                .receive("timeout") { _ in
+                    timeoutCallsCount += 1
+                }
+            
+            fakeClock.tick(channel.timeout / 2)
+            #expect(timeoutCallsCount == 0)
+            
+            fakeClock.tick(channel.timeout)
+            #expect(timeoutCallsCount == 1)
+        }
+        
+        @Test("accepts timeout arg")
+        func acceptsTimeoutArg() async throws {
+            try channel.join().trigger("ok", payload: [:])
+            
+            var timeoutCallsCount = 0
+            channel
+                .push("event", payload: ["foo": "bar"], timeout: channel.timeout * 2)
+                .receive("timeout") { _ in
+                    timeoutCallsCount += 1
+                }
+            
+            fakeClock.tick(channel.timeout)
+            #expect(timeoutCallsCount == 0)
+            
+            fakeClock.tick(channel.timeout * 2)
+            #expect(timeoutCallsCount == 1)
+        }
+        
+        @Test("does not time out after receiving 'ok'")
+        func doesNotTimeOutAfterReceivingOk() async throws {
+            try channel.join().trigger("ok", payload: [:])
+            
+            var timeoutCallsCount = 0
+            let push = channel.push("event", payload: ["foo": "bar"])
+            push.receive("timeout") { _ in
+                timeoutCallsCount += 1
+            }
+            
+            fakeClock.tick(channel.timeout / 2)
+            #expect(timeoutCallsCount == 0)
+            
+            push.trigger("ok", payload: [:])
+            
+            fakeClock.tick(channel.timeout)
+            #expect(timeoutCallsCount == 0)
+        }
+        
+        @Test("throws if channel has not been joined")
+        func throwsIfCHannelHasNotBeenJoined() async throws {
+            
+        }
+    }
+    
     @Suite("isMemeber")
     struct IsMember {
         let socket: SocketSpy
