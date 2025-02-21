@@ -23,10 +23,10 @@ struct SocketTest {
         return (socket, mockTransport)
     }
     
-    // MARK: -- constructor --
     @Suite("constructor")
     struct ConstructorSuite {
-        @Test func constructor_sets_defaults() async throws {
+        @Test("sets defaults")
+        func setsDefaults() async throws {
             let socket = Socket("wss://localhost:4000/socket")
             
             #expect(socket.channels.count == 0)
@@ -41,7 +41,8 @@ struct SocketTest {
             #expect(socket.heartbeatInterval == Defaults.heartbeatInterval)
         }
         
-        @Test func constructor_supports_closure_or_literal_params() async throws {
+        @Test("supports closure or literal params")
+        func supportsClosureOrLiteralParams() async throws {
             let literalSocket = Socket("wss://localhost:4000/socket", params: ["one": "two"])
             #expect(literalSocket.params?["one"] as? String == "two")
             
@@ -52,338 +53,439 @@ struct SocketTest {
             authToken = "xyz987"
             #expect(closueSocket.params?["token"] as? String == "xyz987")
         }
+        
+        @Test("overrides some defaults with options")
+        func overridesSomeDefaultsWithOptions() async throws {
+            let socket = Socket("wss://localhost:4000/socket")
+            socket.timeout = 40_000
+            socket.heartbeatInterval = 60_000
+            socket.logger = { _ in }
+            socket.reconnectAfter = { _ in return 10 }
+            
+            #expect(socket.timeout == 40_000)
+            #expect(socket.heartbeatInterval == 60_000)
+            #expect(socket.logger != nil)
+            #expect(socket.reconnectAfter(1) == 10)
+            #expect(socket.reconnectAfter(2) == 10)
+            
+        }
+        
+        @Test func defaultsToURLSessionTransport() async throws {
+            let endpoint = "wss://localhost:4000/socket"
+            let socket = Socket(endpoint)
+            
+            let transport = socket.transport(URL(string: endpoint)!)
+            #expect(transport is URLSessionTransport)
+        }
     }
     
     
     // MARK: -- websocketProtocol --
-    @Test func websocketProtocol_returns_wss_when_given_https() async throws {
-        let socket = Socket("https://example.com/")
-        #expect(socket.websocketProtocol == "wss")
-    }
-    
-    @Test func websocketProtocol_returns_wss_when_given_wss() async throws {
-        let socket = Socket("wss://example.com/")
-        #expect(socket.websocketProtocol == "wss")
-    }
-    
-    @Test func websocketProtocol_returns_ws_when_given_http() async throws {
-        let socket = Socket("http://example.com/")
-        #expect(socket.websocketProtocol == "ws")
-    }
-    
-    @Test func websocketProtocol_returns_ws_when_given_ws() async throws {
-        let socket = Socket("ws://example.com/")
-        #expect(socket.websocketProtocol == "ws")
-    }
-    
-    @Test func websocketProtocol_returns_nil_if_there_is_no_schema() async throws {
-        let socket = Socket("example.com/")
-        #expect(socket.websocketProtocol == "ws")
-    }
-    
-    // MARK: -- endPointUrl --
-    @Test func endPointUrl_constructs_valid_url() async throws {
-        // Full URL
-        #expect(Socket("wss://example.com/websocket")
-            .endPointUrl.absoluteString == "wss://example.com/websocket?vsn=2.0.0")
-        
-        // Appends `/websocket`
-        #expect(Socket("https://example.com/chat")
-            .endPointUrl.absoluteString == "wss://example.com/chat/websocket?vsn=2.0.0")
-        
-        // Appends `/websocket`, accounting for trailing `/`
-        #expect(Socket("ws://example.com/chat/")
-            .endPointUrl.absoluteString == "ws://example.com/chat/websocket?vsn=2.0.0")
-        
-        // Appends `params`
-        #expect(Socket("http://example.com/chat", params: ["token": "abc123"])
-            .endPointUrl.absoluteString == "ws://example.com/chat/websocket?vsn=2.0.0&token=abc123")
-    }
-    
-    // MARK: -- connectWithWebsocket ---
-    @Test func connectWithWebsocket_establishes_websocket_connection_with_endpoint() {
-        let (socket, _) = setupSocket()
-        
-        socket.connect()
-        #expect(socket.connection != nil)
-    }
-    
-    @Test func connectWithWebsocket_sets_callbacks_for_connection() {
-        let (socket, mockTransport) = setupSocket()
-        
-        var open = 0
-        socket.onOpen { open += 1 }
-        
-        var close = 0
-        socket.onClose { close += 1 }
-        
-        var lastError: Error?
-        socket.onError { error, _ in
-            lastError = error
+    @Suite("websocketProtocol")
+    struct WebsocketProtocolSuite {
+        @Test("returns wss when given https")
+        func returnsWssWhenGivenHttps() async throws {
+            let socket = Socket("https://example.com/")
+            #expect(socket.websocketProtocol == "wss")
         }
         
-        var lastMessage: IncomingMessage?
-        socket.onMessage(callback: { (message) in
-            lastMessage = message
+        @Test("returns wss when given wss")
+        func returnsWssWhenGivenWss() async throws {
+            let socket = Socket("wss://example.com/")
+            #expect(socket.websocketProtocol == "wss")
         }
-        )
         
-        mockTransport.readyState = .closed
-        socket.connect()
+        @Test("returns ws when given http")
+        func returnsWsWhenGivenHttp() async throws {
+            let socket = Socket("http://example.com/")
+            #expect(socket.websocketProtocol == "ws")
+        }
         
-        mockTransport.delegate?.onOpen(response: nil)
-        mockTransport.delegate?.onClose(code: .normalClosure, reason: nil)
-        mockTransport.delegate?.onError(error: TestError.stub, response: nil)
+        @Test("returns ws when given ws")
+        func returnsWsWhenGivenWs() async throws {
+            let socket = Socket("ws://example.com/")
+            #expect(socket.websocketProtocol == "ws")
+        }
         
-        let text = """
-        [null,null,"topic","event","payload"]
-        """
-        mockTransport.delegate?.onMessage(string: text)
-        
-        // Delegate implementations all runs `.async` which cause there to be a
-        // slight out-of-ordering. Sleep 1 second to let everything hit
-        Thread.sleep(forTimeInterval: 0.2) // syncarray runs on .async
-        #expect(open == 1)
-        #expect(close == 1)
-        #expect(lastError != nil)
-        
-        let parser = JsonPayloadParser()
-        let parseResult = parser.parse(lastMessage!,
-                                       payloadDecoder: socket.decoder,
-                                       payloadEncoder: socket.encoder)
-        let payload = try! parseResult.get() as! String
-        #expect(payload == "payload")
+        @Test("returns nil if there is no scheme")
+        func returnsNilIfThereIsNoScheme() async throws {
+            let socket = Socket("example.com/")
+            #expect(socket.websocketProtocol == "ws")
+        }
     }
     
-    @Test func connectWithWebsocket_does_not_connect_if_already_connected() {
-        let (socket, mockTransport) = setupSocket()
-        
-        socket.connect()
-        mockTransport.readyState = .open
-        
-        socket.connect()
-        
-        #expect(mockTransport.connectWithCallsCount == 1)
+    @Suite("endpointUrl")
+    struct EndpointUrlSuite {
+        @Test("constructs valid url")
+        func constructsValidUrl() async throws {
+            // Full URL
+            #expect(Socket("wss://example.com/websocket")
+                .endPointUrl.absoluteString == "wss://example.com/websocket?vsn=2.0.0")
+            
+            // Appends `websocket`
+            #expect(Socket("wss://example.com/")
+                .endPointUrl.absoluteString == "wss://example.com/websocket?vsn=2.0.0")
+            
+            // Appends `/websocket`
+            #expect(Socket("https://example.com/chat")
+                .endPointUrl.absoluteString == "wss://example.com/chat/websocket?vsn=2.0.0")
+            
+            // Appends `/websocket`, accounting for trailing `/`
+            #expect(Socket("ws://example.com/chat/")
+                .endPointUrl.absoluteString == "ws://example.com/chat/websocket?vsn=2.0.0")
+            
+            // Appends `params`
+            #expect(Socket("http://example.com/chat", params: ["token": "abc123"])
+                .endPointUrl.absoluteString == "ws://example.com/chat/websocket?vsn=2.0.0&token=abc123")
+            
+            // Appends `params` when containing spaces
+            #expect(Socket("http://example.com/chat", params: ["token": "abc 123"])
+                .endPointUrl.absoluteString == "ws://example.com/chat/websocket?vsn=2.0.0&token=abc%20123")
+            
+        }
     }
+
+    @Suite("connectWithWebsocket")
+    struct ConnectWithWebsocketSuite {
+        
+        let mockTransport: TransportMock
+        let socket: Socket
+        
+        init() {
+            let mockTransport = TransportMock()
+            mockTransport.readyState = .closed
+            
+            self.mockTransport = mockTransport
+            self.socket = Socket("/socket") { _ in return mockTransport }
+        }
+        
+        @Test("establishes websocket connection with endpoint")
+        func establishesWebsocketConnectionWithEndpoint() {
+            socket.connect()
+            #expect(socket.connection as! TransportMock === mockTransport)
+        }
+        
+        @Test("sets callbacks for connection")
+        func setsCallbacksForConnection() {
+            var open = 0
+            socket.onOpen { open += 1 }
+            
+            var close = 0
+            socket.onClose { close += 1 }
+            
+            var lastError: Error?
+            socket.onError { error, _ in lastError = error }
+            
+            var lastMessage: IncomingMessage?
+            socket.onMessage { lastMessage = $0 }
+            socket.connect()
+            
+            mockTransport.delegate?.onOpen(response: nil)
+            DispatchQueue.main.sync { /* sync array no-op */}
+            #expect(open == 1)
+            
+            mockTransport.delegate?.onClose(code: .normalClosure, reason: nil)
+            DispatchQueue.main.sync { /* sync array no-op */}
+            #expect(close == 1)
+            
+            mockTransport.delegate?.onError(error: TestError.stub, response: nil)
+            DispatchQueue.main.sync { /* sync array no-op */}
+            #expect(lastError != nil)
+            
+            let text = """
+            [null,null,"topic","event","payload"]
+            """
+            mockTransport.delegate?.onMessage(string: text)
+            DispatchQueue.main.sync { /* sync array no-op */}
+
+            DispatchQueue.main.sync { }
+            let parser = JsonPayloadParser()
+            let parseResult = parser.parse(lastMessage!,
+                                           payloadDecoder: socket.decoder,
+                                           payloadEncoder: socket.encoder)
+            let payload = try! parseResult.get() as! String
+            #expect(payload == "payload")
+        }
+        
+        @Test("is idempotent")
+        func isIdempotent() {
+            socket.connect()
+            mockTransport.readyState = .open
+            
+            socket.connect()
+            
+            #expect(mockTransport.connectWithCallsCount == 1)
+        }
+    }
+    
     
     // TODO: Long Poll
     // MARK: -- connectWithLongPoll ---
     
-    @Test func disconnect_removes_existing_connection() async throws {
-        let (socket, mockTransport) = setupSocket()
+    @Suite("disconnect")
+    struct DisconnectSuite {
         
-        socket.connect()
-        socket.disconnect()
+        let mockTransport: TransportMock
+        let socket: Socket
         
-        #expect(socket.connection == nil)
-        #expect(mockTransport.disconnectCodeReasonReceivedArguments?.code
-                == URLSessionWebSocketTask.CloseCode.normalClosure)
-    }
-    
-    @Test func disconnect_calls_callback() async throws {
-        let (socket, mockTransport) = setupSocket()
-        socket.connect()
-        
-        var count = 0
-        socket.disconnect(code: .goingAway) {
-            count += 1
+        init() {
+            let mockTransport = TransportMock()
+            mockTransport.readyState = .closed
+            
+            self.mockTransport = mockTransport
+            self.socket = Socket("/socket") { _ in return mockTransport }
         }
         
-        #expect(mockTransport.disconnectCodeReasonCalled)
-        #expect(mockTransport.disconnectCodeReasonReceivedArguments?.code == .goingAway)
-        #expect(mockTransport.disconnectCodeReasonReceivedArguments?.reason == nil)
-        #expect(count == 1)
-    }
-    
-    @Test func disconnect_calls_onClose_state_callbacks() async throws {
-        let (socket, _) = setupSocket()
-        
-        var count =  0
-        socket.onClose {
-            count += 1
+        @Test("removes existing connection")
+        func removesExistingConnection() async throws {
+            socket.connect()
+            socket.disconnect()
+            
+            #expect(socket.connection == nil)
+            #expect(mockTransport.disconnectCodeReasonCalled)
+            #expect(mockTransport.disconnectCodeReasonReceivedArguments?.code
+                    == URLSessionWebSocketTask.CloseCode.normalClosure)
         }
         
-        socket.disconnect()
-        #expect(count == 1)
-    }
-    
-    @Test func disconnect_invalidates_the_heartbeat_timer() async throws {
-        let (socket, _) = setupSocket()
+        @Test("calls callback")
+        func callsCallback() async throws {
+            socket.connect()
+            
+            var count = 0
+            socket.disconnect(code: .goingAway) {
+                count += 1
+            }
+            
+            #expect(mockTransport.disconnectCodeReasonCalled)
+            #expect(mockTransport.disconnectCodeReasonReceivedArguments?.code == .goingAway)
+            #expect(mockTransport.disconnectCodeReasonReceivedArguments?.reason == nil)
+            #expect(count == 1)
+        }
         
-        var count = 0
-        let queue = DispatchQueue(label: "test.heartbeat")
-        let timer = HeartbeatTimer(timeInterval: 10, queue: queue)
+        @Test("calls onClose state callbacks")
+        func callsOnCloseStateCallbacks() async throws {
+            var count =  0
+            socket.onClose {
+                count += 1
+            }
+            
+            socket.disconnect()
+            #expect(count == 1)
+        }
         
-        timer.start { count += 1 }
+        @Test("invalidates the heartbeat timer")
+        func invalidatesTheHeartbeatTimer() async throws {
+            var count = 0
+            let queue = DispatchQueue(label: "test.heartbeat")
+            let timer = HeartbeatTimer(timeInterval: 10, queue: queue)
+            
+            timer.start { count += 1 }
+            
+            socket.heartbeatTimer = timer
+            
+            socket.disconnect()
+            #expect(socket.heartbeatTimer?.isValid == false)
+            timer.fire()
+            #expect(count == 0)
+        }
         
-        socket.heartbeatTimer = timer
-        
-        socket.disconnect()
-        #expect(socket.heartbeatTimer?.isValid == false)
-        timer.fire()
-        #expect(count == 0)
-    }
-    
-    @Test func disconnect_does_nothing_if_not_connected() async throws {
-        let (socket, mockTransport) = setupSocket()
-        
-        socket.disconnect()
-        #expect(mockTransport.disconnectCodeReasonCalled == false)
-    }
-    
-    // MARK: -- isConnected & connectionState --
-    @Test func connectionState_defaults_to_closed() async throws {
-        let (socket, _) = setupSocket()
-        #expect(socket.isConnected == false)
-        #expect(socket.connectionState == .closed)
-    }
-    
-    @Test func connectionState_returns_connecting() async throws {
-        let (socket, _) = setupSocket(readyState: .connecting)
-        socket.connect()
-        
-        #expect(socket.isConnected == false)
-        #expect(socket.connectionState == .connecting)
-    }
-    
-    @Test func connectionState_returns_open() async throws {
-        let (socket, _) = setupSocket(readyState: .open)
-        socket.connect()
-        
-        #expect(socket.isConnected == true)
-        #expect(socket.connectionState == .open)
-    }
-    @Test func connectionState_returns_closing() async throws {
-        let (socket, _) = setupSocket(readyState: .closing)
-        socket.connect()
-        
-        #expect(socket.isConnected == false)
-        #expect(socket.connectionState == .closing)
-    }
-    @Test func connectionState_returns_closed() async throws {
-        let (socket, _) = setupSocket(readyState: .closed)
-        socket.connect()
-        
-        #expect(socket.isConnected == false)
-        #expect(socket.connectionState == .closed)
-    }
-    
-    // MARK: -- channel --
-    @Test func channel_returns_channel_with_given_topic_and_params() async throws {
-        let (socket, _) = setupSocket()
-        
-        let channel = socket.channel("topic", params: ["one": "two"])
-        #expect(channel.socket === socket)
-        #expect(channel.topic == "topic")
-        
-        expectJson(channel.params) { params in
-            let params = params as! [String: Any]
-            #expect(params["one"] as! String == "two")
+        @Test("does nothing if not connected")
+        func doesNothingIfNotConnected() async throws {
+            socket.disconnect()
+            #expect(mockTransport.disconnectCodeReasonCalled == false)
         }
     }
     
-    @Test func channel_adds_channel_to_sockets_channel_list() async throws {
-        let (socket, _) = setupSocket()
+    @Suite("connectionState")
+    struct ConnectionStateSuite {
         
-        #expect(socket.channels.isEmpty)
+        let mockTransport: TransportMock
+        let socket: Socket
         
-        let channel = socket.channel("topic", params: ["one": "two"])
-        #expect(socket.channels.count == 1)
-        #expect(socket.channels.first === channel)
+        init() {
+            let mockTransport = TransportMock()
+            mockTransport.readyState = .closed
+            
+            self.mockTransport = mockTransport
+            self.socket = Socket("/socket") { _ in return mockTransport }
+        }
+        
+        @Test("defaults to closed")
+        func defaultsToClosed() async throws {
+            #expect(socket.isConnected == false)
+            #expect(socket.connectionState == .closed)
+        }
+        
+        @Test("returns connecting")
+        func returnsConnecting() async throws {
+            mockTransport.readyState = .connecting
+            socket.connect()
+            
+            #expect(socket.isConnected == false)
+            #expect(socket.connectionState == .connecting)
+        }
+        
+        @Test("returns open")
+        func returnsOpen() async throws {
+            mockTransport.readyState = .open
+            socket.connect()
+            
+            #expect(socket.isConnected == true)
+            #expect(socket.connectionState == .open)
+        }
+        @Test("returnsClosing")
+        func returnsClosing() async throws {
+            mockTransport.readyState = .closing
+            socket.connect()
+            
+            #expect(socket.isConnected == false)
+            #expect(socket.connectionState == .closing)
+        }
+        @Test("returns closed")
+        func returnsClosed() async throws {
+            mockTransport.readyState = .closed
+            socket.connect()
+            
+            #expect(socket.isConnected == false)
+            #expect(socket.connectionState == .closed)
+        }
     }
     
-    // MARK: -- remove --
-    @Test func remove_removes_given_channel_from_channels() throws {
-        let (socket, _) = setupSocket()
+    @Suite("channel")
+    struct ChannelSuite {
+        let socket: Socket = Socket("/socket") { _ in return TransportMock() }
         
-        let channel1 = socket.channel("topic-1")
-        let channel2 = socket.channel("topic-2")
+        @Test("returns channel with given topic and params")
+        func returnsChannelWithGivenTopicAndParams() async throws {
+            let channel = socket.channel("topic", params: ["one": "two"])
+            #expect(channel.socket === socket)
+            #expect(channel.topic == "topic")
+            
+            expectJson(channel.params) { params in
+                let params = params as! [String: Any]
+                #expect(params["one"] as! String == "two")
+            }
+        }
         
+        @Test("adds channel to sockets channel lilst")
+        func addsChannelToSocketsChannelList() async throws {
+            #expect(socket.channels.isEmpty)
+            
+            let channel = socket.channel("topic", params: ["one": "two"])
+            #expect(socket.channels.count == 1)
+            #expect(socket.channels.first === channel)
+        }
+    }
+    
+    @Suite("remove")
+    struct RemoveSuite {
+        let socket: Socket = Socket("/socket") { _ in return TransportMock() }
         
-        channel1.joinPush.ref = "1"
-        channel2.joinPush.ref = "2"
+        @Test("removes given channel from channels")
+        func removesGivenChannelFromChannels() throws {
+            let channel1 = socket.channel("topic-1")
+            let channel2 = socket.channel("topic-2")
+            
+            
+            channel1.joinPush.ref = "1"
+            channel2.joinPush.ref = "2"
+            
+            Thread.sleep(forTimeInterval: 0.2) // syncarray runs on .async
+            #expect(socket.stateChangeCallbacks.open.count == 2)
+            
+            socket.remove(channel1)
+            Thread.sleep(forTimeInterval: 0.2) // syncarray runs on .async
+            #expect(socket.stateChangeCallbacks.open.count == 1)
+            
+            #expect(socket.channels.count == 1)
+            #expect(socket.channels.first === channel2)
+        }
+    }
+    
+    @Suite("push")
+    struct PushSuite {
+        let mockTransport: TransportMock
+        let socket: Socket
         
-        Thread.sleep(forTimeInterval: 0.2) // syncarray runs on .async
-        #expect(socket.stateChangeCallbacks.open.count == 2)
+        init() {
+            let mockTransport = TransportMock()
+            mockTransport.readyState = .closed
+            
+            self.mockTransport = mockTransport
+            self.socket = Socket("/socket") { _ in return mockTransport }
+        }
         
-        socket.remove(channel1)
-        Thread.sleep(forTimeInterval: 0.2) // syncarray runs on .async
-        #expect(socket.stateChangeCallbacks.open.count == 1)
+        @Test("sends string to connection when connected")
+        func sendsStringToConnectionWhenConnected() throws {
+            socket.connect()
+            mockTransport.readyState = .open
+            
+            let outgoing = buildOutgoingMessage(ref: "ref",
+                                                topic: "topic",
+                                                event: "event",
+                                                payload: .json("payload"))
+            socket.push(outgoing: outgoing)
+            #expect(mockTransport.sendStringCalled)
+            let actual = mockTransport.sendStringReceivedString
+            
+            let expected = """
+            [null,"ref","topic","event","payload"]
+            """
+            
+            #expect(actual == expected)
+        }
         
-        #expect(socket.channels.count == 1)
-        #expect(socket.channels.first === channel2)
+        @Test("sends binary when connected")
+        func sendsBinaryWhenConnected() async throws {
+            socket.connect()
+            mockTransport.readyState = .open
+            
+            let outgoing = buildOutgoingMessage(joinRef: "0",
+                                                ref: "1",
+                                                topic: "t",
+                                                event: "e",
+                                                payload: .binary(Data([0x01])))
+            socket.push(outgoing: outgoing)
+            #expect(mockTransport.sendDataCalled)
+            let data = mockTransport.sendDataReceivedData!
+            let actual = [UInt8](data)
+            let expected: [UInt8] = [0x00, 0x01, 0x01, 0x01, 0x01]
+            + "01te".utf8.map { UInt8($0) }
+            + [0x01]
+            
+            
+            #expect(actual == expected)
+        }
+        
+        @Test("buffers messages when not connected")
+        func buffersMessagesWhenNotConnected() throws {
+            socket.connect()
+            #expect(socket.sendBuffer.isEmpty)
+            
+            let outgoing = buildOutgoingMessage(ref: "ref",
+                                                topic: "topic",
+                                                event: "event",
+                                                payload: .json("payload"))
+            socket.push(outgoing: outgoing)
+            #expect(mockTransport.sendStringCalled == false)
+            #expect(mockTransport.sendDataCalled == false)
+            Thread.sleep(forTimeInterval: 0.2) // syncarray runs on .async
+            #expect(socket.sendBuffer.count == 1)
+            
+            socket.sendBuffer.forEach( { try? $0.callback() } )
+            #expect(mockTransport.sendStringCallsCount == 1)
+            let actual = mockTransport.sendStringReceivedString
+            
+            let expected = """
+            [null,"ref","topic","event","payload"]
+            """
+            
+            #expect(actual == expected)
+        }
     }
     
     // MARK: -- push --
-    @Test func push_sends_string_to_connection_when_conneted() throws {
-        let (socket, mockTransport) = setupSocket()
-        
-        socket.connect()
-        mockTransport.readyState = .open
-        
-        let outgoing = buildOutgoingMessage(ref: "ref",
-                                            topic: "topic",
-                                            event: "event",
-                                            payload: .json("payload"))
-        socket.push(outgoing: outgoing)
-        #expect(mockTransport.sendStringCalled)
-        let actual = mockTransport.sendStringReceivedString
-        
-        let expected = """
-        [null,"ref","topic","event","payload"]
-        """
-        
-        #expect(actual == expected)
-    }
     
-    @Test func push_sends_binary_when_connected() async throws {
-        let (socket, mockTransport) = setupSocket()
-        
-        socket.connect()
-        mockTransport.readyState = .open
-        
-        let outgoing = buildOutgoingMessage(joinRef: "0",
-                                            ref: "1",
-                                            topic: "t",
-                                            event: "e",
-                                            payload: .binary(Data([0x01])))
-        socket.push(outgoing: outgoing)
-        #expect(mockTransport.sendDataCalled)
-        let data = mockTransport.sendDataReceivedData!
-        let actual = [UInt8](data)
-        let expected: [UInt8] = [0x00, 0x01, 0x01, 0x01, 0x01]
-        + "01te".utf8.map { UInt8($0) }
-        + [0x01]
-        
-        
-        #expect(actual == expected)
-    }
-    
-    @Test func push_buffers_messages_when_not_conneted() throws {
-        let (socket, mockTransport) = setupSocket()
-        socket.connect()
-        #expect(socket.sendBuffer.isEmpty)
-        
-        let outgoing = buildOutgoingMessage(ref: "ref",
-                                            topic: "topic",
-                                            event: "event",
-                                            payload: .json("payload"))
-        socket.push(outgoing: outgoing)
-        #expect(mockTransport.sendStringCalled == false)
-        #expect(mockTransport.sendDataCalled == false)
-        Thread.sleep(forTimeInterval: 0.2) // syncarray runs on .async
-        #expect(socket.sendBuffer.count == 1)
-        
-        socket.sendBuffer.forEach( { try? $0.callback() } )
-        #expect(mockTransport.sendStringCallsCount == 1)
-        let actual = mockTransport.sendStringReceivedString
-        
-        let expected = """
-        [null,"ref","topic","event","payload"]
-        """
-        
-        #expect(actual == expected)
-    }
     
     // MARK: -- makeRef --
     @Test func makeRef_returns_next_message_ref() throws {

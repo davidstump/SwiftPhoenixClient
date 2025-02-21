@@ -76,7 +76,7 @@ public class Socket: TransportDelegate {
     
     /// The WebSocket transport. Default behavior is to provide a
     /// URLSessionWebsocketTask. See README for alternatives.
-    private let transport: ((URL) -> Transport)
+    internal let transport: ((URL) -> Transport)
     
     /// Phoenix serializer version, defaults to "2.0.0"
     public var vsn: String = Defaults.vsn
