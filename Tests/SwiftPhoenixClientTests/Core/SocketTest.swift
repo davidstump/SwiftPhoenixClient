@@ -10,6 +10,7 @@ import Foundation
 import Testing
 @testable import SwiftPhoenixClient
 
+@Suite("Socket", .serialized)
 struct SocketTest {
     
     private func setupSocket(readyState: TransportReadyState = .closed,
@@ -23,32 +24,36 @@ struct SocketTest {
     }
     
     // MARK: -- constructor --
-    @Test func constructor_sets_defaults() async throws {
-        let socket = Socket("wss://localhost:4000/socket")
+    @Suite("constructor")
+    struct ConstructorSuite {
+        @Test func constructor_sets_defaults() async throws {
+            let socket = Socket("wss://localhost:4000/socket")
+            
+            #expect(socket.channels.count == 0)
+            #expect(socket.sendBuffer.count == 0)
+            #expect(socket.ref == 0)
+            #expect(socket.endPoint == "wss://localhost:4000/socket")
+            #expect(socket.stateChangeCallbacks.open.isEmpty)
+            #expect(socket.stateChangeCallbacks.close.isEmpty)
+            #expect(socket.stateChangeCallbacks.error.isEmpty)
+            #expect(socket.stateChangeCallbacks.message.isEmpty)
+            #expect(socket.timeout == Defaults.timeoutInterval)
+            #expect(socket.heartbeatInterval == Defaults.heartbeatInterval)
+        }
         
-        #expect(socket.channels.count == 0)
-        #expect(socket.sendBuffer.count == 0)
-        #expect(socket.ref == 0)
-        #expect(socket.endPoint == "wss://localhost:4000/socket")
-        #expect(socket.stateChangeCallbacks.open.isEmpty)
-        #expect(socket.stateChangeCallbacks.close.isEmpty)
-        #expect(socket.stateChangeCallbacks.error.isEmpty)
-        #expect(socket.stateChangeCallbacks.message.isEmpty)
-        #expect(socket.timeout == Defaults.timeoutInterval)
-        #expect(socket.heartbeatInterval == Defaults.heartbeatInterval)
+        @Test func constructor_supports_closure_or_literal_params() async throws {
+            let literalSocket = Socket("wss://localhost:4000/socket", params: ["one": "two"])
+            #expect(literalSocket.params?["one"] as? String == "two")
+            
+            var authToken = "abc123"
+            let closueSocket = Socket("wss://localhost:4000/socket", params: { ["token": authToken] } )
+            #expect(closueSocket.params?["token"] as? String == "abc123")
+            
+            authToken = "xyz987"
+            #expect(closueSocket.params?["token"] as? String == "xyz987")
+        }
     }
     
-    @Test func constructor_supports_closure_or_literal_params() async throws {
-        let literalSocket = Socket("wss://localhost:4000/socket", params: ["one": "two"])
-        #expect(literalSocket.params?["one"] as? String == "two")
-        
-        var authToken = "abc123"
-        let closueSocket = Socket("wss://localhost:4000/socket", params: { ["token": authToken] } )
-        #expect(closueSocket.params?["token"] as? String == "abc123")
-        
-        authToken = "xyz987"
-        #expect(closueSocket.params?["token"] as? String == "xyz987")
-    }
     
     // MARK: -- websocketProtocol --
     @Test func websocketProtocol_returns_wss_when_given_https() async throws {
