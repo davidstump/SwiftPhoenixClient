@@ -128,8 +128,13 @@ struct ChannelTest {
         func testJoinsMultipleTimes() async throws {
             try channel.join()
             
-            #expect(throws: ChannelError.alreadyJoined, performing: {
+            #expect(performing: {
                 try channel.join()
+            }, throws: { error in
+                switch error as! ChannelError {
+                case .alreadyJoined: return true
+                default: return false
+                }
             })
         }
         
@@ -902,6 +907,125 @@ struct ChannelTest {
         }
     }
     
+    @Suite("on")
+    struct OnSuite {
+        let socket: SocketSpy
+        let channel: Channel
+        let kDefaultRef = "1"
+        
+        init() {
+            socket = SocketSpy("/socket", transport: { _ in TransportMock() })
+            socket.makeRefReturnValue = kDefaultRef
+            channel = socket.channel("topic", params: ["one": "two"])
+        }
+        
+        @Test("sets up callback for event")
+        func setsUpCallbackForEvent() async throws {
+            var onCallCount = 0
+            
+            channel.trigger(buildIncomingMessage(ref: kDefaultRef, event: "event"))
+            #expect(onCallCount == 0)
+            
+            channel.on("event", callback: { (_) in
+                onCallCount += 1
+            })
+            
+            channel.trigger(buildIncomingMessage(ref: kDefaultRef, event: "event"))
+            #expect(onCallCount == 1)
+        }
+        
+        @Test("other event callbacks are ignored")
+        func otherEventCallbacksAreIgnored() async throws {
+            var onCallCount = 0
+            let ignoredOnCallCount = 0
+            
+            channel.trigger(buildIncomingMessage(ref: kDefaultRef, event: "event"))
+            #expect(ignoredOnCallCount == 0)
+            
+            channel.on("event") { _ in onCallCount += 1 }
+            
+            channel.trigger(buildIncomingMessage(ref: kDefaultRef, event: "event"))
+            #expect(ignoredOnCallCount == 0)
+        }
+        
+        @Test("generates unique refs for callbacks")
+        func generatesUniqueRefsForCallbacks() async throws {
+            let ref1 = channel.on("event1") { _ in }
+            let ref2 = channel.on("event2") { _ in }
+            #expect(ref1 != ref2)
+            #expect(ref1 + 1 == ref2)
+        }
+        
+        @Test("calls all callbacks for event if they modified during event processing")
+        func callsAllCallbacksForEventIfTheyModifiedDuringEventProcessing() async throws {
+            channel.bindingRef = 3
+            let ref1 = channel.on("event") { _ in
+                channel.off("event", ref: 3)
+            }
+            
+            #expect(ref1 == 3)
+            
+            var onCallCount = 0
+            channel.on("event") { _ in
+                onCallCount += 1
+            }
+            
+            channel.trigger(buildIncomingMessage(ref: kDefaultRef, event: "event"))
+            #expect(onCallCount == 1)
+        }
+    }
+    // TODO: On Data/On Decodable
+    // TODO: On AsyncStream/Publisher
+    
+    
+    @Suite("off")
+    struct OffSwuite {
+        
+        let socket: SocketSpy
+        let channel: Channel
+        let kDefaultRef = "1"
+        
+        init() {
+            socket = SocketSpy("/socket", transport: { _ in TransportMock() })
+            socket.makeRefReturnValue = kDefaultRef
+            channel = socket.channel("topic", params: ["one": "two"])
+        }
+        
+        @Test("removes all callbacks for event")
+        func removesAllCallbacksForEvents() async throws {
+            var callCount1 = 0
+            var callCount2 = 0
+            var callCount3 = 0
+            
+            channel.on("event", callback: { _ in callCount1 += 1})
+            channel.on("event", callback: { _ in callCount2 += 1})
+            channel.on("other", callback: { _ in callCount3 += 1})
+            
+            channel.off("event")
+            channel.trigger(buildIncomingMessage(ref: kDefaultRef, event: "event"))
+            channel.trigger(buildIncomingMessage(ref: kDefaultRef, event: "other"))
+            
+            #expect(callCount1 == 0)
+            #expect(callCount2 == 0)
+            #expect(callCount3 == 1)
+        }
+        
+        @Test("removes callback by ref")
+        func removesCallbackByRef() async throws {
+            var callCount1 = 0
+            var callCount2 = 0
+            
+            let ref1 = channel.on("event", callback: { _ in callCount1 += 1})
+            let _ = channel.on("event", callback: { _ in callCount2 += 1})
+            
+            channel.off("event", ref: ref1)
+            channel.trigger(buildIncomingMessage(ref: kDefaultRef, event: "event"))
+            
+            #expect(callCount1 == 0)
+            #expect(callCount2 == 1)
+        }
+    }
+    
     @Suite("push")
     class PushSuite {
         
@@ -950,7 +1074,7 @@ struct ChannelTest {
         @Test("sends push event when successfully joined")
         func sendsPushEventWhenSuccessfullyJoined() throws {
             try channel.join().trigger("ok", payload: [:])
-            channel.push("event", payload: ["foo": "bar"])
+            try channel.push("event", payload: ["foo": "bar"])
             
             #expect(socket.pushOutgoingCalled)
             expectSocketPushParamsCalled()
@@ -959,7 +1083,7 @@ struct ChannelTest {
         @Test("enqueues push event to be sent once join has succeeded")
         func enqueuesPushEventToBeSentOnceJoinHasSucceeded() throws {
             let joinPush = try channel.join()
-            channel.push("event", payload: ["foo": "bar"])
+            try channel.push("event", payload: ["foo": "bar"])
             
             refuteSocketPushParamsCalled()
             
@@ -972,7 +1096,7 @@ struct ChannelTest {
         @Test("does not push if channel join times out")
         func doesNotPushIfChannelJoinTimesOut() throws {
             let joinPush = try channel.join()
-            channel.push("event", payload: ["foo": "bar"])
+            try channel.push("event", payload: ["foo": "bar"])
             
             refuteSocketPushParamsCalled()
             
@@ -987,7 +1111,7 @@ struct ChannelTest {
             try channel.join().trigger("ok", payload: [:])
             
             var timeoutCallsCount = 0
-            channel
+            try channel
                 .push("event", payload: ["foo": "bar"])
                 .receive("timeout") { _ in
                     timeoutCallsCount += 1
@@ -1005,7 +1129,7 @@ struct ChannelTest {
             try channel.join().trigger("ok", payload: [:])
             
             var timeoutCallsCount = 0
-            channel
+            try channel
                 .push("event", payload: ["foo": "bar"], timeout: channel.timeout * 2)
                 .receive("timeout") { _ in
                     timeoutCallsCount += 1
@@ -1023,7 +1147,7 @@ struct ChannelTest {
             try channel.join().trigger("ok", payload: [:])
             
             var timeoutCallsCount = 0
-            let push = channel.push("event", payload: ["foo": "bar"])
+            let push = try channel.push("event", payload: ["foo": "bar"])
             push.receive("timeout") { _ in
                 timeoutCallsCount += 1
             }
@@ -1040,6 +1164,17 @@ struct ChannelTest {
         @Test("throws if channel has not been joined")
         func throwsIfCHannelHasNotBeenJoined() async throws {
             
+            #expect(performing: {
+                try channel.push("event", payload: [:])
+            }, throws: { error in
+                switch error as! ChannelError {
+                case .pushTriedBeforeJoin(let topic, let event):
+                    #expect(event == "event")
+                    #expect(topic == "topic")
+                    return true
+                default: return false
+                }
+            })
         }
     }
     

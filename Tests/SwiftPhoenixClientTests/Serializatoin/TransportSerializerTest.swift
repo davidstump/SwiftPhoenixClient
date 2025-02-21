@@ -59,23 +59,16 @@ final class PhoenixTransportSerializerTest {
             payload: .binary(Data())
         )
         
-        #expect {
+        #expect(performing: {
             try serializer.encode(message: message)
-        } throws: { error in
-            guard let error = error as? PhxError else {
-            return false
-          }
-            switch error {
-            case .serializerError(let reason):
-                switch reason {
-                case .binarySentAsText(let message):
-                    #expect(message.ref == "1")
-                    return true
-                default:
-                    return false
-                }
+        }, throws: { error in
+            switch error as! TransportSerializerError {
+            case .binarySentAsText(let message):
+                #expect(message.ref == "1")
+                return true
+            default: return false
             }
-        }
+        })
     }
     
     

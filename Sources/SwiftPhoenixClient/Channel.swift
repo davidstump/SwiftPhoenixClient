@@ -340,9 +340,9 @@ public class Channel {
     @discardableResult
     public func push(_ event: String,
                      payload: Payload,
-                     timeout: TimeInterval = Defaults.timeoutInterval) -> Push {
+                     timeout: TimeInterval = Defaults.timeoutInterval) throws -> Push {
         guard joinedOnce else {
-            fatalError("Tried to push \(event) to \(self.topic) before joining. Use channel.join() before pushing events")
+            throw ChannelError.pushTriedBeforeJoin(topic: self.topic, event: event)
         }
         
         let pushEvent = Push(channel: self,
@@ -372,8 +372,10 @@ public class Channel {
     /// - parameter timeout: Optional timeout
     public func binaryPush(_ event: String,
                            payload: Data,
-                           timeout: TimeInterval = Defaults.timeoutInterval) -> Push {
-        guard joinedOnce else { fatalError("Tried to push \(event) to \(self.topic) before joining. Use channel.join() before pushing events") }
+                           timeout: TimeInterval = Defaults.timeoutInterval) throws -> Push {
+        guard joinedOnce else {
+            throw ChannelError.pushTriedBeforeJoin(topic: self.topic, event: event)
+        }
         
         let pushEvent = Push(channel: self,
                              event: event,

@@ -70,17 +70,14 @@ public class PhoenixTransportSerializer: TransportSerializer {
     
     public func encode(message: OutgoingMessage) throws -> String {
         switch message.payload {
-        case .binary(_):
-            throw PhxError.serializerError(reason: .binarySentAsText(message))
+        case .binary(_): throw TransportSerializerError.binarySentAsText(message)
             
         case .encodable(let encodablePayload):
             let outgoingShape = OutgoingShape(message: message, payload: encodablePayload)
             let outgoingJsonData = try self.payloadEncoder.encode(outgoingShape)
             guard let outgoingText = String(data: outgoingJsonData, encoding: .utf8) else {
-                throw PhxError.serializerError(
-                    reason: .stringFromDataFailed(
-                        string: "Expected json object to serialize to a String. \(outgoingShape)"
-                    )
+                throw TransportSerializerError.stringFromDataFailed(
+                    string: "Expected json object to serialize to a String. \(outgoingShape)"
                 )
             }
             return outgoingText
@@ -97,10 +94,8 @@ public class PhoenixTransportSerializer: TransportSerializer {
             
             let outgoingJsonData = try self.payloadEncoder.encode(any: outgoingShape)
             guard let outgoingText = String(data: outgoingJsonData, encoding: .utf8) else {
-                throw PhxError.serializerError(
-                    reason: .stringFromDataFailed(
-                        string: "Expected json object to serialize to a String. \(outgoingShape)"
-                    )
+                throw TransportSerializerError.stringFromDataFailed(
+                    string: "Expected json object to serialize to a String. \(outgoingShape)"
                 )
             }
             
@@ -151,10 +146,8 @@ public class PhoenixTransportSerializer: TransportSerializer {
     
     
     public func decode(text: String) throws -> IncomingMessage {
-        guard
-            let jsonData = text.data(using: .utf8)
-        else {
-            throw PhxError.serializerError(reason: .dataFromStringFailed(string: text))
+        guard let jsonData = text.data(using: .utf8) else {
+            throw TransportSerializerError.dataFromStringFailed(string: text)
         }
         
         let partialMessage = try payloadDecoder.decode(PartialMessage.self, from: jsonData)
@@ -171,7 +164,7 @@ public class PhoenixTransportSerializer: TransportSerializer {
             guard
                 let status = partialMessage.status
             else {
-                throw PhxError.serializerError(reason: .invalidReplyStructure(string: text))
+                throw TransportSerializerError.invalidReplyStructure(string: text)
             }
             
             return buildIncomingMessage(
@@ -210,8 +203,8 @@ public class PhoenixTransportSerializer: TransportSerializer {
         case KIND_REPLY: try decodeReply(buffer: binary, rawData: data)
         case KIND_BROADCAST: try decodeBroadcast(buffer: binary, rawData: data)
         default:
-            throw PhxError.serializerError(reason:
-                    .invalidBinaryKind(string: "Expected binary data to include a KIND of push, reply, or broadcast. Got \(binary[0])")
+            throw TransportSerializerError.invalidBinaryKind(
+                string: "Expected binary data to include a KIND of push, reply, or broadcast. Got \(binary[0])"
             )
         }
     }
@@ -226,11 +219,11 @@ public class PhoenixTransportSerializer: TransportSerializer {
         let joinRef = String(bytes: buffer[offset ..< offset + joinRefSize], encoding: .utf8)
         offset += joinRefSize
         guard let topic = String(bytes: buffer[offset ..< offset + topicSize], encoding: .utf8) else {
-            throw PhxError.serializerError(reason: .decodeMissingTopic)
+            throw TransportSerializerError.decodeMissingTopic
         }
         offset += topicSize
         guard let event = String(bytes: buffer[offset ..< offset + eventSize], encoding: .utf8) else {
-            throw PhxError.serializerError(reason: .decodeMissingEvent)
+            throw TransportSerializerError.decodeMissingEvent
         }
         offset += eventSize
         let data = Data(buffer[offset ..< buffer.count])
@@ -256,11 +249,11 @@ public class PhoenixTransportSerializer: TransportSerializer {
         let ref = String(bytes: buffer[offset ..< offset + refSize], encoding: .utf8)
         offset += refSize
         guard let topic = String(bytes: buffer[offset ..< offset + topicSize], encoding: .utf8) else {
-            throw PhxError.serializerError(reason: .decodeMissingTopic)
+            throw TransportSerializerError.decodeMissingTopic
         }
         offset += topicSize
         guard let event = String(bytes: buffer[offset ..< offset + eventSize], encoding: .utf8) else {
-            throw PhxError.serializerError(reason: .decodeMissingEvent)
+            throw TransportSerializerError.decodeMissingEvent
         }
         offset += eventSize
         let data = Data(buffer[offset ..< buffer.count])
@@ -283,11 +276,11 @@ public class PhoenixTransportSerializer: TransportSerializer {
         var offset = HEADER_LENGTH + 2
         
         guard let topic = String(bytes: buffer[offset ..< offset + topicSize], encoding: .utf8) else {
-            throw PhxError.serializerError(reason: .decodeMissingTopic)
+            throw TransportSerializerError.decodeMissingTopic
         }
         offset += topicSize
         guard let event = String(bytes: buffer[offset ..< offset + eventSize], encoding: .utf8) else {
-            throw PhxError.serializerError(reason: .decodeMissingEvent)
+            throw TransportSerializerError.decodeMissingEvent
         }
         offset += eventSize
         let data = Data(buffer[offset ..< buffer.count])

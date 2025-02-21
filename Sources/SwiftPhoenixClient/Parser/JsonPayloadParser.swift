@@ -31,7 +31,7 @@ class JsonPayloadParser: PayloadParser {
                         let response = payload["response"]
                     else {
                         let text = incomingMessage.rawText ?? "n/a"
-                        throw PhxError.serializerError(reason: .invalidReplyStructure(string: text))
+                        throw TransportSerializerError.invalidReplyStructure(string: text)
                     }
                     return response
                     

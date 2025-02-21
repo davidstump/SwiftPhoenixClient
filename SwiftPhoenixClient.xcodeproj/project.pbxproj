@@ -42,13 +42,14 @@
 		12A61E7E2D49E94C000B62E1 /* DataPayloadParserTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A61E7D2D49E94C000B62E1 /* DataPayloadParserTest.swift */; };
 		12A61E812D49E954000B62E1 /* DecodablePayloadParserTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A61E802D49E954000B62E1 /* DecodablePayloadParserTest.swift */; };
 		12A61E852D49E95B000B62E1 /* JsonPayloadParserTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A61E832D49E95B000B62E1 /* JsonPayloadParserTest.swift */; };
+		12C2F0992D68BAD90089B49F /* ChannelError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C2F0982D68BAD90089B49F /* ChannelError.swift */; };
 		12EF620425524B6800A6EE9B /* SocketSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF61FF25524B6800A6EE9B /* SocketSpec.swift */; };
 		12EF620525524B6800A6EE9B /* ChannelSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620025524B6800A6EE9B /* ChannelSpec.swift */; };
 		12EF620625524B6800A6EE9B /* PresenceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620125524B6800A6EE9B /* PresenceSpec.swift */; };
 		12EF620725524B6800A6EE9B /* TimeoutTimerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620225524B6800A6EE9B /* TimeoutTimerSpec.swift */; };
 		12EF620825524B6800A6EE9B /* DefaultSerializerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620325524B6800A6EE9B /* DefaultSerializerSpec.swift */; };
 		634398462CCFDA9200A2B9AC /* PayloadDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634398452CCFDA9200A2B9AC /* PayloadDecoder.swift */; };
-		6343984A2CCFDDBD00A2B9AC /* PhxError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634398492CCFDDBD00A2B9AC /* PhxError.swift */; };
+		6343984A2CCFDDBD00A2B9AC /* TransportSerializerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634398492CCFDDBD00A2B9AC /* TransportSerializerError.swift */; };
 		6343984E2CD0075B00A2B9AC /* DefaultsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6343984D2CD0075B00A2B9AC /* DefaultsTest.swift */; };
 		634398502CD009F800A2B9AC /* SocketTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6343984F2CD009F800A2B9AC /* SocketTest.swift */; };
 		634E20EC2CC4813D0037A570 /* PayloadEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634E20EB2CC4813D0037A570 /* PayloadEncoder.swift */; };
@@ -135,13 +136,14 @@
 		12A61E7D2D49E94C000B62E1 /* DataPayloadParserTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPayloadParserTest.swift; sourceTree = "<group>"; };
 		12A61E802D49E954000B62E1 /* DecodablePayloadParserTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodablePayloadParserTest.swift; sourceTree = "<group>"; };
 		12A61E832D49E95B000B62E1 /* JsonPayloadParserTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonPayloadParserTest.swift; sourceTree = "<group>"; };
+		12C2F0982D68BAD90089B49F /* ChannelError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelError.swift; sourceTree = "<group>"; };
 		12EF61FF25524B6800A6EE9B /* SocketSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketSpec.swift; sourceTree = "<group>"; };
 		12EF620025524B6800A6EE9B /* ChannelSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelSpec.swift; sourceTree = "<group>"; };
 		12EF620125524B6800A6EE9B /* PresenceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresenceSpec.swift; sourceTree = "<group>"; };
 		12EF620225524B6800A6EE9B /* TimeoutTimerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeoutTimerSpec.swift; sourceTree = "<group>"; };
 		12EF620325524B6800A6EE9B /* DefaultSerializerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultSerializerSpec.swift; sourceTree = "<group>"; };
 		634398452CCFDA9200A2B9AC /* PayloadDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayloadDecoder.swift; sourceTree = "<group>"; };
-		634398492CCFDDBD00A2B9AC /* PhxError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhxError.swift; sourceTree = "<group>"; };
+		634398492CCFDDBD00A2B9AC /* TransportSerializerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportSerializerError.swift; sourceTree = "<group>"; };
 		6343984D2CD0075B00A2B9AC /* DefaultsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultsTest.swift; sourceTree = "<group>"; };
 		6343984F2CD009F800A2B9AC /* SocketTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketTest.swift; sourceTree = "<group>"; };
 		634E20EB2CC4813D0037A570 /* PayloadEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayloadEncoder.swift; sourceTree = "<group>"; };
@@ -247,6 +249,7 @@
 		128143AE25410DF3008615A7 /* SwiftPhoenixClient */ = {
 			isa = PBXGroup;
 			children = (
+				12C2F0972D68BACE0089B49F /* Error */,
 				63AEB5A72D4FBB9000E8A3CC /* Transport */,
 				120019E32D4BA1FB00EF4613 /* Channel */,
 				1284F4CA2D4817A00090D0DA /* Message */,
@@ -260,7 +263,6 @@
 				12922E1F2543B10B0034B257 /* Socket.swift */,
 				12991E00254C3F1300BB8650 /* TimeoutTimer.swift */,
 				63F3765229E7296F00A5AB6E /* SynchronizedArray.swift */,
-				634398492CCFDDBD00A2B9AC /* PhxError.swift */,
 			);
 			path = SwiftPhoenixClient;
 			sourceTree = "<group>";
@@ -353,6 +355,15 @@
 				12A61E832D49E95B000B62E1 /* JsonPayloadParserTest.swift */,
 			);
 			path = Parser;
+			sourceTree = "<group>";
+		};
+		12C2F0972D68BACE0089B49F /* Error */ = {
+			isa = PBXGroup;
+			children = (
+				634398492CCFDDBD00A2B9AC /* TransportSerializerError.swift */,
+				12C2F0982D68BAD90089B49F /* ChannelError.swift */,
+			);
+			path = Error;
 			sourceTree = "<group>";
 		};
 		12EF61FE25524B6800A6EE9B /* SwiftPhoenixClientTests */ = {
@@ -591,6 +602,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				12991DFB254C3EB800BB8650 /* Defaults.swift in Sources */,
+				12C2F0992D68BAD90089B49F /* ChannelError.swift in Sources */,
 				634E20EC2CC4813D0037A570 /* PayloadEncoder.swift in Sources */,
 				63AEB5AB2D4FBC0500E8A3CC /* Transport.swift in Sources */,
 				12991E05254C3F3300BB8650 /* Channel.swift in Sources */,
@@ -612,7 +624,7 @@
 				1284F4D02D481E960090D0DA /* PartialMessage.swift in Sources */,
 				12991DFF254C3EF900BB8650 /* HeartbeatTimer.swift in Sources */,
 				12991E03254C3F2300BB8650 /* Push.swift in Sources */,
-				6343984A2CCFDDBD00A2B9AC /* PhxError.swift in Sources */,
+				6343984A2CCFDDBD00A2B9AC /* TransportSerializerError.swift in Sources */,
 				1284F4C52D4801210090D0DA /* JsonPayloadParser.swift in Sources */,
 				12922E202543B10B0034B257 /* Socket.swift in Sources */,
 				12922E222543B37B0034B257 /* URLSessionTransport.swift in Sources */,
