@@ -10,7 +10,8 @@ import Testing
 import XCTest
 @testable import SwiftPhoenixClient
 
-final class PhoenixTransportSerializerTest {
+@Suite("PhoenixTransportSerializer")
+struct PhoenixTransportSerializerTest {
     
     @Suite("encode")
     struct EncodeSuite {

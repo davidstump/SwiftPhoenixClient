@@ -470,6 +470,7 @@ struct SocketTest {
             #expect(mockTransport.sendStringCalled == false)
             #expect(mockTransport.sendDataCalled == false)
             DispatchQueue.main.sync { /* sync array no-op */}
+            Thread.sleep(forTimeInterval: 0.2) // syncarray runs on .async
             #expect(socket.sendBuffer.count == 1)
             
             socket.sendBuffer.forEach( { try? $0.callback() } )
@@ -604,6 +605,7 @@ struct SocketTest {
             
             socket.flushSendBuffer()
             DispatchQueue.main.sync { /* sync array no-op */}
+            Thread.sleep(forTimeInterval: 0.2) // syncarray runs on .async
             #expect(socket.sendBuffer.count == 0)
         }
     }

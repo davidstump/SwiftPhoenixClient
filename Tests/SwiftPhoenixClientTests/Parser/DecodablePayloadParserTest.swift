@@ -9,9 +9,8 @@
 import Testing
 @testable import SwiftPhoenixClient
 
-
-
-final class DecodablePayloadParserTest {
+@Suite("DecodablePayloadParser")
+struct DecodablePayloadParserTest {
 
     @Suite("parse")
     struct ParseSuite {

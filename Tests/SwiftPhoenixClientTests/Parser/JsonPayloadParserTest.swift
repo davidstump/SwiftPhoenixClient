@@ -10,7 +10,8 @@
 import Testing
 @testable import SwiftPhoenixClient
 
-final class JsonPayloadParserTest {
+@Suite("JsonPayloadParser")
+struct JsonPayloadParserTest {
     
     @Suite("parse")
     struct ParseSuite {
