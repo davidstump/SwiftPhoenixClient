@@ -224,13 +224,14 @@ public final class Presence {
             let stateEvent = opts.events[.state],
             let diffEvent = opts.events[.diff] else { return }
         
-        
-        // TODO: Fix Presence since Payload has been overhauled
-        
+                
         channel.on(stateEvent) { [weak self] message in
-            guard let self else { return }
+            guard
+                let self,
+                case .success(let payload) = message.payload,
+                let newState = payload as? State
+            else { return }
             
-            guard let newState = message.rawPayload as? State else { return }
             
             self.joinRef = self.channel?.joinRef
             self.state = Presence.syncState(self.state,
@@ -250,9 +251,12 @@ public final class Presence {
         }
         
         self.channel?.on(diffEvent) { [weak self] message in
-            guard let self else { return }
+            guard
+                let self,
+                case .success(let payload) = message.payload,
+                let diff = payload as? Diff
+            else { return }
             
-            guard let diff = message.rawPayload as? Diff else { return }
             if self.isPendingSyncState {
                 self.pendingDiffs.append(diff)
             } else {

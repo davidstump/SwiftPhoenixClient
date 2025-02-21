@@ -45,6 +45,8 @@
 		12C2F0992D68BAD90089B49F /* ChannelError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C2F0982D68BAD90089B49F /* ChannelError.swift */; };
 		12C2F09B2D68F9540089B49F /* TimeoutTimerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C2F09A2D68F9540089B49F /* TimeoutTimerTest.swift */; };
 		12C2F09D2D68FCE20089B49F /* HeartbeatTimerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C2F09C2D68FCE20089B49F /* HeartbeatTimerTest.swift */; };
+		12C2F0A12D6920CE0089B49F /* PresenceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C2F0A02D6920CE0089B49F /* PresenceTest.swift */; };
+		12C2F0A32D69247C0089B49F /* ChannelSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C2F0A22D69247C0089B49F /* ChannelSpy.swift */; };
 		12EF620625524B6800A6EE9B /* PresenceSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EF620125524B6800A6EE9B /* PresenceSpec.swift */; };
 		634398462CCFDA9200A2B9AC /* PayloadDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634398452CCFDA9200A2B9AC /* PayloadDecoder.swift */; };
 		6343984A2CCFDDBD00A2B9AC /* TransportSerializerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634398492CCFDDBD00A2B9AC /* TransportSerializerError.swift */; };
@@ -134,6 +136,8 @@
 		12C2F0982D68BAD90089B49F /* ChannelError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelError.swift; sourceTree = "<group>"; };
 		12C2F09A2D68F9540089B49F /* TimeoutTimerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeoutTimerTest.swift; sourceTree = "<group>"; };
 		12C2F09C2D68FCE20089B49F /* HeartbeatTimerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatTimerTest.swift; sourceTree = "<group>"; };
+		12C2F0A02D6920CE0089B49F /* PresenceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenceTest.swift; sourceTree = "<group>"; };
+		12C2F0A22D69247C0089B49F /* ChannelSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelSpy.swift; sourceTree = "<group>"; };
 		12EF620125524B6800A6EE9B /* PresenceSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresenceSpec.swift; sourceTree = "<group>"; };
 		634398452CCFDA9200A2B9AC /* PayloadDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayloadDecoder.swift; sourceTree = "<group>"; };
 		634398492CCFDDBD00A2B9AC /* TransportSerializerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportSerializerError.swift; sourceTree = "<group>"; };
@@ -325,6 +329,7 @@
 				12991E10254C456F00BB8650 /* FakeTimerQueue.swift */,
 				12991E14254C45FC00BB8650 /* FakeTimerQueueSpec.swift */,
 				1295E6F02D67B67500D4D45A /* PushSpy.swift */,
+				12C2F0A22D69247C0089B49F /* ChannelSpy.swift */,
 			);
 			path = Fakes;
 			sourceTree = "<group>";
@@ -364,6 +369,7 @@
 				63BBCF012B897D4F004A16C9 /* Serialization */,
 				12EF620125524B6800A6EE9B /* PresenceSpec.swift */,
 				12C2F09C2D68FCE20089B49F /* HeartbeatTimerTest.swift */,
+				12C2F0A02D6920CE0089B49F /* PresenceTest.swift */,
 			);
 			path = SwiftPhoenixClientTests;
 			sourceTree = "<group>";
@@ -620,6 +626,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12C2F0A32D69247C0089B49F /* ChannelSpy.swift in Sources */,
 				634398502CD009F800A2B9AC /* SocketTest.swift in Sources */,
 				63CE36C32D5EEF7F008E96DE /* MockableProtocol.generated.swift in Sources */,
 				63BBCF052B897DEF004A16C9 /* TransportSerializerTest.swift in Sources */,
@@ -631,6 +638,7 @@
 				12A61E7E2D49E94C000B62E1 /* DataPayloadParserTest.swift in Sources */,
 				12991E0F254C454C00BB8650 /* SocketSpy.swift in Sources */,
 				12991E13254C458100BB8650 /* TestHelpers.swift in Sources */,
+				12C2F0A12D6920CE0089B49F /* PresenceTest.swift in Sources */,
 				12C2F09B2D68F9540089B49F /* TimeoutTimerTest.swift in Sources */,
 				12A61E812D49E954000B62E1 /* DecodablePayloadParserTest.swift in Sources */,
 				12EF620625524B6800A6EE9B /* PresenceSpec.swift in Sources */,
