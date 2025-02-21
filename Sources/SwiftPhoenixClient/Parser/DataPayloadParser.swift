@@ -30,7 +30,7 @@ class DataPayloadParser: PayloadParser {
                         let response = payload["response"]
                     else {
                         let text = String(data: incomingMessageData, encoding: .utf8) ?? "unparsable"
-                        throw PhxError.serializerError(reason: .invalidReplyStructure(string: text))
+                        throw TransportSerializerError.invalidReplyStructure(string: text)
                     }
                     
                     return try payloadEncoder.encode(any: response)

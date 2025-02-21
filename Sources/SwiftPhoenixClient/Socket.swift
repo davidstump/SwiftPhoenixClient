@@ -154,19 +154,19 @@ public class Socket: TransportDelegate {
     // MARK: - Initialization
     //----------------------------------------------------------------------
     public convenience init(_ endPoint: String, params: Payload? = nil) {
-        self.init(endPoint: endPoint,
+        self.init(endPoint,
                   transport: { url in return URLSessionTransport(url: url) },
                   params: { params })
     }
     
     public convenience init(_ endPoint: String, params: PayloadClosure?) {
-        self.init(endPoint: endPoint,
+        self.init(endPoint,
                   transport: { url in return URLSessionTransport(url: url) },
                   params: params)
     }
     
     
-    public init(endPoint: String,
+    public init(_ endPoint: String,
                 transport: @escaping ((URL) -> Transport),
                 params: PayloadClosure? = nil) {
         self.transport = transport
@@ -427,6 +427,11 @@ public class Socket: TransportDelegate {
     /// - return: A new channel
     public func channel(_ topic: String,
                         params: [String: Any] = [:]) -> Channel {
+        return channel(topic, params: .json(params))
+    }
+    
+    public func channel(_ topic: String,
+                        params: OutgoingPayload) -> Channel {
         let channel = Channel(topic: topic, params: params, socket: self)
         self.channels.append(channel)
         

@@ -21,10 +21,65 @@
 @testable import SwiftPhoenixClient
 
 class SocketSpy: Socket {
-  
-  private(set) var pushCalled: Bool?
-  private(set) var pushCallCount: Int = 0
-  private(set) var pushArgs: [Int: (topic: String, event: String, payload: Data, ref: String?, joinRef: String?)] = [:]
+    
+    
+    private(set) var makeRefCallCount: Int = 0
+    var makeRefCalled: Bool { makeRefCallCount > 0 }
+    var makeRefReturnValue: String? = nil
+    
+    override func makeRef() -> String {
+        makeRefCallCount += 1
+        guard let returnValue = makeRefReturnValue else { return super.makeRef() }
+        return returnValue
+    }
+    
+    
+    private(set) var pushOutgoingCallCount: Int = 0
+    var pushOutgoingCalled: Bool { pushOutgoingCallCount > 0 }
+    private(set) var pushOutgoingReceivedMessage: OutgoingMessage? = nil
+    private(set) var pushOutgoingReceivedMessages: [Int :OutgoingMessage] = [:]
+    
+    override func push(outgoing message: OutgoingMessage) {
+        pushOutgoingCallCount += 1
+        pushOutgoingReceivedMessage = message
+        pushOutgoingReceivedMessages[pushOutgoingCallCount] = message
+        super.push(outgoing: message)
+    }
+    
+    private(set) var removeCallCount: Int = 0
+    var removeCalled: Bool { pushOutgoingCallCount > 0 }
+    private(set) var removeReceivedChannel: Channel? = nil
+    
+    override func remove(_ channel: Channel) {
+        removeCallCount += 1
+        removeReceivedChannel = channel
+    }
+    
+    private(set) var removeFromSendBufferCallCount: Int = 0
+    var removeFromSendBufferCalled: Bool { removeFromSendBufferCallCount > 0 }
+    private(set) var removeFromSendBufferReceivedRef: String? = nil
+    
+    override func removeFromSendBuffer(ref: String) {
+        removeFromSendBufferCallCount += 1
+        removeFromSendBufferReceivedRef = ref
+    }
+    
+    private(set) var isConnectedCallCount: Int = 0
+    var isConnectedCalled: Bool { isConnectedCallCount > 0 }
+    var isConnectedReturnValue: Bool?
+    
+    override var isConnected: Bool {
+        guard let isConnectedReturnValue else { return super.isConnected }
+        return isConnectedReturnValue
+    }
+    
+    
+    
+//    
+//    
+//  private(set) var pushCalled: Bool?
+//  private(set) var pushCallCount: Int = 0
+//  private(set) var pushArgs: [Int: (topic: String, event: String, payload: Data, ref: String?, joinRef: String?)] = [:]
   
 //  override func push(topic: String,
 //                     event: String,

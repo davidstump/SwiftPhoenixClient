@@ -50,8 +50,8 @@ public class Channel {
     public let topic: String
     
     /// The params sent when joining the channel
-    public var params: Payload {
-        didSet { self.joinPush.payload = .json(params) }
+    public var params: OutgoingPayload {
+        didSet { self.joinPush.payload = params }
     }
     
     /// The Socket that the channel belongs to
@@ -87,10 +87,18 @@ public class Channel {
     var pushBuffer: [Push]
     
     /// Timer to attempt to rejoin
-    var rejoinTimer: TimeoutTimer
+    var rejoinTimer: ScheduleTimer
     
     /// Refs of stateChange hooks
     var stateChangeRefs: [String]
+    
+    convenience init(
+        topic: String,
+        params: [String: Any] = [:],
+        socket: Socket
+    ) {
+        self.init(topic: topic, params: .json(params), socket: socket)
+    }
     
     /// Initialize a Channel
     ///
@@ -99,7 +107,7 @@ public class Channel {
     /// - parameter socket: Socket that the channel is a part of
     init(
         topic: String,
-        params: [String: Any] = [:],
+        params: OutgoingPayload = .json([:]),
         socket: Socket
     ) {
         self.state = ChannelState.closed
@@ -146,7 +154,7 @@ public class Channel {
         // Setup Push Event to be sent when joining
         self.joinPush = Push(channel: self,
                              event: ChannelEvent.join,
-                             payload: .json(params),
+                             payload: params,
                              timeout: self.timeout)
         
         /// Handle when a response is received after join()
@@ -264,11 +272,11 @@ public class Channel {
     ///
     /// - parameter timeout: Optional. Defaults to Channel's timeout
     /// - return: Push event
+    /// - throws: If the channel has already tried to join
     @discardableResult
-    public func join(timeout: TimeInterval? = nil) -> Push {
+    public func join(timeout: TimeInterval? = nil) throws -> Push {
         guard !joinedOnce else {
-            fatalError("tried to join multiple times. 'join' "
-                       + "can only be called a single time per channel instance")
+            throw ChannelError.alreadyJoined
         }
         
         // Join the Channel
@@ -332,9 +340,9 @@ public class Channel {
     @discardableResult
     public func push(_ event: String,
                      payload: Payload,
-                     timeout: TimeInterval = Defaults.timeoutInterval) -> Push {
+                     timeout: TimeInterval = Defaults.timeoutInterval) throws -> Push {
         guard joinedOnce else {
-            fatalError("Tried to push \(event) to \(self.topic) before joining. Use channel.join() before pushing events")
+            throw ChannelError.pushTriedBeforeJoin(topic: self.topic, event: event)
         }
         
         let pushEvent = Push(channel: self,
@@ -364,8 +372,10 @@ public class Channel {
     /// - parameter timeout: Optional timeout
     public func binaryPush(_ event: String,
                            payload: Data,
-                           timeout: TimeInterval = Defaults.timeoutInterval) -> Push {
-        guard joinedOnce else { fatalError("Tried to push \(event) to \(self.topic) before joining. Use channel.join() before pushing events") }
+                           timeout: TimeInterval = Defaults.timeoutInterval) throws -> Push {
+        guard joinedOnce else {
+            throw ChannelError.pushTriedBeforeJoin(topic: self.topic, event: event)
+        }
         
         let pushEvent = Push(channel: self,
                              event: event,
