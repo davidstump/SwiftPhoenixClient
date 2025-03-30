@@ -12,17 +12,19 @@ import Testing
 @Suite("Presence")
 struct PresenceTest {
     
+    static let fixState: Presence.State = [
+        "u1": ["metas": [["id":1, "phx_ref": "1"]]],
+        "u2": ["metas": [["id":2, "phx_ref": "2"]]],
+        "u3": ["metas": [["id":3, "phx_ref": "3"]]]
+    ]
+    
     @Suite("syncState")
     struct SyncStateSuite {
         
         /// Fixtures
         let fixJoins: Presence.State = ["u1": ["metas": [["id":1, "phx_ref": "1.2"]]]]
         let fixLeaves: Presence.State = ["u2": ["metas": [["id":2, "phx_ref": "2"]]]]
-        let fixState: Presence.State = [
-            "u1": ["metas": [["id":1, "phx_ref": "1"]]],
-            "u2": ["metas": [["id":2, "phx_ref": "2"]]],
-            "u3": ["metas": [["id":3, "phx_ref": "3"]]]
-        ]
+        
         
         @Test("syncs empty state")
         func syncsEmptyState() async throws {
@@ -245,6 +247,52 @@ struct PresenceTest {
         }
     }
     
+    @Suite("list")
+    struct ListSuite {
+        
+        @Test("lists full presence by default")
+        func byDefault() async throws {
+            let list = Presence.list(fixState).sorted { first, second in
+                let firstId = (first["metas"]!.first!["id"] as! Int)
+                let secondId = (second["metas"]!.first!["id"] as! Int)
+                return firstId < secondId
+            }
+            
+            #expect((list[0]["metas"]![0]["id"] as! Int) == 1)
+            #expect((list[0]["metas"]![0]["phx_ref"] as! String) == "1")
+            
+            #expect((list[1]["metas"]![0]["id"] as! Int) == 2)
+            #expect((list[1]["metas"]![0]["phx_ref"] as! String) == "2")
+            
+            #expect((list[2]["metas"]![0]["id"] as! Int) == 3)
+            #expect((list[2]["metas"]![0]["phx_ref"] as! String) == "3")
+        }
+        
+        @Test("lists with custom function")
+        func withCustomFucntion() async throws {
+            let state = [
+                "u1": [
+                    "metas": [
+                        [
+                            "id": 1,
+                            "phx_ref": "1.first"
+                        ],
+                        [
+                            "id": 1,
+                            "phx_ref": "1.second"
+                        ]
+                    ]
+                ]
+            ]
+            let list = Presence.listBy(state) { key, map in
+                return map.first?.value.first
+            }
+            
+            #expect(list.first!!["id"] as! Int == 1)
+            #expect(list.first!!["phx_ref"] as! String == "1.first")
+        }
+    }
+    
     @Suite("instance")
     struct InstanceSuite {
         let listByFirst: (_ key: String, _ presence: Presence.Map) -> Presence.Meta
@@ -252,35 +300,168 @@ struct PresenceTest {
             return pres["metas"]!.first!
         }
         
+        let channel: Channel
+        
+        init() {
+            let socket = SocketSpy("/socket") { _ in TransportMock() }
+            channel = socket.channel("topic")
+            channel.joinPush.ref = "1"
+        }
+        
         @Test("syncs state and diffs")
         func syncsStateAndDiffs() async throws {
-            let channel = ChannelSpy()
             let presence = Presence(channel: channel)
             let user1: Presence.Map = ["metas": [["id": 1, "phx_ref": "1"]]]
             let user2: Presence.Map = ["metas": [["id": 2, "phx_ref": "2"]]]
             let newState: Presence.State = ["u1": user1, "u2": user2]
             
+            let incomingPresenceState = buildIncomingJsonMessage(ref: "1",
+                                                                 event: "presence_state",
+                                                                 jsonPayload: newState)
+            channel.trigger(incomingPresenceState)
+            var s = presence.list(by: listByFirst)
+            #expect(s.count == 2)
+            s.sort { first, second in
+                return (first["id"] as! Int) < (second["id"] as! Int)
+            }
             
-            channel.trigger(event: "presence_state",
-                            payload: newState,
-                            ref: "1")
-            let s = presence.list(by: listByFirst)
-            expect(s).to(haveCount(2))
-            // can't check values because maps are lazy
-            //                expect(s[0]["id"] as? Int).to(equal(1))
-            //                expect(s[0]["phx_ref"] as? String).to(equal("1"))
-            //
-            //                expect(s[1]["id"] as? Int).to(equal(2))
-            //                expect(s[1]["phx_ref"] as? String).to(equal("2"))
+            #expect((s[0]["id"] as! Int) == 1)
+            #expect((s[0]["phx_ref"] as! String) == "1")
+            #expect((s[1]["id"] as! Int) == 2)
+            #expect((s[1]["phx_ref"] as! String) == "2")
             
-            channel.trigger(event: "presence_diff",
-                            payload: ["joins": [:], "leaves": ["u1": user1]],
-                            ref: "2")
             
+            
+            let diffJson = ["joins": [:], "leaves": ["u1": user1]]
+            let incomingPresenceDiff = buildIncomingJsonMessage(ref: "2",
+                                                                event: "presence_diff",
+                                                                jsonPayload: diffJson)
+            
+            channel.trigger(incomingPresenceDiff)
             let l = presence.list(by: listByFirst)
-            expect(l).to(haveCount(1))
-            expect(l[0]["id"] as? Int).to(equal(2))
-            expect(l[0]["phx_ref"] as? String).to(equal("2"))
+            #expect(l.count == 1)
+            #expect((l[0]["id"] as! Int) == 2)
+            #expect((l[0]["phx_ref"] as! String) == "2")
+        }
+        
+        @Test("applies pending diff if state is not yet synced")
+        func appliesPendingDiffIfNotSynced() async throws {
+            var onJoins: [(id: String, current: Presence.Map?, new: Presence.Map)] = []
+            var onLeaves: [(id: String, current: Presence.Map, left: Presence.Map)] = []
+            
+            let presence = Presence(channel: channel)
+            presence.onJoin({ (key, current, new) in
+                onJoins.append((key, current, new))
+            })
+            
+            presence.onLeave({ (key, current, left) in
+                onLeaves.append((key, current, left))
+            })
+            
+            let user1 = ["metas": [["id": 1, "phx_ref": "1"]]]
+            let user2 = ["metas": [["id": 2, "phx_ref": "2"]]]
+            let user3 = ["metas": [["id": 3, "phx_ref": "3"]]]
+            
+            let newState = ["u1": user1, "u2": user2]
+            let leaves = ["u2": user2]
+            
+            let payload1 = ["joins": [:], "leaves": leaves]
+            channel.trigger(buildIncomingJsonMessage(event: "presence_diff",
+                                                     jsonPayload: payload1))
+            
+            // there is no state
+            #expect(presence.list(by: listByFirst).isEmpty)
+            
+            // pending diffs 1
+            #expect(presence.pendingDiffs.count == 1)
+            #expect(presence.pendingDiffs[0]["joins"]?.isEmpty == true)
+            let t1 = transform(presence.pendingDiffs[0]["leaves"]!, and: leaves)
+            #expect(t1.lhs == t1.rhs)
+            
+            channel.trigger(buildIncomingJsonMessage(event: "presence_state",
+                                                     jsonPayload: newState))
+            #expect(onLeaves.count == 1)
+            #expect(onLeaves[0].id == "u2")
+            #expect(onLeaves[0].current["metas"]?.isEmpty == true)
+            #expect(onLeaves[0].left["metas"]?[0]["id"] as? Int == 2)
+            
+            let s = presence.list(by: listByFirst)
+            #expect(s.count == 1)
+            #expect(s[0]["id"] as? Int == 1)
+            #expect(s[0]["phx_ref"] as? String == "1")
+            #expect(presence.pendingDiffs.isEmpty)
+            
+            #expect(onJoins.count == 2)
+            onJoins.sort { first, second in
+                return first.id < second.id
+            }
+            // can't check values because maps are lazy
+            #expect(onJoins[0].id == "u1")
+            #expect(onJoins[0].current == nil)
+            #expect(onJoins[0].new["metas"]?[0]["id"] as? Int == 1)
+            
+            #expect(onJoins[1].id == "u2")
+            #expect(onJoins[1].current == nil)
+            #expect(onJoins[1].new["metas"]?[0]["id"] as? Int == 2)
+            
+            
+            // disconnect then reconnect
+            #expect(presence.isPendingSyncState == false)
+            channel.joinPush.ref = "2"
+            #expect(presence.isPendingSyncState == true)
+            
+            
+            channel.trigger(buildIncomingJsonMessage(
+                event: "presence_diff",
+                jsonPayload: ["joins": [:], "leaves": ["u1": user1]]))
+            
+            let d = presence.list(by: listByFirst)
+            #expect(d.count == 1)
+            #expect(d[0]["id"] as? Int == 1)
+            #expect(d[0]["phx_ref"] as? String == "1")
+            
+            channel.trigger(buildIncomingJsonMessage(event: "presence_state",
+                                                     jsonPayload: ["u1": user1, "u3": user3]))
+            
+            let s2 = presence.list(by: listByFirst)
+            #expect(s2.count == 1)
+            #expect(s2[0]["id"] as? Int == 3)
+            #expect(s2[0]["phx_ref"] as? String == "3")
+        }
+        
+        @Test("allows custom channel events")
+        func allowsCustomEvents() async throws {
+            let customOptions = Presence.Options(
+                events: [.state: "the_state", .diff: "the_diff"])
+            let p = Presence(channel: channel, opts: customOptions)
+            
+            #expect(p.channel?.getChannelSubscription("presence_state").isEmpty == true)
+            #expect(p.channel?.getChannelSubscription("presence_diff").isEmpty == true)
+            
+            #expect(p.channel?.getChannelSubscription("the_state").count == 1)
+            #expect(p.channel?.getChannelSubscription("the_diff").count == 1)
+            
+            
+            let user1: Presence.Map = ["metas": [["id": 1, "phx_ref": "1"]]]
+            let theState = buildIncomingJsonMessage(event: "the_state",
+                                                    jsonPayload: ["user1": user1])
+            channel.trigger(theState)
+            
+            
+            let s = p.list(by: listByFirst)
+            #expect(s.count == 1)
+            #expect(s[0]["id"] as? Int == 1)
+            #expect(s[0]["phx_ref"] as? String == "1")
+            
+            let theDiff = buildIncomingJsonMessage(event: "the_diff",
+                                                   jsonPayload: ["joins": [:], "leaves": ["user1": user1]])
+            channel.trigger(theDiff)
+            #expect(p.list(by: listByFirst).isEmpty)
+        }
+        
+        @Test("updates existing meta for a presence update (leave + join)")
+        func updatesExistingMeta() async throws {
+            
         }
     }
     

@@ -36,6 +36,32 @@ func transform(_ lhs: [AnyHashable: Any],
     return (NSDictionary(dictionary: lhs), NSDictionary(dictionary: rhs))
 }
 
+func buildDeferredPayload(
+    joinRef: String? = nil,
+    ref: String? = nil,
+    topic: String = "t",
+    event: String = "e",
+    jsonPayload: [String: Any] = [:]
+) -> IncomingPayload {
+    let outgoingShape: [Any] = [
+        joinRef as Any,
+        ref as Any,
+        topic,
+        event,
+        jsonPayload
+    ]
+    
+    let payloadEncoder = PhoenixPayloadEncoder()
+    
+    let outgoingJsonData = try! payloadEncoder.encode(any: outgoingShape)
+//    guard let outgoingText = String(data: outgoingJsonData, encoding: .utf8) else {
+//        fatalError("Bad value in test")
+//    }
+    
+
+    return .deferred(outgoingJsonData)
+}
+
 func buildIncomingMessage(
     joinRef: String? = nil,
     ref: String? = nil,
@@ -54,6 +80,33 @@ func buildIncomingMessage(
             rawBinary: nil
         )
     }
+
+func buildIncomingJsonMessage(
+    joinRef: String? = nil,
+    ref: String? = nil,
+    topic: String = "t",
+    event: String = "e",
+    jsonPayload: [String: Any] = [:]
+) -> IncomingMessage {
+    let outgoingShape: [Any] = [
+        joinRef as Any,
+        ref as Any,
+        topic,
+        event,
+        jsonPayload
+    ]
+    
+    let payloadEncoder = PhoenixPayloadEncoder()
+    
+    let outgoingJsonData = try! payloadEncoder.encode(any: outgoingShape)
+    return buildIncomingMessage(
+        joinRef: joinRef,
+        ref: ref,
+        topic: topic,
+        event: event,
+        payload: .deferred(outgoingJsonData)
+    )
+}
 
 func buildOutgoingMessage(
     joinRef: String? = nil,

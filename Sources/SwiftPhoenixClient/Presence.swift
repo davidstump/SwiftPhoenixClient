@@ -232,7 +232,6 @@ public final class Presence {
                 let newState = payload as? State
             else { return }
             
-            
             self.joinRef = self.channel?.joinRef
             self.state = Presence.syncState(self.state,
                                             newState: newState,
@@ -271,7 +270,7 @@ public final class Presence {
     
     /// Returns the array of presences, with deault selected metadata.
     public func list() -> [Map] {
-        return self.list(by: { _, pres in pres })
+        return Presence.list(self.state)
     }
     
     /// Returns the array of presences, with selected metadata
@@ -395,6 +394,11 @@ public final class Presence {
                               by filter: ((String, Map) -> Bool)?) -> State {
         let safeFilter = filter ?? { key, pres in true }
         return presences.filter(safeFilter)
+    }
+    
+    /// Returns the array of presences, with deault selected metadata.
+    public static func list(_ presences: State) -> [Map] {
+        return Presence.listBy(presences) { _, pres in pres }
     }
     
     public static func listBy<T>(_ presences: State,
