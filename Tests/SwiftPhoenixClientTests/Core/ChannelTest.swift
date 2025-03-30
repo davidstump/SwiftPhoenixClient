@@ -973,8 +973,31 @@ struct ChannelTest {
             channel.trigger(buildIncomingMessage(ref: kDefaultRef, event: "event"))
             #expect(onCallCount == 1)
         }
+        
+        @Test("on data")
+        func onData() async throws {
+            var data: Data? = nil
+            channel.onData("event") { channelMessage in
+                data = try! channelMessage.payload.get()
+            }
+            
+            channel.trigger(buildIncomingMessage(event: "event", payload: .decided(Data())))
+            
+            #expect(data != nil)
+        }
+        
+        @Test("on decodable")
+        func onDecodable() async throws {
+            var data: TestData? = nil
+            channel.onDecodable("event", of: TestData.self) { message in
+                data = try! message.payload.get()
+            }
+            channel.trigger(buildIncomingJsonMessage(event: "event",
+                                                     jsonPayload: ["foo": 1]))
+            #expect(data?.foo == 1)
+            
+        }
     }
-    // TODO: On Data/On Decodable
     // TODO: On AsyncStream/Publisher
     
     
