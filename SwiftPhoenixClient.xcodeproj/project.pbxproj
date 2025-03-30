@@ -362,8 +362,6 @@
 				12A61E7C2D49E93B000B62E1 /* Parser */,
 				6343984C2CD0075100A2B9AC /* Core */,
 				63BBCF012B897D4F004A16C9 /* Serialization */,
-				12C2F09C2D68FCE20089B49F /* HeartbeatTimerTest.swift */,
-				12C2F0A02D6920CE0089B49F /* PresenceTest.swift */,
 			);
 			path = SwiftPhoenixClientTests;
 			sourceTree = "<group>";
@@ -371,6 +369,8 @@
 		6343984C2CD0075100A2B9AC /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				12C2F09C2D68FCE20089B49F /* HeartbeatTimerTest.swift */,
+				12C2F0A02D6920CE0089B49F /* PresenceTest.swift */,
 				12C2F09A2D68F9540089B49F /* TimeoutTimerTest.swift */,
 				6343984D2CD0075B00A2B9AC /* DefaultsTest.swift */,
 				6343984F2CD009F800A2B9AC /* SocketTest.swift */,

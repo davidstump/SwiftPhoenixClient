@@ -175,6 +175,14 @@ open class URLSessionTransport: NSObject, Transport, URLSessionWebSocketDelegate
     
     // MARK: - Private
     private func receive() {
+        if #available(iOS 17.0, *) {
+            awaitReceive()
+        } else {
+            receiveAsCallback()
+        }
+    }
+    
+    private func awaitReceive() {
         self.receiveMessageTask = Task { [weak self] in
             guard let self else { return }
             do {
@@ -196,6 +204,26 @@ open class URLSessionTransport: NSObject, Transport, URLSessionWebSocketDelegate
                 receive()
             } catch {
                 abnormalErrorReceived(error, response: nil)
+            }
+        }
+    }
+    
+    private func receiveAsCallback() {
+        self.task?.receive { [weak self] result in
+            switch result {
+            case .success(.data(let data)):
+                self?.delegate?.onMessage(data: data)
+                self?.receive()
+                
+            case .success(.string(let string)):
+                self?.delegate?.onMessage(string: string)
+                self?.receive()
+                
+            case .failure(let error):
+                self?.abnormalErrorReceived(error, response: nil)
+                
+            default:
+                fatalError("Unknown result was received. [\(result)]")
             }
         }
     }

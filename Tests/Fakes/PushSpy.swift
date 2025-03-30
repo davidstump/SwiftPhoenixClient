@@ -11,7 +11,6 @@ import Foundation
 
 class PushSpy: Push {
     
-
     override init(
         channel: Channel,
         event: String,
@@ -26,6 +25,7 @@ class PushSpy: Push {
         )
     }
     
+    // MARK: - send
     private(set) var sendCallCount: Int = 0
     var sendCalled: Bool { sendCallCount > 0 }
     
@@ -33,6 +33,7 @@ class PushSpy: Push {
         sendCallCount += 1
     }
     
+    // MARK: - reset
     private(set) var resetCallCount: Int = 0
     var resetCalled: Bool { resetCallCount > 0 }
     
