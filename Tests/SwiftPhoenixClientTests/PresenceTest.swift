@@ -461,7 +461,80 @@ struct PresenceTest {
         
         @Test("updates existing meta for a presence update (leave + join)")
         func updatesExistingMeta() async throws {
+            let presence = Presence(channel: channel)
+            var onJoins: [(id: String, current: Presence.Map?, new: Presence.Map)] = []
+            var onLeaves: [(id: String, current: Presence.Map, left: Presence.Map)] = []
             
+            let user1 = ["metas": [["id": 1, "phx_ref": "1"]]]
+            let user2 = ["metas": [["id": 2, "name": "chris", "phx_ref": "2"]]]
+            let newState = ["u1": user1, "u2": user2]
+            
+            channel.trigger(buildIncomingJsonMessage(event: "presence_state",
+                                                     jsonPayload: newState))
+            
+            presence.onJoin({ (id, current, new) in
+                onJoins.append((id, current, new))
+            })
+            
+            presence.onLeave({ (id, current, left) in
+                onLeaves.append((id, current, left))
+            })
+            
+            let metas = presence
+                .list { id, map in map["metas"] }
+                .sorted { first, second in
+                    (first?[0]["id"] as! Int) < (second?[0]["id"] as! Int)
+                }
+            #expect(metas[0]?[0]["id"] as! Int == 1)
+            #expect(metas[0]?[0]["name"] == nil)
+            #expect(metas[0]?[0]["phx_ref"] as! String == "1")
+            
+            #expect(metas[1]?[0]["id"] as! Int == 2)
+            #expect(metas[1]?[0]["name"] as! String == "chris")
+            #expect(metas[1]?[0]["phx_ref"] as! String == "2")
+
+            let leaves = ["u2": user2]
+            let joins = [
+                "u2": [
+                    "metas": [
+                        ["id": 2, "name": "chris.2", "phx_ref": "2.2", "phx_ref_prev": "2"]
+                    ]
+                ]
+            ]
+            
+            let diffJson = ["joins": joins, "leaves": leaves]
+            channel.trigger(buildIncomingJsonMessage(event: "presence_diff",
+                                                     jsonPayload: diffJson))
+            
+            let diffMetas = presence
+                .list { id, map in map["metas"] }
+                .sorted { first, second in
+                    (first?[0]["id"] as! Int) < (second?[0]["id"] as! Int)
+                }
+            
+            #expect(diffMetas[0]?[0]["id"] as! Int == 1)
+            #expect(diffMetas[0]?[0]["name"] == nil)
+            #expect(diffMetas[0]?[0]["phx_ref"] as! String == "1")
+            
+            #expect(diffMetas[1]?[0]["id"] as! Int == 2)
+            #expect(diffMetas[1]?[0]["name"] as! String == "chris.2")
+            #expect(diffMetas[1]?[0]["phx_ref"] as! String == "2.2")
+            #expect(diffMetas[1]?[0]["phx_ref_prev"] as! String == "2")
+            
+            
+            #expect(onJoins.count == 1)
+            #expect(onJoins.first?.id == "u2")
+            
+            let current = onJoins.first?.current
+            #expect(current?["metas"]?.first?["id"] as! Int == 2)
+            #expect(current?["metas"]?.first?["name"] as! String == "chris")
+            #expect(current?["metas"]?.first?["phx_ref"] as! String == "2")
+            
+            let new = onJoins.first?.new
+            #expect(new?["metas"]?.first?["id"] as! Int == 2)
+            #expect(new?["metas"]?.first?["name"] as! String == "chris.2")
+            #expect(new?["metas"]?.first?["phx_ref"] as! String == "2.2")
+            #expect(new?["metas"]?.first?["phx_ref_prev"] as! String == "2")
         }
     }
     
