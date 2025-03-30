@@ -55,6 +55,32 @@ func buildIncomingMessage(
         )
     }
 
+func buildIncomingJsonMessage(
+    joinRef: String? = nil,
+    ref: String? = nil,
+    topic: String = "t",
+    event: String = "e",
+    jsonPayload: [String: Any] = [:]
+) -> IncomingMessage {
+    let outgoingShape: [Any] = [
+        joinRef as Any,
+        ref as Any,
+        topic,
+        event,
+        jsonPayload
+    ]
+    
+    let payloadEncoder = PhoenixPayloadEncoder()
+    let outgoingJsonData = try! payloadEncoder.encode(any: outgoingShape)
+    return buildIncomingMessage(
+        joinRef: joinRef,
+        ref: ref,
+        topic: topic,
+        event: event,
+        payload: .deferred(outgoingJsonData)
+    )
+}
+
 func buildOutgoingMessage(
     joinRef: String? = nil,
     ref: String? = nil,

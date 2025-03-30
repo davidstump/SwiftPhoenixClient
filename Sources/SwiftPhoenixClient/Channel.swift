@@ -107,7 +107,7 @@ public class Channel {
     /// - parameter socket: Socket that the channel is a part of
     init(
         topic: String,
-        params: OutgoingPayload = .json([:]),
+        params: OutgoingPayload,
         socket: Socket
     ) {
         self.state = ChannelState.closed
