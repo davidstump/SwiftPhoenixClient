@@ -24,11 +24,11 @@ import Foundation
 enum TestError: Error {
     case stub
 }
-//
-//func toWebSocketText(data: [Any?]) -> String {
-//  let encoded = Defaults.encode(data)
-//  return String(decoding: encoded, as: UTF8.self)
-//}
+
+struct TestData: Codable {
+    let foo: Int
+}
+
 
 /// Transforms two Dictionaries into NSDictionaries so they can be conpared
 func transform(_ lhs: [AnyHashable: Any],
@@ -106,9 +106,6 @@ func expectJson(_ payload: OutgoingPayload?, block: (Any) -> Void) {
     }
 }
 
-struct TestData: Codable {
-    let foo: Int
-}
 
 extension Channel {
     /// Utility method to easily filter the bindings for a channel by their event

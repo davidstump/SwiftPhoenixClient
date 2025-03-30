@@ -22,7 +22,7 @@
 
 class SocketSpy: Socket {
     
-    
+    // MARK: - makeRef
     private(set) var makeRefCallCount: Int = 0
     var makeRefCalled: Bool { makeRefCallCount > 0 }
     var makeRefReturnValue: String? = nil
@@ -34,6 +34,7 @@ class SocketSpy: Socket {
     }
     
     
+    // MARK: - push(outgoing:)
     private(set) var pushOutgoingCallCount: Int = 0
     var pushOutgoingCalled: Bool { pushOutgoingCallCount > 0 }
     private(set) var pushOutgoingReceivedMessage: OutgoingMessage? = nil
@@ -46,6 +47,7 @@ class SocketSpy: Socket {
         super.push(outgoing: message)
     }
     
+    // MARK: - remove
     private(set) var removeCallCount: Int = 0
     var removeCalled: Bool { pushOutgoingCallCount > 0 }
     private(set) var removeReceivedChannel: Channel? = nil
@@ -55,6 +57,7 @@ class SocketSpy: Socket {
         removeReceivedChannel = channel
     }
     
+    // MARK: - removeFromSendBuffer(ref:)
     private(set) var removeFromSendBufferCallCount: Int = 0
     var removeFromSendBufferCalled: Bool { removeFromSendBufferCallCount > 0 }
     private(set) var removeFromSendBufferReceivedRef: String? = nil
@@ -64,6 +67,7 @@ class SocketSpy: Socket {
         removeFromSendBufferReceivedRef = ref
     }
     
+    // MARK: - isConnected
     private(set) var isConnectedCallCount: Int = 0
     var isConnectedCalled: Bool { isConnectedCallCount > 0 }
     var isConnectedReturnValue: Bool?
@@ -72,29 +76,4 @@ class SocketSpy: Socket {
         guard let isConnectedReturnValue else { return super.isConnected }
         return isConnectedReturnValue
     }
-    
-    
-    
-//    
-//    
-//  private(set) var pushCalled: Bool?
-//  private(set) var pushCallCount: Int = 0
-//  private(set) var pushArgs: [Int: (topic: String, event: String, payload: Data, ref: String?, joinRef: String?)] = [:]
-  
-//  override func push(topic: String,
-//                     event: String,
-//                     payload: Data,
-//                     ref: String? = nil,
-//                     joinRef: String? = nil) {
-//    self.pushCalled = true
-//    self.pushCallCount += 1
-//    self.pushArgs[pushCallCount] = (topic: topic, event: event, payload: payload, ref: ref, joinRef: joinRef)
-//    super.push(topic: topic,
-//               event: event,
-//               payload: payload,
-//               ref: ref,
-//               joinRef: joinRef)
-//  }
-
-  
 }
