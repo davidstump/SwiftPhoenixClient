@@ -28,13 +28,16 @@ extension Channel {
         self.bindingRef = ref + 1
         
         let subscription = ChannelSubscription(event: event, ref: ref, callback: callback)
-        self.subscriptions.append(subscription)
+        self.subscriptions.withValue { subscriptions in
+            subscriptions.append(subscription)
+        }
         
         return subscription.ref
     }
     
     /// Hook into when the Channel is closed.
     /// Same as `on`, but for the `phx_close` event
+    @discardableResult
     public func onClose(_ callback: @escaping (ChannelMessage<Any>) -> Void) -> Int {
         return self.on(ChannelEvent.close, callback: callback)
     }
