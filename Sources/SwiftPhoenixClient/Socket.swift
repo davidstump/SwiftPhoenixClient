@@ -28,10 +28,10 @@ public typealias PayloadClosure = () -> Payload?
 
 /// Struct that gathers callbacks assigned to the Socket
 struct StateChangeCallbacks {
-    let open: SynchronizedArray<(ref: String, callback: ((URLResponse?) -> Void))> = .init()
-    let close: SynchronizedArray<(ref: String, callback: ((URLSessionWebSocketTask.CloseCode, String?) -> Void))> = .init()
-    let error: SynchronizedArray<(ref: String, callback: ((Error, URLResponse?) -> Void))> = .init()
-    let message: SynchronizedArray<(ref: String, callback: ((IncomingMessage) -> Void))> = .init()
+    var open: [(ref: String, callback: ((URLResponse?) -> Void))] = []
+    var close: [(ref: String, callback: ((URLSessionWebSocketTask.CloseCode, String?) -> Void))] = []
+    var error: [(ref: String, callback: ((Error, URLResponse?) -> Void))] = []
+    var message: [(ref: String, callback: ((IncomingMessage) -> Void))] = []
 }
 
 
@@ -122,14 +122,15 @@ public class Socket: TransportDelegate {
     // MARK: - Private Attributes
     //----------------------------------------------------------------------
     /// Callbacks for socket state changes
-    let stateChangeCallbacks: StateChangeCallbacks = StateChangeCallbacks()
+    let stateChangeCallbacks: LockIsolated<StateChangeCallbacks>
+        = LockIsolated(StateChangeCallbacks())
     
     /// Collection on channels created for the Socket
     public internal(set) var channels: [Channel] = []
     
     /// Buffers messages that need to be sent once the socket has connected. It is an array
     /// of tuples, with the ref of the message to send and the callback that will send the message.
-    let sendBuffer = SynchronizedArray<(ref: String?, callback: () throws -> ())>()
+    let sendBuffer = LockIsolated<[(ref: String?, callback: () throws -> ())]>([])
     
     /// Ref counter for messages
     var ref: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
@@ -336,7 +337,11 @@ public class Socket: TransportDelegate {
     /// - parameter callback: Called when the Socket is opened
     @discardableResult
     public func onOpen(callback: @escaping (URLResponse?) -> Void) -> String {
-        self.append(callback: callback, to: self.stateChangeCallbacks.open)
+        return self.stateChangeCallbacks.withValue { callbacks in
+            let ref = makeRef()
+            callbacks.open.append((ref, callback))
+            return ref
+        }
     }
     
     /// Registers callbacks for connection close events.
@@ -364,7 +369,11 @@ public class Socket: TransportDelegate {
     /// - parameter callback: Called when the Socket is closed
     @discardableResult
     public func onClose(callback: @escaping (URLSessionWebSocketTask.CloseCode, String?) -> Void) -> String {
-        self.append(callback: callback, to: self.stateChangeCallbacks.close)
+        return self.stateChangeCallbacks.withValue { callbacks in
+            let ref = makeRef()
+            callbacks.close.append((ref, callback))
+            return ref
+        }
     }
     
     /// Registers callbacks for connection error events.
@@ -378,7 +387,11 @@ public class Socket: TransportDelegate {
     /// - parameter callback: Called when the Socket errors
     @discardableResult
     public func onError(callback: @escaping (Error, URLResponse?) -> Void) -> String {
-        self.append(callback: callback, to: self.stateChangeCallbacks.error)
+        return self.stateChangeCallbacks.withValue { callbacks in
+            let ref = makeRef()
+            callbacks.error.append((ref, callback))
+            return ref
+        }
     }
     
     /// Registers callbacks for connection message events.
@@ -392,23 +405,23 @@ public class Socket: TransportDelegate {
     /// - parameter callback: Called when the Socket receives a message event
     @discardableResult
     public func onMessage(callback: @escaping (IncomingMessage) -> Void) -> String {
-        self.append(callback: callback, to: self.stateChangeCallbacks.message)
-    }
-    
-    private func append<T>(callback: T, to array: SynchronizedArray<(ref: String, callback: T)>) -> String {
-        let ref = makeRef()
-        array.append((ref, callback))
-        return ref
+        return self.stateChangeCallbacks.withValue { callbacks in
+            let ref = makeRef()
+            callbacks.message.append((ref, callback))
+            return ref
+        }
     }
     
     /// Releases all stored callback hooks (onError, onOpen, onClose, etc.) You should
     /// call this method when you are finished when the Socket in order to release
     /// any references held by the socket.
     public func releaseCallbacks() {
-        self.stateChangeCallbacks.open.removeAll()
-        self.stateChangeCallbacks.close.removeAll()
-        self.stateChangeCallbacks.error.removeAll()
-        self.stateChangeCallbacks.message.removeAll()
+        self.stateChangeCallbacks.withValue { callbacks in
+            callbacks.open.removeAll()
+            callbacks.close.removeAll()
+            callbacks.error.removeAll()
+            callbacks.message.removeAll()
+        }
     }
     
     
@@ -458,10 +471,12 @@ public class Socket: TransportDelegate {
     ///
     /// - Parameter refs: List of refs returned by calls to `onOpen`, `onClose`, etc
     public func off(_ refs: [String]) {
-        self.stateChangeCallbacks.open.removeAll { refs.contains($0.ref) }
-        self.stateChangeCallbacks.close.removeAll { refs.contains($0.ref) }
-        self.stateChangeCallbacks.error.removeAll { refs.contains($0.ref) }
-        self.stateChangeCallbacks.message.removeAll { refs.contains($0.ref) }
+        self.stateChangeCallbacks.withValue { callbacks in
+            callbacks.open.removeAll { refs.contains($0.ref) }
+            callbacks.close.removeAll { refs.contains($0.ref) }
+            callbacks.error.removeAll { refs.contains($0.ref) }
+            callbacks.message.removeAll { refs.contains($0.ref) }
+        }
     }
     
     
@@ -493,7 +508,9 @@ public class Socket: TransportDelegate {
         } else {
             /// If the socket is not connected, add the push to a buffer which will
             /// be sent immediately upon connection.
-            self.sendBuffer.append((ref: message.ref, callback: callback))
+            self.sendBuffer.withValue { buffer in
+                buffer.append((ref: message.ref, callback: callback))
+            }
         }
     }
     
@@ -588,13 +605,17 @@ public class Socket: TransportDelegate {
     /// Send all messages that were buffered before the socket opened
     internal func flushSendBuffer() {
         guard isConnected else { return }
-        self.sendBuffer.forEach( { try? $0.callback() } )
-        self.sendBuffer.removeAll()
+        self.sendBuffer.withValue { buffer in
+            buffer.forEach( { try? $0.callback() } )
+            buffer.removeAll()
+        }
     }
     
     /// Removes an item from the sendBuffer with the matching ref
     internal func removeFromSendBuffer(ref: String) {
-        self.sendBuffer.removeAll { $0.ref == ref }
+        self.sendBuffer.withValue { buffer in
+            buffer.removeAll { $0.ref == ref }
+        }
     }
 
     
@@ -676,15 +697,11 @@ public class Socket: TransportDelegate {
     // MARK: - TransportDelegate
     //----------------------------------------------------------------------
     public func onOpen(response: URLResponse?) {
-        DispatchQueue.main.async {
-            self.onConnectionOpen(response: response)
-        }
+        self.onConnectionOpen(response: response)
     }
     
     public func onError(error: Error, response: URLResponse?) {
-        DispatchQueue.main.async {
-            self.onConnectionError(error, response: response)
-        }
+        self.onConnectionError(error, response: response)
     }
     
     public func onMessage(data: Data) {
@@ -694,9 +711,7 @@ public class Socket: TransportDelegate {
         }
 
         self.logItems("receive \(data.count) bytes")
-        DispatchQueue.main.async {
-            self.onConnectionMessage(decodedMessage)
-        }
+        self.onConnectionMessage(decodedMessage)
     }
     
     public func onMessage(string: String) {
@@ -706,14 +721,10 @@ public class Socket: TransportDelegate {
         }
         
         self.logItems("receive ", string)
-        DispatchQueue.main.async {
-            self.onConnectionMessage(decodedMessage)
-        }
+        self.onConnectionMessage(decodedMessage)
     }
 
     public func onClose(code: URLSessionWebSocketTask.CloseCode, reason: String? = nil) {
-        DispatchQueue.main.async {
-            self.onConnectionClosed(code: code, reason: reason)
-        }
+        self.onConnectionClosed(code: code, reason: reason)
     }
 }

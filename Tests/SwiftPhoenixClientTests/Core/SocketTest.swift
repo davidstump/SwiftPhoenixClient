@@ -10,7 +10,7 @@ import Foundation
 import Testing
 @testable import SwiftPhoenixClient
 
-@Suite("Socket", .serialized)
+@Suite("Socket")
 struct SocketTest {
     
     private func setupSocket(readyState: TransportReadyState = .closed,
@@ -181,11 +181,9 @@ struct SocketTest {
             socket.connect()
             
             mockTransport.delegate?.onOpen(response: nil)
-            DispatchQueue.main.sync { /* sync array no-op */}
             #expect(open == 1)
             
             mockTransport.delegate?.onClose(code: .normalClosure, reason: nil)
-            DispatchQueue.main.sync { /* sync array no-op */}
             #expect(close == 1)
             
             mockTransport.delegate?.onError(error: TestError.stub, response: nil)
@@ -473,7 +471,7 @@ struct SocketTest {
             Thread.sleep(forTimeInterval: 0.2) // syncarray runs on .async
             #expect(socket.sendBuffer.count == 1)
             
-            socket.sendBuffer.forEach( { try? $0.callback() } )
+            socket.sendBuffer.value.forEach( { try? $0.callback() } )
             #expect(mockTransport.sendStringCallsCount == 1)
             let actual = mockTransport.sendStringReceivedString
             
@@ -582,9 +580,15 @@ struct SocketTest {
             mockTransport.readyState = .open
             
             var oneCalled = 0
-            socket.sendBuffer.append(("0", { oneCalled += 1 }))
+            let oneCallback = ("0", { oneCalled += 1 })
+            socket.sendBuffer.withValue { buffer in
+                buffer.append(oneCallback)
+            }
             var twoCalled = 0
-            socket.sendBuffer.append(("1", { twoCalled += 1 }))
+            let twoCallback = ("1", { twoCalled += 1 })
+            socket.sendBuffer.withValue { buffer in
+                buffer.append(twoCallback)
+            }
             let threeCalled = 0
             
             socket.flushSendBuffer()
@@ -598,7 +602,9 @@ struct SocketTest {
             socket.connect()
             mockTransport.readyState = .open
             
-            socket.sendBuffer.append(("0", { }))
+            socket.sendBuffer.withValue { buffer in
+                buffer.append(("0", { }))
+            }
             
             DispatchQueue.main.sync { /* sync array no-op */}
             #expect(socket.sendBuffer.count == 1)
@@ -630,9 +636,16 @@ struct SocketTest {
             mockTransport.readyState = .open
             
             var oneCalled = 0
-            socket.sendBuffer.append(("0", { oneCalled += 1 }))
+            let oneCallback = ("0", { oneCalled += 1 })
+            socket.sendBuffer.withValue { buffer in
+                buffer.append(oneCallback)
+            }
+            
             var twoCalled = 0
-            socket.sendBuffer.append(("1", { twoCalled += 1 }))
+            let twoCallback = ("1", { twoCalled += 1 })
+            socket.sendBuffer.withValue { buffer in
+                buffer.append(twoCallback)
+            }
             let threeCalled = 0
             
             socket.connect()
@@ -664,7 +677,10 @@ struct SocketTest {
         @Test("flushes the send buffer")
         func flushesTheSendBuffer() throws {
             var oneCalled = 0
-            socket.sendBuffer.append(("0", { oneCalled += 1 }))
+            let oneCallback = ("0", { oneCalled += 1 })
+            socket.sendBuffer.withValue { buffer in
+                buffer.append(oneCallback)
+            }
             
             socket.connect()
             mockTransport.readyState = .open

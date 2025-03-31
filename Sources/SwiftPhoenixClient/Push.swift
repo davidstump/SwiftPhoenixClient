@@ -55,7 +55,7 @@ public class Push {
     var timeoutWorkItem: DispatchWorkItem?
         
     /// Hooks into a Push. Where .receive("ok", callback(Payload)) are stored
-    var receiveHooks: SynchronizedArray<ReceiveHook>
+    var receiveHooks: LockIsolated<[ReceiveHook]>
     
     /// True if the Push has been sent
     var sent: Bool
@@ -92,7 +92,7 @@ public class Push {
         self.timeout = timeout
         self.receivedMessage = nil
         self.timeoutTimer = TimerQueue.main
-        self.receiveHooks = SynchronizedArray()
+        self.receiveHooks = LockIsolated([])
         self.sent = false
         self.ref = nil
     }
@@ -178,7 +178,9 @@ public class Push {
                                   payloadEncoder: self.encoder)
         }
         
-        self.receiveHooks.append(hook)
+        self.receiveHooks.withValue { hooks in
+            hooks.append(hook)
+        }
         
         return self
     }
@@ -198,7 +200,7 @@ public class Push {
     /// - parameter status: Status which was received, e.g. "ok", "error", "timeout"
     /// - parameter response: Response that was received
     private func matchReceive(_ status: String, message: IncomingMessage) {
-        self.receiveHooks.forEach { hook in
+        self.receiveHooks.value.forEach { hook in
             if hook.status == status {
                 hook.callback.trigger(message,
                                       payloadDecoder: self.decoder,

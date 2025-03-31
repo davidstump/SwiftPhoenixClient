@@ -62,7 +62,6 @@
 		63CE36C32D5EEF7F008E96DE /* MockableProtocol.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CE36BF2D5EEF7F008E96DE /* MockableProtocol.generated.swift */; };
 		63CE36C52D5EF00A008E96DE /* ChannelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CE36C42D5EF00A008E96DE /* ChannelTest.swift */; };
 		63F0F58D2592E44800C904FB /* ChatRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F0F58C2592E44800C904FB /* ChatRoomViewController.swift */; };
-		63F3765329E7296F00A5AB6E /* SynchronizedArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F3765229E7296F00A5AB6E /* SynchronizedArray.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -158,7 +157,6 @@
 		63CE36BF2D5EEF7F008E96DE /* MockableProtocol.generated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockableProtocol.generated.swift; sourceTree = "<group>"; };
 		63CE36C42D5EF00A008E96DE /* ChannelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelTest.swift; sourceTree = "<group>"; };
 		63F0F58C2592E44800C904FB /* ChatRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewController.swift; sourceTree = "<group>"; };
-		63F3765229E7296F00A5AB6E /* SynchronizedArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynchronizedArray.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -260,7 +258,6 @@
 				12991E02254C3F2300BB8650 /* Push.swift */,
 				12922E1F2543B10B0034B257 /* Socket.swift */,
 				12991E00254C3F1300BB8650 /* TimeoutTimer.swift */,
-				63F3765229E7296F00A5AB6E /* SynchronizedArray.swift */,
 				121F9D3F2D9A2C6D00B3A16F /* LockIsolated.swift */,
 			);
 			path = SwiftPhoenixClient;
@@ -606,7 +603,6 @@
 				1284F4C72D4801320090D0DA /* DecodablePayloadParser.swift in Sources */,
 				634398462CCFDA9200A2B9AC /* PayloadDecoder.swift in Sources */,
 				121F9D3C2D98E7C400B3A16F /* Channel+OnData.swift in Sources */,
-				63F3765329E7296F00A5AB6E /* SynchronizedArray.swift in Sources */,
 				1284F4C32D4801100090D0DA /* DataPayloadParser.swift in Sources */,
 				1284F4CE2D4818EF0090D0DA /* IncomingMessage.swift in Sources */,
 				12991E09254C3F5B00BB8650 /* Presence.swift in Sources */,

@@ -700,7 +700,10 @@ struct ChannelTest {
             let mockPush = PushSpy(channel: channel, event: "event")
             mockPush.ref = "10"
             
-            socket.sendBuffer.append(("10", {}))
+            socket.sendBuffer.withValue { buffer in
+                buffer.append(("10", {}))
+            }
+            
             
             channel.joinPush = mockPush
             channel.state = .joining
