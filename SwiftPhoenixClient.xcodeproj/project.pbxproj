@@ -10,6 +10,7 @@
 		120019E52D4BA21E00EF4613 /* Channel+OnJson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120019E42D4BA21E00EF4613 /* Channel+OnJson.swift */; };
 		121F9D3C2D98E7C400B3A16F /* Channel+OnData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121F9D3B2D98E7C400B3A16F /* Channel+OnData.swift */; };
 		121F9D3E2D98E7D100B3A16F /* Channel+OnDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121F9D3D2D98E7D100B3A16F /* Channel+OnDecodable.swift */; };
+		121F9D402D9A2C6D00B3A16F /* LockIsolated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121F9D3F2D9A2C6D00B3A16F /* LockIsolated.swift */; };
 		125A9EF82543C84700292017 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1281439225410D52008615A7 /* SwiftPhoenixClient.framework */; };
 		125A9F082543C8D000292017 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 125A9EFF2543C8D000292017 /* Assets.xcassets */; };
 		125A9F092543C8D000292017 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 125A9F002543C8D000292017 /* LaunchScreen.storyboard */; };
@@ -98,6 +99,7 @@
 		120019E42D4BA21E00EF4613 /* Channel+OnJson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Channel+OnJson.swift"; sourceTree = "<group>"; };
 		121F9D3B2D98E7C400B3A16F /* Channel+OnData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Channel+OnData.swift"; sourceTree = "<group>"; };
 		121F9D3D2D98E7D100B3A16F /* Channel+OnDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Channel+OnDecodable.swift"; sourceTree = "<group>"; };
+		121F9D3F2D9A2C6D00B3A16F /* LockIsolated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockIsolated.swift; sourceTree = "<group>"; };
 		125A9EE42543C82800292017 /* Basic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Basic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		125A9EFF2543C8D000292017 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		125A9F012543C8D000292017 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -259,6 +261,7 @@
 				12922E1F2543B10B0034B257 /* Socket.swift */,
 				12991E00254C3F1300BB8650 /* TimeoutTimer.swift */,
 				63F3765229E7296F00A5AB6E /* SynchronizedArray.swift */,
+				121F9D3F2D9A2C6D00B3A16F /* LockIsolated.swift */,
 			);
 			path = SwiftPhoenixClient;
 			sourceTree = "<group>";
@@ -616,6 +619,7 @@
 				1284F4D02D481E960090D0DA /* PartialMessage.swift in Sources */,
 				12991DFF254C3EF900BB8650 /* HeartbeatTimer.swift in Sources */,
 				12991E03254C3F2300BB8650 /* Push.swift in Sources */,
+				121F9D402D9A2C6D00B3A16F /* LockIsolated.swift in Sources */,
 				6343984A2CCFDDBD00A2B9AC /* TransportSerializerError.swift in Sources */,
 				121F9D3E2D98E7D100B3A16F /* Channel+OnDecodable.swift in Sources */,
 				1284F4C52D4801210090D0DA /* JsonPayloadParser.swift in Sources */,
