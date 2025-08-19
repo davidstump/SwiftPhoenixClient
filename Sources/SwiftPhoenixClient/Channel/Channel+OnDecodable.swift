@@ -35,7 +35,9 @@ extension Channel {
         self.bindingRef = ref + 1
         
         let subscription = ChannelSubscription(event: event, ref: ref, type: type, callback: callback)
-        self.subscriptions.append(subscription)
+        self.subscriptions.withValue { subscriptions in
+            subscriptions.append(subscription)
+        }
         
         return subscription.ref
     }

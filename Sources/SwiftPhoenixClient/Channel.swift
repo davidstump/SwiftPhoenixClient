@@ -69,7 +69,7 @@ public class Channel {
     var state: ChannelState
     
     /// Collection of subscriptions on the Channel
-    let subscriptions: SynchronizedArray<ChannelSubscription>
+    let subscriptions: LockIsolated<[ChannelSubscription]>
     
     /// Tracks event binding ref counters
     var bindingRef: Int
@@ -114,7 +114,7 @@ public class Channel {
         self.topic = topic
         self.params = params
         self.socket = socket
-        self.subscriptions = SynchronizedArray()
+        self.subscriptions = LockIsolated([])
         self.bindingRef = 0
         self.timeout = socket.timeout
         self.joinedOnce = false
@@ -294,7 +294,9 @@ public class Channel {
         self.bindingRef = ref + 1
         
         let subscription = ChannelSubscription(event: event, ref: ref, callback: callback)
-        self.subscriptions.append(subscription)
+        self.subscriptions.withValue { subscriptions in
+            subscriptions.append(subscription)
+        }
         
         return subscription.ref
     }
@@ -319,8 +321,10 @@ public class Channel {
     /// - parameter event: Event to unsubscribe from
     /// - paramter ref: Ref counter returned when subscribing. Can be omitted
     public func off(_ event: String, ref: Int? = nil) {
-        self.subscriptions.removeAll { (subcription) -> Bool in
-            subcription.event == event && (ref == nil || ref == subcription.ref)
+        self.subscriptions.withValue { subscriptions in
+            subscriptions.removeAll { subscription in
+                subscription.event == event && (ref == nil || ref == subscription.ref)
+            }
         }
     }
     
@@ -526,7 +530,7 @@ public class Channel {
     func trigger(_ incomingMessage: IncomingMessage) {
         let handledMessage = self.onMessage(incomingMessage)
         
-        self.subscriptions.forEach { subscription in
+        self.subscriptions.value.forEach { subscription in
             if subscription.event == incomingMessage.event {
                 subscription.trigger(handledMessage,
                                      payloadDecoder: self.decoder,

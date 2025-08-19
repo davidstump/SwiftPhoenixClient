@@ -115,7 +115,8 @@ class BasicChatViewController: UIViewController {
     @IBAction func sendMessage(_ sender: UIButton) {
         let payload = ["user": username, "body": messageField.text!]
         
-        self.lobbyChannel
+        
+        try! self.lobbyChannel
             .push("new:msg", payload: payload)
             .receive("ok") { (message) in
                 print("success", message)
@@ -123,6 +124,8 @@ class BasicChatViewController: UIViewController {
             .receive("error") { (errorMessage) in
                 print("error: ", errorMessage)
             }
+    
+        
         
         messageField.text = ""
     }
@@ -165,7 +168,7 @@ class BasicChatViewController: UIViewController {
         self.lobbyChannel = channel
         
         
-        self.lobbyChannel
+        try! self.lobbyChannel
             .join()
             .receive("ok") { [weak self] _ in
                 self?.addText("Joined Channel")

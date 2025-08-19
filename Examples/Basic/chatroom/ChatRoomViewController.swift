@@ -86,7 +86,7 @@ class ChatRoomViewController: UIViewController {
         // Create and send the payload
         let payload = ["name": username, "message": messageInput.text!]
         
-        self.lobbyChannel?.push("shout", payload: payload)
+        try! self.lobbyChannel?.push("shout", payload: payload)
         
         // Clear the text intput
         self.messageInput.text = ""
@@ -166,10 +166,22 @@ class ChatRoomViewController: UIViewController {
             }
         }
         
+        let presence = Presence(channel: channel)
+        presence.onSync {
+            let list = presence.list()
+            print("Presence List: \(list)")
+            
+            let state = presence.state
+            state.forEach { (key: String, value: Presence.Map) in
+                
+            }
+            print("Presence State: \(state)")
+        }
+        
         
         // Now connect the socSerket and join the channel
         self.lobbyChannel = channel
-        self.lobbyChannel?
+        try! self.lobbyChannel?
             .join()
             .receive("ok") { message in
                 print("CHANNEL: rooms:lobby joined. status <\(message.status ?? "null")>")

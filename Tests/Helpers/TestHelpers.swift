@@ -110,12 +110,8 @@ func expectJson(_ payload: OutgoingPayload?, block: (Any) -> Void) {
 extension Channel {
     /// Utility method to easily filter the bindings for a channel by their event
     func getChannelSubscription(_ event: String) -> [ChannelSubscription] {
-        var subscriptions = [ChannelSubscription]()
-        self.subscriptions.forEach { subscription in
-            guard subscription.event == event else { return }
-            subscriptions.append(subscription)
+        return self.subscriptions.value.filter { subscription in
+            subscription.event == event
         }
-        
-        return subscriptions
       }
 }
