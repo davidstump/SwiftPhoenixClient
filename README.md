@@ -34,41 +34,10 @@ of 13.0.
 
 ## Installation
 
-### CocoaPods
-
-You can install SwiftPhoenix Client via CocoaPods by adding the following to your
-Podfile. Keep in mind that in order to use Swift Phoenix Client, the minimum iOS
-target must be '9.0'
-
-```RUBY
-pod "SwiftPhoenixClient", '~> 5.3'
-```
-
-and running `pod install`. From there you will need to add `import SwiftPhoenixClient` in any class you want it to be used.
-
-### Carthage
-
-If you use Carthage to manage your dependencies, simply add
-SwiftPhoenixClient to your `Cartfile`:
-
-```
-github "davidstump/SwiftPhoenixClient" ~> 5.3
-```
-
-Then run `carthage update`.
-
-If this is your first time using Carthage in the project, you'll need to go through some additional steps as explained [over at Carthage](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application).
-
-
-
-### SwiftPackageManager
-
-_Note: Instructions below are for using **SwiftPM** without the Xcode UI. It's the easiest to go to your Project Settings -> Swift Packages and add SwiftPhoenixClient from there._
-
-To integrate using Apple's Swift package manager, without Xcode integration, add the following as a dependency to your `Package.swift`:
+As of version 6.x, SwiftPhoenixClient is only available via SwiftPackageManager.
 
 ```swift
-.package(url: "https://github.com/davidstump/SwiftPhoenixClient.git", .upToNextMajor(from: "5.2.2"))
+.package(url: "https://github.com/davidstump/SwiftPhoenixClient.git", .upToNextMajor(from: "6.0.0"))
 ```
 
 and then specify `"SwiftPhoenixClient"` as a dependency of the Target in which you wish to use SwiftPhoenixClient.
