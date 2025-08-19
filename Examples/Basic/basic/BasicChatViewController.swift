@@ -72,18 +72,18 @@ class BasicChatViewController: UIViewController {
             guard let self else { return }
             
             self.addText("Socket Opened")
-//            DispatchQueue.main.async {
+            DispatchQueue.main.async {
                 self.connectButton.setTitle("Disconnect", for: .normal)
-//            }
+            }
         }
         
         socket.onClose { [weak self] in
             guard let self else { return }
 
             self.addText("Socket Closed")
-//            DispatchQueue.main.async {
+            DispatchQueue.main.async {
                 self.connectButton.setTitle("Connect", for: .normal)
-//            }
+            }
         }
         
         socket.onError { [weak self] (error, response) in
@@ -179,13 +179,13 @@ class BasicChatViewController: UIViewController {
     }
     
     private func addText(_ text: String) {
-//        DispatchQueue.main.async {
+        DispatchQueue.main.async {
             let updatedText = self.chatWindow.text.appending(text).appending("\n")
             self.chatWindow.text = updatedText
             
             let bottom = NSMakeRange(updatedText.count - 1, 1)
             self.chatWindow.scrollRangeToVisible(bottom)
-//        }
+        }
     }
     
 }

@@ -113,12 +113,5 @@ extension Channel {
         return self.subscriptions.value.filter { subscription in
             subscription.event == event
         }
-//        var subscriptions = [ChannelSubscription]()
-//        self.subscriptions.forEach { subscription in
-//            guard subscription.event == event else { return }
-//            subscriptions.append(subscription)
-//        }
-//        
-//        return subscriptions
       }
 }
