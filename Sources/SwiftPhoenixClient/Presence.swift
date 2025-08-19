@@ -268,7 +268,7 @@ public final class Presence {
         }
     }
     
-    /// Returns the array of presences, with deault selected metadata.
+    /// Returns the array of presences, with default selected metadata.
     public func list() -> [Map] {
         return Presence.list(self.state)
     }
