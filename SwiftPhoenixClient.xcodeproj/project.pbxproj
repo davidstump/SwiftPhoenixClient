@@ -18,6 +18,8 @@
 		125A9F0B2543C8D000292017 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125A9F042543C8D000292017 /* AppDelegate.swift */; };
 		125A9F0D2543C8D000292017 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125A9F062543C8D000292017 /* SceneDelegate.swift */; };
 		125A9F0F2543CDDE00292017 /* BasicChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125A9F0E2543CDDE00292017 /* BasicChatViewController.swift */; };
+		126B3CCD2E56B6DE00C539A2 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126B3CCC2E56B6DE00C539A2 /* WebSocket.swift */; };
+		126B3CCF2E56B8AF00C539A2 /* URLSessionWebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126B3CCE2E56B8AF00C539A2 /* URLSessionWebSocket.swift */; };
 		1281439C25410D52008615A7 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1281439225410D52008615A7 /* SwiftPhoenixClient.framework */; };
 		128143B225410DF3008615A7 /* SwiftPhoenixClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 128143B025410DF3008615A7 /* SwiftPhoenixClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1284F4C02D47C8080090D0DA /* ChannelSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1284F4BF2D47C8080090D0DA /* ChannelSubscription.swift */; };
@@ -107,6 +109,8 @@
 		125A9F052543C8D000292017 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		125A9F062543C8D000292017 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		125A9F0E2543CDDE00292017 /* BasicChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicChatViewController.swift; sourceTree = "<group>"; };
+		126B3CCC2E56B6DE00C539A2 /* WebSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
+		126B3CCE2E56B8AF00C539A2 /* URLSessionWebSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionWebSocket.swift; sourceTree = "<group>"; };
 		1281439225410D52008615A7 /* SwiftPhoenixClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftPhoenixClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1281439B25410D52008615A7 /* SwiftPhoenixClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftPhoenixClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		128143B025410DF3008615A7 /* SwiftPhoenixClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftPhoenixClient.h; sourceTree = "<group>"; };
@@ -212,6 +216,15 @@
 			path = Basic;
 			sourceTree = "<group>";
 		};
+		126B3CCB2E56B6D400C539A2 /* WebSocket */ = {
+			isa = PBXGroup;
+			children = (
+				126B3CCC2E56B6DE00C539A2 /* WebSocket.swift */,
+				126B3CCE2E56B8AF00C539A2 /* URLSessionWebSocket.swift */,
+			);
+			path = WebSocket;
+			sourceTree = "<group>";
+		};
 		1281438825410D52008615A7 = {
 			isa = PBXGroup;
 			children = (
@@ -245,6 +258,7 @@
 		128143AE25410DF3008615A7 /* SwiftPhoenixClient */ = {
 			isa = PBXGroup;
 			children = (
+				126B3CCB2E56B6D400C539A2 /* WebSocket */,
 				12C2F0972D68BACE0089B49F /* Error */,
 				63AEB5A72D4FBB9000E8A3CC /* Transport */,
 				120019E32D4BA1FB00EF4613 /* Channel */,
@@ -600,6 +614,7 @@
 				12991E05254C3F3300BB8650 /* Channel.swift in Sources */,
 				63BBCF032B897D87004A16C9 /* TransportSerializer.swift in Sources */,
 				1284F4C02D47C8080090D0DA /* ChannelSubscription.swift in Sources */,
+				126B3CCD2E56B6DE00C539A2 /* WebSocket.swift in Sources */,
 				1284F4CC2D48182F0090D0DA /* OutgoingMessage.swift in Sources */,
 				1284F4C72D4801320090D0DA /* DecodablePayloadParser.swift in Sources */,
 				634398462CCFDA9200A2B9AC /* PayloadDecoder.swift in Sources */,
@@ -612,6 +627,7 @@
 				12991E01254C3F1300BB8650 /* TimeoutTimer.swift in Sources */,
 				120019E52D4BA21E00EF4613 /* Channel+OnJson.swift in Sources */,
 				63AEB5A92D4FBBC700E8A3CC /* TransportReadyState.swift in Sources */,
+				126B3CCF2E56B8AF00C539A2 /* URLSessionWebSocket.swift in Sources */,
 				1284F4C92D48035C0090D0DA /* PayloadParser.swift in Sources */,
 				1284F4D02D481E960090D0DA /* PartialMessage.swift in Sources */,
 				12991DFF254C3EF900BB8650 /* HeartbeatTimer.swift in Sources */,
