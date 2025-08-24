@@ -26,6 +26,7 @@ final class URLSessionWebSocket: WebSocket {
     /// The subprotocol negotiated with the peer upon connection.
     private let subProtocol: String?
     
+    
     private init(
         task: URLSessionWebSocketTask,
         subProtocol: String?
@@ -33,90 +34,11 @@ final class URLSessionWebSocket: WebSocket {
         self.task = task
         self.subProtocol = subProtocol
         
+        
         self.mutableState.withValue { state in
             state.readyState = .open
         }
         scheduleReceive()
-    }
-    
-    static func connect(
-        to url: URL,
-        configuration: URLSessionConfiguration = .default,
-        protocols: [String] = []
-    ) async throws -> URLSessionWebSocket {
-        let wsUrl = { () -> URL in
-            if url.scheme == "ws" || url.scheme == "wss" {
-                return url
-            } else {
-                // URLSession requires that the endpoint be "wss" instead of "https".
-                let endpoint = url.absoluteString
-                let wsEndpoint = endpoint
-                    .replacingOccurrences(of: "http://", with: "ws://")
-                    .replacingOccurrences(of: "https://", with: "wss://")
-                return URL(string: wsEndpoint)!
-            }
-        }()
-        
-        // Holds the created WebSocket to be returned after connection
-        struct MutableState {
-            var continuation: CheckedContinuation<URLSessionWebSocket, any Error>!
-            var webSocket: URLSessionWebSocket?
-        }
-        let mutableState = LockIsolated(MutableState())
-        
-        let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 1
-        
-        let delegate = Delegate(
-            onOpen: { urlSession, wsTask, withProtocol in
-                mutableState.withValue { state in
-                    let websocket = URLSessionWebSocket(task: wsTask, subProtocol: withProtocol)
-                    state.webSocket = websocket
-                    state.continuation.resume(returning: websocket)
-                }
-            },
-            onClose: { urlSession, wsTask, closeCode, reason in
-                mutableState.withValue { state in
-                    assert(state.webSocket != nil, "connection should exist by this time")
-                    state.webSocket?.connectionClosed(code: closeCode, reason: reason)
-                }
-            },
-            onComplete: { urlSession, wsTask, error in
-                mutableState.withValue { state in
-                    if let webSocket = state.webSocket {
-                        webSocket.connectionClosed(code: .abnormalClosure,
-                                                   reason: Data("abnormal close".utf8))
-                    } else if let error {
-                        state.continuation
-                            .resume(
-                                throwing: WebSocketError.connection(
-                                    message: "connection ended unexpectedly",
-                                    error: error
-                                )
-                            )
-                    } else {
-                        // `onWebSocketTaskOpened` should have been called and resumed continuation.
-                        // So either there was an error creating the connection or a logic error.
-                        assertionFailure(
-                            "expected an error or `onOpen` to have been called first"
-                        )
-                    }
-                }
-            }
-        )
-        
-        let session = URLSession(
-            configuration: configuration,
-            delegate: delegate,
-            delegateQueue: queue
-        )
-        
-        session.webSocketTask(with: wsUrl, protocols: protocols).resume()
-        return try await withCheckedThrowingContinuation { continuation in
-            mutableState.withValue { state in
-                state.continuation = continuation
-            }
-        }
     }
     
     // MARK: Private Internal Helpers
@@ -245,9 +167,12 @@ final class URLSessionWebSocket: WebSocket {
         reason: Data?
     ) {
         guard !isClosed else { return }
+        self.mutableState.withValue { state in
+            state.readyState = .closed
+        }
         
         let closeReason = reason.map { String(decoding: $0, as: UTF8.self) } ?? ""
-        trigger(.close(code: code, reason: closeReason))
+        trigger(.close(code: code.rawValue, reason: closeReason))
     }
     
     private func trigger(_ event: WebSocketEvent) {
@@ -360,5 +285,101 @@ private final class Delegate: NSObject, URLSessionWebSocketDelegate {
                     task: URLSessionTask,
                     didCompleteWithError error: (any Error)?) {
         self.onComplete?(session, task, error)
+    }
+}
+
+
+extension URLSessionWebSocket {
+    /// Creates and returns a new WebSocket object and immediately
+    /// attempts to establish a connection to the specified WebSocket URL.
+    /// - Parameter url: The URL of the target WebSocket server to connect to.
+    ///     The URL must use one of the following schemes: ws, wss, http, or https.
+    /// - Parameter configuration: A URLSessionConfiguration which can be used to add
+    ///     headers or further configure the underling URLSession used to drive the
+    ///     URLSessoinWebSocketTask.
+    /// - Parameter protocols: An array of strings representing the sub-protocol(s)
+    ///     that the client would like to use, in order of preference. If it is
+    ///      omitted, an empty array is used by default, i.e., [].
+    static func connect(
+        to url: URL,
+        configuration: URLSessionConfiguration = .default,
+        protocols: [String] = []
+    ) async throws -> URLSessionWebSocket {
+        // `http` and `https` are acceptable, but will be replaced with `ws` or `wss
+        // respectively.
+        let wsUrl = { () -> URL in
+            if url.scheme == "ws" || url.scheme == "wss" {
+                return url
+            } else {
+                // URLSession requires that the endpoint be "wss" instead of "https".
+                let endpoint = url.absoluteString
+                let wsEndpoint = endpoint
+                    .replacingOccurrences(of: "http://", with: "ws://")
+                    .replacingOccurrences(of: "https://", with: "wss://")
+                return URL(string: wsEndpoint)!
+            }
+        }()
+        
+        
+        // Holds the created WebSocket to be returned after connection
+        struct MutableState {
+            var continuation: CheckedContinuation<URLSessionWebSocket, any Error>!
+            var webSocket: URLSessionWebSocket?
+        }
+        let mutableState = LockIsolated(MutableState())
+        
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 1
+        
+        let delegate = Delegate(
+            onOpen: { urlSession, wsTask, withProtocol in
+                mutableState.withValue { state in
+                    let websocket = URLSessionWebSocket(task: wsTask, subProtocol: withProtocol)
+                    state.webSocket = websocket
+                    state.continuation.resume(returning: websocket)
+                }
+            },
+            onClose: { urlSession, wsTask, closeCode, reason in
+                mutableState.withValue { state in
+                    assert(state.webSocket != nil, "connection should exist by this time")
+                    state.webSocket?.connectionClosed(code: closeCode, reason: reason)
+                }
+            },
+            onComplete: { urlSession, wsTask, error in
+                mutableState.withValue { state in
+                    if let webSocket = state.webSocket {
+                        webSocket.connectionClosed(code: .abnormalClosure,
+                                                   reason: Data("abnormal close".utf8))
+                    } else if let error {
+                        state.continuation
+                            .resume(
+                                throwing: WebSocketError.connection(
+                                    message: "connection ended unexpectedly",
+                                    error: error
+                                )
+                            )
+                    } else {
+                        // `onWebSocketTaskOpened` should have been called and resumed continuation.
+                        // So either there was an error creating the connection or a logic error.
+                        assertionFailure(
+                            "expected an error or `onOpen` to have been called first"
+                        )
+                    }
+                }
+            }
+        )
+        
+        let session = URLSession(
+            configuration: configuration,
+            delegate: delegate,
+            delegateQueue: queue
+        )
+        
+        session.webSocketTask(with: wsUrl, protocols: protocols).resume()
+        return try await withCheckedThrowingContinuation { continuation in
+            mutableState.withValue { state in
+                state.continuation = continuation
+            }
+        }
     }
 }

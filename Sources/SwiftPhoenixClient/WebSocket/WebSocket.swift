@@ -35,7 +35,7 @@ public enum WebSocketEvent: Sendable {
     case binary(Data)
     
     /// The connection was closed.
-    case close(code: URLSessionWebSocketTask.CloseCode, reason: String?)
+    case close(code: Int, reason: String?)
 }
 
 /// Represents errors that can occur on a WebSocket connection.
