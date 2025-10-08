@@ -39,11 +39,11 @@ public enum WebSocketEvent: Sendable {
 }
 
 /// Represents errors that can occur on a WebSocket connection.
-enum WebSocketError: Error, LocalizedError {
+public enum WebSocketError: Error, LocalizedError {
   /// An error occurred while connecting to the peer.
   case connection(message: String, error: any Error)
 
-  var errorDescription: String? {
+  public var errorDescription: String? {
     switch self {
     case .connection(let message, let error): "\(message) \(error.localizedDescription)"
     }
@@ -84,7 +84,7 @@ public protocol WebSocket: Sendable, AnyObject {
 extension WebSocket {
     
     /// An `AsyncStream` of ``WebSocketEvent`` received from the peer.
-    var events: AsyncStream<WebSocketEvent> {
+    public var events: AsyncStream<WebSocketEvent> {
         let (stream, continuation) = AsyncStream<WebSocketEvent>.makeStream()
         self.onEvent = { event in
             continuation.yield(event)

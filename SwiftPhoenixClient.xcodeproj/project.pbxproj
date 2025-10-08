@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -11,6 +11,7 @@
 		121F9D3C2D98E7C400B3A16F /* Channel+OnData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121F9D3B2D98E7C400B3A16F /* Channel+OnData.swift */; };
 		121F9D3E2D98E7D100B3A16F /* Channel+OnDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121F9D3D2D98E7D100B3A16F /* Channel+OnDecodable.swift */; };
 		121F9D402D9A2C6D00B3A16F /* LockIsolated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121F9D3F2D9A2C6D00B3A16F /* LockIsolated.swift */; };
+		122C41A42E5AACA500A42026 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1281439225410D52008615A7 /* SwiftPhoenixClient.framework */; };
 		125A9EF82543C84700292017 /* SwiftPhoenixClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1281439225410D52008615A7 /* SwiftPhoenixClient.framework */; };
 		125A9F082543C8D000292017 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 125A9EFF2543C8D000292017 /* Assets.xcassets */; };
 		125A9F092543C8D000292017 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 125A9F002543C8D000292017 /* LaunchScreen.storyboard */; };
@@ -67,6 +68,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		122C41A62E5AACA500A42026 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1281438925410D52008615A7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1281439125410D52008615A7;
+			remoteInfo = SwiftPhoenixClient;
+		};
 		125A9EFA2543C84700292017 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1281438925410D52008615A7 /* Project object */;
@@ -101,6 +109,7 @@
 		121F9D3B2D98E7C400B3A16F /* Channel+OnData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Channel+OnData.swift"; sourceTree = "<group>"; };
 		121F9D3D2D98E7D100B3A16F /* Channel+OnDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Channel+OnDecodable.swift"; sourceTree = "<group>"; };
 		121F9D3F2D9A2C6D00B3A16F /* LockIsolated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockIsolated.swift; sourceTree = "<group>"; };
+		122C41932E5AAA6800A42026 /* Examples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Examples.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		125A9EE42543C82800292017 /* Basic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Basic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		125A9EFF2543C8D000292017 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		125A9F012543C8D000292017 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -163,7 +172,19 @@
 		63F0F58C2592E44800C904FB /* ChatRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRoomViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		122C41942E5AAA6800A42026 /* Examples */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Examples; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
+		122C41902E5AAA6800A42026 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				122C41A42E5AACA500A42026 /* SwiftPhoenixClient.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		125A9EE12543C82800292017 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -230,7 +251,8 @@
 			children = (
 				128143AC25410DF3008615A7 /* Sources */,
 				128143B425410E01008615A7 /* Tests */,
-				128143BB25410E13008615A7 /* Examples */,
+				128143BB25410E13008615A7 /* ExamplesOld */,
+				122C41942E5AAA6800A42026 /* Examples */,
 				128143D82541142F008615A7 /* Frameworks */,
 				1281439325410D52008615A7 /* Products */,
 			);
@@ -242,6 +264,7 @@
 				1281439225410D52008615A7 /* SwiftPhoenixClient.framework */,
 				1281439B25410D52008615A7 /* SwiftPhoenixClientTests.xctest */,
 				125A9EE42543C82800292017 /* Basic.app */,
+				122C41932E5AAA6800A42026 /* Examples.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -297,12 +320,12 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
-		128143BB25410E13008615A7 /* Examples */ = {
+		128143BB25410E13008615A7 /* ExamplesOld */ = {
 			isa = PBXGroup;
 			children = (
 				125A9EFD2543C8D000292017 /* Basic */,
 			);
-			path = Examples;
+			path = ExamplesOld;
 			sourceTree = "<group>";
 		};
 		128143D82541142F008615A7 /* Frameworks */ = {
@@ -466,6 +489,29 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		122C41922E5AAA6800A42026 /* Examples */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 122C419E2E5AAA6900A42026 /* Build configuration list for PBXNativeTarget "Examples" */;
+			buildPhases = (
+				122C418F2E5AAA6800A42026 /* Sources */,
+				122C41902E5AAA6800A42026 /* Frameworks */,
+				122C41912E5AAA6800A42026 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				122C41A72E5AACA500A42026 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				122C41942E5AAA6800A42026 /* Examples */,
+			);
+			name = Examples;
+			packageProductDependencies = (
+			);
+			productName = Examples;
+			productReference = 122C41932E5AAA6800A42026 /* Examples.app */;
+			productType = "com.apple.product-type.application";
+		};
 		125A9EE32543C82800292017 /* Basic */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 125A9EF52543C82900292017 /* Build configuration list for PBXNativeTarget "Basic" */;
@@ -528,10 +574,13 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastSwiftUpdateCheck = 1170;
+				LastSwiftUpdateCheck = 1620;
 				LastUpgradeCheck = 1620;
 				ORGANIZATIONNAME = SwiftPhoenixClient;
 				TargetAttributes = {
+					122C41922E5AAA6800A42026 = {
+						CreatedOnToolsVersion = 16.2;
+					};
 					125A9EE32543C82800292017 = {
 						CreatedOnToolsVersion = 11.7;
 						LastSwiftMigration = 1230;
@@ -560,11 +609,19 @@
 				1281439125410D52008615A7 /* SwiftPhoenixClient */,
 				1281439A25410D52008615A7 /* SwiftPhoenixClientTests */,
 				125A9EE32543C82800292017 /* Basic */,
+				122C41922E5AAA6800A42026 /* Examples */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		122C41912E5AAA6800A42026 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		125A9EE22543C82800292017 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -592,6 +649,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		122C418F2E5AAA6800A42026 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		125A9EE02543C82800292017 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -667,6 +731,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		122C41A72E5AACA500A42026 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1281439125410D52008615A7 /* SwiftPhoenixClient */;
+			targetProxy = 122C41A62E5AACA500A42026 /* PBXContainerItemProxy */;
+		};
 		125A9EFB2543C84700292017 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1281439125410D52008615A7 /* SwiftPhoenixClient */;
@@ -699,6 +768,76 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		122C419F2E5AAA6900A42026 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Examples/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dsrees.github.Examples;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		122C41A02E5AAA6900A42026 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Examples/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dsrees.github.Examples;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		125A9EF62543C82900292017 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -991,6 +1130,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		122C419E2E5AAA6900A42026 /* Build configuration list for PBXNativeTarget "Examples" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				122C419F2E5AAA6900A42026 /* Debug */,
+				122C41A02E5AAA6900A42026 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		125A9EF52543C82900292017 /* Build configuration list for PBXNativeTarget "Basic" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

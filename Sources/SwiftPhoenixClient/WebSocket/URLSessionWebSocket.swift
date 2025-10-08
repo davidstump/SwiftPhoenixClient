@@ -9,12 +9,13 @@
 import Foundation
 
 /// A `URLSession` implementation of the `WebSocket` protocol
-final class URLSessionWebSocket: WebSocket {
+public final class URLSessionWebSocket: WebSocket {
     
     /// Thread-safe mutable state for the WebSocket connection.
     private struct MutableState {
         var readyState: WebSocketReadyState = .closed
         var onEvent: (@Sendable (WebSocketEvent) -> Void)? = nil
+        var eventBuffer: [WebSocketEvent] = []
     }
     
     /// Lock-isolated mutable state to ensure thread safety.
@@ -177,7 +178,17 @@ final class URLSessionWebSocket: WebSocket {
     
     private func trigger(_ event: WebSocketEvent) {
         mutableState.withValue { state in
-            state.onEvent?(event)
+            if let onEvent = state.onEvent {
+                // Deliver event immediately if callback is available
+                onEvent(event)
+            } else {
+                // Buffer event if no callback is attached yet
+                // Limit buffer size to prevent memory issues (keep last 100 events)
+                state.eventBuffer.append(event)
+                if state.eventBuffer.count > 100 {
+                    state.eventBuffer.removeFirst()
+                }
+            }
             
             if case .close(_, _) = event {
                 state.onEvent = nil
@@ -187,27 +198,37 @@ final class URLSessionWebSocket: WebSocket {
     }
     
     // MARK: WebSocket
-    var readyState: WebSocketReadyState {
+    public var readyState: WebSocketReadyState {
         mutableState.value.readyState
     }
     
-    var isClosed: Bool {
+    public var isClosed: Bool {
         mutableState.value.readyState == .closed
     }
     
-    var onEvent: (@Sendable (WebSocketEvent) -> Void)? {
+    public var onEvent: (@Sendable (WebSocketEvent) -> Void)? {
         get { mutableState.value.onEvent }
         set {
             mutableState.withValue { state in
                 state.onEvent = newValue
+                
+                // Replay buffered events when callback is attached
+                if let onEvent = newValue, !state.eventBuffer.isEmpty {
+                    let bufferedEvents = state.eventBuffer
+                    state.eventBuffer.removeAll()
+                    
+                    for event in bufferedEvents {
+                        onEvent(event)
+                    }
+                }
             }
         }
     }
     
-    func send(data: Data) {
+    public func send(data: Data) {
         self.send(.data(data))
     }
-    func send(string: String) {
+    public func send(string: String) {
         self.send(.string(string))
     }
     
@@ -222,7 +243,7 @@ final class URLSessionWebSocket: WebSocket {
         }
     }
     
-    func disconnect(code: URLSessionWebSocketTask.CloseCode, reason: String?) {
+    public func disconnect(code: URLSessionWebSocketTask.CloseCode, reason: String?) {
         guard !isClosed else { return }
         
         // Validate reason length per RFC 6455
@@ -300,7 +321,7 @@ extension URLSessionWebSocket {
     /// - Parameter protocols: An array of strings representing the sub-protocol(s)
     ///     that the client would like to use, in order of preference. If it is
     ///      omitted, an empty array is used by default, i.e., [].
-    static func connect(
+    public static func connect(
         to url: URL,
         configuration: URLSessionConfiguration = .default,
         protocols: [String] = []
@@ -336,6 +357,8 @@ extension URLSessionWebSocket {
                 mutableState.withValue { state in
                     let websocket = URLSessionWebSocket(task: wsTask, subProtocol: withProtocol)
                     state.webSocket = websocket
+                    websocket.trigger(.open(wsTask.response))
+                    
                     state.continuation.resume(returning: websocket)
                 }
             },
