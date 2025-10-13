@@ -228,7 +228,7 @@ public class Channel {
             if (self.isJoining) {
                 // Make sure that the "phx_join" isn't buffered to send once the socket
                 // reconnects. The channel will send a new join event when the socket connects.
-                if let safeJoinRef = self.joinRef {
+                if let sa feJoinRef = self.joinRef {
                     self.socket?.removeFromSendBuffer(ref: safeJoinRef)
                 }
                 

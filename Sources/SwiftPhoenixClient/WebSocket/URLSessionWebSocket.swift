@@ -310,6 +310,30 @@ private final class Delegate: NSObject, URLSessionWebSocketDelegate {
 }
 
 
+public class URLSessionWebsocketTransport: TransportV2 {
+    
+    private let configuration: URLSessionConfiguration
+    
+    public init(configuration: URLSessionConfiguration = .default) {
+        self.configuration = configuration
+    }
+    
+    
+    public func connect(to url: URL) async throws -> URLSessionWebSocket {
+        return try await self.connect(to: url, protocols: [])
+    }
+    
+    public func connect(
+        to url: URL,
+        protocols: [String]
+    ) async throws -> URLSessionWebSocket {
+        return try await URLSessionWebSocket.connect(to: url,
+                                           configuration: self.configuration,
+                                           protocols: protocols)
+    }
+}
+
+
 extension URLSessionWebSocket {
     /// Creates and returns a new WebSocket object and immediately
     /// attempts to establish a connection to the specified WebSocket URL.
@@ -321,25 +345,28 @@ extension URLSessionWebSocket {
     /// - Parameter protocols: An array of strings representing the sub-protocol(s)
     ///     that the client would like to use, in order of preference. If it is
     ///      omitted, an empty array is used by default, i.e., [].
-    public static func connect(
+    internal static func connect(
         to url: URL,
         configuration: URLSessionConfiguration = .default,
         protocols: [String] = []
     ) async throws -> URLSessionWebSocket {
+        guard url.scheme == "ws" || url.scheme == "wss" else {
+            preconditionFailure("only ws: and wss: schemes are supported")
+        }
         // `http` and `https` are acceptable, but will be replaced with `ws` or `wss
         // respectively.
-        let wsUrl = { () -> URL in
-            if url.scheme == "ws" || url.scheme == "wss" {
-                return url
-            } else {
-                // URLSession requires that the endpoint be "wss" instead of "https".
-                let endpoint = url.absoluteString
-                let wsEndpoint = endpoint
-                    .replacingOccurrences(of: "http://", with: "ws://")
-                    .replacingOccurrences(of: "https://", with: "wss://")
-                return URL(string: wsEndpoint)!
-            }
-        }()
+//        let wsUrl = { () -> URL in
+//            if url.scheme == "ws" || url.scheme == "wss" {
+//                return url
+//            } else {
+//                // URLSession requires that the endpoint be "wss" instead of "https".
+//                let endpoint = url.absoluteString
+//                let wsEndpoint = endpoint
+//                    .replacingOccurrences(of: "http://", with: "ws://")
+//                    .replacingOccurrences(of: "https://", with: "wss://")
+//                return URL(string: wsEndpoint)!
+//            }
+//        }()
         
         
         // Holds the created WebSocket to be returned after connection
@@ -398,7 +425,7 @@ extension URLSessionWebSocket {
             delegateQueue: queue
         )
         
-        session.webSocketTask(with: wsUrl, protocols: protocols).resume()
+        session.webSocketTask(with: url, protocols: protocols).resume()
         return try await withCheckedThrowingContinuation { continuation in
             mutableState.withValue { state in
                 state.continuation = continuation

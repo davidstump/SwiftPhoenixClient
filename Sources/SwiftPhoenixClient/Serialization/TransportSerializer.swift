@@ -13,7 +13,8 @@ import Foundation
 /// the message is passed to the rest of the Client. Encodes`OutgoingMessage` into text or binary
 /// messages before being sent through a Websocket Transport to the Server.
 ///
-public protocol TransportSerializer {
+// TODO: Rename this to drop `Transport`
+public protocol TransportSerializer: Sendable {
     
     /// Encodes `OutgoingMessage` into a `String` to be sent to a Phoenix server as raw text
     ///
@@ -50,7 +51,7 @@ public protocol TransportSerializer {
 /// the JS client behavior. You can implement a custom `TransportSerializer` and pass set it on the
 /// `Socket`.
 ///
-public class PhoenixTransportSerializer: TransportSerializer {
+public final class PhoenixTransportSerializer: TransportSerializer {
     
     private let HEADER_LENGTH: Int = 1
     private let META_LENGTH: Int = 4

@@ -38,7 +38,7 @@ struct PingPongExample: View {
                 }
                 .padding(.vertical, 8)
             }
-            .onChange(of: vm.messages) { _ in
+            .onChange(of: vm.messages) { _, _ in
                 withAnimation {
                     proxy.scrollTo(bottomID, anchor: .bottom)
                 }

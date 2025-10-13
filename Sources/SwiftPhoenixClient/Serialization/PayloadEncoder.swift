@@ -11,7 +11,7 @@ import Foundation
 ///
 /// Encodes an `Encodable` or a generic `Any` JsonObject payload into `Data`
 ///
-public protocol PayloadEncoder {
+public protocol PayloadEncoder: Sendable {
     
     /// Encodes an `Encodable` into `Data`
     ///
@@ -31,7 +31,7 @@ public protocol PayloadEncoder {
 /// A default implementtion of `PayloadEncoder` which works out of the box with a
 /// standard Phoenix server.
 ///
-public class PhoenixPayloadEncoder: PayloadEncoder {
+public final class PhoenixPayloadEncoder: PayloadEncoder {
     
     /// The options for writing payloads as JSON data.
     public let options: JSONSerialization.WritingOptions

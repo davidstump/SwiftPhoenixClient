@@ -8,6 +8,14 @@
 
 import Foundation
 
+public protocol TransportV2: Sendable {
+    
+    func connect(to url: URL) async throws -> URLSessionWebSocket
+    func connect(to url: URL, protocols: [String]) async throws -> URLSessionWebSocket
+}
+
+
+
 /// Defines a `Socket`'s Transport layer.
 // sourcery: AutoMockable
 public protocol Transport {

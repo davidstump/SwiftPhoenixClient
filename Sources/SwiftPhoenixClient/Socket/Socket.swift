@@ -35,6 +35,10 @@ struct StateChangeCallbacks {
 }
 
 
+public protocol SocketProtocol: AnyObject, Sendable {
+    
+}
+
 /// ## Socket Connection
 /// A single connection is established to the server and
 /// channels are multiplexed over the connection.
@@ -49,6 +53,41 @@ struct StateChangeCallbacks {
 /// the authentication params, as well as options that can be found in
 /// the Socket docs, such as configuring the heartbeat.
 public class Socket: TransportDelegate {
+    
+    /// Private state which is accessed behind a ``LockIsolated``
+    private struct MutableState {
+        /// Callbacks for socket state changes
+        let stateChangeCallbacks = StateChangeCallbacks()
+        
+        /// Collection on channels created for the Socket
+        var channels: [Channel] = []
+        
+        /// Buffers messages that need to be sent once the socket has connected.
+        var sendBuffer: [@Sendable () -> Void] = []
+        
+        /// Ref counter for messages
+        var ref: UInt64 = UInt64.min
+        
+        /// Ref counter for the last heartbeat that was sent
+        var pendingHeartbeatRef: String?
+        
+        /// Indicates if the socket disconnect was indended or not.
+        var closeWasClean = false
+        
+        /// Long-running task which sensd heartbeats to the server.
+        var heartbeatTask: Task<Void, Never>? = nil
+        
+        /// Long-running task which listens for incoming messages.
+        var incomingMessagesTask: Task<Void, Never>? = nil
+    }
+    
+    /// The URL which was given to the ``Socket`` to connect to.
+    let url: URL
+    
+    /// The ``SocketOptions`` given to the the ``Socket``
+    let options: SocketOptions
+    
+    
     
     
     //----------------------------------------------------------------------
@@ -135,7 +174,7 @@ public class Socket: TransportDelegate {
     /// Ref counter for messages
     var ref: UInt64 = UInt64.min // 0 (max: 18,446,744,073,709,551,615)
     
-    /// Timer that triggers sending new Heartbeat messages
+    /// Timer that   triggers sending new Heartbeat messages
     var heartbeatTimer: HeartbeatTimer?
     
     /// Ref counter for the last heartbeat that was sent
@@ -154,6 +193,27 @@ public class Socket: TransportDelegate {
     //----------------------------------------------------------------------
     // MARK: - Initialization
     //----------------------------------------------------------------------
+    /// Initializes the Socket
+    ///
+    /// - parameter endpoint: The string WebSocket endpoint, ie `"ws://example.com/socket"
+    /// - parameter options: The ``SocketOptions`` for optional configuration
+    public convenience init(_ endpoint: String, options: SocketOptions) throws {
+        guard let url = URL(string: endPoint) else {
+            fatalError("Malformed URL: \(endPoint)")
+        }
+        
+        self.init(url, options: options)
+    }
+
+    /// Initializes the Socket
+    ///
+    /// - parameter url: The WebSocket URL.
+    /// - parameter options: The ``SocketOptions`` for optional configuration
+    public init(_ url: URL, options: SocketOptions) {
+        self.url = url
+        self.options = options
+    }
+    
     public convenience init(_ endPoint: String, params: Payload? = nil) {
         self.init(endPoint,
                   transport: { url in return URLSessionTransport(url: url) },
@@ -163,8 +223,9 @@ public class Socket: TransportDelegate {
     public convenience init(_ endPoint: String, params: PayloadClosure?) {
         self.init(endPoint,
                   transport: { url in return URLSessionTransport(url: url) },
-                  params: params)
+                                params: params)
     }
+    
     
     
     public init(_ endPoint: String,
@@ -201,15 +262,14 @@ public class Socket: TransportDelegate {
     //----------------------------------------------------------------------
     /// - return: The socket protocol, wss or ws
     public var websocketProtocol: String? {
-        return endPointUrl.scheme
+        return url.scheme
     }
     
     /// The fully qualified socket URL
     public var endPointUrl: URL {
         guard
-            let url = URL(string: self.endPoint),
             var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
-        else { fatalError("Malformed URL: \(self.endPoint)") }
+        else { fatalError("Could not parse URLComponents from URL: \(url)") }
         
         let wsScheme = switch urlComponents.scheme {
         case "wss": "wss"
@@ -217,11 +277,11 @@ public class Socket: TransportDelegate {
         default: "ws"
         }
         
-    // Override the scheme to always be `ws` or `wss`
+        // Override the scheme to always be `ws` or `wss`
         urlComponents.scheme = wsScheme
         
         // Ensure that the URL ends with "/websocket
-        if !urlComponents.path.contains("/websocket") {
+        if !urlComponents.path.hasSuffix("websocket") {
             // Do not duplicate '/' in the path
             if urlComponents.path.last != "/" {
                 urlComponents.path.append("/")

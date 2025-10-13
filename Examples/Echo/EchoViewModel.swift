@@ -31,7 +31,8 @@ final class EchoViewModel: ObservableObject {
     func connect() async {
         do {
             self.append("Connecting...")
-            let websocket = try await URLSessionWebSocket.connect(to: url)
+            let transport = URLSessionWebsocketTransport()
+            let websocket = try await transport.connect(to: url)
             self.websocket = websocket
             
             for await event in websocket.events {

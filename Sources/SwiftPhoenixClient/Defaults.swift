@@ -20,11 +20,7 @@
 
 import Foundation
 
-///
-/// Type Alias that defines a callback that takes which attempt number is being
-/// tried and returns a `TimerInterval` corresponding to the attempt.
-///
-public typealias SteppedBackoff = (_ tries: Int) -> TimeInterval
+
 
 
 /// A collection of default values and behaviors used across the Client

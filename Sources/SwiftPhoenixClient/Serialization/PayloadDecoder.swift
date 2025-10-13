@@ -11,7 +11,7 @@ import Foundation
 ///
 /// Decodes `Data` payloads into a `Decodable` or a generic `Any` JsonObject
 ///
-public protocol PayloadDecoder {
+public protocol PayloadDecoder: Sendable {
     
     /// Decodes `Data` into a JsonObject of type `Any`
     ///
@@ -32,7 +32,7 @@ public protocol PayloadDecoder {
 /// A default implementtion of `PayloadDecoder` which works out of the box with a
 /// standard Phoenix server.
 ///
-public class PhoenixPayloadDecoder: PayloadDecoder {
+public final class PhoenixPayloadDecoder: PayloadDecoder {
     
     /// The options for reading payloads as JSON data.
     public let options: JSONSerialization.ReadingOptions
