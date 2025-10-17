@@ -63,6 +63,12 @@
 		635863AB2E98A054003C6FD9 /* SocketStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635863AA2E98A054003C6FD9 /* SocketStatus.swift */; };
 		635863AC2E98A054003C6FD9 /* SocketStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635863AA2E98A054003C6FD9 /* SocketStatus.swift */; };
 		635863AF2E98A1A1003C6FD9 /* SocketStateChangeCallbacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635863AE2E98A1A1003C6FD9 /* SocketStateChangeCallbacks.swift */; };
+		635863B22E9C9012003C6FD9 /* HTTPTypes in Frameworks */ = {isa = PBXBuildFile; productRef = 635863B12E9C9012003C6FD9 /* HTTPTypes */; };
+		635863B42E9DD475003C6FD9 /* LongPollConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635863B32E9DD475003C6FD9 /* LongPollConnection.swift */; };
+		635863B62E9DD47E003C6FD9 /* WebSocketConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635863B52E9DD47E003C6FD9 /* WebSocketConnection.swift */; };
+		635863B92E9DDC11003C6FD9 /* HTTPTypes in Frameworks */ = {isa = PBXBuildFile; productRef = 635863B82E9DDC11003C6FD9 /* HTTPTypes */; };
+		635863BC2EA06E3E003C6FD9 /* Clock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635863BB2EA06E3E003C6FD9 /* Clock.swift */; };
+		635863BE2EA08888003C6FD9 /* Task+Timeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635863BD2EA08888003C6FD9 /* Task+Timeout.swift */; };
 		63AEB5A92D4FBBC700E8A3CC /* TransportReadyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AEB5A82D4FBBC700E8A3CC /* TransportReadyState.swift */; };
 		63AEB5AB2D4FBC0500E8A3CC /* Transport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AEB5AA2D4FBC0500E8A3CC /* Transport.swift */; };
 		63AEB5AD2D4FBC4200E8A3CC /* TransportDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63AEB5AC2D4FBC4200E8A3CC /* TransportDelegate.swift */; };
@@ -168,6 +174,10 @@
 		635863A72E98A036003C6FD9 /* TypeAliases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeAliases.swift; sourceTree = "<group>"; };
 		635863AA2E98A054003C6FD9 /* SocketStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketStatus.swift; sourceTree = "<group>"; };
 		635863AE2E98A1A1003C6FD9 /* SocketStateChangeCallbacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketStateChangeCallbacks.swift; sourceTree = "<group>"; };
+		635863B32E9DD475003C6FD9 /* LongPollConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongPollConnection.swift; sourceTree = "<group>"; };
+		635863B52E9DD47E003C6FD9 /* WebSocketConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketConnection.swift; sourceTree = "<group>"; };
+		635863BB2EA06E3E003C6FD9 /* Clock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clock.swift; sourceTree = "<group>"; };
+		635863BD2EA08888003C6FD9 /* Task+Timeout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+Timeout.swift"; sourceTree = "<group>"; };
 		63AEB5A82D4FBBC700E8A3CC /* TransportReadyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportReadyState.swift; sourceTree = "<group>"; };
 		63AEB5AA2D4FBC0500E8A3CC /* Transport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transport.swift; sourceTree = "<group>"; };
 		63AEB5AC2D4FBC4200E8A3CC /* TransportDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportDelegate.swift; sourceTree = "<group>"; };
@@ -207,6 +217,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				635863B92E9DDC11003C6FD9 /* HTTPTypes in Frameworks */,
+				635863B22E9C9012003C6FD9 /* HTTPTypes in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,6 +303,7 @@
 		128143AE25410DF3008615A7 /* SwiftPhoenixClient */ = {
 			isa = PBXGroup;
 			children = (
+				635863BA2EA06E34003C6FD9 /* Helpers */,
 				635863AD2E98A16D003C6FD9 /* Socket */,
 				635863A62E98A02A003C6FD9 /* Types */,
 				126B3CCB2E56B6D400C539A2 /* WebSocket */,
@@ -452,6 +465,15 @@
 			path = Socket;
 			sourceTree = "<group>";
 		};
+		635863BA2EA06E34003C6FD9 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				635863BB2EA06E3E003C6FD9 /* Clock.swift */,
+				635863BD2EA08888003C6FD9 /* Task+Timeout.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		63AEB5A72D4FBB9000E8A3CC /* Transport */ = {
 			isa = PBXGroup;
 			children = (
@@ -459,6 +481,8 @@
 				63AEB5AA2D4FBC0500E8A3CC /* Transport.swift */,
 				63AEB5AC2D4FBC4200E8A3CC /* TransportDelegate.swift */,
 				63AEB5A82D4FBBC700E8A3CC /* TransportReadyState.swift */,
+				635863B32E9DD475003C6FD9 /* LongPollConnection.swift */,
+				635863B52E9DD47E003C6FD9 /* WebSocketConnection.swift */,
 			);
 			path = Transport;
 			sourceTree = "<group>";
@@ -632,6 +656,9 @@
 				Base,
 			);
 			mainGroup = 1281438825410D52008615A7;
+			packageReferences = (
+				635863B72E9DDC11003C6FD9 /* XCRemoteSwiftPackageReference "swift-http-types" */,
+			);
 			productRefGroup = 1281439325410D52008615A7 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -704,7 +731,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				12991DFB254C3EB800BB8650 /* Defaults.swift in Sources */,
+				635863B62E9DD47E003C6FD9 /* WebSocketConnection.swift in Sources */,
 				12C2F0992D68BAD90089B49F /* ChannelError.swift in Sources */,
+				635863B42E9DD475003C6FD9 /* LongPollConnection.swift in Sources */,
+				635863BC2EA06E3E003C6FD9 /* Clock.swift in Sources */,
 				634E20EC2CC4813D0037A570 /* PayloadEncoder.swift in Sources */,
 				6358639E2E988ED0003C6FD9 /* SocketOptions.swift in Sources */,
 				63AEB5AB2D4FBC0500E8A3CC /* Transport.swift in Sources */,
@@ -713,6 +743,7 @@
 				1284F4C02D47C8080090D0DA /* ChannelSubscription.swift in Sources */,
 				126B3CCD2E56B6DE00C539A2 /* WebSocket.swift in Sources */,
 				1284F4CC2D48182F0090D0DA /* OutgoingMessage.swift in Sources */,
+				635863BE2EA08888003C6FD9 /* Task+Timeout.swift in Sources */,
 				1284F4C72D4801320090D0DA /* DecodablePayloadParser.swift in Sources */,
 				634398462CCFDA9200A2B9AC /* PayloadDecoder.swift in Sources */,
 				121F9D3C2D98E7C400B3A16F /* Channel+OnData.swift in Sources */,
@@ -1212,6 +1243,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		635863B02E9C9012003C6FD9 /* XCRemoteSwiftPackageReference "swift-http-types" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-http-types.git";
+			requirement = {
+				kind = exactVersion;
+				version = 1.4.0;
+			};
+		};
+		635863B72E9DDC11003C6FD9 /* XCRemoteSwiftPackageReference "swift-http-types" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-http-types.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		635863B12E9C9012003C6FD9 /* HTTPTypes */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 635863B02E9C9012003C6FD9 /* XCRemoteSwiftPackageReference "swift-http-types" */;
+			productName = HTTPTypes;
+		};
+		635863B82E9DDC11003C6FD9 /* HTTPTypes */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 635863B72E9DDC11003C6FD9 /* XCRemoteSwiftPackageReference "swift-http-types" */;
+			productName = HTTPTypes;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1281438925410D52008615A7 /* Project object */;
 }

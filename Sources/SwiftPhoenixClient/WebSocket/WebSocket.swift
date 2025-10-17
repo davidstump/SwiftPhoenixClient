@@ -40,14 +40,14 @@ public enum WebSocketEvent: Sendable {
 
 /// Represents errors that can occur on a WebSocket connection.
 public enum WebSocketError: Error, LocalizedError {
-  /// An error occurred while connecting to the peer.
-  case connection(message: String, error: any Error)
-
-  public var errorDescription: String? {
-    switch self {
-    case .connection(let message, let error): "\(message) \(error.localizedDescription)"
+    /// An error occurred while connecting to the peer.
+    case connection(message: String, error: any Error)
+    
+    public var errorDescription: String? {
+        switch self {
+        case .connection(let message, let error): "\(message) \(error.localizedDescription)"
+        }
     }
-  }
 }
 
 /// Defines a connection to a peer over a websocket.

@@ -30,7 +30,7 @@ extension Channel {
     @discardableResult
     public func onDecodable<T: Decodable>(_ event: String,
                                           of type: T.Type,
-                                          callback: @escaping (ChannelMessage<T>) -> Void) -> Int {
+                                          callback: @escaping (ChannelMessage<T>?, Error?) -> Void) -> Int {
         let ref = bindingRef
         self.bindingRef = ref + 1
         
@@ -46,7 +46,7 @@ extension Channel {
     /// Same as `onDecodable`, but for the `phx_close` event
     @discardableResult
     public func onCloseDecodable<T: Decodable>(_ type: T.Type,
-                                               callback: @escaping (ChannelMessage<T>) -> Void) -> Int {
+                                               callback: @escaping (ChannelMessage<T>?, Error?) -> Void) -> Int {
         return self.onDecodable(ChannelEvent.close, of: type, callback: callback)
     }
     
@@ -54,7 +54,7 @@ extension Channel {
     /// Same as `onDecodable`, but for the `phx_error` event
     @discardableResult
     public func onErrorDecodable<T: Decodable>(_ type: T.Type,
-                                               callback: @escaping (ChannelMessage<T>) -> Void) -> Int {
+                                               callback: @escaping (ChannelMessage<T>?, Error?) -> Void) -> Int {
         return self.onDecodable(ChannelEvent.close, of: type, callback: callback)
     }
 }

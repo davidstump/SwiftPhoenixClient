@@ -26,6 +26,8 @@ import Foundation
 /// A collection of default values and behaviors used across the Client
 public class Defaults {
     
+    public static let normalCloseCode: Int = URLSessionWebSocketTask.CloseCode.normalClosure.rawValue
+    
     /// Default timeout when sending messages
     public static let timeoutInterval: TimeInterval = 10.0
     

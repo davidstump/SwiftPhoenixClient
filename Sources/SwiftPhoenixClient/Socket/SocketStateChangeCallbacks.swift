@@ -10,17 +10,17 @@ import Foundation
  
 internal struct SocketOpened {
     let ref: String
-    let callback: (URLResponse?) -> Void
+    let callback: () -> Void
 }
 
 internal struct SocketClosed {
     let ref: String
-    let callback: (URLSessionWebSocketTask.CloseCode, String?) -> Void
+    let callback: (Int, String?) -> Void
 }
 
 internal struct SocketErrored {
     let ref: String
-    let callback: (Error, URLResponse?) -> Void
+    let callback: (Error) -> Void
 }
 
 internal struct SocketMessaged {

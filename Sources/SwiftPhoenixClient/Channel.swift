@@ -21,6 +21,7 @@
 import Swift
 import Foundation
 
+
 ///
 /// Represents a Channel which is bound to a topic
 ///
@@ -158,7 +159,7 @@ public class Channel {
                              timeout: self.timeout)
         
         /// Handle when a response is received after join()
-        self.joinPush.receive("ok") { [weak self] _ in
+        self.joinPush.receive("ok") { [weak self] _, _ in
             guard let self else { return }
 
             // Mark the Channel as joined
@@ -173,7 +174,7 @@ public class Channel {
         }
         
         // Perform if Channel errors while attempting to joi
-        self.joinPush.receive("error") { [weak self] _ in
+        self.joinPush.receive("error") { [weak self] _, _ in
             guard let self else { return }
 
             self.state = .errored
@@ -181,7 +182,7 @@ public class Channel {
         }
         
         // Handle when the join push times out when sending after join()
-        self.joinPush.receive("timeout") { [weak self] _ in
+        self.joinPush.receive("timeout") { [weak self] _, _  in
             guard let self else { return }
 
             // log that the channel timed out
@@ -203,7 +204,7 @@ public class Channel {
         }
         
         /// Perfom when the Channel has been closed
-        self.onClose { [weak self] _ in
+        self.onClose { [weak self] _,_ in
             guard let self else { return }
             
             // Reset any timer that may be on-going
@@ -218,7 +219,7 @@ public class Channel {
         }
         
         /// Perfom when the Channel errors
-        self.onError { [weak self] message in
+        self.onError { [weak self] message,_ in
             guard let self else { return }
 
             // Log that the channel received an error
@@ -228,7 +229,7 @@ public class Channel {
             if (self.isJoining) {
                 // Make sure that the "phx_join" isn't buffered to send once the socket
                 // reconnects. The channel will send a new join event when the socket connects.
-                if let sa feJoinRef = self.joinRef {
+                if let safeJoinRef = self.joinRef {
                     self.socket?.removeFromSendBuffer(ref: safeJoinRef)
                 }
                 

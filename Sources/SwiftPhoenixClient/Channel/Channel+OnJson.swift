@@ -23,7 +23,8 @@ extension Channel {
     /// - parameter callback: Called with the event's message
     /// - return: Ref counter of the subscription. See `channel.off(_:, ref:)`.
     @discardableResult
-    public func on(_ event: String, callback: @escaping (ChannelMessage<Any>) -> Void) -> Int {
+    public func on(_ event: String,
+                   callback: @escaping (ChannelMessage<Any>?, Error?) -> Void) -> Int {
         let ref = bindingRef
         self.bindingRef = ref + 1
         
@@ -38,14 +39,14 @@ extension Channel {
     /// Hook into when the Channel is closed.
     /// Same as `on`, but for the `phx_close` event
     @discardableResult
-    public func onClose(_ callback: @escaping (ChannelMessage<Any>) -> Void) -> Int {
+    public func onClose(_ callback: @escaping (ChannelMessage<Any>?, Error?) -> Void) -> Int {
         return self.on(ChannelEvent.close, callback: callback)
     }
     
     /// Hook into when the Channel receives an Error.
     /// Same as `on`, but for the `phx_error` event
     @discardableResult
-    public func onError(_ callback: @escaping (ChannelMessage<Any>) -> Void) -> Int {
+    public func onError(_ callback: @escaping (ChannelMessage<Any>?, Error?) -> Void) -> Int {
         return self.on(ChannelEvent.error, callback: callback)
     }
 }

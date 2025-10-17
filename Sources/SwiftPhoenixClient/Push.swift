@@ -48,14 +48,14 @@ public class Push {
     /// The server's response to the Push
     var receivedMessage: IncomingMessage?
     
-    /// Timer which triggers a timeout event
-    var timeoutTimer: TimerQueue
-    
-    /// WorkItem to be performed when the timeout timer fires
-    var timeoutWorkItem: DispatchWorkItem?
+    /// Task which tracks timing out a Push
+    var timeoutTask: Task<Void, Never>?
         
     /// Hooks into a Push. Where .receive("ok", callback(Payload)) are stored
     var receiveHooks: LockIsolated<[ReceiveHook]>
+    
+    /// The Callback wrapping the continuation of an await
+    var awaitCallback: SubscriptionCallback?
     
     /// True if the Push has been sent
     var sent: Bool
@@ -91,14 +91,12 @@ public class Push {
         self.payload = payload
         self.timeout = timeout
         self.receivedMessage = nil
-        self.timeoutTimer = TimerQueue.main
         self.receiveHooks = LockIsolated([])
+        self.awaitCallback = nil
         self.sent = false
         self.ref = nil
     }
-    
-    
-    
+
     /// Resets and sends the Push
     /// - parameter timeout: Optional. The push timeout. Default is 10.0s
     public func resend(_ timeout: TimeInterval = Defaults.timeoutInterval) {
@@ -141,14 +139,14 @@ public class Push {
     /// - parameter callback: Callback to fire when the status is recevied
     @discardableResult
     public func receive(_ status: String,
-                        callback: @escaping (ChannelMessage<Any>) -> Void) -> Push {
+                        callback: @escaping (ChannelMessage<Any>?, Error?) -> Void) -> Push {
         let subscriptionCallback = JsonSubscriptionCallback(callback: callback)
         return appendReceive(status, callback: subscriptionCallback)
     }
     
     @discardableResult
     public func receiveData(_ status: String,
-                            callback: @escaping (ChannelMessage<Data>) -> Void) -> Push {
+                            callback: @escaping (ChannelMessage<Data>?, Error?) -> Void) -> Push {
         let subscriptionCallback = DataSubscriptionCallback(callback: callback)
         return appendReceive(status, callback: subscriptionCallback)
     }
@@ -156,7 +154,7 @@ public class Push {
     @discardableResult
     public func receiveDecodable<T: Codable>(_ status: String,
                                              of type: T.Type,
-                                             callback: @escaping (ChannelMessage<T>) -> Void) -> Push {
+                                             callback: @escaping (ChannelMessage<T>?, Error?) -> Void) -> Push {
         let subscriptionCallback = DecodableSubscriptionCallback(type: type, callback: callback)
         return appendReceive(status, callback: subscriptionCallback)
     }
@@ -166,6 +164,28 @@ public class Push {
                          callback: @escaping (IncomingMessage) -> Void) -> Push {
         let subscriptionCallback = InternalSubscriptionCallback(callback: callback)
         return appendReceive(status, callback: subscriptionCallback)
+    }
+    
+    
+    public func awaitReply() async throws -> ChannelMessage<Any> {
+        return try await withCheckedThrowingContinuation { continuation in
+            self.awaitCallback = JsonContinuation(continuation: continuation)
+            
+        }
+    }
+    
+    public func awaitReplyData() async throws -> ChannelMessage<Data> {
+        return try await withCheckedThrowingContinuation { continuation in
+            self.awaitCallback = DataContinuation(continuation: continuation)
+        }
+        
+    }
+    
+    public func awaitReply<T: Codable>(of type: T.Type) async throws -> ChannelMessage<T> {
+        return try await withCheckedThrowingContinuation { continuation in
+            self.awaitCallback = DecodableContinuation(type: type,
+                                                       continuation: continuation)
+        }
     }
     
     private func appendReceive(_ status: String, callback: SubscriptionCallback) -> Self {
@@ -200,6 +220,7 @@ public class Push {
     /// - parameter status: Status which was received, e.g. "ok", "error", "timeout"
     /// - parameter response: Response that was received
     private func matchReceive(_ status: String, message: IncomingMessage) {
+        // Pass the event to any hooks that are registered
         self.receiveHooks.value.forEach { hook in
             if hook.status == status {
                 hook.callback.trigger(message,
@@ -207,6 +228,11 @@ public class Push {
                                       payloadEncoder: self.encoder)
             }
         }
+        
+        // Invoke any continuation
+        self.awaitCallback?.trigger(message,
+                                    payloadDecoder: self.decoder,
+                                    payloadEncoder: self.encoder)
     }
     
     /// Reverses the result on channel.on(ChannelEvent, callback) that spawned the Push
@@ -217,15 +243,15 @@ public class Push {
     
     /// Cancel any ongoing Timeout Timer
     internal func cancelTimeout() {
-        self.timeoutWorkItem?.cancel()
-        self.timeoutWorkItem = nil
+        self.timeoutTask?.cancel()
+        self.timeoutTask = nil
     }
     
     /// Starts the Timer which will trigger a timeout after a specific _timeout_
     /// time, in milliseconds, is reached.
     internal func startTimeout() {
         // Cancel any existing timeout before starting a new one
-        if let safeWorkItem = timeoutWorkItem, !safeWorkItem.isCancelled {
+        if let timeoutTask, !timeoutTask.isCancelled {
             self.cancelTimeout()
         }
         
@@ -255,12 +281,15 @@ public class Push {
 
         
         /// Setup and start the Timeout timer.
-        let workItem = DispatchWorkItem {
+        let task = Task {
+            try? await _clock.sleep(for: timeout)
+            guard !Task.isCancelled else { return }
+
             self.trigger("timeout", payload: [:])
         }
-        
-        self.timeoutWorkItem = workItem
-        self.timeoutTimer.queue(timeInterval: timeout, execute: workItem)
+         
+        self.timeoutTask = task
+
     }
     
     /// Checks if a status has already been received by the Push.

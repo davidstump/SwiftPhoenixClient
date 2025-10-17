@@ -190,7 +190,7 @@ class ChatRoomViewController: UIViewController {
                 print("CHANNEL: rooms:lobby failed to join. payload <\(message.payload)>  status <\(message.status ?? "null")> ")
             }
         
-        self.socket.connect()
+//        self.socket.connect()
     }
     
     private func disconnectFromChat() {

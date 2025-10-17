@@ -1,5 +1,5 @@
 //
-//  PingPongExample.swift
+//  EchoExample.swift
 //  Examples
 //
 //  Created by Daniel Rees on 8/23/25.
@@ -9,7 +9,7 @@
 import SwiftUI
 import SwiftPhoenixClient
 
-struct PingPongExample: View {
+struct EchoExample: View {
     
     @StateObject private var vm = EchoViewModel()
     @State private var bottomID = "BOTTOM"
@@ -80,5 +80,5 @@ struct PingPongExample: View {
 }
 
 #Preview {
-    PingPongExample()
+    EchoExample()
 }

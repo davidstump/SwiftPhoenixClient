@@ -14,9 +14,50 @@ protocol SubscriptionCallback {
     func trigger(_ decodedMessage: IncomingMessage,
                  payloadDecoder: PayloadDecoder,
                  payloadEncoder: PayloadEncoder)
-    
 }
 
+
+extension SubscriptionCallback {
+    
+    func process<T>(parser: some PayloadParser<T>,
+                 callback: (ChannelMessage<T>?, Swift.Error?) -> Void,
+                 incomingMessage: IncomingMessage,
+                 payloadDecoder: PayloadDecoder,
+                 payloadEncoder: PayloadEncoder) {
+        let result = parser.parse(incomingMessage,
+                                  payloadDecoder: payloadDecoder,
+                                  payloadEncoder: payloadEncoder)
+    
+        switch result {
+        case .success(let payload):
+            let channelMessage = ChannelMessage(from: incomingMessage, payload: payload)
+            callback(channelMessage, nil)
+        case .failure(let error):
+            callback(nil, error)
+        }
+        
+    }
+    
+    func process<T>(parser: some PayloadParser<T>,
+                     continuation: CheckedContinuation<ChannelMessage<T>, Error>,
+                     incomingMessage: IncomingMessage,
+                     payloadDecoder: PayloadDecoder,
+                     payloadEncoder: PayloadEncoder) {
+        let result = parser.parse(incomingMessage,
+                                  payloadDecoder: payloadDecoder,
+                                  payloadEncoder: payloadEncoder)
+    
+        switch result {
+        case .success(let payload):
+            let channelMessage = ChannelMessage(from: incomingMessage, payload: payload)
+            continuation.resume(returning: channelMessage)
+        case .failure(let error):
+            continuation.resume(throwing: error)
+        }
+    }
+}
+
+// MARK: - Callbacks
 struct InternalSubscriptionCallback: SubscriptionCallback {
     let callback: (IncomingMessage) -> Void
     
@@ -31,43 +72,43 @@ struct InternalSubscriptionCallback: SubscriptionCallback {
 struct DataSubscriptionCallback: SubscriptionCallback {
     
     let parser = DataPayloadParser()
-    let callback: (ChannelMessage<Data>) -> Void
+    let callback: (ChannelMessage<Data>?, Swift.Error?) -> Void
     
     func trigger(_ incomingMessage: IncomingMessage,
                  payloadDecoder: PayloadDecoder,
                  payloadEncoder: PayloadEncoder) {
-        let result = self.parser.parse(incomingMessage,
-                                       payloadDecoder: payloadDecoder,
-                                       payloadEncoder: payloadEncoder)
-        let channelMessage = ChannelMessage(from: incomingMessage, payload: result)
-        callback(channelMessage)
+        process(parser: parser,
+                callback: callback,
+                incomingMessage: incomingMessage,
+                payloadDecoder: payloadDecoder,
+                payloadEncoder: payloadEncoder)
     }
 }
 
 struct JsonSubscriptionCallback: SubscriptionCallback {
     
     let parser = JsonPayloadParser()
-    let callback: (ChannelMessage<Any>) -> Void
+    let callback: (ChannelMessage<Any>?, Error?) -> Void
     
     func trigger(_ incomingMessage: IncomingMessage,
                  payloadDecoder: PayloadDecoder,
                  payloadEncoder: PayloadEncoder) {
-        let result = self.parser.parse(incomingMessage,
-                                       payloadDecoder: payloadDecoder,
-                                       payloadEncoder: payloadEncoder)
-        let channelMessage = ChannelMessage(from: incomingMessage, payload: result)
-        callback(channelMessage)
+        process(parser: parser,
+                callback: callback,
+                incomingMessage: incomingMessage,
+                payloadDecoder: payloadDecoder,
+                payloadEncoder: payloadEncoder)
     }
 }
 
 struct DecodableSubscriptionCallback<T: Decodable>: SubscriptionCallback {
     
     let parser: DecodablePayloadParser<T>
-    let callback: (ChannelMessage<T>) -> Void
+    let callback: (ChannelMessage<T>?, Swift.Error?) -> Void
     
     init(
         type: T.Type,
-        callback: @escaping (ChannelMessage<T>) -> Void) {
+        callback: @escaping (ChannelMessage<T>?, Swift.Error?) -> Void) {
             self.parser = DecodablePayloadParser(type: type)
             self.callback = callback
         }
@@ -76,13 +117,73 @@ struct DecodableSubscriptionCallback<T: Decodable>: SubscriptionCallback {
     func trigger(_ incomingMessage: IncomingMessage,
                  payloadDecoder: PayloadDecoder,
                  payloadEncoder: PayloadEncoder) {
-        let result = self.parser.parse(incomingMessage,
-                                       payloadDecoder: payloadDecoder,
-                                       payloadEncoder: payloadEncoder)
-        let channelMessage = ChannelMessage(from: incomingMessage, payload: result)
-        callback(channelMessage)
+        process(parser: parser,
+                callback: callback,
+                incomingMessage: incomingMessage,
+                payloadDecoder: payloadDecoder,
+                payloadEncoder: payloadEncoder)
     }
 }
+
+
+// MARK: - Continuations
+struct JsonContinuation: SubscriptionCallback {
+    let parser = JsonPayloadParser()
+    let continuation: CheckedContinuation<ChannelMessage<Any>, Error>
+    
+    func trigger(_ incomingMessage: IncomingMessage,
+                 payloadDecoder: PayloadDecoder,
+                 payloadEncoder: PayloadEncoder) {
+        process(parser: parser,
+                continuation: continuation,
+                incomingMessage: incomingMessage,
+                payloadDecoder: payloadDecoder,
+                payloadEncoder: payloadEncoder)
+    }
+}
+
+struct DataContinuation: SubscriptionCallback {
+    let parser = DataPayloadParser()
+    let continuation: CheckedContinuation<ChannelMessage<Data>, Error>
+    
+    func trigger(_ incomingMessage: IncomingMessage,
+                 payloadDecoder: PayloadDecoder,
+                 payloadEncoder: PayloadEncoder) {
+        process(parser: parser,
+                continuation: continuation,
+                incomingMessage: incomingMessage,
+                payloadDecoder: payloadDecoder,
+                payloadEncoder: payloadEncoder)
+    }
+}
+
+struct DecodableContinuation<T: Decodable>: SubscriptionCallback {
+    
+    let parser: DecodablePayloadParser<T>
+    let continuation: CheckedContinuation<ChannelMessage<T>, Error>
+    
+    
+    init(
+        type: T.Type,
+        continuation: CheckedContinuation<ChannelMessage<T>, Error>) {
+            self.parser = DecodablePayloadParser(type: type)
+            self.continuation = continuation
+        }
+    
+    
+    func trigger(_ incomingMessage: IncomingMessage,
+                 payloadDecoder: PayloadDecoder,
+                 payloadEncoder: PayloadEncoder) {
+        process(parser: parser,
+                continuation: continuation,
+                incomingMessage: incomingMessage,
+                payloadDecoder: payloadDecoder,
+                payloadEncoder: payloadEncoder)
+    }
+    
+}
+
+
 
 public struct ChannelMessage<PayloadType> {
     
@@ -102,11 +203,10 @@ public struct ChannelMessage<PayloadType> {
     /// The reply status as a string
     public let status: String?
     
-    /// The payload of the message to send or that was received. Wrapped in a
-    /// `Result` so that serialization errors can be passed up to the caller.
-    public let payload: Result<PayloadType, Swift.Error>
+    /// The payload of the message to send or that was received
+    public let payload: PayloadType
     
-    init(from message: IncomingMessage, payload: Result<PayloadType, Swift.Error>) {
+    init(from message: IncomingMessage, payload: PayloadType) {
         self.joinRef = message.joinRef
         self.ref = message.ref
         self.topic = message.topic
@@ -132,25 +232,37 @@ class ChannelSubscription {
         self.callback = callback
     }
     
-    convenience init(event: String, ref: Int, callback: @escaping (ChannelMessage<Any>) -> Void) {
-        self.init(event: event, ref: ref, callback: JsonSubscriptionCallback(callback: callback))
+    convenience init(event: String,
+                     ref: Int,
+                     callback: @escaping (ChannelMessage<Any>?, Swift.Error?) -> Void) {
+        self.init(event: event,
+                  ref: ref,
+                  callback: JsonSubscriptionCallback(callback: callback))
     }
     
-    convenience init(event: String, ref: Int, callback: @escaping (ChannelMessage<Data>) -> Void) {
-        self.init(event: event, ref: ref, callback: DataSubscriptionCallback(callback: callback))
+    convenience init(event: String,
+                     ref: Int,
+                     callback: @escaping (ChannelMessage<Data>?, Swift.Error?) -> Void) {
+        self.init(event: event,
+                  ref: ref,
+                  callback: DataSubscriptionCallback(callback: callback))
     }
     
     convenience init<T: Decodable>(event: String,
                                    ref: Int,
                                    type: T.Type,
-                                   callback: @escaping (ChannelMessage<T>) -> Void) {
+                                   callback: @escaping (ChannelMessage<T>?, Swift.Error?) -> Void) {
         self.init(event: event,
                   ref: ref,
                   callback: DecodableSubscriptionCallback(type: type, callback: callback))
     }
     
-    convenience init(event: String, ref: Int, callback: @escaping (IncomingMessage) -> Void) {
-        self.init(event: event, ref: ref, callback: InternalSubscriptionCallback(callback: callback))
+    convenience init(event: String,
+                     ref: Int,
+                     callback: @escaping (IncomingMessage) -> Void) {
+        self.init(event: event,
+                  ref: ref,
+                  callback: InternalSubscriptionCallback(callback: callback))
     }
 
     func trigger(_ incomingMessage: IncomingMessage,

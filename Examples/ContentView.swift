@@ -38,9 +38,9 @@ struct ContentView: View {
             .navigationDestination(for: Int.self) { id in
                 switch id {
                 case 1:
-                    PingPongExample()
+                    EchoExample()
                 case 2:
-                    DetailView(title: "Local Phoenix Server")
+                    LocalExample()
                 case 3:
                     DetailView(title: "DYWL Chat Example")
                 default:

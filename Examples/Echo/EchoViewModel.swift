@@ -17,8 +17,8 @@ final class EchoViewModel: ObservableObject {
         EchoMessage(text: "Welcome! Tap Connect to start.", isMe: false)
     ]
     
-    private let url = URL(string: "https://echo.websocket.org/")!
-    private var websocket: WebSocket? = nil
+    private let url = URL(string: "wss://echo.websocket.org/")!
+    private var websocket: TransportConnection? = nil
     
     func toggleConnection() async {
         if websocket == nil || websocket?.isClosed == true {
@@ -31,13 +31,13 @@ final class EchoViewModel: ObservableObject {
     func connect() async {
         do {
             self.append("Connecting...")
-            let transport = URLSessionWebsocketTransport()
+            let transport = WebSocketTransport()
             let websocket = try await transport.connect(to: url)
             self.websocket = websocket
             
             for await event in websocket.events {
                 switch event {
-                case .open(_):
+                case .open:
                     self.append("Connected ✅")
                     self.isConnected = true
                 case .close(let code, let reason):
@@ -59,7 +59,8 @@ final class EchoViewModel: ObservableObject {
     
     func disconnect() {
         self.append("disconnecting...")
-        websocket?.disconnect(code: .normalClosure, reason: nil)
+        let closeCode = URLSessionWebSocketTask.CloseCode.normalClosure
+        websocket?.disconnect(code: closeCode.rawValue, reason: nil)
     }
     
     func send() {

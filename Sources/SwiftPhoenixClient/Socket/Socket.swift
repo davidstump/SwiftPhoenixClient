@@ -20,6 +20,8 @@
 
 import Foundation
 
+private let AUTH_TOKEN_PREFIX = "base64url.bearer.phx."
+
 /// Alias for a JSON dictionary [String: Any]
 public typealias Payload = [String: Any]
 
@@ -54,10 +56,10 @@ public protocol SocketProtocol: AnyObject, Sendable {
 /// the Socket docs, such as configuring the heartbeat.
 public class Socket: TransportDelegate {
     
-    /// Private state which is accessed behind a ``LockIsolated``
+    /// Private state which is accessed behind a ``LockIsolated`f`
     private struct MutableState {
         /// Callbacks for socket state changes
-        let stateChangeCallbacks = StateChangeCallbacks()
+        let stateChangeCallbacks = SocketStateChangeCallbacks()
         
         /// Collection on channels created for the Socket
         var channels: [Channel] = []
@@ -79,13 +81,31 @@ public class Socket: TransportDelegate {
         
         /// Long-running task which listens for incoming messages.
         var incomingMessagesTask: Task<Void, Never>? = nil
+        
+        /// The underlying connection established by the transport
+        var connection: (any TransportConnection)? = nil
     }
     
     /// The URL which was given to the ``Socket`` to connect to.
-    let url: URL
+    public let url: URL
     
     /// The ``SocketOptions`` given to the the ``Socket``
-    let options: SocketOptions
+    public let options: SocketOptions
+    
+    /// The Socket's Mutable State, wrapped in a lock for concurrency safely
+    private let mutableState = LockIsolated(MutableState())
+    
+    /// The underlying ``TransportConnection`` opened on ``connect()``
+    private var connection: (any TransportConnection)? {
+        return mutableState.connection
+    }
+    
+    /// All ``Channel``s that are being managed by the ``Socket``.
+    public var channels: [Channel] {
+        return mutableState.channels
+    }
+    
+    
     
     
     
@@ -97,7 +117,7 @@ public class Socket: TransportDelegate {
     /// `"wss://example.com"`, etc.) That was passed to the Socket during
     /// initialization. The URL endpoint will be modified by the Socket to
     /// include `"/websocket"` if missing.
-    public let endPoint: String
+//    public let endPoint: String
         
     /// Custom headers to be added to the socket connection request
     public var headers: [String : Any] = [:]
@@ -105,17 +125,17 @@ public class Socket: TransportDelegate {
     /// Resolves to return the `paramsClosure` result at the time of calling.
     /// If the `Socket` was created with static params, then those will be
     /// returned every time.
-    public var params: Payload? {
-        return self.paramsClosure?()
-    }
+//    public var params: Payload? {
+//        return self.paramsClosure?()
+//    }
     
     /// The optional params closure used to get params when connecting. Must
     /// be set when initializing the Socket.
-    public let paramsClosure: PayloadClosure?
+//    public let paramsClosure: PayloadClosure?
     
     /// The WebSocket transport. Default behavior is to provide a
     /// URLSessionWebsocketTask. See README for alternatives.
-    internal let transport: ((URL) -> Transport)
+//    internal let transport: ((URL) -> Transport)
     
     /// Phoenix serializer version, defaults to "2.0.0"
     public var vsn: String = Defaults.vsn
@@ -165,7 +185,7 @@ public class Socket: TransportDelegate {
         = LockIsolated(StateChangeCallbacks())
     
     /// Collection on channels created for the Socket
-    public internal(set) var channels: [Channel] = []
+//    public internal(set) var channels: [Channel] = []
     
     /// Buffers messages that need to be sent once the socket has connected. It is an array
     /// of tuples, with the ref of the message to send and the callback that will send the message.
@@ -181,13 +201,13 @@ public class Socket: TransportDelegate {
     var pendingHeartbeatRef: String?
     
     /// Timer to use when attempting to reconnect
-    var reconnectTimer: ScheduleTimer
+    var reconnectTimer: ScheduleTimer!
     
     /// Indicates if the socket disconnect was indended or not.
     var closeWasClean = false
     
     /// The connection to the server
-    var connection: Transport? = nil
+//    var connection: Transport? = nil
     
     
     //----------------------------------------------------------------------
@@ -197,9 +217,10 @@ public class Socket: TransportDelegate {
     ///
     /// - parameter endpoint: The string WebSocket endpoint, ie `"ws://example.com/socket"
     /// - parameter options: The ``SocketOptions`` for optional configuration
-    public convenience init(_ endpoint: String, options: SocketOptions) throws {
-        guard let url = URL(string: endPoint) else {
-            fatalError("Malformed URL: \(endPoint)")
+    public convenience init(_ endpoint: String,
+                            options: SocketOptions = .default) {
+        guard let url = URL(string: endpoint) else {
+            preconditionFailure("Malformed URL: \(endpoint)")
         }
         
         self.init(url, options: options)
@@ -209,52 +230,58 @@ public class Socket: TransportDelegate {
     ///
     /// - parameter url: The WebSocket URL.
     /// - parameter options: The ``SocketOptions`` for optional configuration
-    public init(_ url: URL, options: SocketOptions) {
+    public init(_ url: URL,
+                options: SocketOptions = .default) {
         self.url = url
         self.options = options
     }
     
-    public convenience init(_ endPoint: String, params: Payload? = nil) {
-        self.init(endPoint,
-                  transport: { url in return URLSessionTransport(url: url) },
-                  params: { params })
-    }
-    
-    public convenience init(_ endPoint: String, params: PayloadClosure?) {
-        self.init(endPoint,
-                  transport: { url in return URLSessionTransport(url: url) },
-                                params: params)
-    }
-    
-    
-    
-    public init(_ endPoint: String,
-                transport: @escaping ((URL) -> Transport),
-                params: PayloadClosure? = nil) {
-        self.transport = transport
-        self.paramsClosure = params
-        self.endPoint = endPoint
-        
-        self.reconnectTimer = TimeoutTimer()
-        self.reconnectTimer.callback = { [weak self] in
-            guard let self else { return }
-
-            self.logItems("Socket attempting to reconnect")
-            self.teardown(reason: "reconnection") { self.connect() }
-        }
-        self.reconnectTimer.timerCalculation = { [weak self] tries in
-            guard let self else {
-                return Defaults.reconnectSteppedBackOff(tries)
-            }
-            
-            let interval = self.reconnectAfter(tries)
-            self.logItems("Socket reconnecting in \(interval)s")
-            return interval
-        }
-    }
+//    public convenience init(_ endPoint: String, params: Payload? = nil) {
+//        self.init(endPoint,
+//                  transport: { url in return URLSessionTransport(url: url) },
+//                  params: { params })
+//    }
+//    
+//    public convenience init(_ endPoint: String, params: PayloadClosure?) {
+//        self.init(endPoint,
+//                  transport: { url in return URLSessionTransport(url: url) },
+//                                params: params)
+//    }
+//    
+//    
+//    
+//    public init(_ endPoint: String,
+//                transport: @escaping ((URL) -> Transport),
+//                params: PayloadClosure? = nil) {
+//        self.transport = transport
+//        self.paramsClosure = params
+//        self.endPoint = endPoint
+//        
+//        self.reconnectTimer = TimeoutTimer()
+//        self.reconnectTimer.callback = { [weak self] in
+//            guard let self else { return }
+//
+//            self.logItems("Socket attempting to reconnect")
+//            self.teardown(reason: "reconnection") { self.connect() }
+//        }
+//        self.reconnectTimer.timerCalculation = { [weak self] tries in
+//            guard let self else {
+//                return Defaults.reconnectSteppedBackOff(tries)
+//            }
+//            
+//            let interval = self.reconnectAfter(tries)
+//            self.logItems("Socket reconnecting in \(interval)s")
+//            return interval
+//        }
+//    }
     
     deinit {
         reconnectTimer.reset()
+        mutableState.withValue { state in
+            state.heartbeatTask?.cancel()
+            state.incomingMessagesTask?.cancel()
+            state.channels = []
+        }
     }
     
     //----------------------------------------------------------------------
@@ -295,10 +322,11 @@ public class Socket: TransportDelegate {
         urlComponents.queryItems = [URLQueryItem(name: "vsn", value: vsn)]
         
         // If there are parameters, append them to the URL
-        if let params = self.params {
-            urlComponents.queryItems?.append(contentsOf: params.map {
+        if let params = self.options.params?() {
+            let queryItems = params.map {
                 URLQueryItem(name: $0.key, value: String(describing: $0.value))
-            })
+            }
+            urlComponents.queryItems?.append(contentsOf: queryItems)
         }
         
         guard let qualifiedUrl = urlComponents.url else {
@@ -319,20 +347,37 @@ public class Socket: TransportDelegate {
         return self.connection?.readyState ?? .closed
     }
     
-    /// Connects the Socket. The params passed to the Socket on initialization
-    /// will be sent through the connection. If the Socket is already connected,
-    /// then this call will be ignored.
-    public func connect() {
+    /// Connects the Socket. Suspends until the socket has connected.
+    public func connect() async {
         // Do not attempt to reconnect if the socket is currently connected
         guard !isConnected else { return }
         
         // Reset the close status when attempting to connect
         self.closeWasClean = false
         
-        self.connection = self.transport(self.endPointUrl)
-        self.connection?.delegate = self
-                
-        self.connection?.connect(with: self.headers)
+        do {
+            let protocols: [String]
+            if let authToken = self.options.authToken {
+                let encodedToken = Data(authToken.utf8)
+                    .base64EncodedString()
+                    .replacingOccurrences(of: "=", with: "")
+                protocols = ["phoenix", "\(AUTH_TOKEN_PREFIX)\(encodedToken)"]
+            } else {
+                protocols = []
+            }
+            
+            let connection = try await self.options
+                .transport
+                .connect(to: endPointUrl,
+                         headers: options.headers,
+                         protocols: protocols)
+            self.mutableState
+                .withValue { $0.connection = connection}
+            
+            self.receiveIncomingMessages()
+        } catch {
+            self.onConnectionError(error)
+        }
     }
     
     /// Disconnects the socket
@@ -353,12 +398,21 @@ public class Socket: TransportDelegate {
     internal func teardown(code: URLSessionWebSocketTask.CloseCode = .normalClosure,
                            reason: String? = nil,
                            callback: (() -> Void)? = nil) {
-        self.connection?.delegate = nil
-        self.connection?.disconnect(code: code, reason: reason)
-        self.connection = nil
-        
+        self.connection?.disconnect(code: code.rawValue, reason: reason)
+        self.mutableState.withValue { state in
+            // Stop sending heartbeats
+            state.heartbeatTask?.cancel()
+            
+            // Stop receiving any messages
+            state.incomingMessagesTask?.cancel()
+            
+            // Release any reference to the connection
+            state.connection = nil
+        }
+
         // The socket connection has been torndown, heartbeats are not needed
-        self.heartbeatTimer?.stop()
+        self.mutableState.value.heartbeatTask?.cancel()
+//        self.heartbeatTimer?.stop()
         
         // Since the connection's delegate was nil'd out, inform all state
         // callbacks that the connection has closed
@@ -506,7 +560,9 @@ public class Socket: TransportDelegate {
     public func channel(_ topic: String,
                         params: OutgoingPayload) -> Channel {
         let channel = Channel(topic: topic, params: params, socket: self)
-        self.channels.append(channel)
+        self.mutableState.withValue { state in
+            state.channels.append(channel)
+        }
         
         return channel
     }
@@ -523,7 +579,9 @@ public class Socket: TransportDelegate {
     /// - parameter channel: Channel to remove
     public func remove(_ channel: Channel) {
         self.off(channel.stateChangeRefs)
-        self.channels.removeAll(where: { $0.joinRef == channel.joinRef })
+        self.mutableState.withValue { state in
+            state.channels.removeAll(where: { $0.joinRef == channel.joinRef })
+        }
     }
     
     /// Removes `onOpen`, `onClose`, `onError,` and `onMessage` registrations.
@@ -592,8 +650,8 @@ public class Socket: TransportDelegate {
     // MARK: - Connection Events
     //----------------------------------------------------------------------
     /// Called when the underlying Websocket connects to it's host
-    internal func onConnectionOpen(response: URLResponse?) {
-        self.logItems("transport", "Connected to \(endPoint)")
+    internal func onConnectionOpen() {
+        self.logItems("transport", "Connected to \(url)")
         
         // Reset the close status now that the socket has been connected
         self.closeWasClean = false
@@ -602,41 +660,51 @@ public class Socket: TransportDelegate {
         self.flushSendBuffer()
         
         // Reset how the socket tried to reconnect
-        self.reconnectTimer.reset()
-        
-        // Restart the heartbeat timer
+//        self.reconnectTimer.reset()
+//        
+//        // Restart the heartbeat timer
         self.resetHeartbeat()
         
         // Inform all onOpen callbacks that the Socket has opened
-        self.stateChangeCallbacks.open.forEach({ $0.callback(response) })
+        self.mutableState.stateChangeCallbacks.open.forEach({ $0.callback() })
     }
     
-    internal func onConnectionClosed(code: URLSessionWebSocketTask.CloseCode, reason: String?) {
+    internal func onConnectionClosed(code: Int, reason: String?) {
         self.logItems("transport", "close")
         
         // Send an error to all channels
         self.triggerChannelError()
         
-        // Prevent the heartbeat from triggering if the
-        self.heartbeatTimer?.stop()
+        // Prevent the heartbeat from triggering if the connection closed
+        self.mutableState.value.heartbeatTask?.cancel()
+//        self.heartbeatTimer?.stop()
         
         // Only attempt to reconnect if the socket did not close normally,
         // or if it was closed abnormally but on client side (e.g. due to heartbeat timeout)
-        if (!self.closeWasClean && code != .normalClosure) {
-            self.reconnectTimer.scheduleTimeout()
+        if (!self.closeWasClean && code != Defaults.normalCloseCode) {
+//            self.scheduleReconnect()
+//            self.reconnectTimer.scheduleTimeout()
         }
         
-        self.stateChangeCallbacks.close.forEach({ $0.callback(code, reason) })
+        self.mutableState.value
+            .stateChangeCallbacks
+            .close
+            .forEach({ $0.callback(code, reason) })
     }
     
-    internal func onConnectionError(_ error: Error, response: URLResponse?) {
-        self.logItems("transport", error, response ?? "")
+    internal func onConnectionError(_ error: Error) {
+        self.logItems("transport", error)
         
         // Send an error to all channels
         self.triggerChannelError()
         
         // Inform any state callbacks of the error
-        self.stateChangeCallbacks.error.forEach({ $0.callback(error, response) })
+        self.mutableState
+            .stateChangeCallbacks
+            .error
+            .forEach { $0.callback(error) }
+        
+//        self.stateChangeCallbacks.error.forEach({ $0.callback(error, response) })
     }
     
     internal func onConnectionMessage(_ message: IncomingMessage) {
@@ -649,8 +717,10 @@ public class Socket: TransportDelegate {
             .forEach( { $0.trigger(message) } )
         
         // Inform all onMessage callbacks of the message
+        
         self.stateChangeCallbacks.message.forEach({ $0.callback(message) })
     }
+    
     
     /// Triggers an error event to all of the connected Channels
     internal func triggerChannelError() {
@@ -695,16 +765,24 @@ public class Socket: TransportDelegate {
     internal func resetHeartbeat() {
         // Clear anything related to the heartbeat
         self.pendingHeartbeatRef = nil
-        self.heartbeatTimer?.stop()
+        self.mutableState.value.heartbeatTask?.cancel()
         
         // Do not start up the heartbeat timer if skipHeartbeat is true
         guard !skipHeartbeat else { return }
         
-        self.heartbeatTimer = HeartbeatTimer(timeInterval: heartbeatInterval,
-                                             leeway: heartbeatLeeway)
-        self.heartbeatTimer?.start(eventHandler: { [weak self] in
-            self?.sendHeartbeat()
-        })
+        let heartbeatTask = Task {
+            while !Task.isCancelled {
+                try? await _clock.sleep(for: options.heartbeatInterval)
+                
+                if Task.isCancelled {
+                    break
+                }
+                
+                self.sendHeartbeat()
+            }
+        }
+        
+        self.mutableState.withValue { $0.heartbeatTask = heartbeatTask }
     }
     
     /// Sends a heartbeat payload to the phoenix servers
@@ -749,22 +827,43 @@ public class Socket: TransportDelegate {
          If the server subsequently acknowledges with code 1000 (normal close),
          the socket will keep the `.abnormal` close status and trigger a reconnection.
          */
-        self.connection?.disconnect(code: .normalClosure, reason: reason)
+        let closeCode = URLSessionWebSocketTask.CloseCode.normalClosure
+        self.connection?.disconnect(code: closeCode.rawValue, reason: reason)
     }
-    
     
     //----------------------------------------------------------------------
-    // MARK: - TransportDelegate
+    // MARK: - Message Receiving
     //----------------------------------------------------------------------
-    public func onOpen(response: URLResponse?) {
-        self.onConnectionOpen(response: response)
+    private func receiveIncomingMessages() {
+        let task = Task { [weak self] in
+            guard let self, let connection = self.connection else { return }
+            
+            do {
+                for await event in connection.events {
+                    if Task.isCancelled { return }
+                    
+                    switch event {
+                    case .open:
+                        onConnectionOpen()
+                        break
+                    case .binary(let data):
+                        onMessageReceived(data: data)
+                        break
+                    case .text(let text):
+                        onMessageReceived(string: text)
+                        break
+                    case .close(let code, let reason):
+                        onConnectionClosed(code: code, reason: reason)
+                        break
+                    }
+                }
+            }
+        }
+        
+        self.mutableState.withValue { $0.incomingMessagesTask = task }
     }
     
-    public func onError(error: Error, response: URLResponse?) {
-        self.onConnectionError(error, response: response)
-    }
-    
-    public func onMessage(data: Data) {
+    private func onMessageReceived(data: Data) {
         guard let decodedMessage = try? serializer.binaryDecode(data: data) else {
             self.logItems("receive: Unable to parse binary: \(data)")
             return
@@ -774,7 +873,7 @@ public class Socket: TransportDelegate {
         self.onConnectionMessage(decodedMessage)
     }
     
-    public func onMessage(string: String) {
+    private func onMessageReceived(string: String) {
         guard let decodedMessage = try? serializer.decode(text: string) else {
             self.logItems("receive: Unable to parse JSON: \(string)")
             return
@@ -783,8 +882,40 @@ public class Socket: TransportDelegate {
         self.logItems("receive ", string)
         self.onConnectionMessage(decodedMessage)
     }
+    
+    
+    //----------------------------------------------------------------------
+    // MARK: - TransportDelegate
+    //----------------------------------------------------------------------
+    public func onOpen(response: URLResponse?) {
+//        self.onConnectionOpen(response: response)
+    }
+    
+    public func onError(error: Error, response: URLResponse?) {
+//        self.onConnectionError(error, response: response)
+    }
+    
+    public func onMessage(data: Data) {
+//        guard let decodedMessage = try? serializer.binaryDecode(data: data) else {
+//            self.logItems("receive: Unable to parse binary: \(data)")
+//            return
+//        }
+//
+//        self.logItems("receive \(data.count) bytes")
+//        self.onConnectionMessage(decodedMessage)
+    }
+    
+    public func onMessage(string: String) {
+//        guard let decodedMessage = try? serializer.decode(text: string) else {
+//            self.logItems("receive: Unable to parse JSON: \(string)")
+//            return
+//        }
+//        
+//        self.logItems("receive ", string)
+//        self.onConnectionMessage(decodedMessage)
+    }
 
     public func onClose(code: URLSessionWebSocketTask.CloseCode, reason: String? = nil) {
-        self.onConnectionClosed(code: code, reason: reason)
+//        self.onConnectionClosed(code: code, reason: reason)
     }
 }

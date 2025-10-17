@@ -1,21 +1,53 @@
 //
-//  URLSessionWebSocket.swift
+//  WebSocketConnection.swift
 //  SwiftPhoenixClient
 //
-//  Created by Daniel Rees on 8/20/25.
+//  Created by Daniel Rees on 10/13/25.
 //  Copyright © 2025 SwiftPhoenixClient. All rights reserved.
 //
 
 import Foundation
 
-/// A `URLSession` implementation of the `WebSocket` protocol
-public final class URLSessionWebSocket: WebSocket {
+public class WebSocketTransport: TransportV2 {
+    
+    private let configuration: URLSessionConfiguration
+    public var onOpen: (URLResponse?) -> Void
+    public var onError: (Error, URLResponse?) -> Void
+    
+    public init(
+        configuration: URLSessionConfiguration = .default,
+        onOpen: @escaping (URLResponse?) -> Void = { _ in },
+        onError: @escaping (Error, URLResponse?) -> Void = { _, _ in }
+    ) {
+        self.configuration = configuration
+        self.onOpen = onOpen
+        self.onError = onError
+    }
+    
+    public func connect(to url: URL,
+                        headers: [String : String] = [:],
+                        protocols: [String] = []) async throws -> TransportConnection {
+        let existingHeaders = configuration.httpAdditionalHeaders ?? [:]
+        configuration.httpAdditionalHeaders = existingHeaders
+            .merging(headers) { _, new in new }
+        
+        return try await WebSocketConnection.connect(to: url,
+                                                     configuration: self.configuration,
+                                                     protocols: protocols,
+                                                     onOpen: onOpen,
+                                                     onError: onError)
+    }
+}
+
+/// A WebSocket based ``TransportConnection`` that is backed by
+/// `URLSessionWebSocketTask`.
+public final class WebSocketConnection: TransportConnection {
     
     /// Thread-safe mutable state for the WebSocket connection.
     private struct MutableState {
-        var readyState: WebSocketReadyState = .closed
-        var onEvent: (@Sendable (WebSocketEvent) -> Void)? = nil
-        var eventBuffer: [WebSocketEvent] = []
+        var readyState: TransportReadyState = .closed
+        var onEvent: (@Sendable (TransportEvent) -> Void)? = nil
+        var eventBuffer: [TransportEvent] = []
     }
     
     /// Lock-isolated mutable state to ensure thread safety.
@@ -26,7 +58,6 @@ public final class URLSessionWebSocket: WebSocket {
     
     /// The subprotocol negotiated with the peer upon connection.
     private let subProtocol: String?
-    
     
     private init(
         task: URLSessionWebSocketTask,
@@ -55,7 +86,7 @@ public final class URLSessionWebSocket: WebSocket {
     private func handleMessage(_ value: URLSessionWebSocketTask.Message) {
         guard !isClosed else { return }
         
-        let event: WebSocketEvent
+        let event: TransportEvent
         switch value {
         case .string(let text):
             event = .text(text)
@@ -176,7 +207,7 @@ public final class URLSessionWebSocket: WebSocket {
         trigger(.close(code: code.rawValue, reason: closeReason))
     }
     
-    private func trigger(_ event: WebSocketEvent) {
+    private func trigger(_ event: TransportEvent) {
         mutableState.withValue { state in
             if let onEvent = state.onEvent {
                 // Deliver event immediately if callback is available
@@ -197,8 +228,8 @@ public final class URLSessionWebSocket: WebSocket {
         }
     }
     
-    // MARK: WebSocket
-    public var readyState: WebSocketReadyState {
+    // MARK: TransportConnection
+    public var readyState: TransportReadyState {
         mutableState.value.readyState
     }
     
@@ -206,7 +237,7 @@ public final class URLSessionWebSocket: WebSocket {
         mutableState.value.readyState == .closed
     }
     
-    public var onEvent: (@Sendable (WebSocketEvent) -> Void)? {
+    public var onEvent: (@Sendable (TransportEvent) -> Void)? {
         get { mutableState.value.onEvent }
         set {
             mutableState.withValue { state in
@@ -243,7 +274,7 @@ public final class URLSessionWebSocket: WebSocket {
         }
     }
     
-    public func disconnect(code: URLSessionWebSocketTask.CloseCode, reason: String?) {
+    public func disconnect(code: Int, reason: String?) {
         guard !isClosed else { return }
         
         // Validate reason length per RFC 6455
@@ -254,13 +285,17 @@ public final class URLSessionWebSocket: WebSocket {
         mutableState.withValue { state in
             guard state.readyState != .closed else { return }
             
+            guard let code = URLSessionWebSocketTask.CloseCode(rawValue: code) else {
+                preconditionFailure("Close code must be complient with Section 7.4 of RFC 6455")
+            }
+            
             state.readyState = .closing
             self.task.cancel(with: code, reason: reason?.data(using: .utf8))
         }
     }
 }
 
-// MARK: - Internal URLSession Delegate
+// MARK: ----- Internal URLSession Delegate
 private final class Delegate: NSObject, URLSessionWebSocketDelegate {
     
     typealias OnOpenCallback = @Sendable (URLSession,
@@ -310,53 +345,23 @@ private final class Delegate: NSObject, URLSessionWebSocketDelegate {
 }
 
 
-public final class URLSessionWebsocketTransport: TransportV2 {
-    
-    private let configuration: URLSessionConfiguration
-    
-    public init(configuration: URLSessionConfiguration = .default) {
-        self.configuration = configuration
-    }
-    
-    public func connect(to url: URL,
-                        headers: [String : String] = [:],
-                        protocols: [String] = []) async throws -> TransportConnection {
-        let existingHeaders = configuration.httpAdditionalHeaders ?? [:]
-        configuration.httpAdditionalHeaders = existingHeaders
-            .merging(headers) { _, new in new }
-
-        fatalError()
-//        return try await URLSessionWebSocket.connect(to: url,
-//                                           configuration: self.configuration,
-//                                           protocols: protocols)
-    }
-}
-
-
-extension URLSessionWebSocket {
-    /// Creates and returns a new WebSocket object and immediately
-    /// attempts to establish a connection to the specified WebSocket URL.
-    /// - Parameter url: The URL of the target WebSocket server to connect to.
-    ///     The URL must use one of the following schemes: ws, wss, http, or https.
-    /// - Parameter configuration: A URLSessionConfiguration which can be used to add
-    ///     headers or further configure the underling URLSession used to drive the
-    ///     URLSessoinWebSocketTask.
-    /// - Parameter protocols: An array of strings representing the sub-protocol(s)
-    ///     that the client would like to use, in order of preference. If it is
-    ///      omitted, an empty array is used by default, i.e., [].
+// MARK: ----- Static Connection
+extension WebSocketConnection {
     internal static func connect(
         to url: URL,
-        configuration: URLSessionConfiguration = .default,
-        protocols: [String] = []
-    ) async throws -> URLSessionWebSocket {
+        configuration: URLSessionConfiguration,
+        protocols: [String],
+        onOpen: @escaping (URLResponse?) -> Void,
+        onError: @escaping (Error, URLResponse?) -> Void
+    ) async throws -> WebSocketConnection {
         guard url.scheme == "ws" || url.scheme == "wss" else {
             preconditionFailure("only ws: and wss: schemes are supported")
         }
-                
+        
         // Holds the created WebSocket to be returned after connection
         struct MutableState {
-            var continuation: CheckedContinuation<URLSessionWebSocket, any Error>!
-            var webSocket: URLSessionWebSocket?
+            var continuation: CheckedContinuation<WebSocketConnection, any Error>!
+            var webSocket: WebSocketConnection?
         }
         let mutableState = LockIsolated(MutableState())
         
@@ -366,11 +371,12 @@ extension URLSessionWebSocket {
         let delegate = Delegate(
             onOpen: { urlSession, wsTask, withProtocol in
                 mutableState.withValue { state in
-                    let websocket = URLSessionWebSocket(task: wsTask,
+                    let websocket = WebSocketConnection(task: wsTask,
                                                         subProtocol: withProtocol)
                     state.webSocket = websocket
-                    websocket.trigger(.open(wsTask.response))
+                    websocket.trigger(.open)
                     
+                    onOpen(wsTask.response)
                     state.continuation.resume(returning: websocket)
                 }
             },
@@ -382,12 +388,11 @@ extension URLSessionWebSocket {
             },
             onComplete: { urlSession, wsTask, error in
                 mutableState.withValue { state in
-//                    wsTask.response
-                    
                     if let webSocket = state.webSocket {
                         webSocket.connectionClosed(code: .abnormalClosure,
                                                    reason: Data("abnormal close".utf8))
                     } else if let error {
+                        onError(error, wsTask.response)
                         state.continuation
                             .resume(
                                 throwing: WebSocketError.connection(

@@ -43,7 +43,14 @@ public struct SocketOptions: Sendable {
     // TODO: Logger
     
     /// The optional params to pass when connecting
-    public var params: (@Sendable () -> OutgoingPayload)?
+    public var params: (@Sendable () -> [String: String])?
+    
+    /// Custom headers to be added to the socket connection request
+    public var headers: [String : String]
+    
+    /// The optional authentication token to be exposed on the server
+    /// under the `:auth_token` connect_info key.
+    public var authToken: String? = nil
     
     /// The serializer's protocol version to send on connect.
     public var vsn: String
@@ -61,12 +68,14 @@ public struct SocketOptions: Sendable {
         heartbeatInterval: TimeInterval = Self.Defaults.heartbeatInterval,
         reconnectAfter: @escaping SteppedBackoff = Self.Defaults.reconnectAfter,
         rejoinAfter: @escaping SteppedBackoff = Self.Defaults.rejoinAfter,
-        params: OutgoingPayload? = nil,
+        params: [String: String]? = nil,
+        headers: [String: String] = [:],
+        authToken: String? = nil,
         vsn: String = Self.Defaults.vsn,
         skipHeartbeat: Bool = false
          
     ) {
-        let paramsClosure: (() -> OutgoingPayload)? = if let params {
+        let paramsClosure: (@Sendable () -> [String: String])? = if let params {
             { params }
         } else {
             nil
@@ -82,6 +91,7 @@ public struct SocketOptions: Sendable {
             reconnectAfter: reconnectAfter,
             rejoinAfter: rejoinAfter,
             params: paramsClosure,
+            authToken: authToken,
             vsn: vsn,
             skipHeartbeat: skipHeartbeat
         )
@@ -96,7 +106,9 @@ public struct SocketOptions: Sendable {
         heartbeatInterval: TimeInterval = Self.Defaults.heartbeatInterval,
         reconnectAfter: @escaping SteppedBackoff = Self.Defaults.reconnectAfter,
         rejoinAfter: @escaping SteppedBackoff = Self.Defaults.rejoinAfter,
-        params: (() -> OutgoingPayload)? = nil,
+        params:  (@Sendable () -> [String: String])?,
+        headers: [String: String] = [:],
+        authToken: String? = nil,
         vsn: String = Self.Defaults.vsn,
         skipHeartbeat: Bool = false
     ) {
@@ -110,6 +122,8 @@ public struct SocketOptions: Sendable {
         self.heartbeatInterval = heartbeatInterval
         self.reconnectAfter = reconnectAfter
         self.rejoinAfter = rejoinAfter
+        self.params = params
+        self.headers = headers
         self.vsn = vsn
         self.skipHeartbeat = skipHeartbeat
     }
@@ -142,4 +156,8 @@ public struct SocketOptions: Sendable {
         public static let vsn = "2.0.0"
         
     }
+}
+
+extension SocketOptions {
+    public static let `default` = SocketOptions()
 }

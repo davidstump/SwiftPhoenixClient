@@ -118,11 +118,11 @@ class BasicChatViewController: UIViewController {
         
         try! self.lobbyChannel
             .push("new:msg", payload: payload)
-            .receive("ok") { (message) in
-                print("success", message)
+            .receive("ok") { (message, _) in
+                print("success", message!)
             }
-            .receive("error") { (errorMessage) in
-                print("error: ", errorMessage)
+            .receive("error") { (errorMessage, _) in
+                print("error: ", errorMessage!)
             }
     
         
@@ -143,39 +143,39 @@ class BasicChatViewController: UIViewController {
         let channel = socket.channel(topic, params: ["status":"joining"])
         
 
-        channel.on("join") { [weak self] _ in
+        channel.on("join") { [weak self] _,_ in
             self?.addText("You joined the room.")
         }
         
-        channel.onDecodable("new:msg", of: Chat.self) { [weak self] message in
+        channel.onDecodable("new:msg", of: Chat.self) { [weak self] message,_ in
             guard let self else { return }
             
-            switch message.payload {
-            case .success(let chat):
-                let newMessage = "[\(chat.username)] \(chat.body)"
-                self.addText(newMessage)
-                
-            case .failure(let error):
-                print("new:msg parse failure: ", error)
-            }
+//            switch message.payload {
+//            case .success(let chat):
+//                let newMessage = "[\(chat.username)] \(chat.body)"
+//                self.addText(newMessage)
+//                
+//            case .failure(let error):
+//                print("new:msg parse failure: ", error)
+//            }
         }
         
-        channel.on("user:entered") { [weak self] message in
-            print(message.payload)
-            self?.addText("[anonymous entered]")
-        }
+//        channel.on("user:entered") { [weak self] message in
+//            print(message.payload)
+//            self?.addText("[anonymous entered]")
+//        }
         
         self.lobbyChannel = channel
         
         
         try! self.lobbyChannel
             .join()
-            .receive("ok") { [weak self] _ in
+            .receive("ok") { [weak self] _,_ in
                 self?.addText("Joined Channel")
-            }.receive("error") { [weak self] message in
-                self?.addText("Failed to join channel: \(message.payload)")
+            }.receive("error") { [weak self] message,_ in
+                self?.addText("Failed to join channel: \(message!.payload)")
             }
-        self.socket.connect()
+//        self.socket.connect()
     }
     
     private func addText(_ text: String) {

@@ -225,47 +225,47 @@ public final class Presence {
             let diffEvent = opts.events[.diff] else { return }
         
                 
-        channel.on(stateEvent) { [weak self] message in
-            guard
-                let self,
-                case .success(let payload) = message.payload,
-                let newState = payload as? State
-            else { return }
-            
-            self.joinRef = self.channel?.joinRef
-            self.state = Presence.syncState(self.state,
-                                            newState: newState,
-                                            onJoin: self.caller.onJoin,
-                                            onLeave: self.caller.onLeave)
-            
-            self.pendingDiffs.forEach({ (diff) in
-                self.state = Presence.syncDiff(self.state,
-                                               diff: diff,
-                                               onJoin: self.caller.onJoin,
-                                               onLeave: self.caller.onLeave)
-            })
-            
-            self.pendingDiffs = []
-            self.caller.onSync()
-        }
+//        channel.on(stateEvent) { [weak self] message in
+//            guard
+//                let self,
+//                case .success(let payload) = message.payload,
+//                let newState = payload as? State
+//            else { return }
+//            
+//            self.joinRef = self.channel?.joinRef
+//            self.state = Presence.syncState(self.state,
+//                                            newState: newState,
+//                                            onJoin: self.caller.onJoin,
+//                                            onLeave: self.caller.onLeave)
+//            
+//            self.pendingDiffs.forEach({ (diff) in
+//                self.state = Presence.syncDiff(self.state,
+//                                               diff: diff,
+//                                               onJoin: self.caller.onJoin,
+//                                               onLeave: self.caller.onLeave)
+//            })
+//            
+//            self.pendingDiffs = []
+//            self.caller.onSync()
+//        }
         
-        self.channel?.on(diffEvent) { [weak self] message in
-            guard
-                let self,
-                case .success(let payload) = message.payload,
-                let diff = payload as? Diff
-            else { return }
-            
-            if self.isPendingSyncState {
-                self.pendingDiffs.append(diff)
-            } else {
-                self.state = Presence.syncDiff(self.state,
-                                               diff: diff,
-                                               onJoin: self.caller.onJoin,
-                                               onLeave: self.caller.onLeave)
-                self.caller.onSync()
-            }
-        }
+//        self.channel?.on(diffEvent) { [weak self] message in
+//            guard
+//                let self,
+//                case .success(let payload) = message.payload,
+//                let diff = payload as? Diff
+//            else { return }
+//            
+//            if self.isPendingSyncState {
+//                self.pendingDiffs.append(diff)
+//            } else {
+//                self.state = Presence.syncDiff(self.state,
+//                                               diff: diff,
+//                                               onJoin: self.caller.onJoin,
+//                                               onLeave: self.caller.onLeave)
+//                self.caller.onSync()
+//            }
+//        }
     }
     
     /// Returns the array of presences, with default selected metadata.
