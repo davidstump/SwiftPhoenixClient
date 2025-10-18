@@ -170,9 +170,9 @@ public class Push {
     public func awaitReply() async throws -> ChannelMessage<Any> {
         return try await withCheckedThrowingContinuation { continuation in
             self.awaitCallback = JsonContinuation(continuation: continuation)
-            
         }
     }
+    
     
     public func awaitReplyData() async throws -> ChannelMessage<Data> {
         return try await withCheckedThrowingContinuation { continuation in

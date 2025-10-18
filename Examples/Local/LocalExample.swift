@@ -47,7 +47,7 @@ struct LocalExample: View {
                 proxy.scrollTo(bottomID, anchor: .bottom)
             }
         }
-        .navigationTitle("Echo Example")
+        .navigationTitle("Local Chat Room Example")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(vm.isConnected ? "Disconnect" : "Connect") {

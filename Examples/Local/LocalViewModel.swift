@@ -26,6 +26,7 @@ final class LocalViewModel: ObservableObject {
     private let url = URL(string: "ws://localhost:4000/socket")!
     private let socket: Socket
     private var lobby: Channel? = nil
+    private var messageTask: Task<Void, Never>? = nil
     
     init() {
         self.socket = Socket("http://localhost:4000/socket", options: .init(
@@ -56,8 +57,11 @@ final class LocalViewModel: ObservableObject {
     }
     
     func connect() async {
-        self.socket.onOpen {
-            self.append("✅ Socket Opened")
+        Task {
+            for await _ in socket.onOpenEvents() {
+                self.isConnected = true
+                self.append("✅ Socket Opened")
+            }
         }
         
         self.socket.onClose {
@@ -83,18 +87,8 @@ final class LocalViewModel: ObservableObject {
         
         self.lobby = channel
         self.joinLobby()
-//        try! self.lobby?
-//            .join()
-//            .awa
-//            .receive("ok") { message in
-//                self.append("✅ Joined lobby")
-//                print("CHANNEL: rooms:lobby joined. status <\(message.status ?? "null")>")
-//            }
-//            .receive("error") { message in
-//                self.append("⛔️ Could not join lobby")
-//                print("CHANNEL: rooms:lobby failed to join. payload <\(message.payload)>  status <\(message.status ?? "null")> ")
-//            }
-            
+        self.listenForChannelMessages()
+
         await self.socket.connect()
     }
     
@@ -117,11 +111,24 @@ final class LocalViewModel: ObservableObject {
                     print("CHANNEL: rooms:lobby failed to join. payload <\(reply.payload)>  status <\(reply.status ?? "null")> ")
                 }
                 
+                if reply.status == "timeout" {
+                    self.append("⏳ Timed out while joining")
+                }
+                
             } catch {
                 self.append("⛔️ Could not join lobby")
                 print("CHANNEL: rooms:lobby failed to join. payload <\(error)>")
             }
-            
+        }
+    }
+    
+    private func listenForChannelMessages() {
+        guard let lobby else { return }
+        self.messageTask = Task {
+            for await message in lobby.awaitOnDecodable("shout", of: Shout.self) {
+                let shout = message.payload
+                self.append("\(shout.name): \(shout.message)")
+            }
         }
     }
     
@@ -135,25 +142,18 @@ final class LocalViewModel: ObservableObject {
     }
     
     func send() {
+        guard let lobby else { return }
         let trimmed = draft.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
         
-        // Create and send the payload
-        let payload = ["name": "mobile", "message": trimmed]
-        try! self.lobby?.push("shout", payload: payload)
-
-        Task {
-            do {
-                let message = try await self.lobby?
-                    .push("shout", payload: payload)
-                    .awaitReply()
-                
-                
-            } catch {
-                // TODO: Local Timeout
-            }
+        // Create and send the payload        
+        let shout = Shout(name: "mobile-codable", message: trimmed)
+        do {
+            try lobby.push("shout", payload: shout)
+    
+        } catch {
+            print("Error pushing shout: \(error)")
         }
-        
         
         // Clear the text intput
         self.draft = ""

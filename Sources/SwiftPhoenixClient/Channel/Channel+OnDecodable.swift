@@ -42,6 +42,24 @@ extension Channel {
         return subscription.ref
     }
     
+    public func awaitOnDecodable<T: Decodable>(
+        _ event: String,
+        of type: T.Type
+    ) -> AsyncStream<ChannelMessage<T>> {
+        let (stream, continuation) = AsyncStream<ChannelMessage<T>>.makeStream()
+        let ref = self.onDecodable(event, of: type) { message, error in
+            guard let message else { return }
+            continuation.yield(message)
+        }
+        
+        continuation.onTermination = { _ in
+            self.off(event, ref: ref)
+        }
+
+        return stream
+    }
+    
+    
     /// Hook into when the Channel is closed.
     /// Same as `onDecodable`, but for the `phx_close` event
     @discardableResult

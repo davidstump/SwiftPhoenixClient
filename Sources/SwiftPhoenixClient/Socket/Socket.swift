@@ -59,7 +59,7 @@ public class Socket: TransportDelegate {
     /// Private state which is accessed behind a ``LockIsolated`f`
     private struct MutableState {
         /// Callbacks for socket state changes
-        let stateChangeCallbacks = SocketStateChangeCallbacks()
+        var stateChangeCallbacks = SocketStateChangeCallbacks()
         
         /// Collection on channels created for the Socket
         var channels: [Channel] = []
@@ -437,7 +437,25 @@ public class Socket: TransportDelegate {
     /// - parameter callback: Called when the Socket is opened
     @discardableResult
     public func onOpen(callback: @escaping () -> Void) -> String {
-        self.onOpen { _ in callback() }
+        return self.mutableState.withValue { state in
+            let ref = makeRef()
+            let opened = SocketOpened(ref: ref, callback: callback)
+            state.stateChangeCallbacks.open.append(opened)
+            return ref
+        }
+    }
+    
+    public func onOpenEvents() -> AsyncStream<Void> {
+        let (stream, continuation) = AsyncStream<Void>.makeStream()
+        let ref = self.onOpen {
+            continuation.yield()
+        }
+        
+        continuation.onTermination = { _ in
+            self.off([ref])
+        }
+        
+        return stream
     }
     
     /// Registers callbacks for connection open events.

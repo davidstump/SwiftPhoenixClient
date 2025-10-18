@@ -36,6 +36,20 @@ extension Channel {
         return subscription.ref
     }
     
+    public func awaitOn(_ event: String) -> AsyncStream<ChannelMessage<Any>> {
+        let (stream, continuation) = AsyncStream<ChannelMessage<Any>>.makeStream()
+        let ref = self.on(event) { message, error in
+            guard let message else { return }
+            continuation.yield(message)
+        }
+        
+        continuation.onTermination = { _ in
+            self.off(event, ref: ref)
+        }
+        
+        return stream
+    }
+    
     /// Hook into when the Channel is closed.
     /// Same as `on`, but for the `phx_close` event
     @discardableResult

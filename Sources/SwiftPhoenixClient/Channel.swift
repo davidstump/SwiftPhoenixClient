@@ -364,6 +364,28 @@ public class Channel {
         return pushEvent
     }
     
+    @discardableResult
+    public func push(_ event: String,
+                     payload: any Encodable,
+                     timeout: TimeInterval = Defaults.timeoutInterval) throws -> Push {
+        guard joinedOnce else {
+            throw ChannelError.pushTriedBeforeJoin(topic: self.topic, event: event)
+        }
+        
+        let pushEvent = Push(channel: self,
+                             event: event,
+                             payload: .encodable(payload),
+                             timeout: timeout)
+        if canPush {
+            pushEvent.send()
+        } else {
+            pushEvent.startTimeout()
+            pushBuffer.append(pushEvent)
+        }
+        
+        return pushEvent
+    }
+    
     /// Pushes a binary payload to the Channel
     ///
     /// Example:
