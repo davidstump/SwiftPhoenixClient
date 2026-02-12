@@ -44,7 +44,7 @@ GEM
     dotenv (2.8.1)
     emoji_regex (3.2.3)
     excon (0.99.0)
-    faraday (1.10.3)
+    faraday (1.10.5)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
       faraday-excon (~> 1.1)
@@ -60,12 +60,12 @@ GEM
       faraday (>= 0.8.0)
       http-cookie (~> 1.0.0)
     faraday-em_http (1.0.0)
-    faraday-em_synchrony (1.0.0)
+    faraday-em_synchrony (1.0.1)
     faraday-excon (1.1.0)
     faraday-httpclient (1.0.1)
-    faraday-multipart (1.0.4)
-      multipart-post (~> 2)
-    faraday-net_http (1.0.1)
+    faraday-multipart (1.2.0)
+      multipart-post (~> 2.0)
+    faraday-net_http (1.0.2)
     faraday-net_http_persistent (1.2.0)
     faraday-patron (1.0.0)
     faraday-rack (1.0.0)
@@ -163,11 +163,15 @@ GEM
     memoist (0.16.2)
     mini_magick (4.12.0)
     mini_mime (1.1.2)
+    mini_portile2 (2.8.9)
     minitest (5.17.0)
     multi_json (1.15.0)
     multipart-post (2.0.0)
     nanaimo (0.3.0)
     naturally (2.2.1)
+    nokogiri (1.14.2)
+      mini_portile2 (~> 2.8.0)
+      racc (~> 1.4)
     nokogiri (1.14.2-x86_64-darwin)
       racc (~> 1.4)
     optparse (0.1.1)
@@ -231,6 +235,7 @@ GEM
 
 PLATFORMS
   x86_64-darwin-19
+  x86_64-linux
 
 DEPENDENCIES
   fastlane
